@@ -1,0 +1,269 @@
+import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/user-controller.dart';
+import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Public/styles.dart';
+import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/Items/Form/thousand-separator-inputFormatter.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+class FormTextField extends StatefulWidget {
+  String? lable;
+  String? hint;
+  Function? onChange;
+  bool? isNumber;
+  String? initValue;
+  bool? isMobile;
+  bool? isLoginPage;
+  bool? isPassword;
+  bool? isLongTxt;
+  String name;
+ GlobalKey<FormBuilderState>? fbKey;
+ var column;
+  var maxValidator;
+  var minValidator;
+  bool? isEmail;
+
+
+   FormTextField({this.lable,  this.hint , this.onChange , this.isNumber =false , this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
+     this.fbKey , this.isLongTxt = false , required this.name , this.column});
+
+  @override
+  State<FormTextField> createState() => _FormTextFieldState();
+}
+
+class _FormTextFieldState extends State<FormTextField> {
+  final textFieldKey = GlobalKey<FormBuilderFieldState>();
+  var txt = null;
+  final FocusNode _focusNode = FocusNode();
+  String? _errorText;
+  // var value;
+  final TextEditingController _formConroller = TextEditingController();
+  Rx<String> text = ''.obs;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        _validateInput();
+      }
+    });
+  }
+  void _validateInput() {
+    // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
+     if(widget.column != null){
+       if(widget.column['validators'] != null){
+         var inputRequired;
+         String? errorMessage;
+
+          inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+         if(inputRequired != null){
+          if(inputRequired['message'] != null){
+            errorMessage = inputRequired['message'];
+          }
+         }
+         if(widget.isNumber == true){
+           var maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+           var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+           if (text.value != '')  {
+             //check min and max
+             // var inputRange = widget.column['validators'].firstWhere((validator) => validator['type'] == 'range', orElse: () => null);
+             // print('inputRange>>>${inputRange}');
+             // errorMessage = inputRange['message'];
+             // errorMessage =maxValidator['message'];
+             var number = num.tryParse(text.value);
+             if(number != null){
+               if(number < minValidator['value']){
+                 setState(() {
+                   _errorText = minValidator['message'];
+                 });
+               }
+               else{
+                 if(number > maxValidator['value']){
+                   setState(() {
+                     _errorText = maxValidator['message'];
+                   });
+                 }
+                 else{
+                   setState(() {
+                     _errorText = null;
+                   });
+                 }
+               }
+               // if (number < minValidator['value'] || number > maxValidator['value']) {
+               //   setState(() {
+               //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
+               //     _errorText =   errorMessage;
+               //   });
+               // } else {
+               //   setState(() {
+               //     _errorText = null;
+               //   });
+               // }
+             }
+           }
+           else{
+             if(inputRequired != null){
+               if(inputRequired['type'] == 'required'){
+                 if(text.value == ''){
+                   setState(() {
+                     // _errorText = '${AppController.of(context)!.value('Entering this field is required')}';
+                     _errorText =   errorMessage;
+                   });
+
+                 }
+                 else{
+                   setState(() {
+                     _errorText = null;
+                   });
+                 }
+               }
+             }
+
+           }
+         }
+         else{
+           if(inputRequired['type'] == 'required'){
+             if(text.value == ''){
+               setState(() {
+                 // _errorText = '${AppController.of(context)!.value('Entering this field is required')}';
+                 _errorText = errorMessage;
+               });
+
+             }
+             else{
+               setState(() {
+                 _errorText = null;
+               });
+             }
+           }
+
+         }
+       }
+     }
+
+
+  }
+  @override
+  Widget build(BuildContext context) {
+
+    return  Obx((){
+      if(ViewController.isShowMessage.value){
+        if (text.value == '')  {
+          var inputRequired;
+          if(widget.column != null){
+            if(widget.column['validators'] != null){
+              inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+              if(inputRequired != null){
+                _errorText = inputRequired['message'];
+              }
+            }
+          }
+        }
+        else if(text.value != ''){
+          var maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+          var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+          var number = num.tryParse(text.value);
+          if(number != null){
+            if(number < minValidator['value']){
+                _errorText = minValidator['message'];
+            }
+            else{
+              if(number > maxValidator['value']){
+                  _errorText = maxValidator['message'];
+              }
+              else{
+                  _errorText = null;
+              }
+            }
+            // if (number < minValidator['value'] || number > maxValidator['value']) {
+            //   setState(() {
+            //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
+            //     _errorText =   errorMessage;
+            //   });
+            // } else {
+            //   setState(() {
+            //     _errorText = null;
+            //   });
+            // }
+          }
+        }
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FormBuilder(
+            key: widget.fbKey,
+            child: FormBuilderTextField(
+              key: textFieldKey,
+              focusNode: _focusNode,
+              controller: widget.initValue == null ? _formConroller : null,
+              obscureText: widget.isPassword == true  && UserController.isVisibility.value == false? true : false,
+              keyboardType:widget.isLongTxt == true?TextInputType.multiline:widget.isNumber!?TextInputType.number:TextInputType.text,
+              minLines: 1,
+              maxLines: widget.isPassword == true ? 1:3,
+              inputFormatters: [
+                if (widget.isMobile == true)
+                  LengthLimitingTextInputFormatter(11),
+                if (widget.isMobile == true)
+                  FilteringTextInputFormatter.digitsOnly,
+                if (widget.isNumber == true)
+                  FilteringTextInputFormatter.digitsOnly,
+                // if(widget.isNumber == true)
+                //   ThousandSeparatorInputFormatter(),
+                if (widget.isMobile == true)
+                  FilteringTextInputFormatter.deny(RegExp(
+                      r'^0+'),),
+              ],
+              initialValue: widget.initValue,
+              // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
+              style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
+              onChanged: (value){
+                text.value = value!;
+
+                if(widget.onChange!=null)
+                  this.widget.onChange!(value);
+              },
+              name: widget.name,
+              decoration: InputDecoration(
+                prefixIcon:   widget.isPassword == true?Obx((){
+                  return InkWell(
+                      onTap: (){
+                        setState(() {
+                          UserController.isVisibility.value = !UserController.isVisibility.value;
+                        });
+                      },
+                      child: Icon(UserController.isVisibility.value == true ? Icons.visibility :Icons.visibility_off, size: 15, color: MainController.isLightMode.value == true ? whiteColor:primaryDark,));
+                }):
+                Icon(Icons.circle , color: Colors.transparent, size: 5,),
+                labelText: '${this.widget.lable}',
+                labelStyle: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: colorBtn, width: 2.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: color3, width: 1.0),
+                ),
+                // errorText: _errorText,
+              ),
+            ),
+          ),
+          SizedBox(height: 5,),
+          Txt('${_errorText != null ? _errorText:''}' , color: errorColor,),
+        ],
+      );
+    });
+  }
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+}

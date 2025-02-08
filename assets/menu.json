@@ -1,0 +1,197 @@
+[
+    {
+        "title":"مشتری",
+        "tooltip":"",
+        "main-menu": true,
+        "table-name":"customer",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[
+            {
+                "name": "N",
+                "type": "string",
+                "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            },
+            {
+                "name": "b",
+                "type": "int",
+                "is-prime":true
+            }, 
+            {
+                "name": "C",
+                "type": "int",
+                "import-of-excel":false
+            },
+            {
+                "name": "D",
+                "type": "int",
+              "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            },
+            {
+                "name": "E",
+                "type": "string",
+                "is-show-table":false
+        
+            },
+            {
+               "name": "d",
+               "type": "select",
+                "items": [
+                    {"title": "انتخاب نشده" , "value": "-1"},
+                    {"title": "a","value": "1","is_selected": false},
+                    {"title": "b","value": "2","is_selected": false},
+                    {"title": "c","value": "3","is_selected": false}
+                ],
+              "validators": [
+                {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+              ]
+        
+           },
+           {
+              "name": "dddddd",
+              "type": "select",
+             "items": [
+               {"title": "انتخاب نشده" , "value": "-1"},
+               {"title": "w","value": "1","is_selected": true},
+               {"title": "eb","value": "2","is_selected": false},
+               {"title": "r","value": "3","is_selected": false}
+             ]
+          },
+           {
+                "name": "checkBox",
+                "type": "checkbox",
+                "default_value": false
+            },
+           {
+                "name": "radioButton",
+                "type": "radiobutton",
+                "items": [
+                    {"title": "test 1","value": "1","is_selected": true},
+                    {"title": "test 2","value": "2","is_selected": false},
+                    {"title": "test 3","value": "3","is_selected": false},
+                    {"title": "test 4","value": "4","is_selected": false}
+                ]
+            },
+          {
+            "name": "Date",
+            "type": "date"
+          },
+          {
+            "name": "multiSelect",
+            "type": "multiSelect",
+            "items": [
+              {"title": "انتخاب نشده" , "value": "-1"},
+              {"title": "test 1","value": "1"},
+              {"title": "test 2","value": "2"},
+              {"title": "test 3","value": "3"},
+              {"title": "test 4","value": "4"}
+            ],
+            "validators": [
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+            ]
+          },
+          {
+            "name" : "Color",
+            "type": "color",
+            "validators": [
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+            ]
+          },
+          {
+            "name" : "Color2",
+            "type": "color"
+          },
+          {
+            "name": "multiSelect2",
+            "type": "multiSelect",
+            "items": [
+              {"title": "انتخاب نشده" , "value": "-1"},
+              {"title": "test 5","value": "1"},
+              {"title": "test 6","value": "2"},
+              {"title": "test 7","value": "3"},
+              {"title": "test 8","value": "4"}
+            ]
+
+
+          },
+          {
+            "name": "Number",
+            "type": "number",
+            "validators": [
+              {"type": "min","value": 200 , "message": "عدد وارد شده کمتر از 200 است"},
+              {"type": "max","value": 700 , "message": "عدد وارد شده بیشتر از 700 است"},
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+
+            ]
+          },
+          {
+            "name": "Number2",
+            "type": "number",
+            "validators": [
+              {"type": "min","value": 400 , "message": "عدد وارد شده کمتر از 400 است"},
+              {"type": "max","value": 1000 , "message": "عدد وارد شده بیشتر از 1000 است"}
+            ]
+          },
+          {
+            "name": "File",
+            "type": "file",
+            "validators": [
+              {"type": "min","value": 1000 , "message": "حجم فایل انتخاب شده کمتر از 1000 بایت است"},
+              {"type": "max","value": 20000 , "message": "حجم فایل انتخاب شده بیشتر از 20000 بایت است"},
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+            ]
+          },
+          {
+            "name": "File2",
+            "type": "file",
+            "validators": [
+              {"type": "min","value": 1000 , "message": "حجم فایل انتخاب شده کمتر از 1000 بایت است"},
+              {"type": "max","value": 5000 , "message": "حجم فایل انتخاب شده بیشتر از 5000 بایت است"}
+
+            ]
+
+          }
+        ]
+    },
+    {
+        "title":"دسته بندی",
+        "tooltip":"",
+        "main-menu": true,
+        "table-name":"category",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[
+            {
+                "name": "x",
+                "type": "string"
+            },
+            {
+                "name": "y",
+                "type": "int"
+            }
+        ]
+    },
+    {
+        "title":"محصولات",
+        "tooltip":"",
+        "main-menu": true,
+        "table-name":"product",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[]
+    },
+    {
+        "title":"x",
+        "tooltip":"",
+        "main-menu": false,
+        "table-name":"",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[]
+    }
+
+]

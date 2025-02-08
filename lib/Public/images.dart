@@ -1,0 +1,1 @@
+const String loginSvg = 'assets/images/logo.svg';
