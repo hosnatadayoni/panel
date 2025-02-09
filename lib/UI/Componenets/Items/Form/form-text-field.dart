@@ -30,7 +30,7 @@ class FormTextField extends StatefulWidget {
 
 
    FormTextField({this.lable,  this.hint , this.onChange , this.isNumber =false , this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
-     this.fbKey , this.isLongTxt = false , required this.name , this.column});
+     this.fbKey , this.isLongTxt = false , required this.name , this.column , this.isEmail});
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -167,8 +167,13 @@ class _FormTextFieldState extends State<FormTextField> {
           }
         }
         else if(text.value != ''){
-          var maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-          var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+          var maxValidator;
+          var minValidator;
+          if(widget.column['validators'] != null){
+            maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+            minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+          }
+
           var number = num.tryParse(text.value);
           if(number != null){
             if(number < minValidator['value']){

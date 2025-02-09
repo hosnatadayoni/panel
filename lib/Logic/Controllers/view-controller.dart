@@ -32,6 +32,7 @@ class ViewController extends GetxController {
 
 
   static Widget generateStoreFormView(Map dataJson) {
+
     var children = <Widget>[];
     var textField;
     var selectBox;
@@ -41,9 +42,11 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       if (MainController.tableInfo['columns'][j]['is-show-store'] == true) {
         var column = MainController.tableInfo['columns'][j];
+        print('column table>>>${column}');
         var type = column['type'];
         String name = column['name'];
         var defaultValue = column['default_value'];
@@ -51,7 +54,6 @@ class ViewController extends GetxController {
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
         var maxValidator;
         var minValidator;
-
         if(column['validators'] != null){
           maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
           minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
@@ -64,11 +66,43 @@ class ViewController extends GetxController {
           children.add(textField);
         }
         if (type == 'select') {
-          var items = column['items'];
-          var selectedItem = items.firstWhere(
-                (item) => item['is_selected'] == true,
-            orElse: () => items.first,);
-          selectBox = generateFormSelectBox(name, column , dataJson , '', '${selectedItem['title']}');
+          var items;
+          var selectedItem;
+          var initailValue;
+          for(var subMenu in MainController.SubMenuList){
+            if(column['sourceItems'] != 'custom'){
+              if(column['sourceTable'] == subMenu['table-name']){
+                items = [];
+                print('d44>>>>${subMenu['columns']}');
+                for(var i = 0;i<subMenu['columns'].length;i++){
+                  for(var j=0;j<MainController.tableData.value.length;j++){
+                    print('k89>>>${MainController.tableData.value[j].data['${subMenu['columns'][i]}']}');
+                    print('ssss78>>>${MainController.tableData.value[j].data['${subMenu['columns'][i]}']}');
+
+                    // items =  subMenu['columns'][i];
+                    items.add({'title': subMenu['columns'][i]['name'] , 'value': i});
+                    print('g4>>>${subMenu['columns'][i]}');
+                  }
+
+                }
+                print('items 4>>>${items}');
+                print('items.first>>>${items.first}');
+                initailValue = items.first['title'];
+              }
+
+
+            }
+            else{
+              items = column['items'];
+              print('c1>>>${items}');
+              print('c2>>>${column['items']}');
+              selectedItem = items.firstWhere(
+                    (item) => item['is_selected'] == true,
+                orElse: () => items.first,);
+              initailValue = selectedItem['title'];
+            }
+          }
+          selectBox = generateFormSelectBox(name, column , dataJson , '', '${initailValue}');
           children.add(SizedBox(
             height: 20,
           ));
@@ -151,7 +185,7 @@ class ViewController extends GetxController {
           maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
           minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
         }
-        if (type == 'string' || type == 'int' || type == 'number') {
+        if (type == 'string' || type == 'int' || type == 'number' || type == 'email') {
           print('dataModel>>>${dataModel}');
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(name , _fbKey , column , dataModel , type , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
@@ -173,6 +207,7 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(textField);
+
         }
         else if (type == 'select') {
           selectBox = generateFormSelectBox(name , column , dataModel , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}' , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
@@ -581,6 +616,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFormTextField(String ColumnName , GlobalKey<FormBuilderState> _fbKey , var column , Map dataJson , var type , String initValue){
+
     return new FormTextField(
       name: '${ColumnName}',
       fbKey: _fbKey,
@@ -590,6 +626,7 @@ class ViewController extends GetxController {
       initValue: initValue,
       onChange: (text) {
         dataJson[ColumnName] = text;
+
         // if(type == 'number'){
         //
         //   if(text < minValidator['value'] || text > maxValidator['value']){
@@ -607,14 +644,46 @@ class ViewController extends GetxController {
       },
       isMobile: type == 'mobile' ? true : false,
       isNumber: type == 'number' ? true : false,
+      isEmail: type == 'email' ? true : false,
     );
   }
 
   static Widget generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue){
-    var items = column['items'];
-    var selectedItem = items.firstWhere(
-          (item) => item['is_selected'] == true,
-      orElse: () => items.first,);
+    var items;
+    var selectedItem;
+    var initailValue;
+
+    for(var subMenu in MainController.SubMenuList){
+      if(column['sourceItems'] != 'custom'){
+        if(column['sourceTable'] == subMenu['table-name']){
+          print('column[sourceTable]>>>${column['sourceTable']}');
+          print('subMenu[columns]>>>${subMenu['columns']}');
+          items = [];
+          getInfoTable(column['sourceTable']);
+          for(var i = 0;i<subMenu['columns'].length;i++){
+            ColumnName = subMenu['columns'][i]['name'];
+            print('ColumnName 6>>>${ColumnName}');
+            // items =  subMenu['columns'][i];
+            print('xxx5>>>${dataJson[ColumnName]}');
+            items.add({'title': subMenu['columns'][i]['name'], 'value': i});
+          }
+          initailValue = items.first['title'];
+        }
+      }
+      else{
+        items = column['items'];
+        print('c1>>>${items}');
+        print('c2>>>${column['items']}');
+        selectedItem = items.firstWhere(
+              (item) => item['is_selected'] == true,
+          orElse: () => items.first,);
+        initailValue = selectedItem['title'];
+      }
+    }
+    // var items = column['items'];
+    // var selectedItem = items.firstWhere(
+    //       (item) => item['is_selected'] == true,
+    //   orElse: () => items.first,);
     print('selectedItemSelected>>>${selectedItem}');
 
     return new SelectBox(
@@ -631,7 +700,7 @@ class ViewController extends GetxController {
                 ),
                 value: item['title']),
         ],
-        initalValue: initalValue != '' ? initalValue:selectedItem['title'],
+        initalValue: initalValue != '' ? initalValue:initailValue,
         onChanged: (value) {
           print('selected item ${value}');
           for(var item in items){
@@ -824,5 +893,24 @@ class ViewController extends GetxController {
       selectedFilesTxt: selecetdFiles,
       column: column,
     ) ;
+  }
+
+  static  getInfoTable(String tableName){
+    List<String> dropDownItems = [];
+    for(var subMenu in MainController.SubMenuList){
+      if(subMenu['table-name'] == tableName){
+        for(var i=0;i<dataController.allData.value.length ;i++){
+          print('dataController.allData.value>>>${dataController.allData.value[i].data}');
+        }
+       // for(var sub in subMenu['columns']){
+       //   print('gggggggggg>>>${sub['name']}');
+       // }
+
+
+
+      }
+    }
+    return;
+
   }
 }

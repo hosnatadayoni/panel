@@ -26,6 +26,7 @@ class CreatePage extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
+
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
     Map<String , dynamic> dataJson = {};
@@ -157,7 +158,6 @@ class CreatePage extends StatelessWidget {
                                                         }
                                                       }
                                                     }
-
                                                       if(maxValidator != null && minValidator != null){
                                                         if(column['type'] == 'number'){
                                                           var number;
@@ -172,9 +172,6 @@ class CreatePage extends StatelessWidget {
                                                           }
                                                       }
                                                         else if(column['type'] == 'file'){
-
-
-
                                                         }
 
                                                       }

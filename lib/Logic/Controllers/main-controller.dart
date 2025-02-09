@@ -66,6 +66,7 @@ class MainController extends GetxController {
   static var allColumn;
 
 
+
   static  GlobalKey<FormBuilderState> fbKey = GlobalKey<FormBuilderState>();
 
   static Future<void> createExel(String? fileExelPath) async {
@@ -518,6 +519,7 @@ class MainController extends GetxController {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+
       }
 
 

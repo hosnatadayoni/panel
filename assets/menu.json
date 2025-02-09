@@ -37,9 +37,12 @@
                 "is-show-table":false
         
             },
+
             {
                "name": "d",
                "type": "select",
+              "sourceItems": "custom",
+              "sorceTable": null,
                 "items": [
                     {"title": "انتخاب نشده" , "value": "-1"},
                     {"title": "a","value": "1","is_selected": false},
@@ -51,16 +54,26 @@
               ]
         
            },
-           {
-              "name": "dddddd",
-              "type": "select",
-             "items": [
-               {"title": "انتخاب نشده" , "value": "-1"},
-               {"title": "w","value": "1","is_selected": true},
-               {"title": "eb","value": "2","is_selected": false},
-               {"title": "r","value": "3","is_selected": false}
-             ]
+            {
+            "name": "dddddd",
+            "type": "select",
+            "sourceItems": "custom",
+            "sorceTable": null,
+            "items": [
+              {"title": "انتخاب نشده" , "value": "-1"},
+              {"title": "w","value": "1","is_selected": true},
+              {"title": "eb","value": "2","is_selected": false},
+              {"title": "r","value": "3","is_selected": false}
+            ]
           },
+            {
+            "name": "table select",
+            "type": "select",
+            "sourceItems": "table",
+            "sourceTable": "status",
+            "items": []
+          },
+
            {
                 "name": "checkBox",
                 "type": "checkbox",
@@ -154,6 +167,10 @@
 
             ]
 
+          },
+          {
+            "name": "Email",
+            "type": "email"
           }
         ]
     },
@@ -192,6 +209,24 @@
         "currentPage":1,
         "countShowRow":10,
         "columns":[]
-    }
+    },
+  {
+    "title": "status",
+    "tooltip":"",
+    "main-menu": true,
+    "table-name":"status",
+    "currentPage":1,
+    "countShowRow":10,
+    "columns":[
+      {
+        "name": "item 1",
+        "type": "string"
+      },
+      {
+        "name": "item 2",
+        "type": "string"
+      }
+    ]
+  }
 
 ]
