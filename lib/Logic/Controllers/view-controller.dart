@@ -12,6 +12,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/Popups/loading.dart';
 import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,8 @@ class ViewController extends GetxController {
   static Map<String , List<int>> fileSizeList={};
 
 
-  static Widget generateStoreFormView(Map dataJson) {
+  static Future<Widget> generateStoreFormView(Map dataJson) async {
+    AppController.startLoading('get-store-form');
 
     var children = <Widget>[];
     var textField;
@@ -103,11 +105,11 @@ class ViewController extends GetxController {
               initailValue = selectedItem['title'];
             }
           }
-          selectBox = generateFormSelectBox(name, column , dataJson , '', '${initailValue}');
+          selectBox = await generateFormSelectBox(name, column , dataJson , '', '${initailValue}');
           children.add(SizedBox(
             height: 20,
           ));
-          children.add(selectBox);
+          children.add(await selectBox);
         }
         else if(type == 'checkbox'){
           checkBox = generateFormCheckBox(name ,column, defaultValue , dataJson);
@@ -159,6 +161,7 @@ class ViewController extends GetxController {
         }
       }
     }
+    AppController.finishLoading('get-store-form');
     return Column(children: children);
   }
 
@@ -649,7 +652,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue)  {
+  static Future<Widget> generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue)  async {
     var items;
     var selectedItem;
     var initailValue;
@@ -660,12 +663,9 @@ class ViewController extends GetxController {
           print('column[sourceTable]>>>${column['sourceTable']}');
           print('subMenu[columns]>>>${subMenu['columns']}');
           items = [];
-          items = getInfoTable(column['sourceTable']);
-           // for(var i in  getInfoTable(column['sourceTable'])){
-           //
-           // }
+           for(var i in  await getInfoTable(column['sourceTable'])){
 
-
+           }
           for(var i = 0;i<subMenu['columns'].length;i++){
             ColumnName = subMenu['columns'][i]['name'];
             print('ColumnName 6>>>${ColumnName}');
