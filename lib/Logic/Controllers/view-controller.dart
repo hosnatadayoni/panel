@@ -19,6 +19,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 
@@ -648,7 +649,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue){
+  static Widget generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue)  {
     var items;
     var selectedItem;
     var initailValue;
@@ -659,7 +660,12 @@ class ViewController extends GetxController {
           print('column[sourceTable]>>>${column['sourceTable']}');
           print('subMenu[columns]>>>${subMenu['columns']}');
           items = [];
-          getInfoTable(column['sourceTable']);
+          items = getInfoTable(column['sourceTable']);
+           // for(var i in  getInfoTable(column['sourceTable'])){
+           //
+           // }
+
+
           for(var i = 0;i<subMenu['columns'].length;i++){
             ColumnName = subMenu['columns'][i]['name'];
             print('ColumnName 6>>>${ColumnName}');
@@ -895,22 +901,29 @@ class ViewController extends GetxController {
     ) ;
   }
 
-  static  getInfoTable(String tableName){
-    List<String> dropDownItems = [];
-    for(var subMenu in MainController.SubMenuList){
-      if(subMenu['table-name'] == tableName){
-        for(var i=0;i<dataController.allData.value.length ;i++){
-          print('dataController.allData.value>>>${dataController.allData.value[i].data}');
-        }
-       // for(var sub in subMenu['columns']){
-       //   print('gggggggggg>>>${sub['name']}');
-       // }
-
-
-
-      }
+  static Future<List<dynamic>>  getInfoTable(String tableName) async{
+    List<dynamic> rowList=[];
+    List<dynamic> tableData = [];
+    box = await Hive.openBox<DataModel>('${tableName}');
+    tableData = box.values.toList();
+    // for(var subMenu in MainController.SubMenuList){
+    //   if(subMenu['table-name'] == tableName){
+    //
+    //    // for(var sub in subMenu['columns']){
+    //    //   print('gggggggggg>>>${sub['name']}');
+    //    // }
+    //   }
+    // }
+    for(var row in tableData){
+      print('tableData>>>${row.data}');
+      rowList.add(row.data);
     }
-    return;
+    print('rowList>>>${rowList}');
+    for(var i in rowList){
+      print('${i['item 1']}');
+    }
+
+    return rowList;
 
   }
 }

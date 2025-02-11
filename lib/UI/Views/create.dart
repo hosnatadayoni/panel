@@ -40,7 +40,7 @@ class CreatePage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Obx((){
+              Obx(() {
                 return  Positioned(
                     // right:MainController.isClickedItem.value == true ? 300 :50,
                     right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
@@ -130,58 +130,58 @@ class CreatePage extends StatelessWidget {
                                                 print('newData.data>>>${newData.data}');
                                                 for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
                                                   isValidator = ValidatorController.checkInputValidation(j,newData.data);
-                                                  print('isValidator}${MainController.tableInfo['columns'][j]['name']}>>>${isValidator}${j}');
-                                                  isValidatorList.add(isValidator);
-                                                  // if(isValidator){
-                                                  //   await box.add(newData);
-                                                  //   print('box.length>>>>${box.length}');
-                                                  //   dataController.allData.value.add(newData);
-                                                  //   print('newData.data${newData.data}');
-                                                  //   await MainController.loadData();
-                                                  //   MainController.renderPagination();
-                                                  //   // }
-                                                  //   Get.to(() => TablePage());
+                                                  // print('isValidator}${MainController.tableInfo['columns'][j]['name']}>>>${isValidator}${j}');
+                                                  // isValidatorList.add(isValidator);
+                                                  // // if(isValidator){
+                                                  // //   await box.add(newData);
+                                                  // //   print('box.length>>>>${box.length}');
+                                                  // //   dataController.allData.value.add(newData);
+                                                  // //   print('newData.data${newData.data}');
+                                                  // //   await MainController.loadData();
+                                                  // //   MainController.renderPagination();
+                                                  // //   // }
+                                                  // //   Get.to(() => TablePage());
+                                                  // // }
+                                                  // // else{
+                                                  // //   showSnackbar(snackTypes.error,'موارد را درست وارد کنید.');
+                                                  // // }
+                                                  // var column = MainController.tableInfo['columns'][j];
+                                                  // if(column['validators'] != null){
+                                                  //   var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+                                                  //   var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+                                                  //   var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+                                                  //   if(inputRequired != null){
+                                                  //     if(inputRequired['type'] == 'required'){
+                                                  //       print('dataJson[column[name]]>>>>${dataJson[column['name']]}');
+                                                  //       if(dataJson[column['name']] == null || dataJson[column['name']] == ''){
+                                                  //         isRequiredList.add('${column['name']}');
+                                                  //       }
+                                                  //     }
+                                                  //   }
+                                                  //     if(maxValidator != null && minValidator != null){
+                                                  //       if(column['type'] == 'number'){
+                                                  //         var number;
+                                                  //         if(dataJson[column['name']] != null){
+                                                  //           number = num.tryParse(dataJson[column['name']]);
+                                                  //         }
+                                                  //         if(number != null){
+                                                  //           if(number < minValidator['value'] || number > maxValidator['value']){
+                                                  //             isRangeList.add('${column['name']}');
+                                                  //
+                                                  //           }
+                                                  //         }
+                                                  //     }
+                                                  //       else if(column['type'] == 'file'){
+                                                  //       }
+                                                  //
+                                                  //     }
+                                                  //
                                                   // }
-                                                  // else{
-                                                  //   showSnackbar(snackTypes.error,'موارد را درست وارد کنید.');
-                                                  // }
-                                                  var column = MainController.tableInfo['columns'][j];
-                                                  if(column['validators'] != null){
-                                                    var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-                                                    var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-                                                    var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-                                                    if(inputRequired != null){
-                                                      if(inputRequired['type'] == 'required'){
-                                                        print('dataJson[column[name]]>>>>${dataJson[column['name']]}');
-                                                        if(dataJson[column['name']] == null || dataJson[column['name']] == ''){
-                                                          isRequiredList.add('${column['name']}');
-                                                        }
-                                                      }
-                                                    }
-                                                      if(maxValidator != null && minValidator != null){
-                                                        if(column['type'] == 'number'){
-                                                          var number;
-                                                          if(dataJson[column['name']] != null){
-                                                            number = num.tryParse(dataJson[column['name']]);
-                                                          }
-                                                          if(number != null){
-                                                            if(number < minValidator['value'] || number > maxValidator['value']){
-                                                              isRangeList.add('${column['name']}');
-
-                                                            }
-                                                          }
-                                                      }
-                                                        else if(column['type'] == 'file'){
-                                                        }
-
-                                                      }
-
-                                                  }
                                                 }
-                                                print('isValidatorList>>>${isValidatorList}');
+                                                // print('isValidatorList>>>${isValidatorList}');
                                                 bool isExsistsValidation = isValidatorList.contains(false);
-                                                print('isRangeList>>>${isRangeList}');
-                                                print('isRequiredList>>>${isRequiredList}');
+                                                // print('isRangeList>>>${isRangeList}');
+                                                // print('isRequiredList>>>${isRequiredList}');
                                                 if(isExsistsValidation){
                                                   String requiredMessage = isRequiredList.isNotEmpty
                                                       ? '${AppController.of(context)!.value('Enter the fields')} ${isRequiredList.join(', ')} ${AppController.of(context)!.value('It is mandatory')} '

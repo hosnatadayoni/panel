@@ -210,7 +210,7 @@
         "countShowRow":10,
         "columns":[]
     },
-  {
+    {
     "title": "status",
     "tooltip":"",
     "main-menu": true,
