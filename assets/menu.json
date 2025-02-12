@@ -184,7 +184,10 @@
         "columns":[
             {
                 "name": "x",
-                "type": "string"
+                "type": "string",
+                "validators": [
+                  {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
             },
             {
                 "name": "y",

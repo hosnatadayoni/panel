@@ -23,6 +23,7 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 
 import '../../UI/Componenets/Items/Form/form-file.dart';
+import 'dataController.dart';
 
 class ViewController extends GetxController {
 
@@ -158,7 +159,7 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Column(children: children);
+    return  Column(children: children);
   }
 
   static Widget generateEditFormView(Map dataModel) {
@@ -176,8 +177,6 @@ class ViewController extends GetxController {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
         var name = column['name'];
-        // var defaultValue = column['default_value'];
-        // GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         var maxValidator;
         var minValidator;
 
@@ -189,20 +188,6 @@ class ViewController extends GetxController {
           print('dataModel>>>${dataModel}');
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(name , _fbKey , column , dataModel , type , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
-          // textField = new FormTextField(
-          //   name: '${name}',
-          //   hint: '${name}',
-          //   fbKey: _fbKey,
-          //   lable: '${name}',
-          //   column:column ,
-          //   initValue:
-          //   '${dataModel.data['${name}'] != null ? dataModel.data['${name}'] : ''}',
-          //   onChange: (text) {
-          //     dataModel.data['${name}'] = text;
-          //   },
-          //   isMobile: type == 'mobile' ? true : false,
-          //   isNumber: type == 'number' ? true : false,
-          // );
           children.add(SizedBox(
             height: 20,
           ));
@@ -211,43 +196,6 @@ class ViewController extends GetxController {
         }
         else if (type == 'select') {
           selectBox = generateFormSelectBox(name , column , dataModel , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}' , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
-          // var items = column['items'];
-          // selectBox = SelectBox(
-          //     name: 'option1',
-          //     column: column,
-          //     items: [
-          //       for (var item in items)
-          //         DropdownMenuItem(
-          //             child: Txt(
-          //               '${item['title']}',
-          //               color: MainController.isLightMode.value == true
-          //                   ? whiteColor
-          //                   : primaryDark,
-          //             ),
-          //             value: item['title']),
-          //     ],
-          //     onChanged: (value) {
-          //       print('selected item ${value}');
-          //       for(var item in items){
-          //         if(item['title'] == value){
-          //           if(item['value'] == '-1'){
-          //             value = null;
-          //           }
-          //         }
-          //       }
-          //       if(value != null){
-          //         MainController.selectedItemList.value = value!.toString();
-          //       }
-          //       else{
-          //         MainController.selectedItemList.value = '';
-          //       }
-          //       dataModel['${name}'] =
-          //           MainController.selectedItemList.value;
-          //       print('MainController.selectedItemList.value>>>${MainController.selectedItemList.value}');
-          //     },
-          //     hintText:
-          //     '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}',
-          //     selectedValue: MainController.selectedItemList.value.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -255,11 +203,6 @@ class ViewController extends GetxController {
         }
         else if(type == 'checkbox'){
           checkBox = generateFormCheckBox(name , column , dataModel['${name}'] , dataModel);
-          // print('type checkBox');
-          // print('dataModel.data[name]3>>>${dataModel['${name}']}');
-          // checkBox = new CheckBox(checkBoxName: '${name}',checkBoxTitle: '${name}' ,defaultValue: dataModel['${name}'],onChange: (text) {
-          //   dataModel['${name}'] = text;
-          // },);
           children.add(SizedBox(
             height: 20,
           ));
@@ -267,26 +210,6 @@ class ViewController extends GetxController {
         }
         else if(type == 'radiobutton'){
           radioButtonBox = generateFormRadioButton(name , column , dataModel , dataModel[name]);
-          // var radioButtonItems = column['items'];
-          // var selectedItem = radioButtonItems.firstWhere(
-          //         (item) => item['title'] == dataModel[name],
-          //     orElse: () => radioButtonItems.firstWhere(
-          //           (item) => item['is_selected'] == true,
-          //       orElse: () => radioButtonItems.first,));
-          // radioButtonBox = new RadioButton(name: '',radioButtonItems: [
-          //   for (var radioButtonItem in radioButtonItems)
-          //     FormBuilderChipOption(
-          //       value: '${radioButtonItem['title']}',
-          //       child: Txt('${radioButtonItem['title']}' , color: MainController.isLightMode.value ? whiteColor : primaryDark,),
-          //     ),
-          // ],
-          //   onChanged: (text){
-          //     selectedRadioButton.value= text!;
-          //     ViewController. selectedRadioButton.value = text;
-          //     dataModel[name] = ViewController. selectedRadioButton.value;
-          //   },
-          //   initalValue:  dataModel[name],
-          // );
           children.add(SizedBox(
             height: 20,
           ));
@@ -306,212 +229,27 @@ class ViewController extends GetxController {
             day = int.parse('${dateParts[2]}');
           }
           dateBox = generateFormDateBox(name ,  column , dataModel , Jalali(year,month,day));
-          // List<String>? dateParts;
-          // int year=Jalali.now().year;
-          // int month=Jalali.now().month;
-          // int day=Jalali.now().day;
-          // if(dataModel['${name}'] != null){
-          //   dateParts = dataModel['${name}'].split('/');
-          //   year = int.parse('${dateParts![0]}');
-          //   month = int.parse('${dateParts[1]}');
-          //   day = int.parse('${dateParts[2]}');
-          // }
-          // dateBox = new DateBox(
-          //     selectedDate:Jalali(year,month,day) ,
-          //     onDateChanged: (date){
-          //       dataModel[name] =  date;
-          //       // Jalali? picked = await showPersianDatePicker(
-          //       //   context: Get.context!,
-          //       //   initialDate: Jalali.now(),
-          //       //   firstDate: Jalali(1385 , 8),
-          //       //   lastDate: Jalali(1450 , 9),
-          //       // );
-          //       // if(picked != null){
-          //       //   print('picked>>>${picked}');
-          //       //   MainController.selectedDate!.value= picked;
-          //       //   print('MainController.selectedDate!.value>>>${MainController.selectedDate!.value}');
-          //       //   String date = '${MainController.selectedDate!.value.year.obs}${'/'}${MainController.selectedDate!.value.month.obs}${'/'}${MainController.selectedDate!.value.day.obs}';
-          //       //   dataJson[name] =  date;
-          //       // }
-          //     });
+
           children.add(SizedBox(
             height: 20,
           ));
           children.add(dateBox);
         }
-        // else if(type == 'date'){
-        //   List<String> dateParts = dataModel.data['${name}'].split('/');
-        //   RxInt year = int.parse('${dateParts[0]}').obs;
-        //   RxInt month = int.parse('${dateParts[1]}').obs;
-        //   RxInt day = int.parse('${dateParts[2]}').obs;
-        //   List<String> dateUpdate = [];
-        //   String? date;
-        //
-        //   dateBox = Obx((){
-        //     return new DateBox(onTap: ()async{
-        //       print('MainController.selectedDate!.value>>>${MainController.selectedDate!.value}');
-        //       print('dataModel.data[name]5>>>${dataModel.data['${name}']}');
-        //       Jalali? picked = await showPersianDatePicker(
-        //         context: Get.context!,
-        //         initialDate:  Jalali(year.value , month.value , day.value),
-        //         firstDate: Jalali(1385 , 8),
-        //         lastDate: Jalali(1450 , 9),
-        //       );
-        //       if(picked != null){
-        //         MainController.selectedDate!.value= picked;
-        //         date = '${MainController.selectedDate!.value.year}${'/'}${MainController.selectedDate!.value.month}${'/'}${MainController.selectedDate!.value.day}';
-        //         dateUpdate = date!.split('/');
-        //         dataModel.data['${name}'] =  date;
-        //       }
-        //
-        //     },selectedDate: '${MainController.selectedDate!.value == Jalali.now() ?  dataModel.data['${name}'] : date}');
-        //   });
-        //   children.add(SizedBox(
-        //     height: 20,
-        //   ));
-        //   children.add(dateBox);
-        // }
-        // else if(type == 'multiSelect'){
-        //   var items = column['items'];
-        //
-        //   RxList<String> selectedItems = <String>[].obs;
-        //   List<dynamic>? titles;
-        //   if(dataModel.data['${name}'] != null){
-        //     titles= dataModel.data['${name}'].split(',').map((title) => title.trim()).toList();
-        //     for(String title in titles!){
-        //       selectedItems.add(title);
-        //     }
-        //     // MainController.hintText.value = '${dataModel.data['${name}']}';
-        //   }
-        //   else{
-        //     // MainController.hintText.value = 'Select Options';
-        //   }
-        //   multiSelectBox = MultiSelectDropdown(
-        //     items: [
-        //       for (var item in items)
-        //         DropdownMenuItem(
-        //           value: item['title'],
-        //           child: Row(
-        //             children: [
-        //               SizedBox(
-        //                   width: 50,
-        //                   height: 50,
-        //                   child: Obx((){
-        //                     return Checkbox(
-        //                       activeColor: colorBtn,
-        //                       value: selectedItems.value.contains(item['title']),
-        //                       // defaultValue:MainController.isSelectedItem.value ,
-        //                       onChanged: (bool? text){
-        //                         if(text == true){
-        //                           if(!selectedItems.value.contains(item['title'])){
-        //                             selectedItems.value.add(item['title']);
-        //                           }
-        //                         }
-        //                         else{
-        //                           selectedItems.value.remove(item['title']);
-        //                         }
-        //                         if(selectedItems.value.isEmpty){
-        //                           MainController.hintText.value = "Select Options";
-        //                         }
-        //                         else{
-        //                           MainController.hintText.value = '${selectedItems.value}';
-        //                         }
-        //                         dataModel.data['${name}'] = selectedItems.value.join(', ');
-        //                       },
-        //                     );
-        //                   })
-        //               ),
-        //               SizedBox(width: 5),
-        //               Txt(
-        //                 '${item['title']}',
-        //                 color: MainController.isLightMode.value ? whiteColor : primaryDark,
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //     ],
-        //   );
-        //   children.add(SizedBox(
-        //     height: 20,
-        //   ));
-        //   children.add(multiSelectBox);
-        // }
+
         else if(type == 'multiSelect'){
           var items = column['items'];
 
           multiSelectBox = genarateFormMuiltiSelectBox(name , column ,  dataModel, '${dataModel[name] != null ? dataModel[name]:'${AppController.of(Get.context!)!.value('has been selected')}'}');
-          // multiSelectBox = MultiSelectDropdown(
-          //   selectedItemsMap: selectedItemsMap,
-          //   items: [
-          //     for (var item in items)
-          //     // DropdownMenuItem(
-          //     //   value: item['title'],
-          //     //   child: Row(
-          //     //     children: [
-          //     //       SizedBox(
-          //     //           width: 50,
-          //     //           height: 50,
-          //     //           child: Obx((){
-          //     //             return Checkbox(
-          //     //               activeColor: colorBtn,
-          //     //               value: selectedItems.value.contains(item['title']),
-          //     //               // defaultValue:MainController.isSelectedItem.value ,
-          //     //               onChanged: (bool? text){
-          //     //                 if(text == true){
-          //     //                   if(!selectedItems.value.contains(item['title'])){
-          //     //                     selectedItems.value.add(item['title']);
-          //     //                   }
-          //     //                 }
-          //     //                 else{
-          //     //                   selectedItems.value.remove(item['title']);
-          //     //                 }
-          //     //                 if(selectedItems.value.isEmpty){
-          //     //                   MainController.hintText.value = "Select Options";
-          //     //                 }
-          //     //                 else{
-          //     //                   MainController.hintText.value = '${selectedItems.value.join(', ')}';
-          //     //                 }
-          //     //                 dataJson[name] = selectedItems.value.join(', ');
-          //     //               },
-          //     //             );
-          //     //           })
-          //     //       ),
-          //     //       SizedBox(width: 5),
-          //     //       Txt(
-          //     //         '${item['title']}',
-          //     //         color: MainController.isLightMode.value ? whiteColor : primaryDark,
-          //     //       ),
-          //     //     ],
-          //     //   ),
-          //     // ),
-          //       item['title']
-          //   ],
-          //   hintText: '${dataModel[name] != null ? dataModel[name]:'Select Options'}',
-          //   selectName: name,
-          //   onSelectChanged: (selectedItems){
-          //     dataModel[name] = selectedItems.join(', ');
-          //   },
-          // );
+
           children.add(SizedBox(
             height: 20,
           ));
           children.add(multiSelectBox);
         }
         else if(type == 'color'){
-          // if(dataModel[name] != null){
-          //   ViewController.selectedColor = Color(int.parse('${dataModel[name]}'));
-          // }
+
           colorBox = generateFormColorBox(name ,column,  dataModel , dataModel[name] != null ? Color(int.parse('${dataModel[name]}')):Colors.blue);
-          // colorBox = new Container(
-          //   child: ColorPickerBox(
-          //     selectedColor: dataModel[name] != null ? Color(int.parse('${dataModel[name]}')):Colors.blue,
-          //     onChanged: (color){
-          //       ViewController.selectedColor = color;
-          //       String hexColor = '0x${ViewController.selectedColor.value.toRadixString(16).padLeft(8, '0')}';
-          //       dataModel[name] = hexColor;
-          //     },
-          //   ),
-          // );
+
           children.add(SizedBox(
             height: 20,
           ));
@@ -627,20 +365,6 @@ class ViewController extends GetxController {
       onChange: (text) {
         dataJson[ColumnName] = text;
 
-        // if(type == 'number'){
-        //
-        //   if(text < minValidator['value'] || text > maxValidator['value']){
-        //
-        //   }
-        //   else{
-        //     dataJson[name] = text;
-        //   }
-        //
-        //
-        // }
-        // else{
-        //   dataJson[name] = text;
-        // }
       },
       isMobile: type == 'mobile' ? true : false,
       isNumber: type == 'number' ? true : false,

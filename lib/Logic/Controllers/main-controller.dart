@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
+import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -23,9 +24,8 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:excel/excel.dart' as exl;
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
 // import 'dart:html' as html;
 
 class MainController extends GetxController {
@@ -255,9 +255,9 @@ class MainController extends GetxController {
         var excelJson = generateJsonExcel(data, findIndexRecord);
 
         if (findIndexRecord != -1) {
-          updateRecord(excelJson, findIndexRecord, columnPrime);
+          RecordController.updateRecordByEcel(excelJson, findIndexRecord, columnPrime);
         } else {
-          createRecord(excelJson);
+          RecordController.storeRecordByEcel(excelJson);
         }
       }
       //read all record of excel
@@ -315,28 +315,6 @@ class MainController extends GetxController {
     }
   }
 
-  static updateRecord(var excelJson, var recordIndex, var primeColumn) async {
-    DataModel existingData = MainController.tableData.value[recordIndex];
-    existingData.data = excelJson;
-    await box.putAt(recordIndex, existingData);
-    dataController.allData.value[recordIndex] = existingData;
-  }
-
-  static createRecord(var excelJson) async {
-    var id = Uuid().v4();
-    print('create record:${excelJson}');
-    excelJson.remove('id');
-    print('create record:${excelJson}');
-    DataModel newData = DataModel(
-      id: '${id}',
-      data: excelJson,
-    );
-    await box.add(newData);
-    print('newData>>>${newData}');
-    dataController.allData.value.add(newData);
-    await MainController.loadData();
-    MainController.renderPagination();
-  }
 
   static Map generateJsonExcel(var dataRowExcel, var recordIndex) {
     Map<String, dynamic> dataExlJson = {};
@@ -444,7 +422,7 @@ class MainController extends GetxController {
     return double.tryParse(str) != null;
   }
 
-  static void renderPagination() {
+  static  renderPagination() {
     // if (MainController.table['table-name'] == box.name) {
       print('filterList.value.length>>>${tableData.value.length}');
       MainController.totalPages.value =
@@ -510,7 +488,7 @@ class MainController extends GetxController {
     SubMenuList = json.decode(jsonFileString);
   }
 
-  static Future<void> loadData() async {
+  static  loadData() async {
     if (MainController.selectedSubItem.value != -1) {
       tableInfo = SubMenuList[MainController.selectedSubItem.value];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
@@ -519,10 +497,7 @@ class MainController extends GetxController {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-
       }
-
-
     }
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       if (MainController.tableInfo['columns'][j]['is-show-store'] == null) {
@@ -538,8 +513,6 @@ class MainController extends GetxController {
         MainController.tableInfo['columns'][j]['is-show-excel'] = true;
       }
     }
-
-
   }
 
 }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:expandable_datatable/expandable_datatable.dart';
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -108,13 +109,7 @@ class _TableBoxState extends State<TableBox> {
                                                         SizedBox(width: 5,),
                                                         InkWell(
                                                           onTap: ()async{
-                                                            setState(() {
-                                                              box.deleteAt(i);
-                                                              MainController.tableData.value.removeAt(i);
-                                                            });
-                                                            await MainController.loadData();
-                                                            MainController.renderPagination();
-                                                            Navigator.pop(context);
+                                                            RecordController.deleteRecord(i);
                                                           },
                                                           child: Container(
                                                             padding: EdgeInsets.all(15),
