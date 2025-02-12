@@ -138,5 +138,26 @@ class AppController extends GetxController {
   }
   get currentLanguage => locale.languageCode;
 
+  static getAlertSuccess(){
+   return AppController.of(Get.context!)!.value('The operation accomplished.');
+  }
+  static getAlertError(){
+   return AppController.of(Get.context!)!.value('The operation encountered an error!');
+  }
+  static responceHelper(var data,bool status){
+    Map<String,dynamic> result=<String,dynamic>{};
+    if(status==false){
+      result['status']=false;
+      result['message']=AppController.getAlertError();
+      result['data']=null;
+    }
+    else{
+      result['status']=true;
+      result['message']=AppController.getAlertSuccess();
+      result['data']=data;
+    }
+
+    return result;
+  }
 }
 

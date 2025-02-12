@@ -191,7 +191,11 @@
             },
             {
                 "name": "y",
-                "type": "int"
+                "type": "number",
+              "validators": [
+                {"type": "min","value": 400 , "message": "عدد وارد شده کمتر از 400 است"},
+                {"type": "max","value": 1000 , "message": "عدد وارد شده بیشتر از 1000 است"}
+              ]
             }
         ]
     },

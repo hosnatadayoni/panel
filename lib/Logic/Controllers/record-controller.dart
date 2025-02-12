@@ -1,5 +1,6 @@
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/UI/Componenets/Popups/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -101,29 +102,44 @@ class RecordController extends GetxController {
       id: '${Id}',
       data: dataJson,
     );
-    beforeStoreValidation(newData);
-    if(validate(dataJson, newData)==false){
-      DataModel customData= beforeStore(newData);
-
-      await box.add(customData);
-      dataController.allData.value.add(customData);
-      await MainController.loadData();
-      MainController.renderPagination();
-      afterStore(dataJson,customData);
-      Get.to(() => TablePage());
+    var beforValidate=beforeStoreValidation(newData);
+    if(beforValidate['status']==false){
+      showSnackbar(snackTypes.error, beforValidate['message']);
     }
+    else{
+      if(validate(dataJson, newData)==false){
+        await beforeStore(newData);
+        if(beforeStore (newData)['status']==false){
+          showSnackbar(snackTypes.error, beforeStore (newData)['message']);
+        }
+        else{
+          var customData=beforeStore (newData)['data'];
+
+          await box.add(customData);
+          dataController.allData.value.add(customData);
+          await MainController.loadData();
+          MainController.renderPagination();
+          var afterData=afterStore(dataJson,customData);
+          if(afterData['status']==false){
+            showSnackbar(snackTypes.error, afterData['message']);
+          }
+          Get.to(() => TablePage());
+        }
+
+      }
+    }
+
   }
   static beforeStore(DataModel newData){
-    // Map<String,dynamic> result=<String,dynamic>{};
-    // result['status']=true;
-    // result['data']=newData;
-    return newData;
+    newData.data['y']='123';
+    print('responceHelper>>>${AppController.responceHelper(newData,true)}');
+    return AppController.responceHelper(newData,true);
   }
   static beforeStoreValidation(DataModel newData){
-    return newData;
+    return AppController.responceHelper(newData,true);
   }
   static afterStore(dataJson,DataModel customData){
-    return customData;
+    return AppController.responceHelper(customData,true);
   }
 
   static updateRecord( DataModel data,int index) async {
@@ -131,44 +147,67 @@ class RecordController extends GetxController {
       id: data.id,
       data: data.data,
     );
-    beforeUpdateValidation(record);
-    print('validate>>>${validate(record.data, record)}');
-    if(validate(record.data, record)==false){
-      DataModel customUpdate=beforeUpdate(record);
-      dataController.allData.value[index] =  customUpdate;
-      await box.putAt(index,customUpdate);
-      MainController.isClickedItem.value = true;
-      afterStore(data,customUpdate);
-      Get.to(() => TablePage());
+    var beforeValidate=beforeUpdateValidation(record);
+    if(beforeValidate['status']==false){
+      showSnackbar(snackTypes.error, beforeValidate['message']);
     }
+    else{
+      print('validate>>>${validate(record.data, record)}');
+      if(validate(record.data, record)==false){
+        await beforeUpdate(record);
+        if(beforeUpdate(record)['status']==false){
+          showSnackbar(snackTypes.error, beforeUpdate(record)['messsage']);
+        }else{
+          var customUpdate=beforeUpdate(record)['data'];
+          dataController.allData.value[index] =  customUpdate;
+          await box.putAt(index,customUpdate);
+          MainController.isClickedItem.value = true;
+          var after=afterStore(data,customUpdate);
+          if(after['status']==false){
+            showSnackbar(snackTypes.error,after['message'] );
+          }
+          Get.to(() => TablePage());
+        }
+      }
+
+    }
+
 
   }
   static beforeUpdate(DataModel newData){
-    // Map<String,dynamic> result=<String,dynamic>{};
-    // result['status']=true;
-    // result['data']=newData;
-    return newData;
+    return AppController.responceHelper(newData,true);
   }
   static beforeUpdateValidation(DataModel newData){
-    return newData;
+    return AppController.responceHelper(newData,true);
   }
   static afterUpdate(dataJson,DataModel customData){
-    return customData;
+    return AppController.responceHelper(customData,true);
+
   }
 
   static deleteRecord(int index) async {
     var data=MainController.tableData.value[index];
-    beforeDelete(index);
-    box.deleteAt(index);
-    MainController.tableData.value.removeAt(index);
-    await MainController.loadData();
-    MainController.renderPagination();
-    afterDelete(index, data);
-    Navigator.pop(Get.context!);
+    var before= beforeDelete(index);
+    if(before['status']==false){
+      showSnackbar(snackTypes.error,before['message'] );
+    }
+    else{
+      box.deleteAt(index);
+      MainController.tableData.value.removeAt(index);
+      await MainController.loadData();
+      MainController.renderPagination();
+      var after=afterDelete(index, data);
+      if(after['status']==false){
+        showSnackbar(snackTypes.error,after['message'] );
+      }
+      Navigator.pop(Get.context!);
+    }
+
   }
   static beforeDelete(int index){
-    return null;
+    return AppController.responceHelper(null,true);
+
   }  static afterDelete(int index,DataModel data){
-    return data;
+    return AppController.responceHelper(data,true);
   }
 }
