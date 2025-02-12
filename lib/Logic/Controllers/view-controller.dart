@@ -12,7 +12,6 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/UI/Componenets/Popups/loading.dart';
 import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,6 @@ class ViewController extends GetxController {
 
 
   static Future<Widget> generateStoreFormView(Map dataJson) async {
-    AppController.startLoading('get-store-form');
 
     var children = <Widget>[];
     var textField;
@@ -69,31 +67,28 @@ class ViewController extends GetxController {
           children.add(textField);
         }
         if (type == 'select') {
-          var items;
+          List<dynamic> items =[];
           var selectedItem;
-          var initailValue;
+          var initValue;
           for(var subMenu in MainController.SubMenuList){
             if(column['sourceItems'] != 'custom'){
               if(column['sourceTable'] == subMenu['table-name']){
-                items = [];
-                print('d44>>>>${subMenu['columns']}');
-                for(var i = 0;i<subMenu['columns'].length;i++){
-                  for(var j=0;j<MainController.tableData.value.length;j++){
-                    print('k89>>>${MainController.tableData.value[j].data['${subMenu['columns'][i]}']}');
-                    print('ssss78>>>${MainController.tableData.value[j].data['${subMenu['columns'][i]}']}');
-
-                    // items =  subMenu['columns'][i];
-                    items.add({'title': subMenu['columns'][i]['name'] , 'value': i});
-                    print('g4>>>${subMenu['columns'][i]}');
+                print('column[sourceTable]>>>${column['sourceTable']}');
+                print('subMenu[columns]>>>${subMenu['columns']}');
+                List<dynamic> dropDownListItems = await getInfoTable(column['sourceTable']);
+                List<dynamic> valuesList = [];
+                print('dropDownListItems>>>${dropDownListItems}');
+                for (var item in dropDownListItems) {
+                  for(var itemVal in item.values){
+                    valuesList.add(itemVal);
                   }
-
                 }
-                print('items 4>>>${items}');
-                print('items.first>>>${items.first}');
-                initailValue = items.first['title'];
+                for(var i=0;i<valuesList.length;i++){
+                  items.add({'title': valuesList[i], 'value': i.toString()});
+                }
+                initValue = items.length!=0 ?items.first.entries.first.value:"";
+
               }
-
-
             }
             else{
               items = column['items'];
@@ -102,14 +97,14 @@ class ViewController extends GetxController {
               selectedItem = items.firstWhere(
                     (item) => item['is_selected'] == true,
                 orElse: () => items.first,);
-              initailValue = selectedItem['title'];
+              initValue = selectedItem['title'];
             }
           }
-          selectBox = await generateFormSelectBox(name, column , dataJson , '', '${initailValue}');
+          selectBox = await generateFormSelectBox(name, column , dataJson , '', '${initValue}');
           children.add(SizedBox(
             height: 20,
           ));
-          children.add(await selectBox);
+          children.add(selectBox);
         }
         else if(type == 'checkbox'){
           checkBox = generateFormCheckBox(name ,column, defaultValue , dataJson);
@@ -161,11 +156,10 @@ class ViewController extends GetxController {
         }
       }
     }
-    AppController.finishLoading('get-store-form');
     return Column(children: children);
   }
 
-  static Widget generateEditFormView(Map dataModel) {
+  static Future<Widget> generateEditFormView(Map dataModel) async {
     var children = <Widget>[];
     var textField;
     var selectBox;
@@ -214,7 +208,8 @@ class ViewController extends GetxController {
 
         }
         else if (type == 'select') {
-          selectBox = generateFormSelectBox(name , column , dataModel , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}' , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
+          print('dataModel3>>>${dataModel['${name}']}');
+          selectBox = await generateFormSelectBox(name , column , dataModel , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}' , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           // var items = column['items'];
           // selectBox = SelectBox(
           //     name: 'option1',
@@ -652,47 +647,56 @@ class ViewController extends GetxController {
     );
   }
 
-  static Future<Widget> generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initalValue)  async {
-    var items;
+  static Future<Widget> generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initailValue)  async {
+    print('dataJson5>>>${dataJson}');
+
+    List<dynamic> items =[];
     var selectedItem;
-    var initailValue;
+    var initValue;
 
     for(var subMenu in MainController.SubMenuList){
       if(column['sourceItems'] != 'custom'){
         if(column['sourceTable'] == subMenu['table-name']){
           print('column[sourceTable]>>>${column['sourceTable']}');
           print('subMenu[columns]>>>${subMenu['columns']}');
-          items = [];
-           for(var i in  await getInfoTable(column['sourceTable'])){
-
-           }
-          for(var i = 0;i<subMenu['columns'].length;i++){
-            ColumnName = subMenu['columns'][i]['name'];
-            print('ColumnName 6>>>${ColumnName}');
-            // items =  subMenu['columns'][i];
-            print('xxx5>>>${dataJson[ColumnName]}');
-            items.add({'title': subMenu['columns'][i]['name'], 'value': i});
+          List<dynamic> dropDownListItems = await getInfoTable(column['sourceTable']);
+          List<dynamic> valuesList = [];
+          print('dropDownListItems>>>${dropDownListItems}');
+          for (var item in dropDownListItems) {
+            for(var itemVal in item.values){
+              valuesList.add(itemVal);
+            }
           }
-          initailValue = items.first['title'];
+          for(var i=0;i<valuesList.length;i++){
+            print('wert>>>${valuesList[i].runtimeType}');
+            items.add({'title': valuesList[i], 'value': i.toString()});
+          }
+          if(dataJson == {}){
+            initValue = items.length!=0 ?items.first.entries.first.value:"";
+          }
+          else{
+            initValue = initailValue;
+          }
+
+
         }
       }
       else{
         items = column['items'];
-        print('c1>>>${items}');
-        print('c2>>>${column['items']}');
         selectedItem = items.firstWhere(
               (item) => item['is_selected'] == true,
           orElse: () => items.first,);
-        initailValue = selectedItem['title'];
+        // initailValue = selectedItem['title'];
+        if(dataJson == {}){
+          initValue = selectedItem['title'];
+        }
+        else{
+          initValue = initailValue;
+        }
       }
     }
-    // var items = column['items'];
-    // var selectedItem = items.firstWhere(
-    //       (item) => item['is_selected'] == true,
-    //   orElse: () => items.first,);
-    print('selectedItemSelected>>>${selectedItem}');
-
-    return new SelectBox(
+    print('initailValue11>>>>${initailValue}');
+    return  items.length != 0 ?new SelectBox(
         name: '${ColumnName}',
         column: column,
         items: [
@@ -706,7 +710,7 @@ class ViewController extends GetxController {
                 ),
                 value: item['title']),
         ],
-        initalValue: initalValue != '' ? initalValue:initailValue,
+        initalValue: initValue != '' ? initValue:'',
         onChanged: (value) {
           print('selected item ${value}');
           for(var item in items){
@@ -725,7 +729,7 @@ class ViewController extends GetxController {
           dataJson[ColumnName] = MainController.selectedItemList.value;
         },
         hintText: hintText,
-        selectedValue: MainController.selectedItemList.value.obs);
+        selectedValue: MainController.selectedItemList):Container();
   }
 
   static Widget generateFormCheckBox(String ColumnName ,var column, var defaultValue , Map dataJson){
@@ -904,25 +908,17 @@ class ViewController extends GetxController {
   static Future<List<dynamic>>  getInfoTable(String tableName) async{
     List<dynamic> rowList=[];
     List<dynamic> tableData = [];
-    box = await Hive.openBox<DataModel>('${tableName}');
-    tableData = box.values.toList();
-    // for(var subMenu in MainController.SubMenuList){
-    //   if(subMenu['table-name'] == tableName){
-    //
-    //    // for(var sub in subMenu['columns']){
-    //    //   print('gggggggggg>>>${sub['name']}');
-    //    // }
-    //   }
-    // }
+    Box box2;
+    box2 = await Hive.openBox<DataModel>('${tableName}');
+    print('tableName>>>${tableName}');
+    tableData = box2.values.toList();
+    for(var t in tableData){
+      print('t.data>>>${t.data}');
+    }
     for(var row in tableData){
-      print('tableData>>>${row.data}');
       rowList.add(row.data);
     }
     print('rowList>>>${rowList}');
-    for(var i in rowList){
-      print('${i['item 1']}');
-    }
-
     return rowList;
 
   }

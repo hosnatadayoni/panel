@@ -27,6 +27,13 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  late Future<Widget> _future;
+  Map<String , dynamic> dataJson = {};
+  @override
+  void initState() {
+    super.initState();
+    _future = ViewController.generateEditFormView(widget.data!.data); // ایجاد Future در initState
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -52,7 +59,19 @@ class _EditPageState extends State<EditPage> {
                   child: ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      ViewController.generateEditFormView(widget.data!.data),
+                      FutureBuilder<Widget>(
+                        future: _future,
+                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('خطا: ${snapshot.error}');
+                          } else {
+                            return snapshot.data ?? Container();
+                          }
+                        },
+                      ),
+                      // ViewController.generateEditFormView(widget.data!.data),
                       SizedBox(height: 20,),
                       Container(
                         padding: EdgeInsets.all(10),
@@ -89,51 +108,63 @@ class _EditPageState extends State<EditPage> {
                                     id: widget.data!.id,
                                     data: widget.data!.data,
                                   );
+                                  // bool isValidator;
+                                  // List<bool> isValidatorList=[];
+                                  // List<String> isRequiredList=[];
+                                  // List<String> isRangeList=[];
+                                  // // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+                                  // //   isValidator = ValidatorController.checkInputValidation(j,data.data);
+                                  // //   isValidatorList.add(isValidator);
+                                  // //   var column = MainController.tableInfo['columns'][j];
+                                  // //   if(column['validators'] != null){
+                                  // //     var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+                                  // //     var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+                                  // //     var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+                                  // //     if(inputRequired != null){
+                                  // //       if(inputRequired['type'] == 'required'){
+                                  // //        if(data.data[column['name']] == null || data.data[column['name']] == ''){
+                                  // //           isRequiredList.add('${column['name']}');
+                                  // //       }
+                                  // //       }
+                                  // //     }
+                                  // //     if(maxValidator != null && minValidator != null){
+                                  // //      if(column['type'] == 'number'){
+                                  // //        var number;
+                                  // //        if(data.data[column['name']] != null){
+                                  // //          number = num.tryParse(data.data[column['name']]);
+                                  // //        }
+                                  // //        if(number != null){
+                                  // //          if(number < minValidator['value'] || number > maxValidator['value']){
+                                  // //            isRangeList.add('${column['name']}');
+                                  // //          }
+                                  // //        }
+                                  // //      }
+                                  // //     }
+                                  // //   }
+                                  // // }
+                                  // bool isExsistsValidation = isValidatorList.contains(false);
+                                  // print('isExsistsValidation>>>${isExsistsValidation}');
+                                  // if(isExsistsValidation){
+                                  //   String requiredMessage = isRequiredList.isNotEmpty
+                                  //       ? '${AppController.of(context)!.value('Enter the fields')} ${isRequiredList.join(', ')} ${AppController.of(context)!.value('It is mandatory')} '
+                                  //       : '';
+                                  //   String rangeMessage = isRangeList.isNotEmpty
+                                  //       ? '${AppController.of(context)!.value('fields')} ${isRangeList.join(', ')} ${AppController.of(context)!.value('is wrong')} '
+                                  //       : '';
+                                  //   String finalMessage = '$requiredMessage\n$rangeMessage'.trim();
+                                  //
+                                  //   // showSnackbar(snackTypes.error, finalMessage);
+                                  // }
                                   bool isValidator;
                                   List<bool> isValidatorList=[];
-                                  List<String> isRequiredList=[];
-                                  List<String> isRangeList=[];
                                   for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
                                     isValidator = ValidatorController.checkInputValidation(j,data.data);
                                     isValidatorList.add(isValidator);
-                                    var column = MainController.tableInfo['columns'][j];
-                                    if(column['validators'] != null){
-                                      var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-                                      var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-                                      var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-                                      if(inputRequired != null){
-                                        if(inputRequired['type'] == 'required'){
-                                         if(data.data[column['name']] == null || data.data[column['name']] == ''){
-                                            isRequiredList.add('${column['name']}');
-                                        }
-                                        }
-                                      }
-                                      if(maxValidator != null && minValidator != null){
-                                       if(column['type'] == 'number'){
-                                         var number;
-                                         if(data.data[column['name']] != null){
-                                           number = num.tryParse(data.data[column['name']]);
-                                         }
-                                         if(number != null){
-                                           if(number < minValidator['value'] || number > maxValidator['value']){
-                                             isRangeList.add('${column['name']}');
-                                           }
-                                         }
-                                       }
-                                      }
-                                    }
                                   }
+                                  print('isValidatorList>>>${isValidatorList}');
                                   bool isExsistsValidation = isValidatorList.contains(false);
                                   if(isExsistsValidation){
-                                    String requiredMessage = isRequiredList.isNotEmpty
-                                        ? '${AppController.of(context)!.value('Enter the fields')} ${isRequiredList.join(', ')} ${AppController.of(context)!.value('It is mandatory')} '
-                                        : '';
-                                    String rangeMessage = isRangeList.isNotEmpty
-                                        ? '${AppController.of(context)!.value('fields')} ${isRangeList.join(', ')} ${AppController.of(context)!.value('is wrong')} '
-                                        : '';
-                                    String finalMessage = '$requiredMessage\n$rangeMessage'.trim();
-
-                                    // showSnackbar(snackTypes.error, finalMessage);
+                                    isValidatorList=[];
                                   }
                                   else{
                                     dataController.allData.value[widget.index] =  data;

@@ -11,7 +11,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class SelectBox extends StatefulWidget {
   String? name;
-  List<DropdownMenuItem<String>> items;
+  List<DropdownMenuItem<String>>? items;
   String? hintText;
   Rx<String>? selectedValue;
    Function(String?)? onChanged;
@@ -20,7 +20,7 @@ class SelectBox extends StatefulWidget {
 
   SelectBox({
      this.name,
-    required this.items,
+    this.items,
      this.hintText,
      this.selectedValue,
     this.onChanged,
@@ -39,13 +39,17 @@ class _SelectBoxState extends State<SelectBox> {
 
   @override
   Widget build(BuildContext context) {
+    print('itemsxx>>>${widget.items!.first.value}');
+    print('widget.selectedValue>>>${widget.selectedValue!.value}');
     var inputRequired;
     String? errorMessage;
     if(widget.column['validators'] != null){
        inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
        errorMessage = inputRequired['message'];
     }
-    return  FormBuilder(
+    // String? initialValue = widget.initalValue;
+    // bool initialValueExists = widget.items!.any((item) => item.value == initialValue);
+    return widget.items!.isNotEmpty? FormBuilder(
       child: Obx((){
         return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,14 +68,14 @@ class _SelectBoxState extends State<SelectBox> {
                 border: OutlineInputBorder(),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
-              hint: Txt(widget.hintText!, color: MainController.isLightMode.value ? whiteColor : primaryDark),
+              hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),
               initialValue: widget.initalValue,
-              items: widget.items,
+
+              items: widget.items!,
               onChanged: (value) {
               setState(() {
                 this.isSeleted!.value = true;
                   widget.selectedValue!.value = value!.toString();
-                  // _errorText = '';
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
                   }
@@ -83,11 +87,10 @@ class _SelectBoxState extends State<SelectBox> {
               if(inputRequired['type'] == 'required')
                 ViewController.isShowMessage.value == true && this.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
-            // Txt('${_errorText != null ? _errorText:''}' , color: errorColor,),
           ],
         );
       })
-    );
+    ):Container();
   }
 }
 
