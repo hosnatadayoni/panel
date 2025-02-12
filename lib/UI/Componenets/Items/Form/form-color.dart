@@ -68,7 +68,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
       errorMessage = inputRequired['message'];
     }
     return Obx((){
-      print('${ViewController.isShowMessage.value}');
+      print('${ViewController.isClickedCreateBtn.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -96,7 +96,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isShowMessage.value== true && this.isSeletedColor!.value == false?
+              ViewController.isClickedCreateBtn.value== true && this.isSeletedColor!.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

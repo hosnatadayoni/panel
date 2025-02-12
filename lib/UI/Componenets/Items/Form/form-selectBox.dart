@@ -85,7 +85,7 @@ class _SelectBoxState extends State<SelectBox> {
             SizedBox(height: 5,),
             if(inputRequired != null)
               if(inputRequired['type'] == 'required')
-                ViewController.isShowMessage.value == true && this.isSeleted!.value == false?
+                ViewController.isClickedCreateBtn.value == true && this.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
           ],
         );

@@ -35,7 +35,7 @@ class _FormFileState extends State<FormFile> {
       widget.filesSelected['${widget.columnName}']=[];
     }
     return Obx((){
-      if(ViewController.isShowMessage.value == true){
+      if(ViewController.isClickedCreateBtn.value == true){
         if(inputRequired != null){
           if(this.isSeletedFile!.value == false){
             _errorMasege = inputRequired['message'];
@@ -125,7 +125,10 @@ class _FormFileState extends State<FormFile> {
                   else{
                     if(inputRequired != null){
                       setState(() {
-                        _errorMasege = inputRequired['message'];
+                        if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                          _errorMasege = inputRequired['message'];
+                        }
+
                       });
                     }
                   }

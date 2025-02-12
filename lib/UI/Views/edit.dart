@@ -28,11 +28,11 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   late Future<Widget> _future;
-  Map<String , dynamic> dataJson = {};
+
   @override
   void initState() {
     super.initState();
-    _future = ViewController.generateEditFormView(widget.data!.data); // ایجاد Future در initState
+    _future = ViewController.generateEditFormView(widget.data!.data);
   }
   @override
   Widget build(BuildContext context) {
@@ -87,6 +87,7 @@ class _EditPageState extends State<EditPage> {
                               },
                               child: InkWell(
                                 onTap: (){
+                                  print('widget.data!.data>>>${widget.data!.data}');
                                   MainController.isClickedItem.value = true;
                                   Get.to(() => TablePage());
                                 },
@@ -106,55 +107,9 @@ class _EditPageState extends State<EditPage> {
                               onTap: ()async{
                                   final data = DataModel(
                                     id: widget.data!.id,
-                                    data: widget.data!.data,
+                                    data: ViewController.request,
                                   );
-                                  // bool isValidator;
-                                  // List<bool> isValidatorList=[];
-                                  // List<String> isRequiredList=[];
-                                  // List<String> isRangeList=[];
-                                  // // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                  // //   isValidator = ValidatorController.checkInputValidation(j,data.data);
-                                  // //   isValidatorList.add(isValidator);
-                                  // //   var column = MainController.tableInfo['columns'][j];
-                                  // //   if(column['validators'] != null){
-                                  // //     var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-                                  // //     var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-                                  // //     var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-                                  // //     if(inputRequired != null){
-                                  // //       if(inputRequired['type'] == 'required'){
-                                  // //        if(data.data[column['name']] == null || data.data[column['name']] == ''){
-                                  // //           isRequiredList.add('${column['name']}');
-                                  // //       }
-                                  // //       }
-                                  // //     }
-                                  // //     if(maxValidator != null && minValidator != null){
-                                  // //      if(column['type'] == 'number'){
-                                  // //        var number;
-                                  // //        if(data.data[column['name']] != null){
-                                  // //          number = num.tryParse(data.data[column['name']]);
-                                  // //        }
-                                  // //        if(number != null){
-                                  // //          if(number < minValidator['value'] || number > maxValidator['value']){
-                                  // //            isRangeList.add('${column['name']}');
-                                  // //          }
-                                  // //        }
-                                  // //      }
-                                  // //     }
-                                  // //   }
-                                  // // }
-                                  // bool isExsistsValidation = isValidatorList.contains(false);
-                                  // print('isExsistsValidation>>>${isExsistsValidation}');
-                                  // if(isExsistsValidation){
-                                  //   String requiredMessage = isRequiredList.isNotEmpty
-                                  //       ? '${AppController.of(context)!.value('Enter the fields')} ${isRequiredList.join(', ')} ${AppController.of(context)!.value('It is mandatory')} '
-                                  //       : '';
-                                  //   String rangeMessage = isRangeList.isNotEmpty
-                                  //       ? '${AppController.of(context)!.value('fields')} ${isRangeList.join(', ')} ${AppController.of(context)!.value('is wrong')} '
-                                  //       : '';
-                                  //   String finalMessage = '$requiredMessage\n$rangeMessage'.trim();
-                                  //
-                                  //   // showSnackbar(snackTypes.error, finalMessage);
-                                  // }
+                                  print('xxxx>>>${data.data}');
                                   bool isValidator;
                                   List<bool> isValidatorList=[];
                                   for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
@@ -163,12 +118,16 @@ class _EditPageState extends State<EditPage> {
                                   }
                                   print('isValidatorList>>>${isValidatorList}');
                                   bool isExsistsValidation = isValidatorList.contains(false);
+                                  print('isExsistsValidation>>>${isExsistsValidation}');
                                   if(isExsistsValidation){
                                     isValidatorList=[];
                                   }
                                   else{
                                     dataController.allData.value[widget.index] =  data;
+                                    MainController.tableData.value[widget.index] = data;
                                     await box.putAt(widget.index,data);
+                                    print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+                                    print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
                                     MainController.isClickedItem.value = true;
                                     Get.to(() => TablePage());
                                   }

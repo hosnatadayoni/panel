@@ -88,7 +88,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               //dehdar remove
                               // ViewController.selectedDate!.value = Jalali.now();
                               // ViewController.selectedColor = Colors.blue;
-                              ViewController.isShowMessage.value = false;
+                              ViewController.isClickedCreateBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
 

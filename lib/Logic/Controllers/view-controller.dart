@@ -28,12 +28,13 @@ import '../../UI/Componenets/Items/Form/form-file.dart';
 class ViewController extends GetxController {
 
   static Rx<String> selectedRadioButton = ''.obs;
-  static Rx<bool> isShowMessage=false.obs;
+  static Rx<bool> isClickedCreateBtn=false.obs;
   static Map<String , List<int>> fileSizeList={};
+  static Map<String,dynamic> request ={};
 
 
-  static Future<Widget> generateStoreFormView(Map dataJson) async {
-
+  static Future<Widget> generateStoreFormView(Map<String,dynamic> dataJson) async {
+    // ViewController.request = dataJson;
     var children = <Widget>[];
     var textField;
     var selectBox;
@@ -159,7 +160,7 @@ class ViewController extends GetxController {
     return Column(children: children);
   }
 
-  static Future<Widget> generateEditFormView(Map dataModel) async {
+  static Future<Widget> generateEditFormView(Map<String,dynamic> dataModel) async {
     var children = <Widget>[];
     var textField;
     var selectBox;
@@ -614,32 +615,17 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(String ColumnName , GlobalKey<FormBuilderState> _fbKey , var column , Map dataJson , var type , String initValue){
-
+  static Widget generateFormTextField(String columnName , GlobalKey<FormBuilderState> _fbKey , var column , Map dataJson , var type , String initValue){
     return new FormTextField(
-      name: '${ColumnName}',
+      name: '${columnName}',
       fbKey: _fbKey,
-      hint: '${ColumnName}',
-      lable: '${ColumnName}',
+      hint: '${columnName}',
+      lable: '${columnName}',
       column:column ,
       initValue: initValue,
       onChange: (text) {
-        dataJson[ColumnName] = text;
-
-        // if(type == 'number'){
-        //
-        //   if(text < minValidator['value'] || text > maxValidator['value']){
-        //
-        //   }
-        //   else{
-        //     dataJson[name] = text;
-        //   }
-        //
-        //
-        // }
-        // else{
-        //   dataJson[name] = text;
-        // }
+        // dataJson[columnName] = text;
+        ViewController.request[columnName] =  text;
       },
       isMobile: type == 'mobile' ? true : false,
       isNumber: type == 'number' ? true : false,
@@ -647,8 +633,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Future<Widget> generateFormSelectBox(String ColumnName , var column , Map dataJson , String hintText , String initailValue)  async {
-    print('dataJson5>>>${dataJson}');
+  static Future<Widget> generateFormSelectBox(String columnName , var column , Map dataJson , String hintText , String initailValue)  async {
 
     List<dynamic> items =[];
     var selectedItem;
@@ -667,6 +652,7 @@ class ViewController extends GetxController {
               valuesList.add(itemVal);
             }
           }
+          print('valuesList3>>>${valuesList}');
           for(var i=0;i<valuesList.length;i++){
             print('wert>>>${valuesList[i].runtimeType}');
             items.add({'title': valuesList[i], 'value': i.toString()});
@@ -697,7 +683,7 @@ class ViewController extends GetxController {
     }
     print('initailValue11>>>>${initailValue}');
     return  items.length != 0 ?new SelectBox(
-        name: '${ColumnName}',
+        name: '${columnName}',
         column: column,
         items: [
           for (var item in items)
@@ -726,23 +712,25 @@ class ViewController extends GetxController {
           else{
             MainController.selectedItemList.value = '';
           }
-          dataJson[ColumnName] = MainController.selectedItemList.value;
+          ViewController.request[columnName] = MainController.selectedItemList.value;
+          // dataJson[columnName] = MainController.selectedItemList.value;
         },
         hintText: hintText,
         selectedValue: MainController.selectedItemList):Container();
   }
 
-  static Widget generateFormCheckBox(String ColumnName ,var column, var defaultValue , Map dataJson){
+  static Widget generateFormCheckBox(String columnName ,var column, var defaultValue , Map dataJson){
 
-    return new CheckBox(checkBoxName: '${ColumnName}',checkBoxTitle: '${ColumnName}' ,defaultValue: defaultValue,onChange: (text) {
-      dataJson[ColumnName] = text;
+    return new CheckBox(checkBoxName: '${columnName}',checkBoxTitle: '${columnName}' ,defaultValue: defaultValue,onChange: (text) {
+      ViewController.request[columnName] = text;
+      // dataJson[columnName] = text;
     },
       column: column,
     );
 
   }
 
-  static Widget generateFormRadioButton(String ColumnName , var column , Map dataJson , String initalValue){
+  static Widget generateFormRadioButton(String columnName , var column , Map dataJson , String initalValue){
     var radioButtonItems = column['items'];
 
     var selectedItem = radioButtonItems.firstWhere(
@@ -759,23 +747,25 @@ class ViewController extends GetxController {
     ],
       onChanged: (text){
         selectedRadioButton.value= text!;
-        dataJson[ColumnName] = selectedRadioButton.value;
+        ViewController.request[columnName] = text;
+        // dataJson[columnName] = selectedRadioButton.value;
       },
       initalValue: initalValue,
       column: column,
     );
   }
 
-  static Widget generateFormDateBox(String ColumnName,var column , Map dataJson , Jalali selectedDate){
+  static Widget generateFormDateBox(String columnName,var column , Map dataJson , Jalali selectedDate){
 
-    if(dataJson[ColumnName] == null){
-      dataJson[ColumnName] = '${selectedDate.year}${'/'}${selectedDate.month}${'/'}${
+    if(ViewController.request[columnName] == null){
+      ViewController.request[columnName] = '${selectedDate.year}${'/'}${selectedDate.month}${'/'}${
           selectedDate.day}';
     }
     return new DateBox(
         selectedDate: selectedDate,
         onDateChanged: (date){
-          dataJson[ColumnName] =  date;
+          // dataJson[columnName] =  date;
+          ViewController.request[columnName] = date;
           // Jalali? picked = await showPersianDatePicker(
           //   context: Get.context!,
           //   initialDate: Jalali.now(),
@@ -794,17 +784,17 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget genarateFormMuiltiSelectBox(String ColumnName , var column , Map dataJson , String hintText){
+  static Widget genarateFormMuiltiSelectBox(String columnName , var column , Map dataJson , String hintText){
     var items = column['items'];
     Map<String, List<String>> selectedItemsMap = {};
-    if(selectedItemsMap['${ColumnName}'] == null){
-      selectedItemsMap['${ColumnName}']=[];
+    if(selectedItemsMap['${columnName}'] == null){
+      selectedItemsMap['${columnName}']=[];
     }
     List<dynamic> dataList;
-    if(dataJson[ColumnName] != null){
-      dataList = dataJson[ColumnName].split(', ').map((item) => item.trim()).toList();
+    if(ViewController.request[columnName] != null){
+      dataList = ViewController.request[columnName].split(', ').map((item) => item.trim()).toList();
       for(var data in dataList){
-        selectedItemsMap['${ColumnName}']!.add(data);
+        selectedItemsMap['${columnName}']!.add(data);
       }
     }
     return MultiSelectDropdown(
@@ -854,16 +844,17 @@ class ViewController extends GetxController {
           item['title']
       ],
       hintText: hintText,
-      selectName: ColumnName,
+      selectName: columnName,
       onSelectChanged: (selectedItems){
         print('selectedItem2>>>${selectedItems}');
-        dataJson[ColumnName] = selectedItems.join(', ');
+        // dataJson[columnName] = selectedItems.join(', ');
+        ViewController.request[columnName] = selectedItems.join(', ');
       },
       column: column,
     );
   }
 
-  static Widget generateFormColorBox(String ColumnName ,var column, Map dataJson , Color selectedColor){
+  static Widget generateFormColorBox(String columnName ,var column, Map dataJson , Color selectedColor){
     Color colorChanged;
     return new Container(
       child: ColorPickerBox(
@@ -871,7 +862,8 @@ class ViewController extends GetxController {
         onChanged: (color){
           colorChanged = color;
           String hexColor = '0x${colorChanged.value.toRadixString(16).padLeft(8, '0')}';
-          dataJson[ColumnName] = hexColor;
+          // dataJson[columnName] = hexColor;
+          ViewController.request[columnName] = hexColor;
         },
         column: column,
       ),
@@ -884,20 +876,20 @@ class ViewController extends GetxController {
       selectedFilesMap['${columnName}']=[];
     }
     List<dynamic> filesSelectedList;
-    if(dataJson[columnName] != null){
-      filesSelectedList = dataJson[columnName];
+    if(ViewController.request[columnName] != null){
+      filesSelectedList = ViewController.request[columnName];
       print('aaaaaaaa2>>>${selectedFilesMap['${columnName}']}');
-      print('dataJson[columnName]>>>${dataJson[columnName]}');
+      print('dataJson[columnName]>>>${ViewController.request[columnName]}');
       for(var data in filesSelectedList){
         selectedFilesMap['${columnName}']!.add(data);
       }
     }
-
     return new FormFile(
      columnName: columnName,
       onChanged: (selecetdFiles){
        print('selecetdFiles>>>>${selecetdFiles}');
-        dataJson[columnName] = selecetdFiles;
+        // dataJson[columnName] = selecetdFiles;
+        ViewController.request[columnName] = selecetdFiles;
       },
       filesSelected: selectedFilesMap,
       selectedFilesTxt: selecetdFiles,
@@ -910,15 +902,10 @@ class ViewController extends GetxController {
     List<dynamic> tableData = [];
     Box box2;
     box2 = await Hive.openBox<DataModel>('${tableName}');
-    print('tableName>>>${tableName}');
     tableData = box2.values.toList();
-    for(var t in tableData){
-      print('t.data>>>${t.data}');
-    }
     for(var row in tableData){
       rowList.add(row.data);
     }
-    print('rowList>>>${rowList}');
     return rowList;
 
   }

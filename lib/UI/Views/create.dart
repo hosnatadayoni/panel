@@ -35,7 +35,7 @@ class _CreatePageState extends State<CreatePage> {
   @override
   void initState() {
     super.initState();
-    _future = ViewController.generateStoreFormView(dataJson); // ایجاد Future در initState
+    _future = ViewController.generateStoreFormView(dataJson);
   }
 
   @override
@@ -44,7 +44,7 @@ class _CreatePageState extends State<CreatePage> {
 
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-
+    ViewController.request={};
     return Scaffold(
       body: Container(
           width: size.width,
@@ -131,12 +131,13 @@ class _CreatePageState extends State<CreatePage> {
                                                 // }
                                                 // endTime = DateTime.now();
                                                 // print('endTime>>>${endTime}');
-                                                ViewController.isShowMessage.value = true;
+                                                ViewController.isClickedCreateBtn.value = true;
                                                 var Id =Uuid().v4();
                                                 print("add record manual:${dataJson}");
                                                 DataModel newData = DataModel(
                                                   id: '${Id}',
-                                                  data: dataJson,
+                                                  data: ViewController.request
+                                                  // data: dataJson,
                                                 );
                                                 bool isValidator;
                                                 List<bool> isValidatorList=[];
