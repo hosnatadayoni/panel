@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'Logic/Models/record.dart';
 import 'Public/styles.dart';
 
 void main()async {
@@ -23,6 +24,7 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
+  await Records.getRecords('category',condition: true,fieldName: 'y',oprator: '==',value: '456');
 
 
   runApp(MyApp());

@@ -1,5 +1,6 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
@@ -105,34 +106,7 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                  final data = DataModel(
-                                    id: widget.data!.id,
-                                    data: ViewController.request,
-                                  );
-                                  print('xxxx>>>${data.data}');
-                                  bool isValidator;
-                                  List<bool> isValidatorList=[];
-                                  for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                    isValidator = ValidatorController.checkInputValidation(j,data.data);
-                                    isValidatorList.add(isValidator);
-                                  }
-                                  print('isValidatorList>>>${isValidatorList}');
-                                  bool isExsistsValidation = isValidatorList.contains(false);
-                                  print('isExsistsValidation>>>${isExsistsValidation}');
-                                  if(isExsistsValidation){
-                                    isValidatorList=[];
-                                  }
-                                  else{
-                                    dataController.allData.value[widget.index] =  data;
-                                    MainController.tableData.value[widget.index] = data;
-                                    await box.putAt(widget.index,data);
-                                    print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                                    print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                                    MainController.isClickedItem.value = true;
-                                    Get.to(() => TablePage());
-                                  }
-
-
+                                RecordController.updateRecord(widget.data!, widget.index);
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10),

@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:uuid/uuid.dart';
+import '../../Logic/Controllers/record-controller.dart';
 import '../../Public/styles.dart';
 import '../../boxes.dart';
 import '../Componenets/General/column-scroll.dart';
@@ -114,53 +115,8 @@ class _CreatePageState extends State<CreatePage> {
                                             },
                                             child: InkWell(
                                               onTap: () async{
-                                                // startTime =  DateTime.now();
-                                                // print('startTime>>>${startTime}');
-                                                // for(var i=0;i<100000;i++){
-                                                //   var Id =Uuid().v4();
-                                                //   print("add record manual:${dataJson}");
-                                                //   DataModel newData = DataModel(
-                                                //     id: '${Id}',
-                                                //     data: dataJson,
-                                                //   );
-                                                //   await box.add(newData);
-                                                //   print('box.length>>>>${box.length}');
-                                                //   dataController.allData.value.add(newData);
-                                                //   print('newData.data${newData.data}');
-                                                //
-                                                // }
-                                                // endTime = DateTime.now();
-                                                // print('endTime>>>${endTime}');
-                                                ViewController.isClickedCreateBtn.value = true;
-                                                var Id =Uuid().v4();
-                                                print("add record manual:${dataJson}");
-                                                DataModel newData = DataModel(
-                                                  id: '${Id}',
-                                                  data: ViewController.request
-                                                  // data: dataJson,
-                                                );
-                                                bool isValidator;
-                                                List<bool> isValidatorList=[];
-                                                print('newData.data>>>${newData.data}');
-                                                for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                                  isValidator = ValidatorController.checkInputValidation(j,newData.data);
-                                                  isValidatorList.add(isValidator);
-                                                }
-                                                print('isValidatorList>>>${isValidatorList}');
-                                                bool isExsistsValidation = isValidatorList.contains(false);
-                                                if(isExsistsValidation){
-                                                  isValidatorList=[];
-                                                }
-                                                else{
-                                                  await box.add(newData);
-                                                  print('box.length>>>>${box.length}');
-                                                  dataController.allData.value.add(newData);
-                                                  print('newData.data${newData.data}');
-                                                  await MainController.loadData();
-                                                  MainController.renderPagination();
-                                                  // }
-                                                  Get.to(() => TablePage());
-                                                }
+                                                await RecordController.storeRecord(dataJson);
+
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),

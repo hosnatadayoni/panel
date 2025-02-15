@@ -486,6 +486,7 @@ class MainController extends GetxController {
     //   jsonFileString = await File(jsonFile).readAsString();
     // }
     SubMenuList = json.decode(jsonFileString);
+
   }
 
   static  loadData() async {
@@ -493,6 +494,8 @@ class MainController extends GetxController {
       tableInfo = SubMenuList[MainController.selectedSubItem.value];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       MainController.tableData.value = box.values.toList();
+
+
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];

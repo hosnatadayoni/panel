@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/dataModel.dart';
-import 'app-controller.dart';
 import 'dataController.dart';
 import 'main-controller.dart';
 import 'package:finance/boxes.dart';
@@ -15,61 +14,14 @@ import 'package:finance/boxes.dart';
 class RecordController extends GetxController {
   static bool validate(Map<String , dynamic> dataJson,DataModel newData) {
     bool isValidator;
-    List<bool> isValidatorList = [];
-    List<String> isRequiredList = [];
-    List<String> isRangeList = [];
+    List<bool> isValidatorList=[];
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      isValidator = ValidatorController.checkInputValidation(j, newData.data);
+      isValidator = ValidatorController.checkInputValidation(j,newData.data);
       isValidatorList.add(isValidator);
-
-      var column = MainController.tableInfo['columns'][j];
-      if (column['validators'] != null) {
-        var inputRequired = column['validators'].firstWhere((
-            validator) => validator['type'] == 'required', orElse: () => null);
-        var maxValidator = column['validators'].firstWhere((
-            validator) => validator['type'] == 'max', orElse: () => null);
-        var minValidator = column['validators'].firstWhere((
-            validator) => validator['type'] == 'min', orElse: () => null);
-        if (inputRequired != null) {
-          if (inputRequired['type'] == 'required') {
-            print('dataJson[column[name]]>>>>${dataJson[column['name']]}');
-            if (dataJson[column['name']] == null ||
-                dataJson[column['name']] == '') {
-              isRequiredList.add('${column['name']}');
-            }
-          }
-        }
-        if (maxValidator != null && minValidator != null) {
-          if (column['type'] == 'number') {
-            var number;
-            if (dataJson[column['name']] != null) {
-              number = num.tryParse(dataJson[column['name']]);
-            }
-            if (number != null) {
-              if (number < minValidator['value'] ||
-                  number > maxValidator['value']) {
-                isRangeList.add('${column['name']}');
-              }
-            }
-          }
-          else if (column['type'] == 'file') {}
-        }
-      }
     }
     bool isExsistsValidation = isValidatorList.contains(false);
-    if (isExsistsValidation) {
-      String requiredMessage = isRequiredList.isNotEmpty
-          ? '${AppController.of(Get.context!)!.value(
-          'Enter the fields')} ${isRequiredList.join(', ')} ${AppController.of(
-          Get.context!)!.value('It is mandatory')} '
-          : '';
-      String rangeMessage = isRangeList.isNotEmpty
-          ? '${AppController.of(Get.context!)!.value('fields')} ${isRangeList
-          .join(', ')} ${AppController.of(Get.context!)!.value('is wrong')} '
-          : '';
-      isValidatorList = [];
-      isRequiredList = [];
-      isRangeList = [];
+    if(isExsistsValidation){
+      isValidatorList=[];
       return true;
     }
     else{
@@ -97,11 +49,11 @@ class RecordController extends GetxController {
   }
 
   static storeRecord(Map<String , dynamic> dataJson) async {
-    ViewController.isShowMessage.value = true;
+    ViewController.isClickedCreateBtn.value = true;
     var Id =Uuid().v4();
     DataModel newData = DataModel(
-      id: '${Id}',
-      data: dataJson,
+        id: '${Id}',
+        data: ViewController.request
     );
     var beforValidate=HelperController.beforeStoreValidation(newData);
     if(beforValidate['status']==false){
@@ -115,7 +67,6 @@ class RecordController extends GetxController {
         }
         else{
           var customData=await HelperController.beforeStore (newData)['data'];
-
           await box.add(customData);
           dataController.allData.value.add(customData);
           await MainController.loadData();
@@ -137,7 +88,7 @@ class RecordController extends GetxController {
   static updateRecord( DataModel data,int index) async {
     final record = DataModel(
       id: data.id,
-      data: data.data,
+      data: ViewController.request,
     );
     var beforeValidate=await HelperController.beforeUpdateValidation(record);
     if(beforeValidate['status']==false){
@@ -152,6 +103,7 @@ class RecordController extends GetxController {
         }else{
           var customUpdate=await HelperController.beforeUpdate(record)['data'];
           dataController.allData.value[index] =  customUpdate;
+          MainController.tableData.value[index] = customUpdate;
           await box.putAt(index,customUpdate);
           MainController.isClickedItem.value = true;
           var after=await HelperController.afterStore(data,customUpdate);
