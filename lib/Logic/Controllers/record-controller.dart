@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/UI/Componenets/Popups/snackbar.dart';
@@ -102,24 +103,24 @@ class RecordController extends GetxController {
       id: '${Id}',
       data: dataJson,
     );
-    var beforValidate=beforeStoreValidation(newData);
+    var beforValidate=HelperController.beforeStoreValidation(newData);
     if(beforValidate['status']==false){
       showSnackbar(snackTypes.error, beforValidate['message']);
     }
     else{
       if(validate(dataJson, newData)==false){
-        await beforeStore(newData);
-        if(beforeStore (newData)['status']==false){
-          showSnackbar(snackTypes.error, beforeStore (newData)['message']);
+       var before= await HelperController.beforeStore(newData);
+        if(before['status']==false){
+          showSnackbar(snackTypes.error, before['message']);
         }
         else{
-          var customData=beforeStore (newData)['data'];
+          var customData=await HelperController.beforeStore (newData)['data'];
 
           await box.add(customData);
           dataController.allData.value.add(customData);
           await MainController.loadData();
           MainController.renderPagination();
-          var afterData=afterStore(dataJson,customData);
+          var afterData=await HelperController.afterStore(dataJson,customData);
           if(afterData['status']==false){
             showSnackbar(snackTypes.error, afterData['message']);
           }
@@ -130,39 +131,30 @@ class RecordController extends GetxController {
     }
 
   }
-  static beforeStore(DataModel newData){
-    newData.data['y']='123';
-    print('responceHelper>>>${AppController.responceHelper(newData,true)}');
-    return AppController.responceHelper(newData,true);
-  }
-  static beforeStoreValidation(DataModel newData){
-    return AppController.responceHelper(newData,true);
-  }
-  static afterStore(dataJson,DataModel customData){
-    return AppController.responceHelper(customData,true);
-  }
+
+
 
   static updateRecord( DataModel data,int index) async {
     final record = DataModel(
       id: data.id,
       data: data.data,
     );
-    var beforeValidate=beforeUpdateValidation(record);
+    var beforeValidate=await HelperController.beforeUpdateValidation(record);
     if(beforeValidate['status']==false){
       showSnackbar(snackTypes.error, beforeValidate['message']);
     }
     else{
       print('validate>>>${validate(record.data, record)}');
       if(validate(record.data, record)==false){
-        await beforeUpdate(record);
-        if(beforeUpdate(record)['status']==false){
-          showSnackbar(snackTypes.error, beforeUpdate(record)['messsage']);
+       var before= await HelperController.beforeUpdate(record);
+        if(before['status']==false){
+          showSnackbar(snackTypes.error, before['messsage']);
         }else{
-          var customUpdate=beforeUpdate(record)['data'];
+          var customUpdate=await HelperController.beforeUpdate(record)['data'];
           dataController.allData.value[index] =  customUpdate;
           await box.putAt(index,customUpdate);
           MainController.isClickedItem.value = true;
-          var after=afterStore(data,customUpdate);
+          var after=await HelperController.afterStore(data,customUpdate);
           if(after['status']==false){
             showSnackbar(snackTypes.error,after['message'] );
           }
@@ -174,20 +166,12 @@ class RecordController extends GetxController {
 
 
   }
-  static beforeUpdate(DataModel newData){
-    return AppController.responceHelper(newData,true);
-  }
-  static beforeUpdateValidation(DataModel newData){
-    return AppController.responceHelper(newData,true);
-  }
-  static afterUpdate(dataJson,DataModel customData){
-    return AppController.responceHelper(customData,true);
 
-  }
+
 
   static deleteRecord(int index) async {
     var data=MainController.tableData.value[index];
-    var before= beforeDelete(index);
+    var before=await HelperController. beforeDelete(index);
     if(before['status']==false){
       showSnackbar(snackTypes.error,before['message'] );
     }
@@ -196,7 +180,7 @@ class RecordController extends GetxController {
       MainController.tableData.value.removeAt(index);
       await MainController.loadData();
       MainController.renderPagination();
-      var after=afterDelete(index, data);
+      var after=HelperController.afterDelete(index, data);
       if(after['status']==false){
         showSnackbar(snackTypes.error,after['message'] );
       }
@@ -204,10 +188,5 @@ class RecordController extends GetxController {
     }
 
   }
-  static beforeDelete(int index){
-    return AppController.responceHelper(null,true);
 
-  }  static afterDelete(int index,DataModel data){
-    return AppController.responceHelper(data,true);
-  }
 }
