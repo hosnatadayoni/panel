@@ -69,7 +69,7 @@ class _DateBoxState extends State<DateBox> {
           SizedBox(height: 5),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isShowMessage.value== true && this.isSeletedDate!.value == false?
+              ViewController.isClickedCreateBtn.value== true && this.isSeletedDate!.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
 
         ],

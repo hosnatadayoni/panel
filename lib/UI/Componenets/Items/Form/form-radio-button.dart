@@ -46,7 +46,7 @@ class RadioButton extends StatelessWidget {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isShowMessage.value == true &&  isSelectedItem.value == false?
+              ViewController.isClickedCreateBtn.value == true &&  isSelectedItem.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

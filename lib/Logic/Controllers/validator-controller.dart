@@ -71,12 +71,15 @@ class ValidatorController extends GetxController {
           var number;
           number = num.tryParse(dataJson[name]);
           if(number != null){
-          if(number < minValidator['value'] || number > maxValidator['value']){
-            return false;
-          }
-          else{
-            return true;
-          }
+            if(minValidator != null && maxValidator != null){
+              if(number < minValidator['value'] || number > maxValidator['value']){
+                return false;
+              }
+              else{
+                return true;
+              }
+            }
+
         }
       }
     if (column['type'] == 'file') {

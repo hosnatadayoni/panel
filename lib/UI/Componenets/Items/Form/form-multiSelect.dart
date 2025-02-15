@@ -203,7 +203,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isShowMessage.value == true && this.isSelectedItem.value == false?
+              ViewController.isClickedCreateBtn.value == true && this.isSelectedItem.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

@@ -4,6 +4,7 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/UI/Componenets/General/loading.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/UI/Componenets/Popups/snackbar.dart';
@@ -13,17 +14,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:uuid/uuid.dart';
-import '../../Logic/Controllers/dataController.dart';
-import '../../Logic/Controllers/record-controller.dart';
 import '../../Public/styles.dart';
 import '../../boxes.dart';
 import '../Componenets/General/column-scroll.dart';
 import '../Componenets/General/txt.dart';
 
-class CreatePage extends StatelessWidget {
+class CreatePage extends StatefulWidget {
   CreatePage();
+
+  @override
+  State<CreatePage> createState() => _CreatePageState();
+}
+
+class _CreatePageState extends State<CreatePage> {
   DateTime? startTime;
+
   DateTime? endTime;
+  late Future<Widget> _future;
+  Map<String , dynamic> dataJson = {};
+  @override
+  void initState() {
+    super.initState();
+    _future = ViewController.generateStoreFormView(dataJson);
+  }
 
   @override
 
@@ -31,7 +44,7 @@ class CreatePage extends StatelessWidget {
 
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    Map<String , dynamic> dataJson = {};
+    ViewController.request={};
     return Scaffold(
       body: Container(
           width: size.width,
@@ -42,7 +55,7 @@ class CreatePage extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Obx((){
+              Obx(() {
                 return  Positioned(
                     // right:MainController.isClickedItem.value == true ? 300 :50,
                     right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
@@ -100,8 +113,54 @@ class CreatePage extends StatelessWidget {
                                             onExit: (_){
                                             },
                                             child: InkWell(
-                                              onTap: () {
-                                                RecordController.storeRecord(dataJson);
+                                              onTap: () async{
+                                                // startTime =  DateTime.now();
+                                                // print('startTime>>>${startTime}');
+                                                // for(var i=0;i<100000;i++){
+                                                //   var Id =Uuid().v4();
+                                                //   print("add record manual:${dataJson}");
+                                                //   DataModel newData = DataModel(
+                                                //     id: '${Id}',
+                                                //     data: dataJson,
+                                                //   );
+                                                //   await box.add(newData);
+                                                //   print('box.length>>>>${box.length}');
+                                                //   dataController.allData.value.add(newData);
+                                                //   print('newData.data${newData.data}');
+                                                //
+                                                // }
+                                                // endTime = DateTime.now();
+                                                // print('endTime>>>${endTime}');
+                                                ViewController.isClickedCreateBtn.value = true;
+                                                var Id =Uuid().v4();
+                                                print("add record manual:${dataJson}");
+                                                DataModel newData = DataModel(
+                                                  id: '${Id}',
+                                                  data: ViewController.request
+                                                  // data: dataJson,
+                                                );
+                                                bool isValidator;
+                                                List<bool> isValidatorList=[];
+                                                print('newData.data>>>${newData.data}');
+                                                for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+                                                  isValidator = ValidatorController.checkInputValidation(j,newData.data);
+                                                  isValidatorList.add(isValidator);
+                                                }
+                                                print('isValidatorList>>>${isValidatorList}');
+                                                bool isExsistsValidation = isValidatorList.contains(false);
+                                                if(isExsistsValidation){
+                                                  isValidatorList=[];
+                                                }
+                                                else{
+                                                  await box.add(newData);
+                                                  print('box.length>>>>${box.length}');
+                                                  dataController.allData.value.add(newData);
+                                                  print('newData.data${newData.data}');
+                                                  await MainController.loadData();
+                                                  MainController.renderPagination();
+                                                  // }
+                                                  Get.to(() => TablePage());
+                                                }
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),
@@ -123,8 +182,20 @@ class CreatePage extends StatelessWidget {
                           ),
                           SizedBox(height: 10,),
                           Container(
-                            child: ViewController.generateStoreFormView(dataJson),
-                          ),
+                            child:
+                            FutureBuilder<Widget>(
+                              future:_future,
+                              builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return CircularProgressIndicator(); // در حال بارگذاری
+                                } else if (snapshot.hasError) {
+                                  return Text('خطا: ${snapshot.error}');
+                                } else {
+                                  return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
+                                }
+                              },
+                            )),
+
                         ],
                       ),
                     )

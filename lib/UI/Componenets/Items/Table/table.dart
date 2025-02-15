@@ -65,7 +65,8 @@ class _TableBoxState extends State<TableBox> {
                               children: [
                                 IconButton(onPressed: (){
                                   MainController.isClickedItem.value = false;
-                                  ViewController.isShowMessage.value = false;
+                                  ViewController.isClickedCreateBtn.value = false;
+                                  ViewController.request = {...MainController.tableData.value[i].data};
                                   Get.to(() =>
                                       EditPage(data: MainController.tableData.value[i], index: i,));
                                 }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),

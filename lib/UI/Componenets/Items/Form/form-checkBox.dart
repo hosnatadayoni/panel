@@ -58,7 +58,7 @@ class _CheckBoxState extends State<CheckBox> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isShowMessage.value == true && isClickedBtn!.value == false?
+              ViewController.isClickedCreateBtn.value == true && isClickedBtn!.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

@@ -57,6 +57,10 @@ class _FormTextFieldState extends State<FormTextField> {
   }
   void _validateInput() {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
+    if(ViewController.request[widget.column['name']] != null){
+      text.value =  ViewController.request[widget.column['name']];
+    }
+
      if(widget.column != null){
        if(widget.column['validators'] != null){
          var inputRequired;
@@ -154,7 +158,7 @@ class _FormTextFieldState extends State<FormTextField> {
   Widget build(BuildContext context) {
 
     return  Obx((){
-      if(ViewController.isShowMessage.value){
+      if(ViewController.isClickedCreateBtn.value){
         if (text.value == '')  {
           var inputRequired;
           if(widget.column != null){
@@ -176,27 +180,30 @@ class _FormTextFieldState extends State<FormTextField> {
 
           var number = num.tryParse(text.value);
           if(number != null){
-            if(number < minValidator['value']){
+            if(minValidator != null && maxValidator != null){
+              if(number < minValidator['value']){
                 _errorText = minValidator['message'];
-            }
-            else{
-              if(number > maxValidator['value']){
-                  _errorText = maxValidator['message'];
               }
               else{
+                if(number > maxValidator['value']){
+                  _errorText = maxValidator['message'];
+                }
+                else{
                   _errorText = null;
+                }
               }
+              // if (number < minValidator['value'] || number > maxValidator['value']) {
+              //   setState(() {
+              //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
+              //     _errorText =   errorMessage;
+              //   });
+              // } else {
+              //   setState(() {
+              //     _errorText = null;
+              //   });
+              // }
             }
-            // if (number < minValidator['value'] || number > maxValidator['value']) {
-            //   setState(() {
-            //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
-            //     _errorText =   errorMessage;
-            //   });
-            // } else {
-            //   setState(() {
-            //     _errorText = null;
-            //   });
-            // }
+
           }
         }
       }

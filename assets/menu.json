@@ -52,7 +52,7 @@
               "validators": [
                 {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
               ]
-        
+
            },
             {
             "name": "dddddd",
@@ -167,10 +167,6 @@
 
             ]
 
-          },
-          {
-            "name": "Email",
-            "type": "email"
           }
         ]
     },
@@ -217,7 +213,7 @@
         "countShowRow":10,
         "columns":[]
     },
-  {
+    {
     "title": "status",
     "tooltip":"",
     "main-menu": true,

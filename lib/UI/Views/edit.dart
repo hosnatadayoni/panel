@@ -15,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../Logic/Controllers/dataController.dart';
-import '../../Logic/Controllers/dataController.dart';
-import '../../Logic/Controllers/record-controller.dart';
 import '../../boxes.dart';
 
 class EditPage extends StatefulWidget {
@@ -29,6 +27,13 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
+  late Future<Widget> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = ViewController.generateEditFormView(widget.data!.data);
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -54,7 +59,19 @@ class _EditPageState extends State<EditPage> {
                   child: ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      ViewController.generateEditFormView(widget.data!.data),
+                      FutureBuilder<Widget>(
+                        future: _future,
+                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('خطا: ${snapshot.error}');
+                          } else {
+                            return snapshot.data ?? Container();
+                          }
+                        },
+                      ),
+                      // ViewController.generateEditFormView(widget.data!.data),
                       SizedBox(height: 20,),
                       Container(
                         padding: EdgeInsets.all(10),
@@ -70,6 +87,7 @@ class _EditPageState extends State<EditPage> {
                               },
                               child: InkWell(
                                 onTap: (){
+                                  print('widget.data!.data>>>${widget.data!.data}');
                                   MainController.isClickedItem.value = true;
                                   Get.to(() => TablePage());
                                 },
@@ -87,7 +105,32 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                               await RecordController.updateRecord(widget.data!, widget.index);
+                                  final data = DataModel(
+                                    id: widget.data!.id,
+                                    data: ViewController.request,
+                                  );
+                                  print('xxxx>>>${data.data}');
+                                  bool isValidator;
+                                  List<bool> isValidatorList=[];
+                                  for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+                                    isValidator = ValidatorController.checkInputValidation(j,data.data);
+                                    isValidatorList.add(isValidator);
+                                  }
+                                  print('isValidatorList>>>${isValidatorList}');
+                                  bool isExsistsValidation = isValidatorList.contains(false);
+                                  print('isExsistsValidation>>>${isExsistsValidation}');
+                                  if(isExsistsValidation){
+                                    isValidatorList=[];
+                                  }
+                                  else{
+                                    dataController.allData.value[widget.index] =  data;
+                                    MainController.tableData.value[widget.index] = data;
+                                    await box.putAt(widget.index,data);
+                                    print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+                                    print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
+                                    MainController.isClickedItem.value = true;
+                                    Get.to(() => TablePage());
+                                  }
 
 
                               },
