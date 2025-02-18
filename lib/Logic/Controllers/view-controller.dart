@@ -68,6 +68,12 @@ class ViewController extends GetxController {
           List<dynamic> items =[];
           var selectedItem;
           var initValue;
+          // print('fvghjk>>>${ViewController.itemsList (column)}');
+          for(var item in await ViewController.itemsList (column , column['sourceItems'])){
+            print('the item select box>>>${item}');
+          }
+
+
           for(var subMenu in MainController.SubMenuList){
             if(column['sourceItems'] != 'custom'){
               if(column['sourceTable'] == subMenu['table-name']){
@@ -840,6 +846,35 @@ class ViewController extends GetxController {
 
     }
     return selectedTitle;
+  }
+
+  static itemsList (var column , var type) async {
+    List<dynamic> items=[];
+     for(var subMenu in MainController.SubMenuList){
+        if(type != 'custom'){
+          if(type == subMenu['table-name']){
+            print('column[sourceTable]>>>${column['sourceTable']}');
+            print('subMenu[columns]>>>${subMenu['columns']}');
+            List<DataModel> dropDownListItems = await getRowTable(column['sourceTable']);
+            for(var i=0;i<dropDownListItems.length;i++){
+            print('id data:${dropDownListItems[i].id}');
+            items.add({'title': dropDownListItems[i].data['${subMenu['columns'].first['name']}'], 'value': dropDownListItems[i].id});
+        }
+        }
+        }
+        else{
+          items = column['items'];
+       }
+     }
+     print('items the function>>>${items}');
+     return items;
+  }
+
+  static getInitValue(var column , var type){
+    var initVal;
+    List<dynamic> items= ViewController.itemsList(column , type);
+
+    return initVal;
   }
 
 }
