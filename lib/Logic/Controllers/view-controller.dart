@@ -91,6 +91,7 @@ class ViewController extends GetxController {
               // initValue = selectedItem['title'];
             }
           }
+          print('initValue>>>${initValue}');
           selectBox = await generateFormSelectBox(name, column , dataJson , '', '${initValue}');
           children.add(SizedBox(
             height: 20,
@@ -437,11 +438,11 @@ class ViewController extends GetxController {
         future:generateSelectBox(indexColumn , indexRow),
         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // در حال بارگذاری
+            return CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('خطا: ${snapshot.error}');
           } else {
-            return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
+            return snapshot.data ?? Container();
           }
         },
       );
@@ -592,12 +593,14 @@ class ViewController extends GetxController {
         items: [
           for (var item in items)
             DropdownMenuItem(
-                child: Txt(
-                  '${item['title']}',
-                  color: MainController.isLightMode.value == true
-                      ? whiteColor
-                      : primaryDark,
-                ),
+                child: Obx((){
+                  return Txt(
+                    '${item['title']}',
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : primaryDark,
+                  );
+                }),
                 value: item['value']),
         ],
         initalValue: initValue != null ? initValue:'',
@@ -636,7 +639,9 @@ class ViewController extends GetxController {
       for (var radioButtonItem in radioButtonItems)
         FormBuilderChipOption(
           value: '${radioButtonItem['title']}',
-          child: Txt('${radioButtonItem['title']}' , color: MainController.isLightMode.value ? whiteColor : primaryDark,),
+          child: Obx((){
+            return Txt('${radioButtonItem['title']}' , color: MainController.isLightMode.value ? whiteColor : primaryDark,);
+          })
         ),
     ],
       onChanged: (text){
@@ -836,4 +841,5 @@ class ViewController extends GetxController {
     }
     return selectedTitle;
   }
+
 }
