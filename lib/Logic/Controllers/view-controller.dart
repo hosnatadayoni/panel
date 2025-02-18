@@ -1,7 +1,5 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -22,7 +20,6 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
-
 import '../../UI/Componenets/Items/Form/form-file.dart';
 
 class ViewController extends GetxController {
@@ -76,29 +73,22 @@ class ViewController extends GetxController {
               if(column['sourceTable'] == subMenu['table-name']){
                 print('column[sourceTable]>>>${column['sourceTable']}');
                 print('subMenu[columns]>>>${subMenu['columns']}');
-                List<dynamic> dropDownListItems = await getInfoTable(column['sourceTable']);
-                List<dynamic> valuesList = [];
-                print('dropDownListItems>>>${dropDownListItems}');
-                for (var item in dropDownListItems) {
-                  for(var itemVal in item.values){
-                    valuesList.add(itemVal);
-                  }
+                List<DataModel> dropDownListItems = await getRowTable(column['sourceTable']);
+                for(var i=0;i<dropDownListItems.length;i++){
+                  print('id data:${dropDownListItems[i].id}');
+                  items.add({'title': dropDownListItems[i].data['title'], 'value': dropDownListItems[i].id});
                 }
-                for(var i=0;i<valuesList.length;i++){
-                  items.add({'title': valuesList[i], 'value': i.toString()});
-                }
-                initValue = items.length!=0 ?items.first.entries.first.value:"";
-
+                // initValue = items.length!=0 ?items.first.entries.first.value:"";
+                initValue = items.length!=0 ? items[0]['value']:"";
               }
             }
             else{
               items = column['items'];
-              print('c1>>>${items}');
-              print('c2>>>${column['items']}');
               selectedItem = items.firstWhere(
                     (item) => item['is_selected'] == true,
                 orElse: () => items.first,);
-              initValue = selectedItem['title'];
+              initValue = selectedItem['value'];
+              // initValue = selectedItem['title'];
             }
           }
           selectBox = await generateFormSelectBox(name, column , dataJson , '', '${initValue}');
@@ -133,7 +123,7 @@ class ViewController extends GetxController {
           children.add(dateBox);
         }
         else if(type == 'multiSelect'){
-          multiSelectBox = genarateFormMuiltiSelectBox(name , column ,  dataJson , '${AppController.of(Get.context!)!.value('has been selected')}');
+          multiSelectBox = await genarateFormMuiltiSelectBox(name , column ,  dataJson , '${AppController.of(Get.context!)!.value('has been selected')}');
           children.add(SizedBox(
             height: 20,
           ));
@@ -175,17 +165,14 @@ class ViewController extends GetxController {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
         var name = column['name'];
-        // var defaultValue = column['default_value'];
-        // GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         var maxValidator;
         var minValidator;
-
+        List<dynamic> items =[];
         if(column['validators'] != null){
           maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
           minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
         }
         if (type == 'string' || type == 'int' || type == 'number' || type == 'email') {
-          print('dataModel>>>${dataModel}');
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(name , _fbKey , column , dataModel , type , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           // textField = new FormTextField(
@@ -209,8 +196,24 @@ class ViewController extends GetxController {
 
         }
         else if (type == 'select') {
-          print('dataModel3>>>${dataModel['${name}']}');
-          selectBox = await generateFormSelectBox(name , column , dataModel , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}' , '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
+          for(var subMenu in MainController.SubMenuList){
+            if(column['sourceItems'] != 'custom'){
+              if(column['sourceTable'] == subMenu['table-name']){
+                print('column[sourceTable]>>>${column['sourceTable']}');
+                print('subMenu[columns]>>>${subMenu['columns']}');
+                List<DataModel> dropDownListItems = await getRowTable(column['sourceTable']);
+                for(var i=0;i<dropDownListItems.length;i++){
+                  items.add({'title': dropDownListItems[i].data['title'], 'value': dropDownListItems[i].id});
+                }
+              }
+            }
+            else{
+              items = column['items'];
+            }
+          }
+
+          Map<String, dynamic> selectedItem = items.firstWhere((element) => element['value'] == dataModel['${name}'] , orElse: ()=> items.first);
+          selectBox = await generateFormSelectBox(name , column , dataModel , '${selectedItem['item'] != null ? selectedItem['item']:''}' , '${selectedItem['value'] != null ? selectedItem['value']:'${selectedItem}'}');
           // var items = column['items'];
           // selectBox = SelectBox(
           //     name: 'option1',
@@ -339,159 +342,39 @@ class ViewController extends GetxController {
           ));
           children.add(dateBox);
         }
-        // else if(type == 'date'){
-        //   List<String> dateParts = dataModel.data['${name}'].split('/');
-        //   RxInt year = int.parse('${dateParts[0]}').obs;
-        //   RxInt month = int.parse('${dateParts[1]}').obs;
-        //   RxInt day = int.parse('${dateParts[2]}').obs;
-        //   List<String> dateUpdate = [];
-        //   String? date;
-        //
-        //   dateBox = Obx((){
-        //     return new DateBox(onTap: ()async{
-        //       print('MainController.selectedDate!.value>>>${MainController.selectedDate!.value}');
-        //       print('dataModel.data[name]5>>>${dataModel.data['${name}']}');
-        //       Jalali? picked = await showPersianDatePicker(
-        //         context: Get.context!,
-        //         initialDate:  Jalali(year.value , month.value , day.value),
-        //         firstDate: Jalali(1385 , 8),
-        //         lastDate: Jalali(1450 , 9),
-        //       );
-        //       if(picked != null){
-        //         MainController.selectedDate!.value= picked;
-        //         date = '${MainController.selectedDate!.value.year}${'/'}${MainController.selectedDate!.value.month}${'/'}${MainController.selectedDate!.value.day}';
-        //         dateUpdate = date!.split('/');
-        //         dataModel.data['${name}'] =  date;
-        //       }
-        //
-        //     },selectedDate: '${MainController.selectedDate!.value == Jalali.now() ?  dataModel.data['${name}'] : date}');
-        //   });
-        //   children.add(SizedBox(
-        //     height: 20,
-        //   ));
-        //   children.add(dateBox);
-        // }
-        // else if(type == 'multiSelect'){
-        //   var items = column['items'];
-        //
-        //   RxList<String> selectedItems = <String>[].obs;
-        //   List<dynamic>? titles;
-        //   if(dataModel.data['${name}'] != null){
-        //     titles= dataModel.data['${name}'].split(',').map((title) => title.trim()).toList();
-        //     for(String title in titles!){
-        //       selectedItems.add(title);
-        //     }
-        //     // MainController.hintText.value = '${dataModel.data['${name}']}';
-        //   }
-        //   else{
-        //     // MainController.hintText.value = 'Select Options';
-        //   }
-        //   multiSelectBox = MultiSelectDropdown(
-        //     items: [
-        //       for (var item in items)
-        //         DropdownMenuItem(
-        //           value: item['title'],
-        //           child: Row(
-        //             children: [
-        //               SizedBox(
-        //                   width: 50,
-        //                   height: 50,
-        //                   child: Obx((){
-        //                     return Checkbox(
-        //                       activeColor: colorBtn,
-        //                       value: selectedItems.value.contains(item['title']),
-        //                       // defaultValue:MainController.isSelectedItem.value ,
-        //                       onChanged: (bool? text){
-        //                         if(text == true){
-        //                           if(!selectedItems.value.contains(item['title'])){
-        //                             selectedItems.value.add(item['title']);
-        //                           }
-        //                         }
-        //                         else{
-        //                           selectedItems.value.remove(item['title']);
-        //                         }
-        //                         if(selectedItems.value.isEmpty){
-        //                           MainController.hintText.value = "Select Options";
-        //                         }
-        //                         else{
-        //                           MainController.hintText.value = '${selectedItems.value}';
-        //                         }
-        //                         dataModel.data['${name}'] = selectedItems.value.join(', ');
-        //                       },
-        //                     );
-        //                   })
-        //               ),
-        //               SizedBox(width: 5),
-        //               Txt(
-        //                 '${item['title']}',
-        //                 color: MainController.isLightMode.value ? whiteColor : primaryDark,
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //     ],
-        //   );
-        //   children.add(SizedBox(
-        //     height: 20,
-        //   ));
-        //   children.add(multiSelectBox);
-        // }
         else if(type == 'multiSelect'){
           var items = column['items'];
-
-          multiSelectBox = genarateFormMuiltiSelectBox(name , column ,  dataModel, '${dataModel[name] != null ? dataModel[name]:'${AppController.of(Get.context!)!.value('has been selected')}'}');
-          // multiSelectBox = MultiSelectDropdown(
-          //   selectedItemsMap: selectedItemsMap,
-          //   items: [
-          //     for (var item in items)
-          //     // DropdownMenuItem(
-          //     //   value: item['title'],
-          //     //   child: Row(
-          //     //     children: [
-          //     //       SizedBox(
-          //     //           width: 50,
-          //     //           height: 50,
-          //     //           child: Obx((){
-          //     //             return Checkbox(
-          //     //               activeColor: colorBtn,
-          //     //               value: selectedItems.value.contains(item['title']),
-          //     //               // defaultValue:MainController.isSelectedItem.value ,
-          //     //               onChanged: (bool? text){
-          //     //                 if(text == true){
-          //     //                   if(!selectedItems.value.contains(item['title'])){
-          //     //                     selectedItems.value.add(item['title']);
-          //     //                   }
-          //     //                 }
-          //     //                 else{
-          //     //                   selectedItems.value.remove(item['title']);
-          //     //                 }
-          //     //                 if(selectedItems.value.isEmpty){
-          //     //                   MainController.hintText.value = "Select Options";
-          //     //                 }
-          //     //                 else{
-          //     //                   MainController.hintText.value = '${selectedItems.value.join(', ')}';
-          //     //                 }
-          //     //                 dataJson[name] = selectedItems.value.join(', ');
-          //     //               },
-          //     //             );
-          //     //           })
-          //     //       ),
-          //     //       SizedBox(width: 5),
-          //     //       Txt(
-          //     //         '${item['title']}',
-          //     //         color: MainController.isLightMode.value ? whiteColor : primaryDark,
-          //     //       ),
-          //     //     ],
-          //     //   ),
-          //     // ),
-          //       item['title']
-          //   ],
-          //   hintText: '${dataModel[name] != null ? dataModel[name]:'Select Options'}',
-          //   selectName: name,
-          //   onSelectChanged: (selectedItems){
-          //     dataModel[name] = selectedItems.join(', ');
-          //   },
-          // );
+          List<String> titleList=[];
+          for(var item in items){
+            titleList.add(item['title']);
+          }
+          List<String> dataModelList=[];
+          if(dataModel['${name}'] != null){
+             dataModelList = dataModel['${name}'].split(', ');
+          }
+          String hint='';
+          List<String> hintLists=[];
+          for(var data in dataModelList){
+            if(titleList.contains(data)){
+              if(dataModel[name] != null){
+                hint = data;
+              }
+              else{
+                hint = '${AppController.of(Get.context!)!.value('has been selected')}';
+              }
+            }
+            else{
+              hint ='';
+            }
+            if(hint != ''){
+              hintLists.add(hint);
+            }
+          }
+          String hintString = hintLists.join(', ');
+          if(hintString == ''){
+            hintString = '${AppController.of(Get.context!)!.value('has been selected')}';
+          }
+          multiSelectBox = await genarateFormMuiltiSelectBox(name , column ,  dataModel, '${hintString}');
           children.add(SizedBox(
             height: 20,
           ));
@@ -530,10 +413,10 @@ class ViewController extends GetxController {
     return Column(children: children);
   }
 
-  static Widget generateDataColumn(int indexColumn , int indexRow){
+  static Future<Widget> generateDataColumn(int indexColumn , int indexRow) async {
     var size = MediaQuery.of(Get.context!).size;
     DataModel dataModel=MainController.tableData.value[indexRow];
-    // DataModel dataModel = indexRow;
+
     String type=MainController.tableInfo['columns'][indexColumn]['type'];
     String name=MainController.tableInfo['columns'][indexColumn]['name'];
     var child;
@@ -548,6 +431,21 @@ class ViewController extends GetxController {
     }
     else if(type=='color'){
       child=generateColor(indexColumn , indexRow);
+    }
+    else if(type == 'select'){
+      child = FutureBuilder<Widget>(
+        future:generateSelectBox(indexColumn , indexRow),
+        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // در حال بارگذاری
+          } else if (snapshot.hasError) {
+            return Text('خطا: ${snapshot.error}');
+          } else {
+            return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
+          }
+        },
+      );
+      // child = await generateSelectBox(indexColumn , indexRow);
     }
     else{
       child=generateData(indexColumn , indexRow);
@@ -572,11 +470,8 @@ class ViewController extends GetxController {
     if(dataModel.data['${name}'] == null){
       dataModel.data['${name}'] = false;
     }
-
-    print('generate check box :${dataModel.data['${name}']}');
     return CheckBox(defaultValue:dataModel.data['${name}'] ,checkBoxTitle: '',onChange: (text) async {
       dataModel.data['${name}'] = text;
-      print('dataModel.data[name]>>>${dataModel}');
       final data = DataModel(
         id: dataModel.id,
         data: dataModel.data,
@@ -597,6 +492,29 @@ class ViewController extends GetxController {
         color: Color(int.parse('${dataModel.data['${name}']}')),
       ):Container(),
     );
+  }
+
+  static Future<Widget> generateSelectBox(int indexColumn, int indexRow) async{
+    DataModel dataModel=MainController.tableData.value[indexRow];
+    var column = MainController.tableInfo['columns'][indexColumn];
+    String name=MainController.tableInfo['columns'][indexColumn]['name'];
+    String tableName ='';
+    for(var subMenu in MainController.SubMenuList){
+      if(column['sourceItems'] != 'custom'){
+        if(column['sourceTable'] == subMenu['table-name']){
+          tableName = column['sourceTable'];
+        }
+      }
+    }
+    String titleSelect = await getTitleSelectedItem('${tableName}', dataModel.data['${name}'],column['sourceItems'],column['items'] );
+    return Txt(
+      '${titleSelect}',
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: MainController.isLightMode.value == true ? whiteColor : color2,
+      textAlign: TextAlign.center,
+    );
+
   }
 
   static Widget generateData(int indexColumn, int indexRow){
@@ -634,7 +552,6 @@ class ViewController extends GetxController {
   }
 
   static Future<Widget> generateFormSelectBox(String columnName , var column , Map dataJson , String hintText , String initailValue)  async {
-
     List<dynamic> items =[];
     var selectedItem;
     var initValue;
@@ -642,29 +559,17 @@ class ViewController extends GetxController {
     for(var subMenu in MainController.SubMenuList){
       if(column['sourceItems'] != 'custom'){
         if(column['sourceTable'] == subMenu['table-name']){
-          print('column[sourceTable]>>>${column['sourceTable']}');
-          print('subMenu[columns]>>>${subMenu['columns']}');
-          List<dynamic> dropDownListItems = await getInfoTable(column['sourceTable']);
-          List<dynamic> valuesList = [];
-          print('dropDownListItems>>>${dropDownListItems}');
-          for (var item in dropDownListItems) {
-            for(var itemVal in item.values){
-              valuesList.add(itemVal);
-            }
+          List<DataModel> dropDownListItems = await getRowTable(column['sourceTable']);
+
+          for(var i=0;i<dropDownListItems.length;i++){
+            items.add({'title':dropDownListItems[i].data['${subMenu['columns'].first['name']}'], 'value': dropDownListItems[i].id});
           }
-          print('valuesList3>>>${valuesList}');
-          for(var i=0;i<valuesList.length;i++){
-            print('wert>>>${valuesList[i].runtimeType}');
-            items.add({'title': valuesList[i], 'value': i.toString()});
-          }
-          if(dataJson == {}){
-            initValue = items.length!=0 ?items.first.entries.first.value:"";
+          if(ViewController.request == {}){
+            initValue = items.length!=0 ? items[0]['value']:"";
           }
           else{
             initValue = initailValue;
           }
-
-
         }
       }
       else{
@@ -674,14 +579,13 @@ class ViewController extends GetxController {
           orElse: () => items.first,);
         // initailValue = selectedItem['title'];
         if(dataJson == {}){
-          initValue = selectedItem['title'];
+          initValue = selectedItem['value'];
         }
         else{
           initValue = initailValue;
         }
       }
     }
-    print('initailValue11>>>>${initailValue}');
     return  items.length != 0 ?new SelectBox(
         name: '${columnName}',
         column: column,
@@ -694,10 +598,10 @@ class ViewController extends GetxController {
                       ? whiteColor
                       : primaryDark,
                 ),
-                value: item['title']),
+                value: item['value']),
         ],
-        initalValue: initValue != '' ? initValue:'',
-        onChanged: (value) {
+        initalValue: initValue != null ? initValue:'',
+        onChanged: (value) async {
           print('selected item ${value}');
           for(var item in items){
             if(item['title'] == value){
@@ -706,28 +610,19 @@ class ViewController extends GetxController {
               }
             }
           }
-          if(value != null){
-            MainController.selectedItemList.value = value!.toString();
-          }
-          else{
-            MainController.selectedItemList.value = '';
-          }
-          ViewController.request[columnName] = MainController.selectedItemList.value;
-          // dataJson[columnName] = MainController.selectedItemList.value;
+          ViewController.request[columnName] = value;
         },
         hintText: hintText,
-        selectedValue: MainController.selectedItemList):Container();
+        selectedValue: ''):Container();
   }
 
   static Widget generateFormCheckBox(String columnName ,var column, var defaultValue , Map dataJson){
-
     return new CheckBox(checkBoxName: '${columnName}',checkBoxTitle: '${columnName}' ,defaultValue: defaultValue,onChange: (text) {
       ViewController.request[columnName] = text;
       // dataJson[columnName] = text;
     },
       column: column,
     );
-
   }
 
   static Widget generateFormRadioButton(String columnName , var column , Map dataJson , String initalValue){
@@ -736,7 +631,6 @@ class ViewController extends GetxController {
     var selectedItem = radioButtonItems.firstWhere(
           (item) => item['is_selected'] == true,
       orElse: () => radioButtonItems.first,);
-    print('selectedItem>>>${selectedItem}');
 
     return new RadioButton(name: '',radioButtonItems: [
       for (var radioButtonItem in radioButtonItems)
@@ -766,38 +660,33 @@ class ViewController extends GetxController {
         onDateChanged: (date){
           // dataJson[columnName] =  date;
           ViewController.request[columnName] = date;
-          // Jalali? picked = await showPersianDatePicker(
-          //   context: Get.context!,
-          //   initialDate: Jalali.now(),
-          //   firstDate: Jalali(1385 , 8),
-          //   lastDate: Jalali(1450 , 9),
-          // );
-          // if(picked != null){
-          //   print('picked>>>${picked}');
-          //   MainController.selectedDate!.value= picked;
-          //   print('MainController.selectedDate!.value>>>${MainController.selectedDate!.value}');
-          //   String date = '${MainController.selectedDate!.value.year.obs}${'/'}${MainController.selectedDate!.value.month.obs}${'/'}${MainController.selectedDate!.value.day.obs}';
-          //   dataJson[name] =  date;
-          // }
         },
       column: column,
     );
   }
 
-  static Widget genarateFormMuiltiSelectBox(String columnName , var column , Map dataJson , String hintText){
-    var items = column['items'];
+  static Future<Widget> genarateFormMuiltiSelectBox(String columnName , var column , Map dataJson , String hintText) async {
+    List<dynamic> items=[];
+    items = column['items'];
     Map<String, List<String>> selectedItemsMap = {};
     if(selectedItemsMap['${columnName}'] == null){
       selectedItemsMap['${columnName}']=[];
     }
     List<dynamic> dataList;
     if(ViewController.request[columnName] != null){
+      List<String> titleList=[];
+    for(var item in items){
+      titleList.add(item['title']);
+    }
       dataList = ViewController.request[columnName].split(', ').map((item) => item.trim()).toList();
+      dataList.removeWhere((selectedItem) => !titleList.contains(selectedItem));
+      print('dataList 12>>>${dataList}');
       for(var data in dataList){
         selectedItemsMap['${columnName}']!.add(data);
       }
     }
-    return MultiSelectDropdown(
+    print('k90>>>${selectedItemsMap['${columnName}']}');
+    return items.length != 0 ? new MultiSelectDropdown(
       selectedItemsMap: selectedItemsMap,
       items: [
         for (var item in items)
@@ -846,12 +735,15 @@ class ViewController extends GetxController {
       hintText: hintText,
       selectName: columnName,
       onSelectChanged: (selectedItems){
-        print('selectedItem2>>>${selectedItems}');
+
         // dataJson[columnName] = selectedItems.join(', ');
         ViewController.request[columnName] = selectedItems.join(', ');
+
+
+        print('selectedItems903>>>${selectedItems}');
       },
       column: column,
-    );
+    ):Container();
   }
 
   static Widget generateFormColorBox(String columnName ,var column, Map dataJson , Color selectedColor){
@@ -878,8 +770,6 @@ class ViewController extends GetxController {
     List<dynamic> filesSelectedList;
     if(ViewController.request[columnName] != null){
       filesSelectedList = ViewController.request[columnName];
-      print('aaaaaaaa2>>>${selectedFilesMap['${columnName}']}');
-      print('dataJson[columnName]>>>${ViewController.request[columnName]}');
       for(var data in filesSelectedList){
         selectedFilesMap['${columnName}']!.add(data);
       }
@@ -887,7 +777,6 @@ class ViewController extends GetxController {
     return new FormFile(
      columnName: columnName,
       onChanged: (selecetdFiles){
-       print('selecetdFiles>>>>${selecetdFiles}');
         // dataJson[columnName] = selecetdFiles;
         ViewController.request[columnName] = selecetdFiles;
       },
@@ -897,16 +786,54 @@ class ViewController extends GetxController {
     ) ;
   }
 
-  static Future<List<dynamic>>  getInfoTable(String tableName) async{
-    List<dynamic> rowList=[];
+  // static Future<List<dynamic>>  getInfoTable(String tableName) async{
+  //   List<dynamic> rowList=[];
+  //   List<dynamic> tableData = [];
+  //   Box box2;
+  //   box2 = await Hive.openBox<DataModel>('${tableName}');
+  //   tableData = box2.values.toList();
+  //   for(var row in tableData){
+  //     rowList.add(row.data);
+  //   }
+  //   for(var row in tableData){
+  //     print('ffff67>>>${row.id}');
+  //   }
+  //   print('rowList>>>${rowList}');
+  //   return rowList;
+  //
+  // }
+  static Future<List<DataModel>> getRowTable(String tableName) async {
+    List<DataModel> rowList=[];
     List<dynamic> tableData = [];
     Box box2;
     box2 = await Hive.openBox<DataModel>('${tableName}');
     tableData = box2.values.toList();
     for(var row in tableData){
-      rowList.add(row.data);
+      var dataRow=new DataModel(id: row.id, data: row.data);
+      rowList.add(dataRow);
     }
     return rowList;
+  }
 
+
+  static Future<String> getTitleSelectedItem(String tableName , String selectedId , String sourceItem  , List<dynamic> items) async {
+
+    String selectedTitle='';
+    if(sourceItem != 'custom'){
+      List<DataModel> objectItem  = await getRowTable(tableName);
+      DataModel objectTitleSelected = objectItem.firstWhere((element) => element.id == selectedId, orElse: () => DataModel(id: 'not_found', data: {'error': 'آیتم مربوطه حذف شده است'}));
+      selectedTitle =  objectTitleSelected.data.values.first;
+    }
+    else{
+      Map<String, dynamic> selectedItem = items.firstWhere((element) => element['value'] == selectedId , orElse: ()=>{'error': 'آیتم مربوطه حذف شده است'});
+      if(selectedItem['title'] != null){
+        selectedTitle = selectedItem['title'];
+      }
+      else{
+        selectedTitle = selectedItem['error'];
+      }
+
+    }
+    return selectedTitle;
   }
 }

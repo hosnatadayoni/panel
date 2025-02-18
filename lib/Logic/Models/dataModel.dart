@@ -48,7 +48,7 @@ class DataModel {
   Map<String , dynamic> data;
 
 
-  DataModel({required this.id , required this.data});
+  DataModel({this.id , required this.data});
 
   factory DataModel.fromJson(Map<String, dynamic> json){
     return DataModel(

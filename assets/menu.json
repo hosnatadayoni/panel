@@ -37,7 +37,6 @@
                 "is-show-table":false
         
             },
-
             {
                "name": "d",
                "type": "select",
@@ -73,7 +72,6 @@
             "sourceTable": "status",
             "items": []
           },
-
            {
                 "name": "checkBox",
                 "type": "checkbox",
@@ -96,6 +94,8 @@
           {
             "name": "multiSelect",
             "type": "multiSelect",
+            "sourceItems": "custom",
+            "sorceTable": null,
             "items": [
               {"title": "انتخاب نشده" , "value": "-1"},
               {"title": "test 1","value": "1"},
@@ -121,6 +121,8 @@
           {
             "name": "multiSelect2",
             "type": "multiSelect",
+            "sourceItems": "custom",
+            "sorceTable": null,
             "items": [
               {"title": "انتخاب نشده" , "value": "-1"},
               {"title": "test 5","value": "1"},
@@ -167,6 +169,17 @@
 
             ]
 
+          },
+          {
+            "name": "table multi select",
+            "type": "multiSelect",
+            "sourceItems": "table",
+            "sourceTable": "status",
+            "items": []
+          },
+          {
+            "name": "Email",
+            "type": "email"
           }
         ]
     },
@@ -184,7 +197,7 @@
             },
             {
                 "name": "y",
-                "type": "int"
+                "type": "number"
             }
         ]
     },

@@ -26,8 +26,6 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
   Rx<bool> isSelectedItem = false.obs;
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    Rx<bool>? isSeleted = false.obs;
     if(widget.selectedItemsMap['${widget.selectName}'] == null){
       widget.selectedItemsMap['${widget.selectName}']=[];
     }

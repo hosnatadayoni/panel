@@ -57,15 +57,13 @@ class _FormTextFieldState extends State<FormTextField> {
   }
   void _validateInput() {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
-    if(ViewController.request[widget.column['name']] != null){
-      text.value =  ViewController.request[widget.column['name']];
-    }
-
      if(widget.column != null){
+       if(ViewController.request[widget.column['name']] != null){
+         text.value =  ViewController.request[widget.column['name']];
+       }
        if(widget.column['validators'] != null){
          var inputRequired;
          String? errorMessage;
-
           inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
          if(inputRequired != null){
           if(inputRequired['message'] != null){
@@ -139,7 +137,6 @@ class _FormTextFieldState extends State<FormTextField> {
                  // _errorText = '${AppController.of(context)!.value('Entering this field is required')}';
                  _errorText = errorMessage;
                });
-
              }
              else{
                setState(() {
@@ -151,17 +148,15 @@ class _FormTextFieldState extends State<FormTextField> {
          }
        }
      }
-
-
   }
   @override
   Widget build(BuildContext context) {
-
     return  Obx((){
       if(ViewController.isClickedCreateBtn.value){
-        if (text.value == '')  {
-          var inputRequired;
-          if(widget.column != null){
+        if(widget.column  != null){
+          if (text.value == '')  {
+            var inputRequired;
+
             if(widget.column['validators'] != null){
               inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
               if(inputRequired != null){
@@ -169,41 +164,39 @@ class _FormTextFieldState extends State<FormTextField> {
               }
             }
           }
-        }
-        else if(text.value != ''){
-          var maxValidator;
-          var minValidator;
-          if(widget.column['validators'] != null){
-            maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-            minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-          }
-
-          var number = num.tryParse(text.value);
-          if(number != null){
-            if(minValidator != null && maxValidator != null){
-              if(number < minValidator['value']){
-                _errorText = minValidator['message'];
-              }
-              else{
-                if(number > maxValidator['value']){
-                  _errorText = maxValidator['message'];
+          else if(text.value != ''){
+            var maxValidator;
+            var minValidator;
+            if(widget.column['validators'] != null){
+              maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+              minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+              var number = num.tryParse(text.value);
+              if(number != null){
+                if(minValidator != null && maxValidator != null){
+                  if(number < minValidator['value']){
+                    _errorText = minValidator['message'];
+                  }
+                  else{
+                    if(number > maxValidator['value']){
+                      _errorText = maxValidator['message'];
+                    }
+                    else{
+                      _errorText = null;
+                    }
+                  }
+                  // if (number < minValidator['value'] || number > maxValidator['value']) {
+                  //   setState(() {
+                  //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
+                  //     _errorText =   errorMessage;
+                  //   });
+                  // } else {
+                  //   setState(() {
+                  //     _errorText = null;
+                  //   });
+                  // }
                 }
-                else{
-                  _errorText = null;
-                }
               }
-              // if (number < minValidator['value'] || number > maxValidator['value']) {
-              //   setState(() {
-              //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
-              //     _errorText =   errorMessage;
-              //   });
-              // } else {
-              //   setState(() {
-              //     _errorText = null;
-              //   });
-              // }
             }
-
           }
         }
       }

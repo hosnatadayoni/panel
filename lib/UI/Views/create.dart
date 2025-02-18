@@ -4,10 +4,8 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
-import 'package:finance/UI/Componenets/General/loading.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -156,9 +154,12 @@ class _CreatePageState extends State<CreatePage> {
                                                   print('box.length>>>>${box.length}');
                                                   dataController.allData.value.add(newData);
                                                   print('newData.data${newData.data}');
+                                                  print('dataController.allData.value>>>${dataController.allData.value}');
+                                                  print('newData.id>>>${newData.id}');
                                                   await MainController.loadData();
                                                   MainController.renderPagination();
                                                   // }
+                                                  ViewController.isClickedCreateBtn.value = false;
                                                   Get.to(() => TablePage());
                                                 }
                                               },

@@ -13,7 +13,7 @@ class SelectBox extends StatefulWidget {
   String? name;
   List<DropdownMenuItem<String>>? items;
   String? hintText;
-  Rx<String>? selectedValue;
+  String? selectedValue;
    Function(String?)? onChanged;
    String? initalValue;
   var column;
@@ -39,8 +39,6 @@ class _SelectBoxState extends State<SelectBox> {
 
   @override
   Widget build(BuildContext context) {
-    print('itemsxx>>>${widget.items!.first.value}');
-    print('widget.selectedValue>>>${widget.selectedValue!.value}');
     var inputRequired;
     String? errorMessage;
     if(widget.column['validators'] != null){
@@ -75,7 +73,7 @@ class _SelectBoxState extends State<SelectBox> {
               onChanged: (value) {
               setState(() {
                 this.isSeleted!.value = true;
-                  widget.selectedValue!.value = value!.toString();
+                  widget.selectedValue = value!.toString();
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
                   }

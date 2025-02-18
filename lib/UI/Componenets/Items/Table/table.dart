@@ -56,7 +56,19 @@ class _TableBoxState extends State<TableBox> {
                     children: [
                       for(var j =0 ; j<MainController.tableInfo['columns'].length;j++)
                         if(MainController.tableInfo['columns'][j]['is-show-table'] == true)
-                          ViewController.generateDataColumn(j,i),
+                          FutureBuilder<Widget>(
+                            future:ViewController.generateDataColumn(j,i),
+                            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // در حال بارگذاری
+                              } else if (snapshot.hasError) {
+                                return Text('خطا: ${snapshot.error}');
+                              } else {
+                                return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
+                              }
+                            },
+                          ),
+                          // ViewController.generateDataColumn(j,i),
                       Center(
                         child: Container(
                             padding: EdgeInsets.all(10),

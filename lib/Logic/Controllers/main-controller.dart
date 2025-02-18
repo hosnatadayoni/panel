@@ -58,7 +58,7 @@ class MainController extends GetxController {
 
   static Map<String, dynamic> dataJson = {};
 
-  static Rx<String> selectedItemList = ''.obs;
+  static Rx<int> selectedItemList = 0.obs;
 
   static List<dynamic> SubMenuList = [];
   static dynamic tableInfo = null;
@@ -513,6 +513,7 @@ class MainController extends GetxController {
   static Future<void> loadData() async {
     if (MainController.selectedSubItem.value != -1) {
       tableInfo = SubMenuList[MainController.selectedSubItem.value];
+      print('tableInfo>>>${tableInfo['columns']}');
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       MainController.tableData.value = box.values.toList();
     } else {
