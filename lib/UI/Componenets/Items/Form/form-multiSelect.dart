@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class MultiSelectDropdown extends StatefulWidget {
   String? hintText;
-  List<String>items;
+  // List<String>items;
+  List<DropdownMenuItem<String>>? items;
   List<String>? selectedItems= [];
   Function(List<String>)? onSelectChanged;
   String selectName;
@@ -132,61 +133,63 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                     child: DropdownButton(
                       isExpanded: true,
                       dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
-                      items: widget.items.map((String item) {
-                        Rx<bool> isSelected = widget.selectedItemsMap['${widget.selectName}']!.contains(item).obs;
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 100,
-                                child: SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: Obx((){
-                                      return  Checkbox(
-                                        activeColor: colorBtn,
-                                        value: isSelected.value,
-                                        onChanged: (text) {
-                                          setState(() {
-                                            this.isSelectedItem.value = true;
-                                            if(text == true) {
-                                              if(!widget.selectedItemsMap['${widget.selectName}']!.contains(item)){
-                                                if(item == '${AppController.of(context)!.value('has been selected')}'){
-                                                  widget.selectedItemsMap['${widget.selectName}']!.remove(item);
-                                                }
-                                                else{
-                                                  widget.selectedItemsMap['${widget.selectName}']!.add(item);
-                                                }
-                                              }
-                                            }
-                                            else{
-                                              widget.selectedItemsMap['${widget.selectName}']!.remove(item);
-                                            }
-                                            print('widget.selectedItemsMap[${widget.selectName}]!>>>${widget.selectedItemsMap['${widget.selectName}']!}');
-                                            if(widget.selectedItemsMap['${widget.selectName}']!.length == 0){
-                                              widget.hintText = '${AppController.of(context)!.value('has been selected')}';
-                                              dropDownSelected = widget.hintText;
-                                            }
-                                            else{
-                                              widget.hintText = '${widget.selectedItemsMap['${widget.selectName}']!.join(', ')}';
-                                              dropDownSelected = widget.hintText;
-                                            }
-                                            if(widget.onSelectChanged != null){
-                                              this.widget.onSelectChanged!(widget.selectedItemsMap['${widget.selectName}']! );
-                                            }
-                                            isSelected.value = widget.selectedItemsMap['${widget.selectName}']!.contains(item);
-                                          });
-                                        },
-                                      );
-                                    })
-                                ),
-                              ),
-                              Txt(item, color: MainController.isLightMode.value ? whiteColor : primaryDark),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                      // items: widget.items.map((String item) {
+                      //   print('widget.items>>>${widget.items}');
+                      //   Rx<bool> isSelected = widget.selectedItemsMap['${widget.selectName}']!.contains(item).obs;
+                      //   return DropdownMenuItem<String>(
+                      //     value: item,
+                      //     child: Row(
+                      //       children: [
+                      //         Container(
+                      //           height: 100,
+                      //           child: SizedBox(
+                      //               width: 50,
+                      //               height: 50,
+                      //               child: Obx((){
+                      //                 return  Checkbox(
+                      //                   activeColor: colorBtn,
+                      //                   value: isSelected.value,
+                      //                   onChanged: (text) {
+                      //                     setState(() {
+                      //                       this.isSelectedItem.value = true;
+                      //                       if(text == true) {
+                      //                         if(!widget.selectedItemsMap['${widget.selectName}']!.contains(item)){
+                      //                           if(item == '${AppController.of(context)!.value('has been selected')}'){
+                      //                             widget.selectedItemsMap['${widget.selectName}']!.remove(item);
+                      //                           }
+                      //                           else{
+                      //                             widget.selectedItemsMap['${widget.selectName}']!.add(item);
+                      //                           }
+                      //                         }
+                      //                       }
+                      //                       else{
+                      //                         widget.selectedItemsMap['${widget.selectName}']!.remove(item);
+                      //                       }
+                      //                       print('widget.selectedItemsMap[${widget.selectName}]!>>>${widget.selectedItemsMap['${widget.selectName}']!}');
+                      //                       if(widget.selectedItemsMap['${widget.selectName}']!.length == 0){
+                      //                         widget.hintText = '${AppController.of(context)!.value('has been selected')}';
+                      //                         dropDownSelected = widget.hintText;
+                      //                       }
+                      //                       else{
+                      //                         widget.hintText = '${widget.selectedItemsMap['${widget.selectName}']!.join(', ')}';
+                      //                         dropDownSelected = widget.hintText;
+                      //                       }
+                      //                       if(widget.onSelectChanged != null){
+                      //                         this.widget.onSelectChanged!(widget.selectedItemsMap['${widget.selectName}']! );
+                      //                       }
+                      //                       isSelected.value = widget.selectedItemsMap['${widget.selectName}']!.contains(item);
+                      //                     });
+                      //                   },
+                      //                 );
+                      //               })
+                      //           ),
+                      //         ),
+                      //         Txt(item, color: MainController.isLightMode.value ? whiteColor : primaryDark),
+                      //       ],
+                      //     ),
+                      //   );
+                      // }).toList(),
+                      items:widget.items,
                       onChanged: (_) {},
                     ),
                   ),

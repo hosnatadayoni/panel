@@ -930,10 +930,10 @@ class ViewController extends GetxController {
   //dehdar edit
   static Future<String> getInitValue(
       var column, List<dynamic> items) async {
-    String initValue = '';
-    var type=column['sourceItems'];
-    var tableName=column['sourceTable'];
-    var selectedItem;
+      String initValue = '';
+      var type=column['sourceItems'];
+      var tableName=column['sourceTable'];
+      var selectedItem;
     // List<dynamic> items = await itemsList(column, type, tableName);
     // for (var subMenu in MainController.SubMenuList) {
       if (type != 'custom') {
