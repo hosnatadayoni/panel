@@ -750,6 +750,11 @@ class ViewController extends GetxController {
         selectedItemsMap['${column['name']}']!.add(data);
       }
     }
+    print('items.length>>>${items.length}');
+    for (var item in items){
+      print('sdfg>>>${item['value']}');
+    }
+
     return items.length != 0
         ? new MultiSelectDropdown(
             selectedItemsMap: selectedItemsMap,
