@@ -40,5 +40,6 @@
   "fields": "فیلد های",
   "is wrong": "اشتباه است",
   "Please select the desired file": "لطفا فایل مورد نظر خود را انتخاب کنید",
-  "The corresponding item has been deleted": "آیتم مربوطه حذف شده است"
+  "The corresponding item has been deleted": "آیتم مربوطه حذف شده است",
+  "error": "خطا"
 }

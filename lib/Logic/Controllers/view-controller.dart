@@ -468,7 +468,7 @@ class ViewController extends GetxController {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            return Text('خطا: ${snapshot.error}');
+            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
           } else {
             return snapshot.data ?? Container();
           }

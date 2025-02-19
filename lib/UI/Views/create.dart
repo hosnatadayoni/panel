@@ -190,7 +190,7 @@ class _CreatePageState extends State<CreatePage> {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                   return CircularProgressIndicator(); // در حال بارگذاری
                                 } else if (snapshot.hasError) {
-                                  return Text('خطا: ${snapshot.error}');
+                                  return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
                                 } else {
                                   return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
                                 }
