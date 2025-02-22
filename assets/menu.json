@@ -80,6 +80,8 @@
            {
                 "name": "radioButton",
                 "type": "radiobutton",
+                "sourceItems": "custom",
+                "sorceTable": null,
                 "items": [
                     {"title": "test 1","value": "1","is_selected": true},
                     {"title": "test 2","value": "2","is_selected": false},
@@ -87,6 +89,7 @@
                     {"title": "test 4","value": "4","is_selected": false}
                 ]
             },
+
           {
             "name": "Date",
             "type": "date"
@@ -180,6 +183,13 @@
           {
             "name": "Email",
             "type": "email"
+          },
+          {
+            "name": "table radio button",
+            "type": "radiobutton",
+            "sourceItems": "table",
+            "sourceTable": "status",
+            "items": []
           }
         ]
     },
