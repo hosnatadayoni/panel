@@ -11,7 +11,16 @@ class ValidatorController extends GetxController {
     var type = column['type'];
     String name = column['name'];
     if(column['is-show-store'] == true){
+      if(column['type']=='multiSelect'){
+        if(dataJson[name] != null){
+          if(dataJson[name].length == 0){
+            return checkInputRequiredValidator(indexColumn , dataJson);
+          }
+        }
+      }
       if(dataJson[name] == '' || dataJson[name] == null){
+        print('data json is empty');
+        print('name data is empty>>>${name}');
         return checkInputRequiredValidator(indexColumn , dataJson);
       }
       else{
@@ -63,9 +72,11 @@ class ValidatorController extends GetxController {
     String name = column['name'];
     var maxValidator;
     var minValidator;
+    var emailValidator;
     if(column['validators'] != null){
       maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
       minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+      emailValidator = column['validators'].firstWhere((validator) => validator['type'] == 'email', orElse: () => null);
     }
     if(column['type'] == 'number'){
           var number;
@@ -98,6 +109,15 @@ class ValidatorController extends GetxController {
         return isContains;
       }
 
+    }
+    if(column['type'] == 'email'){
+      final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+      if (!emailRegex.hasMatch(dataJson[name])) {
+        return false;
+      }
+      else{
+        return true;
+      }
     }
     return true;
   }

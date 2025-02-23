@@ -92,6 +92,7 @@ class _TableBoxState extends State<TableBox> {
                                     IconButton(onPressed: (){
                                       MainController.isClickedItem.value = false;
                                       ViewController.isClickedCreateBtn.value = false;
+                                      ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i].data};
                                       Get.to(() =>
                                           EditPage(data: MainController.tableData.value[i], index: i,));

@@ -104,6 +104,7 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
+                                 ViewController.isClickedEditBtn.value = true;
                                   final data = DataModel(
                                     id: widget.data!.id,
                                     data: ViewController.request,
@@ -128,6 +129,7 @@ class _EditPageState extends State<EditPage> {
                                     print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
                                     print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
                                     MainController.isClickedItem.value = true;
+                                    ViewController.isClickedEditBtn.value = false;
                                     Get.to(() => TablePage());
                                   }
 

@@ -25,6 +25,7 @@ import '../../UI/Componenets/Items/Form/form-file.dart';
 class ViewController extends GetxController {
   static Rx<String> selectedRadioButton = ''.obs;
   static Rx<bool> isClickedCreateBtn = false.obs;
+  static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
   static Map<String, dynamic> request = {};
 
@@ -142,7 +143,7 @@ class ViewController extends GetxController {
             multiSelectBox = await genarateFormMuiltiSelectBox(
                 column,
                 items,
-                dataJson,RxString('${items[0]['title']}'),<String>[].obs);
+                dataJson,RxString('${items[0]['title']}'),<String>[].obs ,false.obs);
 
             children.add(SizedBox(
               height: 20,
@@ -440,7 +441,7 @@ class ViewController extends GetxController {
               // print('selected item title>>>${selectedItem['title']}');
             }
             multiSelectBox = await genarateFormMuiltiSelectBox(
-                column, items, dataModel,RxString(multiSelectedItemList.join(', ')),RxList(dataModel['${name}']));
+                column, items, dataModel,RxString(multiSelectedItemList.join(', ')),RxList(dataModel['${name}']),false.obs);
 
             children.add(SizedBox(
               height: 20,
@@ -810,7 +811,7 @@ class ViewController extends GetxController {
   }
 
   static Future<Widget> genarateFormMuiltiSelectBox(
-       var column,List<dynamic> items, Map dataJson , Rx<String> hintTxt , RxList<String> selectedItemsList) async {
+       var column,List<dynamic> items, Map dataJson , Rx<String> hintTxt , RxList<String> selectedItemsList , Rx<bool> isSelectedItem) async {
     return items.length != 0
         ? new Obx(() {
           return MultiSelectDropdown(
@@ -837,6 +838,18 @@ class ViewController extends GetxController {
                                         } else {
                                           selectedItemsList.remove(item['value']);
                                         }
+                                        if(item['value'] == '-1'){
+                                          selectedItemsList.value.remove(item['value']);
+                                        }
+                                        if(selectedItemsList.value.length == 0){
+                                          isSelectedItem.value = false;
+                                        }
+                                        else{
+                                          isSelectedItem.value = true;
+                                        }
+                                        print('isSelectedItem.value clcick check box>>>${isSelectedItem.value}');
+                                        print('selectedItemsList.value.length clcick check box>>>${selectedItemsList.value.length}');
+
                                         hintTxt.value = hintMultiSelectBox(items, selectedItemsList.value);
                                         ViewController.request[column['name']] = selectedItemsList.value;
                                       }
@@ -853,15 +866,12 @@ class ViewController extends GetxController {
             ],
             hintText: hintTxt.value != '' ? hintTxt.value:items[0]['title'],
             selectedItems: selectedItemsList,
+            isSelectedItem:isSelectedItem ,
             onChanged: (selectedList){
               selectedItemsList.value = selectedList;
               hintTxt.value = hintMultiSelectBox(items , selectedItemsList.value);
               ViewController.request[column['name']] = selectedItemsList.value;
             },
-            // onSelectChanged: (selectedItems) {
-            //   // dataJson[columnName] = selectedItems.join(', ');
-            //   ViewController.request[column['name']] = selectedItems.join(', ');
-            // },
             column: column,
           );
     })
@@ -1005,6 +1015,8 @@ class ViewController extends GetxController {
     List<dynamic> items = [];
     var type=column['sourceItems'];
     var tableName=column['sourceTable'];
+    print('column excel>>>${column}');
+    print('tableName>>>${tableName}');
     if (type != 'custom') {
       List<DataModel> dropDownListItems =
       await getRowTable(tableName);
@@ -1026,7 +1038,6 @@ class ViewController extends GetxController {
     return items;
   }
 
-  //dehdar edit
   static Future<String> getInitValue(
       var column, List<dynamic> items) async {
       String initValue = '';
@@ -1085,6 +1096,7 @@ class ViewController extends GetxController {
 
       }
     }
+    print('titles hint>>>${titles}');
     return titles.join(', ');
   }
 

@@ -15,9 +15,10 @@ class MultiSelectDropdown extends StatefulWidget {
   // Function(List<String>)? onSelectChanged;
   Function(List<String>)? onChanged;
   // Map<String, List<String>> selectedItemsMap;
+  Rx<bool>? isSelectedItem = false.obs;
 
   var column;
-  MultiSelectDropdown({this.hintText ,required this.items , this.column , this.onChanged,this.selectedItems});
+  MultiSelectDropdown({this.hintText ,required this.items , this.column , this.onChanged,this.selectedItems , this.isSelectedItem});
   @override
   _MultiSelectDropdownState createState() => _MultiSelectDropdownState();
 }
@@ -25,7 +26,7 @@ class MultiSelectDropdown extends StatefulWidget {
 class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
   var dropDownSelected=null;
 
-  Rx<bool> isSelectedItem = false.obs;
+
   @override
   Widget build(BuildContext context) {
     var inputRequired;
@@ -70,8 +71,14 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                             if (widget.onChanged != null) {
                               widget.onChanged!(widget.selectedItems!.value);
                             }
+                            print('widget.selectedItems!.value>>>${widget.selectedItems!.value}');
+                            if(widget.selectedItems!.value.length ==0 ){
+                              widget.isSelectedItem?.value = false;
+                            }
+                            else{
+                              widget.isSelectedItem?.value = true;
+                            }
                           }
-
                         });
                       },
                     ),
@@ -87,7 +94,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedCreateBtn.value == true && this.isSelectedItem.value == false?
+              ViewController.isClickedCreateBtn.value == true && widget.isSelectedItem!.value == false || widget.isSelectedItem!.value == false && ViewController.isClickedEditBtn.value == true ?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

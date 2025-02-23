@@ -182,7 +182,10 @@
           },
           {
             "name": "Email",
-            "type": "email"
+            "type": "email",
+            "validators": [
+              {"type": "email" , "message": "ایمیل وارد شده معتبر نیست"}
+            ]
           },
           {
             "name": "table radio button",

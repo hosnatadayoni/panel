@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
+import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -102,7 +103,30 @@ class MainController extends GetxController {
             var column = MainController.tableInfo['columns'][j];
             var name = column['name'];
             var value = data.data[name]?.toString() ?? '';
-            rowData.add(exl.TextCellValue(value));
+            List<dynamic> items=[];
+            if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
+             items = await ViewController.itemsList(column);
+            }
+            if(column['type'] =='multiSelect'){
+              String listTitle = ViewController.hintMultiSelectBox(items, data.data[name]);
+              print('listTitle>>>${listTitle}');
+              rowData.add(exl.TextCellValue(listTitle));
+            }
+            else if(column['type'] =='select' || column['type'] == 'radiobutton'){
+              String tableName ='';
+              if (column['sourceItems'] != 'custom') {
+                tableName = column['sourceTable'];
+
+              }
+              String title = await ViewController.getTitleSelectedItem('${tableName}',
+                  data.data[name] , column);
+              rowData.add(exl.TextCellValue(title));
+            }
+            else{
+              rowData.add(exl.TextCellValue(value));
+            }
+
+
           }
         }
         print('rowData>>>${rowData}');
@@ -345,11 +369,13 @@ class MainController extends GetxController {
       var name = column['name'];
       var type = column['type'];
       var items = column['items'];
+      print('items excel>>>${items}');
       var isImportable = column['import-of-excel'];
 
       if (isImportable == null || isImportable) {
         //is importable be true or null: null==true default value
         {
+
           if (type == 'select') {
             if (items.contains(dataRowExcel[name].toString())) {
               dataExlJson[name] = dataRowExcel[name].toString();
