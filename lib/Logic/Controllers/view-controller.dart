@@ -625,7 +625,7 @@ class ViewController extends GetxController {
       initValue: initValue,
       onChange: (text) {
         // dataJson[columnName] = text;
-        ViewController.request[columnName] =  text;
+        ViewController.request[columnName] = text;
       },
       isMobile: type == 'mobile' ? true : false,
       isNumber: type == 'number' ? true : false,

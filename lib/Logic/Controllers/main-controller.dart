@@ -5,15 +5,6 @@ import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
-import 'package:finance/Public/styles.dart';
-import 'package:finance/UI/Componenets/General/txt.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-color.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-date.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
-import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu-item.dart';
 import 'package:finance/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/boxes.dart';
@@ -390,6 +381,30 @@ class MainController extends GetxController {
       }
     }
     return null;
+  }
+  static getColumnInfoTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere((
+        element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
+      print('table info>d>>${tableInfo['columns']}');
+      return tableInfo['columns'];
+    }
+    return null;
+  }
+  static getTypeOfField(String tableName,String name,) {
+    var type;
+    // print('name iss>>${name}');
+    var column=getColumnInfoTable(tableName);
+    for(var item in column){
+      if(item['name']==name){
+        print('name iss>>${item['name']}');
+
+        type=item['type'];
+
+        return type;
+      }
+    }
   }
 
   static getColumnPrime() {
