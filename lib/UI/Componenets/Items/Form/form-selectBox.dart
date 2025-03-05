@@ -17,6 +17,8 @@ class SelectBox extends StatefulWidget {
    Function(String?)? onChanged;
    String? initalValue;
   var column;
+  Rx<bool>? isSeleted = false.obs;
+
 
   SelectBox({
      this.name,
@@ -25,7 +27,8 @@ class SelectBox extends StatefulWidget {
      this.selectedValue,
     this.onChanged,
     this.initalValue,
-    this.column
+    this.column,
+    this.isSeleted
   });
 
   @override
@@ -35,7 +38,7 @@ class SelectBox extends StatefulWidget {
 class _SelectBoxState extends State<SelectBox> {
   String? _errorText='';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Rx<bool>? isSeleted = false.obs;
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,7 @@ class _SelectBoxState extends State<SelectBox> {
     // bool initialValueExists = widget.items!.any((item) => item.value == initialValue);
     return widget.items!.isNotEmpty? FormBuilder(
       child: Obx((){
+        print('xsder>>>${widget.isSeleted!.value}');
         return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -72,7 +76,7 @@ class _SelectBoxState extends State<SelectBox> {
               items: widget.items!,
               onChanged: (value) {
               setState(() {
-                this.isSeleted!.value = true;
+                 widget.isSeleted!.value = true;
                   widget.selectedValue = value!.toString();
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
@@ -83,7 +87,7 @@ class _SelectBoxState extends State<SelectBox> {
             SizedBox(height: 5,),
             if(inputRequired != null)
               if(inputRequired['type'] == 'required')
-                ViewController.isClickedCreateBtn.value == true && this.isSeleted!.value == false?
+                ViewController.isClickedBtn.value == true && widget.isSeleted!.value == false ||  ViewController.isClickedEditBtn.value == true && widget.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
           ],
         );

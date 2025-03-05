@@ -91,7 +91,7 @@ class _TableBoxState extends State<TableBox> {
                                   children: [
                                     IconButton(onPressed: (){
                                       MainController.isClickedItem.value = false;
-                                      ViewController.isClickedCreateBtn.value = false;
+                                      ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i].data};
                                       Get.to(() =>

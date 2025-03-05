@@ -129,7 +129,7 @@ class _CreatePageState extends State<CreatePage> {
                                                 // }
                                                 // endTime = DateTime.now();
                                                 // print('endTime>>>${endTime}');
-                                                ViewController.isClickedCreateBtn.value = true;
+                                                ViewController.isClickedBtn.value = true;
                                                 var Id =Uuid().v4();
                                                 print("add record manual:${dataJson}");
                                                 DataModel newData = DataModel(
@@ -141,7 +141,7 @@ class _CreatePageState extends State<CreatePage> {
                                                 List<bool> isValidatorList=[];
                                                 print('newData.data>>>${newData.data}');
                                                 for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                                  isValidator = ValidatorController.checkInputValidation(j,newData.data);
+                                                  isValidator = await ValidatorController.checkInputValidation(j,newData.data);
                                                   isValidatorList.add(isValidator);
                                                 }
                                                 print('isValidatorList>>>${isValidatorList}');
@@ -159,7 +159,7 @@ class _CreatePageState extends State<CreatePage> {
                                                   await MainController.loadData();
                                                   MainController.renderPagination();
                                                   // }
-                                                  ViewController.isClickedCreateBtn.value = false;
+                                                  ViewController.isClickedBtn.value = false;
                                                   Get.to(() => TablePage());
                                                 }
                                               },

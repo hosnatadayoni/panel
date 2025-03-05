@@ -89,9 +89,9 @@ class MainController extends GetxController {
           cell = sheet.cell(exl.CellIndex.indexByString(
               '${String.fromCharCode(65 + (excelColumnIndex + 1))}1'));
           cell.value = exl.TextCellValue('${name}');
-          print('cell>>>${cell.value}');
           excelColumnIndex++;
         }
+
       }
       int rowIndex = 2;
       for (var data in MainController.tableData.value) {
@@ -102,34 +102,129 @@ class MainController extends GetxController {
           if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
             var column = MainController.tableInfo['columns'][j];
             var name = column['name'];
-            var value = data.data[name]?.toString() ?? '';
+            // var value = data.data[name]?.toString() ?? '';
+            var value = data.data[name] ?? '';
             List<dynamic> items=[];
+            String tableName ='';
             if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
-             items = await ViewController.itemsList(column);
+              items = await ViewController.itemsList(column);
             }
-            if(column['type'] =='multiSelect'){
-              String listTitle = ViewController.hintMultiSelectBox(items, data.data[name]);
-              print('listTitle>>>${listTitle}');
-              rowData.add(exl.TextCellValue(listTitle));
-            }
-            else if(column['type'] =='select' || column['type'] == 'radiobutton'){
-              String tableName ='';
+            if(column['type'] =='select' || column['type'] == 'radiobutton'){
               if (column['sourceItems'] != 'custom') {
-                tableName = column['sourceTable'];
+                      tableName = column['sourceTable'];
 
               }
-              String title = await ViewController.getTitleSelectedItem('${tableName}',
-                  data.data[name] , column);
+              String title;
+              if(data.data[name] != null){
+                title = await ViewController.getTitleSelectedItem('${tableName}', data.data[name] , column);
+
+              }
+              else{
+                title = '';
+              }
               rowData.add(exl.TextCellValue(title));
             }
-            else{
-              rowData.add(exl.TextCellValue(value));
+            else if(column['type'] =='multiSelect'){
+              if (column['sourceItems'] != 'custom'){
+                  if(column['sourceTable'] != null){
+                   tableName = column['sourceTable'];
+              }
+              }
+              List<String> listTitle=[];
+              if(data.data[name] != null){
+                 listTitle = await ViewController.getTitleMultiSelectedItem('${tableName}', data.data[name] , column);
+              }
+
+              rowData.add(exl.TextCellValue(listTitle.join(',')));
+              }
+            else if(column['type'] =='checkbox'){
+              print('value checkbox>>>${value}');
+              rowData.add(exl.BoolCellValue(value));
+            }
+            else if(column['type'] =='file'){
+              if(value != ''){
+                String fileName = getNameFile(value);
+                rowData.add(exl.TextCellValue(fileName.toString()));
+              }
+              else{
+                rowData.add(exl.TextCellValue(''));
+              }
+
             }
 
+            else{
+              rowData.add(exl.TextCellValue(value.toString()));
+            }
+            // rowData.add(exl.TextCellValue(value));
+
+            // List<dynamic> items=[];
+            // String tableName ='';
+            // if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
+            //   items = await ViewController.itemsList(column);
+            // }
+            // if(value.runtimeType == 'String'){
+            //   if(column['type'] =='select' || column['type'] == 'radiobutton'){
+            //     if (column['sourceItems'] != 'custom') {
+            //       tableName = column['sourceTable'];
+            //
+            //     }
+            //     String title = await ViewController.getTitleSelectedItem('${tableName}',
+            //         data.data[name] , column);
+            //     rowData.add(exl.TextCellValue(title));
+            //   }
+            //   else{
+            //     rowData.add(exl.TextCellValue(value));
+            //   }
+            // }
+            // if(value.runtimeType == 'List<String>'){
+            //   if(column['type'] =='multiSelect'){
+            //     if (column['sourceItems'] != 'custom'){
+            //       if(column['sourceTable'] != null){
+            //         tableName = column['sourceTable'];
+            //       }
+            //     }
+            //     List<String> listTitle = await ViewController.getTitleMultiSelectedItem('${tableName}', data.data[name] , column);
+            //     rowData.add(exl.TextCellValue(listTitle.join(',')));
+            //   }
+            // }
+            // if(value.runtimeType == 'bool'){
+            //   rowData.add(exl.BoolCellValue(value));
+            // }
+            // else if(value.runtimeType == 'List<dynamic'){
+            //   rowData.add(exl.TextCellValue(value));
+            // }
+
+
+            // List<dynamic> items=[];
+            // String tableName ='';
+            // if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
+            //  items = await ViewController.itemsList(column);
+            // }
+            // if(column['type'] =='multiSelect'){
+            //   if (column['sourceItems'] != 'custom'){
+            //     if(column['sourceTable'] != null){
+            //       tableName = column['sourceTable'];
+            //     }
+            //   }
+            //   List<String> listTitle = await ViewController.getTitleMultiSelectedItem('${tableName}', data.data[name] , column);
+            //   rowData.add(exl.TextCellValue(listTitle.join(',')));
+            // }
+            // if(column['type'] =='select' || column['type'] == 'radiobutton'){
+            //   if (column['sourceItems'] != 'custom') {
+            //     tableName = column['sourceTable'];
+            //
+            //   }
+            //   String title = await ViewController.getTitleSelectedItem('${tableName}',
+            //       data.data[name] , column);
+            //   rowData.add(exl.TextCellValue(title));
+            // }
 
           }
         }
-        print('rowData>>>${rowData}');
+        for(var i=0;i<rowData.length;i++){
+          print('rowData>>>${rowData[i].runtimeType}');
+        }
+
         sheet.appendRow(rowData);
         rowIndex++;
       }
@@ -222,14 +317,11 @@ class MainController extends GetxController {
           return result?.files.single.path;
         });
         if(filePath != null){
-          print('s2');
           var bytes = File(filePath!).readAsBytesSync();
           excel = exl.Excel.decodeBytes(bytes);
         }
 
       }
-
-
       List<Map<String, dynamic>> rowdetail = [];
 
       //keys[0] dehdar
@@ -237,51 +329,180 @@ class MainController extends GetxController {
       List<dynamic> excelColumns = [];
 
       List<String> currentIds = [];
-      for (var table in excel.tables.keys) {
-        for (var row in excel.tables[table]!.rows) {
-          // rowData.value = [];
-          // rowdetail = [];
-          if (counter == 0) {
-            for (var cell in row) {
-              excelColumns.add(cell?.value.toString());
-            }
-          } else {
-            List<dynamic> rowData = [];
-            Map<String, dynamic> rowDataTest = {};
-            int counterColumn = 0;
-            for (var cell in row) {
-              if (cell?.value is exl.DoubleCellValue) {
-                double doubleValue = (cell!.value as exl.DoubleCellValue).value;
-                cell.value = exl.IntCellValue(doubleValue.toInt());
+      if(excel != null && excel.tables != null){
+        for (var table in excel.tables.keys) {
+          for (var row in excel.tables[table]!.rows) {
+            // rowData.value = [];
+            // rowdetail = [];
+            if (counter == 0) {
+              for (var cell in row) {
+                excelColumns.add(cell?.value.toString());
               }
-              rowData.add(cell?.value);
-              rowDataTest[excelColumns[counterColumn]] = cell?.value;
-              counterColumn++;
+            } else {
+              List<dynamic> rowData = [];
+              Map<String, dynamic> rowDataTest = {};
+              int counterColumn = 0;
+              for (var cell in row) {
+
+                var columnName = excelColumns[counterColumn];
+                var columnType = MainController.tableInfo['columns']
+                    .firstWhere((col) => col['name'] == columnName, orElse: () => null)?['type'];
+
+                dynamic cellValue = cell?.value;
+
+                if (columnType != null) {
+                  switch (columnType) {
+                    case 'select':
+                      if(cellValue != null){
+                        cellValue = cellValue.toString();
+                      }
+                      break;
+                    case 'radiobutton':
+                      if(cellValue != null){
+                        cellValue = cellValue.toString();
+                      }
+                      break;
+                    case 'multiSelect':
+                      if(cellValue != null){
+                        cellValue = cellValue.toString().split(',').map((e) => e.trim()).toList();
+                      }
+                      else{
+                        cellValue = [];
+                      }
+                      break;
+                    case 'checkbox':
+                      cellValue = cellValue.toString().toLowerCase() == 'true';
+                      break;
+                    case 'color':
+                      if(cellValue != null){
+                        cellValue = cellValue.toString();
+                      }
+                      else{
+                        cellValue = '';
+                      }
+                      break;
+                    case 'mobile':
+                      print('cell value before mobile>>>${cellValue} ${cellValue.runtimeType}');
+                      if (cellValue != null) {
+                        if(cellValue is exl.DoubleCellValue){
+                          double doubleValue = (cellValue as exl.DoubleCellValue).value;
+                          cellValue = exl.IntCellValue(doubleValue.toInt());
+                        }
+                        else{
+                          cellValue = int.tryParse(cellValue.toString());
+                        }
+
+                        print('cellValue after mobile>>>${cellValue}');
+                      } else {
+                        cellValue = 0;
+                      }
+                      print('cell value mobile type>>>${cellValue} ${cellValue.runtimeType}');
+                      break;
+                    default:
+                      if(cellValue != null){
+                        cellValue = cellValue.toString();
+                      }
+                      break;
+                  }
+                }
+                if (cell?.value is exl.DoubleCellValue) {
+                  double doubleValue = (cell!.value as exl.DoubleCellValue).value;
+                  cell.value = exl.IntCellValue(doubleValue.toInt());
+                }
+
+
+                if(columnType == 'select'){
+                  print('columnType selct type>>>${cellValue.runtimeType}  ${cellValue}');
+                }
+                else if(columnType == 'radiobutton'){
+                  print('columnType radiobutton type>>>${cellValue.runtimeType}  ${cellValue}');
+                }
+                else if(columnType == 'multiSelect'){
+                  print('columnType multiSelect type>>>${cellValue.runtimeType}  ${cellValue}');
+                }
+                else if(columnType == 'checkbox'){
+                  print('columnType checkbox type>>>${cellValue.runtimeType}  ${cellValue}');
+                }
+                else if(columnType == 'file'){
+                  print('columnType file type>>>${cellValue.runtimeType} ${cellValue}');
+                }
+                else if(columnType == 'mobile'){
+                  print('columnType mobile type>>>${cellValue.runtimeType} ${cellValue}');
+                }
+                rowData.add(cellValue);
+                rowDataTest[excelColumns[counterColumn]] = cellValue;
+                // rowData.add(cell?.value);
+                // rowDataTest[excelColumns[counterColumn]] = cell?.value;
+                counterColumn++;
+              }
+              print('rowData>>>${rowData}');
+              currentIds.add('${rowDataTest[excelColumns[0]]}');
+              if (rowData.any((element) => element != null)) {
+                rowdetail.add(rowDataTest);
+              }
+              print('rowdetail.length>>>${rowdetail.length}');
             }
-            currentIds.add('${rowDataTest[excelColumns[0]]}');
-            if (rowData.any((element) => element != null)) {
-              rowdetail.add(rowDataTest);
-            }
+            counter++;
           }
-          counter++;
         }
       }
+
       print('all data is:${rowdetail}');
 
       var columnPrime = getColumnPrime();
 
       for (var data in rowdetail) {
+
         var findIndexRecord = findByColumn(data, columnPrime);
         print('findIndexRecord>>>${findIndexRecord}');
 
         //create data json
         //function generate json record with columns name and data excel
-        var excelJson = generateJsonExcel(data, findIndexRecord);
+        var excelJson = await generateJsonExcel(data, findIndexRecord);
+        bool isValidator;
+        List<bool> isValidatorList=[];
+        for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+          var column = MainController.tableInfo['columns'][j];
+          bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+
+          isValidatorList.add(isValidator);
+        }
+        bool isExsistsValidation = isValidatorList.contains(false);
+        print('isValidatorList>>>${isValidatorList}');
 
         if (findIndexRecord != -1) {
-          updateRecord(excelJson, findIndexRecord, columnPrime);
+          // updateRecord(excelJson, findIndexRecord, columnPrime);
+          bool isValidator;
+          List<bool> isValidatorList=[];
+          for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+            var column = MainController.tableInfo['columns'][j];
+            bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+            isValidatorList.add(isValidator);
+          }
+          bool isExsistsValidation = isValidatorList.contains(false);
+          if(isExsistsValidation){
+            isValidatorList=[];
+          }
+          else{
+            updateRecord(excelJson, findIndexRecord, columnPrime);
+          }
+
         } else {
-          createRecord(excelJson);
+          bool isValidator;
+          List<bool> isValidatorList=[];
+          for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+            var column = MainController.tableInfo['columns'][j];
+            bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+            isValidatorList.add(isValidator);
+          }
+          bool isExsistsValidation = isValidatorList.contains(false);
+          if(isExsistsValidation){
+            isValidatorList=[];
+          }
+          else{
+            createRecord(excelJson);
+          }
+
         }
       }
       //read all record of excel
@@ -331,7 +552,10 @@ class MainController extends GetxController {
     //search by prime
     else {
       var primeColumnName = primeColumn['name'];
-      String dataToUpdate = dataRow[primeColumnName].toString();
+
+      // String dataToUpdate = dataRow[primeColumnName].toString();
+      var dataToUpdate = dataRow[primeColumnName];
+      print('dataToUpdate>>>${dataToUpdate.runtimeType}  ${dataToUpdate}');
       var existingPrimeIndex = MainController.tableData.value
           .indexWhere((d) => d.data[primeColumnName] == dataToUpdate);
       print('existingPrimeIndex>>>${existingPrimeIndex}');
@@ -362,67 +586,274 @@ class MainController extends GetxController {
     MainController.renderPagination();
   }
 
-  static Map generateJsonExcel(var dataRowExcel, var recordIndex) {
+  static Future<Map> generateJsonExcel(var dataRowExcel, var recordIndex) async {
+
     Map<String, dynamic> dataExlJson = {};
     for (var i = 0; i < MainController.tableInfo['columns'].length; i++) {
       var column = MainController.tableInfo['columns'][i];
       var name = column['name'];
       var type = column['type'];
-      var items = column['items'];
-      print('items excel>>>${items}');
+      // var items = column['items'];
+
+      var items;
+      if(type == 'select' || type == 'radiobutton' || type == 'multiSelect'){
+        items = await ViewController.itemsList(column);
+      }
+
       var isImportable = column['import-of-excel'];
 
       if (isImportable == null || isImportable) {
         //is importable be true or null: null==true default value
         {
-
-          if (type == 'select') {
-            if (items.contains(dataRowExcel[name].toString())) {
-              dataExlJson[name] = dataRowExcel[name].toString();
-            } else {
+          if (type == 'select' || type == 'radiobutton') {
+            if(dataRowExcel[name] == null || dataRowExcel[name] == '' || (dataRowExcel[name] is String && dataRowExcel[name].isEmpty)){
               dataExlJson[name] = '';
+            }
+            else{
+              var itemSelected = items.firstWhere(
+                      (element) => element['title'] == dataRowExcel[name],
+                  orElse: () => null);
+              // if (items.contains(dataRowExcel[name].toString())) {
+              //   dataExlJson[name] = dataRowExcel[name].toString();
+              // } else {
+              //   dataExlJson[name] = '';
+              // }
+
+              if(itemSelected != null){
+                dataExlJson[name] = itemSelected['value'];
+              }
+              else{
+                // dataExlJson[name] = '${AppController.of(Get.context!)!.value('The corresponding item was not found')}';
+                dataExlJson[name] = '';
+
+              }
+            }
+
+          }
+
+          // not select or radio button
+          else {
+            if (dataRowExcel[name] != null) {
+              if(type == 'multiSelect'){
+                var selectedItem;
+                List<String> itemSelectedList=[];
+                for(var data in dataRowExcel[name]){
+                  if(data == null || data == ''){
+                    itemSelectedList = [];
+                  }
+                  else{
+                    selectedItem =  items.firstWhere((item) => data == item['title'] , orElse: () => null);
+                    if(selectedItem != null){
+                      itemSelectedList.add('${selectedItem['value']}');
+                    }
+                    // else{
+                    //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
+                    // }
+                  }
+
+
+                }
+                dataExlJson[name] = itemSelectedList;
+              }
+              else if(type == 'checkbox'){
+                dataExlJson[name] = dataRowExcel[name];
+              }
+              else if(type == 'file'){
+
+                if(dataRowExcel[name] != null){
+                  var columnPrime = getColumnPrime();
+                  int findIndexRecord = findByColumn(dataRowExcel, columnPrime);
+                  if(MainController.tableData.value.length != 0){
+                    if(findIndexRecord != -1){
+                      dataExlJson[name] = MainController.tableData.value[findIndexRecord].data[name];
+                    }
+                  }
+                  else{
+                    dataExlJson[name] = [];
+                  }
+
+                  // if(MainController.tableData.value.length != 0){
+                  //   // Map<String,List<dynamic>> fileInfolist={};
+                  //
+                  //   for (var data in MainController.tableData.value) {
+                  //     print('zasdf>>>${data.data[name]}');
+                  //   }
+                  //
+                  //   // int indexRow = MainController.tableData.value.indexWhere((element) => element.id == dataRowExcel.id);
+                  //   // print('indexRow>>>${indexRow}');
+                  //
+                  //
+                  //   // dataExlJson[name] = fileInfolist;
+                  // }
+                  // else{
+                  //   dataExlJson[name] = '';
+                  // }
+                }
+                else{
+                  dataExlJson[name] = [];
+                }
+              }
+              else if(type == 'color'){
+
+                if(dataRowExcel[name] != ''){
+                  dataExlJson[name] = dataRowExcel[name];
+                }
+                else{
+                  dataExlJson[name] = null;
+                }
+              }
+              else{
+                dataExlJson[name] = dataRowExcel[name].toString();
+              }
+
+            }
+            else {
+              if(type == 'file'){
+                dataExlJson[name] = [];
+              }
+              else{
+                dataExlJson[name] = '';
+              }
+
+            }
+          }
+        }
+      }
+
+      // import excel true
+      else {
+
+        if (recordIndex != -1) {
+
+          if (type == 'select' || type == 'radiobutton') {
+            // if (items.contains(dataRowExcel[name].toString())) {
+            //   dataExlJson[name] =
+            //       MainController.tableData.value[recordIndex].data['${name}'];
+            // } else {
+            //   dataExlJson[name] = '';
+            // }
+            var itemSelected = items.firstWhere(
+                    (element) => element['title'] == dataRowExcel[name],
+                orElse: () => null);
+            if(itemSelected != null){
+              dataExlJson[name] = MainController.tableData.value[recordIndex].data['${name}'];
+            }
+            else{
+              dataExlJson[name] = MainController.tableData.value[recordIndex].data['${name}'];
             }
           }
           else {
             if (dataRowExcel[name] != null) {
-              dataExlJson[name] = dataRowExcel[name].toString();
-            } else {
+              dataExlJson[name] =
+                  MainController.tableData.value[recordIndex].data['${name}'];
+            }
+            else {
               dataExlJson[name] = '';
             }
           }
         }
-      } else {
-        if (recordIndex != -1) {
-          if (type == 'select') {
-            if (items.contains(dataRowExcel[name].toString())) {
-              dataExlJson[name] =
-                  MainController.tableData.value[recordIndex].data['${name}'];
-            } else {
-              dataExlJson[name] = '';
-            }
-          } else {
-            if (dataRowExcel[name] != null) {
-              dataExlJson[name] =
-                  MainController.tableData.value[recordIndex].data['${name}'];
-            } else {
-              dataExlJson[name] = '';
-            }
-          }
-        }
+
         else {
-          if (type == 'select') {
-            if (items.contains(dataRowExcel[name].toString())) {
-              dataExlJson[name] = dataRowExcel[name].toString();
-            } else {
-              dataExlJson[name] = '';
+
+          if (dataRowExcel[name] != null){
+            if (type == 'select'|| type == 'radiobutton') {
+              // if (items.contains(dataRowExcel[name].toString())) {
+              //   dataExlJson[name] = dataRowExcel[name].toString();
+              // } else {
+              //   dataExlJson[name] = '';
+              // }
+              if(dataRowExcel[name] == null || dataRowExcel[name] == '' || (dataRowExcel[name] is String && dataRowExcel[name].isEmpty)){
+                dataExlJson[name] = '';
+              }
+              else{
+                var itemSelected = items.firstWhere(
+                        (element) => element['title'] == dataRowExcel[name],
+                    orElse: () => null);
+                if(itemSelected != null){
+                  dataExlJson[name] = itemSelected['value'];
+                }
+                // else{
+                //   dataExlJson[name] = '${AppController.of(Get.context!)!.value('The corresponding item was not found')}';
+                // }
+              }
             }
-          } else {
-            if (dataRowExcel[name] != null) {
+            if(type == 'multiSelect'){
+              var selectedItem;
+              List<String> itemSelectedList=[];
+              for(var data in dataRowExcel[name]){
+                if(data == null || data == ''){
+                  itemSelectedList = [];
+                }
+                else{
+                  selectedItem=  items.firstWhere((item) => data == item['title'] , orElse: () => null);
+                  if(selectedItem != null){
+                    itemSelectedList.add('${selectedItem['value']}');
+
+                  }
+                  // else{
+                  //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
+                  // }
+                }
+
+              }
+
+              dataExlJson[name] = itemSelectedList;
+            }
+            else if(type == 'checkbox'){
+              dataExlJson[name] = dataRowExcel[name];
+            }
+            else if(type == 'file'){
+              if(dataRowExcel[name] != null){
+                var columnPrime = getColumnPrime();
+                int findIndexRecord = findByColumn(dataRowExcel, columnPrime);
+                if(MainController.tableData.value.length != 0){
+                  if(findIndexRecord != -1){
+                    dataExlJson[name] = MainController.tableData.value[findIndexRecord].data[name];
+                  }
+                  else{
+                    dataExlJson[name] = [];
+                  }
+                }
+                else{
+                  dataExlJson[name] = [];
+                }
+
+                // if(MainController.tableData.value.length != 0){
+                //
+                //
+                // }
+                // else{
+                //   dataExlJson[name] = '';
+                // }
+
+              }
+              else{
+                dataExlJson[name] = [];
+              }
+            }
+            else if(type == 'color'){
+
+              if(dataRowExcel[name] != ''){
+                dataExlJson[name] = dataRowExcel[name];
+              }
+              else{
+                dataExlJson[name] = null;
+              }
+            }
+            else{
               dataExlJson[name] = dataRowExcel[name].toString();
-            } else {
-              dataExlJson[name] = '';
             }
           }
+          else{
+            dataExlJson[name] = '';
+          }
+          // else {
+          //   if (dataRowExcel[name] != null) {
+          //     dataExlJson[name] = dataRowExcel[name].toString();
+          //   } else {
+          //     dataExlJson[name] = '';
+          //   }
+          // }
         }
       }
     }
@@ -568,5 +999,106 @@ class MainController extends GetxController {
 
 
   }
+
+  static String getNameFile(List<dynamic> filesList){
+    List<String> fileNameList=[];
+    print('filesList>>>${filesList}');
+    for(var file in filesList){
+     fileNameList.add('${file['name']}');
+    }
+    return fileNameList.join(',');
+  }
+
+
+  static bool identificationValidator(var cellExcel , var column){
+
+    //check null cell
+
+      if(column['validators'] != null){
+
+        // check null cell
+        print('cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
+
+        if(cellExcel == null || cellExcel == '' || cellExcel is List && cellExcel.isEmpty){
+          print('column name is null>>>${column['name']}');
+        var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+        if(inputRequired != null){
+
+          if(inputRequired['type'] == 'required'){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+      }
+
+        //cehcek not range cell
+        else{
+          if(column['type'] == 'number'){
+            var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+            var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+            // int numberExcel = int.parse('${cellExcel}');
+            print('cellExcel number>>>${cellExcel}');
+              int intValue = int.parse(cellExcel);
+              if(minValidator != null && maxValidator != null){
+                if(intValue < minValidator['value'] || intValue > maxValidator['value']){
+                  return false;
+                }
+                else{
+                  return true;
+                }
+              }
+
+            // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
+          }
+          else if(column['type'] == 'email'){
+            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+            if (!emailRegex.hasMatch(cellExcel)) {
+              return false;
+            }
+            else{
+              return true;
+            }
+          }
+          else if(column['type'] == 'mobile'){
+            print('cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
+            print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
+            print('cellExcel.length>>>${cellExcel.length}');
+            if(cellExcel.length > 13){
+              return false;
+            }
+            else if(!cellExcel.startsWith('9')){
+              return false;
+            }
+            else{
+              return true;
+            }
+          }
+
+        }
+    }
+  return true;
+
+  }
+
+  static Future<dynamic> getDataNull(var column  , Map<String,dynamic> data) async {
+    if(column['type'] == 'select' || column['type'] == 'radiobutton'){
+      List<dynamic> items = await ViewController.itemsList(
+          column);
+      if(items.length != 0){
+        Map<String, dynamic> selectedItem = items.firstWhere(
+                (element) => element['value'] == data['${column['name']}'],
+            orElse: () => items.first);
+        if(selectedItem['value'] != data['${column['name']}']){
+          data['${column['name']}'] = '';
+        }
+      }
+    }
+    return data['${column['name']}'];
+
+  }
+
+
 
 }

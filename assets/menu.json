@@ -18,7 +18,7 @@
                 "name": "b",
                 "type": "int",
                 "is-prime":true
-            }, 
+            },
             {
                 "name": "C",
                 "type": "int",
@@ -35,7 +35,7 @@
                 "name": "E",
                 "type": "string",
                 "is-show-table":false
-        
+
             },
             {
                "name": "d",
@@ -70,8 +70,13 @@
             "type": "select",
             "sourceItems": "table",
             "sourceTable": "status",
-            "items": []
-          },
+            "items": [],
+              "validators": [
+              {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+            ]
+
+
+            },
            {
                 "name": "checkBox",
                 "type": "checkbox",
@@ -159,8 +164,7 @@
             "type": "file",
             "validators": [
               {"type": "min","value": 1000 , "message": "حجم فایل انتخاب شده کمتر از 1000 بایت است"},
-              {"type": "max","value": 20000 , "message": "حجم فایل انتخاب شده بیشتر از 20000 بایت است"},
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              {"type": "max","value": 20000 , "message": "حجم فایل انتخاب شده بیشتر از 20000 بایت است"}
             ]
           },
           {
@@ -178,7 +182,10 @@
             "type": "multiSelect",
             "sourceItems": "table",
             "sourceTable": "status",
-            "items": []
+            "items": [],
+            "validators": [
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+            ]
           },
           {
             "name": "Email",
@@ -193,6 +200,13 @@
             "sourceItems": "table",
             "sourceTable": "status",
             "items": []
+          },
+          {
+            "name": "Mobile",
+            "type": "mobile",
+            "validators": [
+              {"type": "mobile" , "message": "شماره موبایل با فرمت نادرست وارد شده است"}
+            ]
           }
         ]
     },

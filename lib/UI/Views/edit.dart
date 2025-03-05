@@ -110,10 +110,10 @@ class _EditPageState extends State<EditPage> {
                                     data: ViewController.request,
                                   );
                                   print('xxxx>>>${data.data}');
-                                  bool isValidator;
+                                 bool isValidator;
                                   List<bool> isValidatorList=[];
                                   for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                    isValidator = ValidatorController.checkInputValidation(j,data.data);
+                                    isValidator = await ValidatorController.checkInputValidation(j,data.data);
                                     isValidatorList.add(isValidator);
                                   }
                                   print('isValidatorList>>>${isValidatorList}');

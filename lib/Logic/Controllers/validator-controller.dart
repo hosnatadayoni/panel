@@ -1,22 +1,65 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
+import 'app-controller.dart';
 
 class ValidatorController extends GetxController {
   static Rx<int> fileSize = 0.obs;
 
-  static bool checkInputValidation(int indexColumn ,Map dataJson){
+  static Future<bool> checkInputValidation(int indexColumn ,Map dataJson) async {
+
     var column = MainController.tableInfo['columns'][indexColumn];
     var type = column['type'];
     String name = column['name'];
+
     if(column['is-show-store'] == true){
       if(column['type']=='multiSelect'){
         if(dataJson[name] != null){
+          print('dataJson[name] multi select 123>>>${dataJson[name]}');
+          // if(dataJson[name].length == 1 && dataJson[name].contains('آیتم مربوطه یافت نشد')){
+          //   dataJson[name]=[];
+          // }
+          List<dynamic> items = await ViewController.itemsList(
+              column);
+          if(items.length != 0) {
+            if (dataJson[name] != null) {
+              for (var id in dataJson[name]) {
+                var selectedItem = items.firstWhere(
+                      (element) => element['value'] == id,
+                  orElse: () => null,
+                );
+                if(selectedItem == null){
+                  if(dataJson[name].length == 1){
+                    dataJson[name] = [];
+                  }
+
+                }
+              }
+            }
+          }
           if(dataJson[name].length == 0){
             return checkInputRequiredValidator(indexColumn , dataJson);
           }
         }
+      }
+      if(column['type']=='select' || column['type']=='radiobutton'){
+        // if(dataJson[name] == 'آیتم مربوطه یافت نشد'){
+        //   dataJson[name] = '';
+        // }
+        List<dynamic> items = await ViewController.itemsList(
+            column);
+        if(items.length != 0){
+          Map<String, dynamic> selectedItem = items.firstWhere(
+                  (element) => element['value'] == dataJson[name],
+              orElse: () => {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'});
+          if(selectedItem['title'] == null){
+            dataJson[name] = '';
+          }
+        }
+
       }
       if(dataJson[name] == '' || dataJson[name] == null){
         print('data json is empty');
@@ -93,7 +136,7 @@ class ValidatorController extends GetxController {
 
         }
       }
-    if (column['type'] == 'file') {
+    else if (column['type'] == 'file') {
       bool isContains= false;
       if(ViewController.fileSizeList[name]!= null){
         for(var size in ViewController.fileSizeList[name]!){
@@ -110,7 +153,7 @@ class ValidatorController extends GetxController {
       }
 
     }
-    if(column['type'] == 'email'){
+    else if(column['type'] == 'email'){
       final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
       if (!emailRegex.hasMatch(dataJson[name])) {
         return false;
@@ -119,6 +162,15 @@ class ValidatorController extends GetxController {
         return true;
       }
     }
+    else if(column['type'] == 'mobile'){
+      if(dataJson[name].length > 13 || !dataJson[name].startsWith('9')){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
+
     return true;
   }
 
