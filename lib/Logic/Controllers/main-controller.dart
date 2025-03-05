@@ -409,8 +409,6 @@ class MainController extends GetxController {
                   double doubleValue = (cell!.value as exl.DoubleCellValue).value;
                   cell.value = exl.IntCellValue(doubleValue.toInt());
                 }
-
-
                 if(columnType == 'select'){
                   print('columnType selct type>>>${cellValue.runtimeType}  ${cellValue}');
                 }

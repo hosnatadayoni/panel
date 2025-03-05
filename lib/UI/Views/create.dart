@@ -188,11 +188,11 @@ class _CreatePageState extends State<CreatePage> {
                               future:_future,
                               builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return CircularProgressIndicator(); // در حال بارگذاری
+                                  return CircularProgressIndicator();
                                 } else if (snapshot.hasError) {
                                   return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
                                 } else {
-                                  return snapshot.data ?? Container(); // داده‌ها بارگذاری شده‌اند
+                                  return snapshot.data ?? Container(); 
                                 }
                               },
                             )),
