@@ -12,7 +12,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class TableBox extends StatefulWidget {
-  const TableBox({Key? key}) : super(key: key);
+  const TableBox();
 
   @override
   State<TableBox> createState() => _TableBoxState();
@@ -52,7 +52,8 @@ class _TableBoxState extends State<TableBox> {
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
             child: Table(
-              defaultColumnWidth: FixedColumnWidth(200.0),
+               //defaultColumnWidth: FixedColumnWidth(200),
+              defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
               border: TableBorder.all(color: MainController.isLightMode.value == true?  whiteColor:color1),
               children: [
                 TableRow(children: [
@@ -172,7 +173,8 @@ class _TableBoxState extends State<TableBox> {
                           )
                         ])
               ],
-            ),),
+            ),
+          ),
         )
       );
     });

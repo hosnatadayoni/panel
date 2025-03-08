@@ -467,6 +467,7 @@ class MainController extends GetxController {
         }
         bool isExsistsValidation = isValidatorList.contains(false);
         print('isValidatorList>>>${isValidatorList}');
+        print('findIndexRecord excel>>>${findIndexRecord}');
 
         if (findIndexRecord != -1) {
           // updateRecord(excelJson, findIndexRecord, columnPrime);
@@ -485,7 +486,8 @@ class MainController extends GetxController {
             updateRecord(excelJson, findIndexRecord, columnPrime);
           }
 
-        } else {
+        }
+        else {
           bool isValidator;
           List<bool> isValidatorList=[];
           for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
@@ -566,6 +568,8 @@ class MainController extends GetxController {
     existingData.data = excelJson;
     await box.putAt(recordIndex, existingData);
     dataController.allData.value[recordIndex] = existingData;
+    MainController.tableData.value[recordIndex] = existingData;
+
   }
 
   static createRecord(var excelJson) async {
@@ -580,6 +584,7 @@ class MainController extends GetxController {
     await box.add(newData);
     print('newData>>>${newData}');
     dataController.allData.value.add(newData);
+    MainController.tableData.value.add(newData);
     await MainController.loadData();
     MainController.renderPagination();
   }
