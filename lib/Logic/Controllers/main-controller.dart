@@ -461,7 +461,7 @@ class MainController extends GetxController {
         List<bool> isValidatorList=[];
         for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
           var column = MainController.tableInfo['columns'][j];
-          bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+          bool isValidator=  await identificationValidator(excelJson[column['name']] , column);
 
           isValidatorList.add(isValidator);
         }
@@ -475,7 +475,7 @@ class MainController extends GetxController {
           List<bool> isValidatorList=[];
           for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
             var column = MainController.tableInfo['columns'][j];
-            bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+            bool isValidator=  await identificationValidator(excelJson[column['name']] , column);
             isValidatorList.add(isValidator);
           }
           bool isExsistsValidation = isValidatorList.contains(false);
@@ -492,7 +492,7 @@ class MainController extends GetxController {
           List<bool> isValidatorList=[];
           for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
             var column = MainController.tableInfo['columns'][j];
-            bool isValidator=  identificationValidator(excelJson[column['name']] , column);
+            bool isValidator=  await identificationValidator(excelJson[column['name']] , column);
             isValidatorList.add(isValidator);
           }
           bool isExsistsValidation = isValidatorList.contains(false);
@@ -1013,22 +1013,106 @@ class MainController extends GetxController {
   }
 
 
-  static bool identificationValidator(var cellExcel , var column){
+  // static bool identificationValidator(var cellExcel , var column){
+  //
+  //   //check null cell
+  //
+  //     if(column['validators'] != null){
+  //
+  //       // check null cell
+  //       print('cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
+  //
+  //       if(cellExcel == null || cellExcel == '' || cellExcel is List && cellExcel.isEmpty){
+  //         print('column name is null>>>${column['name']}');
+  //       var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+  //       if(inputRequired != null){
+  //
+  //         if(inputRequired['type'] == 'required'){
+  //           return false;
+  //         }
+  //         else{
+  //           return true;
+  //         }
+  //       }
+  //     }
+  //
+  //       //cehcek not range cell
+  //       else{
+  //         if(column['type'] == 'number'){
+  //           var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+  //           var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+  //           // int numberExcel = int.parse('${cellExcel}');
+  //           print('cellExcel number>>>${cellExcel}');
+  //             int intValue = int.parse(cellExcel);
+  //             if(minValidator != null && maxValidator != null){
+  //               if(intValue < minValidator['value'] || intValue > maxValidator['value']){
+  //                 return false;
+  //               }
+  //               else{
+  //                 return true;
+  //               }
+  //             }
+  //
+  //           // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
+  //         }
+  //         else if(column['type'] == 'email'){
+  //           final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+  //           if (!emailRegex.hasMatch(cellExcel)) {
+  //             return false;
+  //           }
+  //           else{
+  //             return true;
+  //           }
+  //         }
+  //         else if(column['type'] == 'mobile'){
+  //           print('cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
+  //           print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
+  //           print('cellExcel.length>>>${cellExcel.length}');
+  //           if(cellExcel.length > 13){
+  //             return false;
+  //           }
+  //           else if(!cellExcel.startsWith('9')){
+  //             return false;
+  //           }
+  //           else{
+  //             return true;
+  //           }
+  //         }
+  //
+  //       }
+  //   }
+  // return true;
+  //
+  // }
+  static Future<bool> identificationValidator(var cellExcel , var column) async {
 
     //check null cell
 
-      if(column['validators'] != null){
+    if(column['validators'] != null){
 
-        // check null cell
-        print('cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
+      // check null cell
+      print('cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
 
-        if(cellExcel == null || cellExcel == '' || cellExcel is List && cellExcel.isEmpty){
-          print('column name is null>>>${column['name']}');
+      if(cellExcel == null || cellExcel == '' || cellExcel is List && cellExcel.isEmpty){
+        print('column name is null>>>${column['name']}');
         var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
         if(inputRequired != null){
 
           if(inputRequired['type'] == 'required'){
-            return false;
+            if(column['type']=='multiSelect' || column['type']=='select' || column['type']=='radiobutton'){
+              List<dynamic> items = await ViewController.itemsList(
+                  column);
+              if(items.length == 0){
+                return true;
+              }
+              else{
+                return false;
+              }
+            }
+            else{
+              return false;
+            }
+            // return false;
           }
           else{
             return true;
@@ -1036,42 +1120,16 @@ class MainController extends GetxController {
         }
       }
 
-        //cehcek not range cell
-        else{
-          if(column['type'] == 'number'){
-            var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-            var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-            // int numberExcel = int.parse('${cellExcel}');
-            print('cellExcel number>>>${cellExcel}');
-              int intValue = int.parse(cellExcel);
-              if(minValidator != null && maxValidator != null){
-                if(intValue < minValidator['value'] || intValue > maxValidator['value']){
-                  return false;
-                }
-                else{
-                  return true;
-                }
-              }
-
-            // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
-          }
-          else if(column['type'] == 'email'){
-            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-            if (!emailRegex.hasMatch(cellExcel)) {
-              return false;
-            }
-            else{
-              return true;
-            }
-          }
-          else if(column['type'] == 'mobile'){
-            print('cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
-            print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
-            print('cellExcel.length>>>${cellExcel.length}');
-            if(cellExcel.length > 13){
-              return false;
-            }
-            else if(!cellExcel.startsWith('9')){
+      //cehcek not range cell
+      else{
+        if(column['type'] == 'number'){
+          var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+          var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+          // int numberExcel = int.parse('${cellExcel}');
+          print('cellExcel number>>>${cellExcel}');
+          int intValue = int.parse(cellExcel);
+          if(minValidator != null && maxValidator != null){
+            if(intValue < minValidator['value'] || intValue > maxValidator['value']){
               return false;
             }
             else{
@@ -1079,9 +1137,35 @@ class MainController extends GetxController {
             }
           }
 
+          // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
         }
+        else if(column['type'] == 'email'){
+          final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+          if (!emailRegex.hasMatch(cellExcel)) {
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+        else if(column['type'] == 'mobile'){
+          print('cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
+          print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
+          print('cellExcel.length>>>${cellExcel.length}');
+          if(cellExcel.length > 13){
+            return false;
+          }
+          else if(!cellExcel.startsWith('9')){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+
+      }
     }
-  return true;
+    return true;
 
   }
 

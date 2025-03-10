@@ -20,6 +20,14 @@
             "validators": [
               {"type": "mobile" , "message": "شماره موبایل با فرمت نادرست وارد شده است"}
             ]
+          },
+          {
+            "name": "آدرس",
+            "type": "string"
+          },
+          {
+            "name": "سقف اعتبار",
+            "type": "number"
           }
         ]
     },
@@ -33,11 +41,12 @@
         "columns":[
             {
                 "name": "عنوان",
-                "type": "string",
-              "validators": [
-                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
+                "type": "string"
             },
+          {
+            "name": "عنوان(کوتاه)",
+            "type": "string"
+          },
             {
                 "name": "قیمت",
                 "type": "number"

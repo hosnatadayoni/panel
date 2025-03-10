@@ -54,6 +54,7 @@ class _TableBoxState extends State<TableBox> {
             child: Table(
                //defaultColumnWidth: FixedColumnWidth(200),
               defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               border: TableBorder.all(color: MainController.isLightMode.value == true?  whiteColor:color1),
               children: [
                 TableRow(children: [
