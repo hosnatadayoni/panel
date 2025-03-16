@@ -3,14 +3,19 @@ import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
 import 'app-controller.dart';
 class ValidatorController extends GetxController {
-  static Rx<int> fileSize = 0.obs;
 
-  static Future<bool> checkInputValidation(int indexColumn ,Map dataJson) async {
 
-    var column = MainController.tableInfo['columns'][indexColumn];
+  static Future<bool> checkInputValidation(int indexColumn ,Map dataJson , {var tableData}) async {
+    var column;
+    if(tableData == null){
+      column= MainController.tableInfo['columns'][indexColumn];
+    }
+    else{
+      column= tableData['columns'][indexColumn];
+
+    }
     var type = column['type'];
     String name = column['name'];
 
@@ -40,7 +45,7 @@ class ValidatorController extends GetxController {
             }
           }
           if(dataJson[name].length == 0){
-            return checkInputRequiredValidator(indexColumn , dataJson);
+            return checkInputRequiredValidator(indexColumn , dataJson ,tableData: tableData);
           }
         }
       }
@@ -63,10 +68,10 @@ class ValidatorController extends GetxController {
       if(dataJson[name] == '' || dataJson[name] == null){
         print('data json is empty');
         print('name data is empty>>>${name}');
-        return checkInputRequiredValidator(indexColumn , dataJson);
+        return checkInputRequiredValidator(indexColumn , dataJson , tableData: tableData);
       }
       else{
-        return checkInputRangeValidator(indexColumn , dataJson);
+        return checkInputRangeValidator(indexColumn , dataJson, tableData: tableData);
       }
       // if(column['validators'] != null){
       //   var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
@@ -84,9 +89,16 @@ class ValidatorController extends GetxController {
       return true;
     }
   }
-  static Future<bool> checkInputRequiredValidator(indexColumn , dataJson) async {
-    var column = MainController.tableInfo['columns'][indexColumn];
-    if( column['validators'] != null){
+  static Future<bool> checkInputRequiredValidator(indexColumn , dataJson, {var tableData}) async {
+    var column;
+    if(tableData == null){
+       column = MainController.tableInfo['columns'][indexColumn];
+    }
+    else{
+      column = tableData['columns'][indexColumn];
+    }
+
+    if(column['validators'] != null){
       var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       String name = column['name'];
       if(inputRequired != null){
@@ -122,8 +134,15 @@ class ValidatorController extends GetxController {
     }
   }
 
-  static bool checkInputRangeValidator(indexColumn , dataJson){
-    var column = MainController.tableInfo['columns'][indexColumn];
+  static bool checkInputRangeValidator(indexColumn , dataJson , {tableData}){
+    var column;
+    if(tableData == null){
+      column = MainController.tableInfo['columns'][indexColumn];
+    }
+    else{
+      column= tableData['columns'][indexColumn];
+    }
+
     String name = column['name'];
     var maxValidator;
     var minValidator;
@@ -135,30 +154,38 @@ class ValidatorController extends GetxController {
     }
     if(column['type'] == 'number'){
       var number;
-      number = num.tryParse(dataJson[name]);
-      if(number != null){
-        if(minValidator != null && maxValidator != null){
-          if(number < minValidator['value'] || number > maxValidator['value']){
-            return false;
+      if(dataJson[name] != null){
+        number = num.tryParse(dataJson[name]);
+        if(number != null){
+          if(minValidator != null && maxValidator != null){
+            if(number < minValidator['value'] || number > maxValidator['value']){
+              return false;
+            }
+            else{
+              return true;
+            }
           }
-          else{
-            return true;
-          }
-        }
 
+        }
       }
     }
     else if (column['type'] == 'file') {
       bool isContains= false;
       if(ViewController.fileSizeList[name]!= null){
         for(var size in ViewController.fileSizeList[name]!){
-          if(size > minValidator['value'] && size < maxValidator['value']){
-            isContains = true;
+          if(minValidator != null  || maxValidator != null){
+            if(size > minValidator['value'] && size < maxValidator['value']){
+              isContains = true;
 
+            }
+            else{
+              isContains = false;
+            }
           }
           else{
-            isContains = false;
+            return true;
           }
+
 
         }
         return isContains;

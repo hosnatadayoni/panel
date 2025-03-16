@@ -89,35 +89,38 @@ class _FormTextFieldState extends State<FormTextField> {
              var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
              var number = num.tryParse(text.value);
              if(number != null){
-               if(number < minValidator['value']){
-                 print('value is < minvalidation');
-                 setState(() {
-                   _errorText = minValidator['message'];
-                 });
-               }
-               else{
-                 if(number > maxValidator['value']){
+               if(minValidator != null || maxValidator != null){
+                 if(number < minValidator['value']){
+                   print('value is < minvalidation');
                    setState(() {
-                     _errorText = maxValidator['message'];
+                     _errorText = minValidator['message'];
                    });
                  }
                  else{
-                   setState(() {
-                     _errorText = null;
-                   });
+                   if(number > maxValidator['value']){
+                     setState(() {
+                       _errorText = maxValidator['message'];
+                     });
+                   }
+                   else{
+                     setState(() {
+                       _errorText = null;
+                     });
+                   }
                  }
+                 // if (number < minValidator['value'] || number > maxValidator['value']) {
+                 //   setState(() {
+                 //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
+                 //     _errorText =   errorMessage;
+                 //   });
+                 // } else {
+                 //   setState(() {
+                 //     _errorText = null;
+                 //   });
+                 // }
+                 print('_errorText number>>>${_errorText}');
                }
-               // if (number < minValidator['value'] || number > maxValidator['value']) {
-               //   setState(() {
-               //     // _errorText = '${AppController.of(context)!.value('The entered number must be between')} ${minValidator['value']} ${AppController.of(context)!.value('and')} ${maxValidator['value']} ${AppController.of(context)!.value('be')} ';
-               //     _errorText =   errorMessage;
-               //   });
-               // } else {
-               //   setState(() {
-               //     _errorText = null;
-               //   });
-               // }
-               print('_errorText number>>>${_errorText}');
+
              }
            }
            else if(widget.isEmail == true){
@@ -358,7 +361,8 @@ class _FormTextFieldState extends State<FormTextField> {
                 if (widget.isMobile == true)
                   FilteringTextInputFormatter.digitsOnly,
                 if (widget.isNumber == true)
-                  FilteringTextInputFormatter.digitsOnly,
+                  // FilteringTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                 // if(widget.isNumber == true)
                 //   ThousandSeparatorInputFormatter(),
                 if (widget.isMobile == true)

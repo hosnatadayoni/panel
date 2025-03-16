@@ -6,6 +6,8 @@ import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
+import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-order-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-orderItem-custom.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +67,8 @@ class _CreatePageState extends State<CreatePage> {
                       child: ColumnScroll(
                         children: [
                           SizedBox(height: 80,),
-                          Container(
+
+                              Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -76,7 +79,8 @@ class _CreatePageState extends State<CreatePage> {
                                     Txt('${MainController.tableInfo['title']}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,),
                                   ],
                                 ),
-                                Obx((){
+                                if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
+                                   Obx((){
                                   return Row(
                                     children: [
                                       Row(
@@ -178,10 +182,13 @@ class _CreatePageState extends State<CreatePage> {
                                     ],
                                   );
                                 }),
+
+
                               ],
                             ),
                           ),
                           SizedBox(height: 10,),
+                          MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?
                           Container(
                             child:
                             FutureBuilder<Widget>(
@@ -195,10 +202,38 @@ class _CreatePageState extends State<CreatePage> {
                                   return snapshot.data ?? Container(); 
                                 }
                               },
-                            )),
+                            )):
+                          // Column(
+                          //   children: MainController.SubMenuList.map((subMenu) {
+                          //     if (subMenu['table-name'] == 'order') {
+                          //       return Column(
+                          //         children: [
+                          //           FormOrderCustom(),
+                          //           if (subMenu['table-name'] == 'order-item')
+                          //             Column(
+                          //               children: [
+                          //                 SizedBox(height: 20),
+                          //                 FormOrderItemCustom(),
+                          //               ],
+                          //             ),
+                          //         ],
+                          //       );
+                          //     }
+                          //     return Container(); // Return an empty container for other cases
+                          //   }).toList(),
+                          // ),
+
+
+                          MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ? Column(
+                            children: [
+                              FormCreateOrderCustom(),
+                              FormCreateOrderItemCustom(),
+                            ],
+                          ):FormCreateOrderItemCustom(),
+
 
                         ],
-                      ),
+                      )
                     )
                 );
               }),

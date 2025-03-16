@@ -621,6 +621,7 @@ class MainController extends GetxController {
               // } else {
               //   dataExlJson[name] = '';
               // }
+              print('itemSelected d>>>${itemSelected} ${column['name']}');
 
               if(itemSelected != null){
                 dataExlJson[name] = itemSelected['value'];
@@ -904,9 +905,8 @@ class MainController extends GetxController {
     return double.tryParse(str) != null;
   }
 
-  static void renderPagination() {
-    // if (MainController.table['table-name'] == box.name) {
-      print('filterList.value.length>>>${tableData.value.length}');
+  static void renderPagination({var table}) {
+    if(table == null){
       MainController.totalPages.value =
           (tableData.value.length / MainController.tableInfo['countShowRow'])
               .ceil();
@@ -914,10 +914,23 @@ class MainController extends GetxController {
           (tableInfo['currentPage'] - 1) * MainController.tableInfo['countShowRow'];
       MainController.endIndex.value = MainController.startIndex.value +
           int.parse('${MainController.tableInfo['countShowRow']}');
+    }
+    else{
+      MainController.totalPages.value =
+          (tableData.value.length / table['countShowRow'])
+              .ceil();
+      MainController.startIndex.value =
+          (table['currentPage'] - 1) * table['countShowRow'];
+      MainController.endIndex.value = MainController.startIndex.value +
+          int.parse('${table['countShowRow']}');
+      print('MainController.startIndex.value312>>>${MainController.startIndex.value}');
+    }
+
+
       if (MainController.endIndex.value > tableData.value.length) {
         MainController.endIndex.value = tableData.value.length;
       }
-    // }
+
     else {
       print('not exsits');
     }
@@ -970,12 +983,38 @@ class MainController extends GetxController {
     SubMenuList = json.decode(jsonFileString);
   }
 
-  static Future<void> loadData() async {
+  static Future<void> loadData({var tableData}) async {
     if (MainController.selectedSubItem.value != -1) {
       tableInfo = SubMenuList[MainController.selectedSubItem.value];
-      print('tableInfo>>>${tableInfo['columns']}');
-      box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      // box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      if(tableData == null){
+        box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      }
+      else{
+        box = await Hive.openBox<DataModel>('${tableData['table-name']}');
+      }
+
+
+      // for(var subMenu in SubMenuList){
+      //   print('x120>>>${subMenu['view']}');
+      //   print('y120>>>${tableInfo['table-name']}');
+      //   if(subMenu['view'] == 'custom'){
+      //     if(subMenu['table-name'] == 'order' || subMenu['table-name'] == 'order-item'){
+      //       box = await Hive.openBox<DataModel>('${subMenu['table-name']}');
+      //     }
+      //   }
+      //   else{
+      //     box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      //   }
+      //   print('box.name>>>${box.name}');
+      // }
+
       MainController.tableData.value = box.values.toList();
+      for(var i=0;i<MainController.tableData.value.length;i++){
+        print('swqrtyuiopnv>>>${MainController.tableData.value[i].data}');
+      }
+
+
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
@@ -985,18 +1024,38 @@ class MainController extends GetxController {
 
 
     }
-    for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      if (MainController.tableInfo['columns'][j]['is-show-store'] == null) {
-        MainController.tableInfo['columns'][j]['is-show-store'] = true;
+    if(tableData == null){
+      for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+        if (MainController.tableInfo['columns'][j]['is-show-store'] == null) {
+          MainController.tableInfo['columns'][j]['is-show-store'] = true;
+        }
+        if (MainController.tableInfo['columns'][j]['is-show-table'] == null) {
+          MainController.tableInfo['columns'][j]['is-show-table'] = true;
+        }
+        if (MainController.tableInfo['columns'][j]['is-show-edit'] == null) {
+          MainController.tableInfo['columns'][j]['is-show-edit'] = true;
+        }
+        if (MainController.tableInfo['columns'][j]['is-show-excel'] == null) {
+          MainController.tableInfo['columns'][j]['is-show-excel'] = true;
+        }
       }
-      if (MainController.tableInfo['columns'][j]['is-show-table'] == null) {
-        MainController.tableInfo['columns'][j]['is-show-table'] = true;
-      }
-      if (MainController.tableInfo['columns'][j]['is-show-edit'] == null) {
-        MainController.tableInfo['columns'][j]['is-show-edit'] = true;
-      }
-      if (MainController.tableInfo['columns'][j]['is-show-excel'] == null) {
-        MainController.tableInfo['columns'][j]['is-show-excel'] = true;
+
+    }
+    else{
+      print('tableData 12>>>${tableData}');
+      for (var j = 0; j < tableData['columns'].length; j++) {
+        if (tableData['columns'][j]['is-show-store'] == null) {
+          tableData['columns'][j]['is-show-store'] = true;
+        }
+        if (tableData['columns'][j]['is-show-table'] == null) {
+          tableData['columns'][j]['is-show-table'] = true;
+        }
+        if (tableData['columns'][j]['is-show-edit'] == null) {
+          tableData['columns'][j]['is-show-edit'] = true;
+        }
+        if (tableData['columns'][j]['is-show-excel'] == null) {
+          tableData['columns'][j]['is-show-excel'] = true;
+        }
       }
     }
 
@@ -1012,78 +1071,6 @@ class MainController extends GetxController {
     return fileNameList.join(',');
   }
 
-
-  // static bool identificationValidator(var cellExcel , var column){
-  //
-  //   //check null cell
-  //
-  //     if(column['validators'] != null){
-  //
-  //       // check null cell
-  //       print('cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
-  //
-  //       if(cellExcel == null || cellExcel == '' || cellExcel is List && cellExcel.isEmpty){
-  //         print('column name is null>>>${column['name']}');
-  //       var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-  //       if(inputRequired != null){
-  //
-  //         if(inputRequired['type'] == 'required'){
-  //           return false;
-  //         }
-  //         else{
-  //           return true;
-  //         }
-  //       }
-  //     }
-  //
-  //       //cehcek not range cell
-  //       else{
-  //         if(column['type'] == 'number'){
-  //           var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-  //           var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-  //           // int numberExcel = int.parse('${cellExcel}');
-  //           print('cellExcel number>>>${cellExcel}');
-  //             int intValue = int.parse(cellExcel);
-  //             if(minValidator != null && maxValidator != null){
-  //               if(intValue < minValidator['value'] || intValue > maxValidator['value']){
-  //                 return false;
-  //               }
-  //               else{
-  //                 return true;
-  //               }
-  //             }
-  //
-  //           // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
-  //         }
-  //         else if(column['type'] == 'email'){
-  //           final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-  //           if (!emailRegex.hasMatch(cellExcel)) {
-  //             return false;
-  //           }
-  //           else{
-  //             return true;
-  //           }
-  //         }
-  //         else if(column['type'] == 'mobile'){
-  //           print('cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
-  //           print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
-  //           print('cellExcel.length>>>${cellExcel.length}');
-  //           if(cellExcel.length > 13){
-  //             return false;
-  //           }
-  //           else if(!cellExcel.startsWith('9')){
-  //             return false;
-  //           }
-  //           else{
-  //             return true;
-  //           }
-  //         }
-  //
-  //       }
-  //   }
-  // return true;
-  //
-  // }
   static Future<bool> identificationValidator(var cellExcel , var column) async {
 
     //check null cell
@@ -1128,7 +1115,7 @@ class MainController extends GetxController {
           // int numberExcel = int.parse('${cellExcel}');
           print('cellExcel number>>>${cellExcel}');
           int intValue = int.parse(cellExcel);
-          if(minValidator != null && maxValidator != null){
+          if(minValidator != null || maxValidator != null){
             if(intValue < minValidator['value'] || intValue > maxValidator['value']){
               return false;
             }

@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/':(context)=>DashboardPage(),
-        '/TablePage': (context) => const TablePage(),
+        '/TablePage': (context) =>  TablePage(),
       },
     );
   }

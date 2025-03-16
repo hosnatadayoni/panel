@@ -63,11 +63,13 @@ class _SelectBoxState extends State<SelectBox> {
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
               isExpanded: true,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(right: 40),
+                // contentPadding: EdgeInsets.only(right: 40),
+                contentPadding: EdgeInsets.only(right: 40 , top: 21,bottom: 21),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
                 border: OutlineInputBorder(),
+                constraints: BoxConstraints(minHeight: 60),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),

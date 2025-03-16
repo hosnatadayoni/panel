@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -32,7 +33,7 @@ class _DateBoxState extends State<DateBox> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
             children: [
               InkWell(
                   onTap: ()async {
@@ -62,7 +63,7 @@ class _DateBoxState extends State<DateBox> {
 
                   child: Icon(Icons.date_range_outlined, color: color3, size: 30.0)),
               SizedBox(width: 5,),
-              Txt(dateSelected == null ?'${widget.selectedDate!.year}/${widget.selectedDate!.month}/${widget.selectedDate!.day}':'${dateSelected.year}/${dateSelected.month}/${dateSelected.day}'),
+              Txt(dateSelected == null ?'${widget.selectedDate!.year}/${widget.selectedDate!.month}/${widget.selectedDate!.day}':'${dateSelected.year}/${dateSelected.month}/${dateSelected.day}', color: MainController.isLightMode.value ? whiteColor : primaryDark ,),
 
             ],
           ),
