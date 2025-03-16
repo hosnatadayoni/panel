@@ -43,7 +43,6 @@ class _TableCustomBoxState extends State<TableCustomBox> {
     });
     var size = MediaQuery.of(context).size;
     return Obx((){
-
       return Container(
           color: MainController.isLightMode.value == true ? background :whiteColor,
           padding: EdgeInsets.all(15),
