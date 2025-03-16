@@ -39,7 +39,8 @@
   "It is mandatory": "الزامی است",
   "fields": "فیلد های",
   "is wrong": "اشتباه است",
-  "The operation accomplished.":"عملیات با موفقیت انجام شد.",
-  "The operation encountered an error!":"عملیات با خطا مواجه شد!",
-  "Please select the desired file": "لطفا فایل مورد نظر خود را انتخاب کنید"
+  "Please select the desired file": "لطفا فایل مورد نظر خود را انتخاب کنید",
+  "The corresponding item has been deleted": "آیتم مربوطه وجود ندارد",
+  "error": "خطا",
+  "The corresponding item was not found": "آیتم مربوطه یافت نشد"
 }

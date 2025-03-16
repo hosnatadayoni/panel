@@ -13,10 +13,12 @@ class SelectBox extends StatefulWidget {
   String? name;
   List<DropdownMenuItem<String>>? items;
   String? hintText;
-  Rx<String>? selectedValue;
+  String? selectedValue;
    Function(String?)? onChanged;
    String? initalValue;
   var column;
+  Rx<bool>? isSeleted = false.obs;
+
 
   SelectBox({
      this.name,
@@ -25,7 +27,8 @@ class SelectBox extends StatefulWidget {
      this.selectedValue,
     this.onChanged,
     this.initalValue,
-    this.column
+    this.column,
+    this.isSeleted
   });
 
   @override
@@ -35,12 +38,10 @@ class SelectBox extends StatefulWidget {
 class _SelectBoxState extends State<SelectBox> {
   String? _errorText='';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Rx<bool>? isSeleted = false.obs;
+
 
   @override
   Widget build(BuildContext context) {
-    print('itemsxx>>>${widget.items!.first.value}');
-    print('widget.selectedValue>>>${widget.selectedValue!.value}');
     var inputRequired;
     String? errorMessage;
     if(widget.column['validators'] != null){
@@ -51,6 +52,7 @@ class _SelectBoxState extends State<SelectBox> {
     // bool initialValueExists = widget.items!.any((item) => item.value == initialValue);
     return widget.items!.isNotEmpty? FormBuilder(
       child: Obx((){
+        print('xsder>>>${widget.isSeleted!.value}');
         return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,11 +63,13 @@ class _SelectBoxState extends State<SelectBox> {
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
               isExpanded: true,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(right: 40),
+                // contentPadding: EdgeInsets.only(right: 40),
+                contentPadding: EdgeInsets.only(right: 40 , top: 21,bottom: 21),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
                 border: OutlineInputBorder(),
+                constraints: BoxConstraints(minHeight: 60),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),
@@ -74,8 +78,8 @@ class _SelectBoxState extends State<SelectBox> {
               items: widget.items!,
               onChanged: (value) {
               setState(() {
-                this.isSeleted!.value = true;
-                  widget.selectedValue!.value = value!.toString();
+                 widget.isSeleted!.value = true;
+                  widget.selectedValue = value!.toString();
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
                   }
@@ -85,7 +89,7 @@ class _SelectBoxState extends State<SelectBox> {
             SizedBox(height: 5,),
             if(inputRequired != null)
               if(inputRequired['type'] == 'required')
-                ViewController.isClickedCreateBtn.value == true && this.isSeleted!.value == false?
+                ViewController.isClickedBtn.value == true && widget.isSeleted!.value == false ||  ViewController.isClickedEditBtn.value == true && widget.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
           ],
         );

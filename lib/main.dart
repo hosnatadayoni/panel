@@ -1,19 +1,18 @@
-import 'package:finance/Logic/Controllers/app_localization_delegate.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Views/dashboard.dart';
-import 'package:finance/UI/Views/login-page.dart';
-import 'package:finance/UI/Views/table-page.dart';
-import 'package:finance/boxes.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'Logic/Models/record.dart';
-import 'Public/styles.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:responsive_framework/utils/scroll_behavior.dart';
+import 'Logic/Controllers/app_localization_delegate.dart';
+import 'UI/Views/table-page.dart';
 
 void main()async {
 
@@ -24,7 +23,6 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-  await Records.getRecords('category',condition: true,fieldName: 'y',oprator: '==',value: '456');
 
 
   runApp(MyApp());
@@ -80,7 +78,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/':(context)=>DashboardPage(),
-        '/TablePage': (context) => const TablePage(),
+        '/TablePage': (context) =>  TablePage(),
       },
     );
   }

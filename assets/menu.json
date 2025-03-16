@@ -7,192 +7,33 @@
         "currentPage":1,
         "countShowRow":10,
         "columns":[
-            {
-                "name": "N",
-                "type": "string",
-                "validators": [
-                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
-            },
-            {
-                "name": "b",
-                "type": "int",
-                "is-prime":true
-            }, 
-            {
-                "name": "C",
-                "type": "int",
-                "import-of-excel":false
-            },
-            {
-                "name": "D",
-                "type": "int",
-              "validators": [
-                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
-            },
-            {
-                "name": "E",
-                "type": "string",
-                "is-show-table":false
-        
-            },
-
-            {
-               "name": "d",
-               "type": "select",
-              "sourceItems": "custom",
-              "sorceTable": null,
-                "items": [
-                    {"title": "انتخاب نشده" , "value": "-1"},
-                    {"title": "a","value": "1","is_selected": false},
-                    {"title": "b","value": "2","is_selected": false},
-                    {"title": "c","value": "3","is_selected": false}
-                ],
-              "validators": [
-                {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
-              ]
-
-           },
-            {
-            "name": "dddddd",
-            "type": "select",
-            "sourceItems": "custom",
-            "sorceTable": null,
-            "items": [
-              {"title": "انتخاب نشده" , "value": "-1"},
-              {"title": "w","value": "1","is_selected": true},
-              {"title": "eb","value": "2","is_selected": false},
-              {"title": "r","value": "3","is_selected": false}
-            ]
-          },
-            {
-            "name": "table select",
-            "type": "select",
-            "sourceItems": "table",
-            "sourceTable": "status",
-            "items": []
-          },
-
-           {
-                "name": "checkBox",
-                "type": "checkbox",
-                "default_value": false
-            },
-           {
-                "name": "radioButton",
-                "type": "radiobutton",
-                "items": [
-                    {"title": "test 1","value": "1","is_selected": true},
-                    {"title": "test 2","value": "2","is_selected": false},
-                    {"title": "test 3","value": "3","is_selected": false},
-                    {"title": "test 4","value": "4","is_selected": false}
-                ]
-            },
           {
-            "name": "Date",
-            "type": "date"
-          },
-          {
-            "name": "multiSelect",
-            "type": "multiSelect",
-            "items": [
-              {"title": "انتخاب نشده" , "value": "-1"},
-              {"title": "test 1","value": "1"},
-              {"title": "test 2","value": "2"},
-              {"title": "test 3","value": "3"},
-              {"title": "test 4","value": "4"}
-            ],
+            "name": "نام و نام خانوادگی",
+            "type": "string",
             "validators": [
               {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
             ]
           },
           {
-            "name" : "Color",
-            "type": "color",
+            "name": "شماره موبایل",
+            "type": "mobile",
             "validators": [
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"},
+              {"type": "mobile" , "message": "شماره موبایل با فرمت نادرست وارد شده است"}
             ]
           },
           {
-            "name" : "Color2",
-            "type": "color"
+            "name": "آدرس",
+            "type": "string"
           },
           {
-            "name": "multiSelect2",
-            "type": "multiSelect",
-            "items": [
-              {"title": "انتخاب نشده" , "value": "-1"},
-              {"title": "test 5","value": "1"},
-              {"title": "test 6","value": "2"},
-              {"title": "test 7","value": "3"},
-              {"title": "test 8","value": "4"}
-            ]
-
-
+            "name": "سقف اعتبار",
+            "type": "number"
           },
           {
-            "name": "Number",
-            "type": "number",
-            "validators": [
-              {"type": "min","value": 200 , "message": "عدد وارد شده کمتر از 200 است"},
-              {"type": "max","value": 700 , "message": "عدد وارد شده بیشتر از 700 است"},
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-
-            ]
-          },
-          {
-            "name": "Number2",
-            "type": "number",
-            "validators": [
-              {"type": "min","value": 400 , "message": "عدد وارد شده کمتر از 400 است"},
-              {"type": "max","value": 1000 , "message": "عدد وارد شده بیشتر از 1000 است"}
-            ]
-          },
-          {
-            "name": "File",
-            "type": "file",
-            "validators": [
-              {"type": "min","value": 1000 , "message": "حجم فایل انتخاب شده کمتر از 1000 بایت است"},
-              {"type": "max","value": 20000 , "message": "حجم فایل انتخاب شده بیشتر از 20000 بایت است"},
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-            ]
-          },
-          {
-            "name": "File2",
-            "type": "file",
-            "validators": [
-              {"type": "min","value": 1000 , "message": "حجم فایل انتخاب شده کمتر از 1000 بایت است"},
-              {"type": "max","value": 5000 , "message": "حجم فایل انتخاب شده بیشتر از 5000 بایت است"}
-
-            ]
-
+            "name": "کد مشتری",
+            "type": "number"
           }
-        ]
-    },
-    {
-        "title":"دسته بندی",
-        "tooltip":"",
-        "main-menu": true,
-        "table-name":"category",
-        "currentPage":1,
-        "countShowRow":10,
-        "columns":[
-            {
-                "name": "x",
-                "type": "string",
-                "validators": [
-                  {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
-            },
-            {
-                "name": "y",
-                "type": "number",
-              "validators": [
-                {"type": "min","value": 400 , "message": "عدد وارد شده کمتر از 400 است"},
-                {"type": "max","value": 1000 , "message": "عدد وارد شده بیشتر از 1000 است"}
-              ]
-            }
         ]
     },
     {
@@ -202,34 +43,158 @@
         "table-name":"product",
         "currentPage":1,
         "countShowRow":10,
-        "columns":[]
+        "columns":[
+            {
+                "name": "عنوان",
+                "type": "string",
+              "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            },
+          {
+            "name": "عنوان(کوتاه)",
+            "type": "string"
+          },
+            {
+                "name": "قیمت",
+                "type": "number",
+              "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            }
+        ]
     },
     {
-        "title":"x",
-        "tooltip":"",
-        "main-menu": false,
-        "table-name":"",
-        "currentPage":1,
-        "countShowRow":10,
-        "columns":[]
-    },
-    {
-    "title": "status",
+    "title":"سفارشات",
     "tooltip":"",
     "main-menu": true,
-    "table-name":"status",
+    "table-name":"order",
     "currentPage":1,
     "countShowRow":10,
     "columns":[
       {
-        "name": "item 1",
-        "type": "string"
+        "name": "مشتری",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "customer",
+        "items": []
       },
       {
-        "name": "item 2",
-        "type": "string"
+        "name": "کد ورودی",
+        "type": "number"
+      },
+      {
+        "name": "تاریخ",
+        "type": "date"
+      },
+      {
+        "name": "شماره نقشه",
+        "type": "number"
+      },
+      {
+        "name": "(مشتری)شماره نقشه",
+        "type": "number"
+      },
+      {
+        "name": "نوع",
+        "type": "select",
+        "sourceItems": "custom",
+        "sorceTable": null,
+        "items": [
+          {"title": "معمولی","value": "1","is_selected": true},
+          {"title": "ویژه","value": "2","is_selected": false}
+        ]
+      },
+      {
+        "name": "عکس",
+        "type": "file",
+        "isPictureSelected" : true
       }
-    ]
+    ],
+    "view": "custom"
+  },
+    {
+      "title":"لیست سفارش ها",
+      "tooltip":"",
+     "main-menu": true,
+     "table-name":"order-item",
+     "currentPage":1,
+     "countShowRow":10,
+     "columns":[
+      {
+        "name": "نام کالا",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "product",
+        "items": []
+      },
+       {
+         "name": "سفارش",
+         "type": "select",
+         "sourceItems": "table",
+         "sourceTable": "order",
+         "items": []
+       },
+       {
+         "name": "قیمت",
+         "type": "number"
+       },
+       {
+         "name": "بعد اول",
+         "type": "number"
+       },
+       {
+         "name": "بعد دوم",
+         "type": "number"
+       },
+       {
+         "name": "جمع متراژ",
+         "type": "number"
+       },
+       {
+         "name": "تعداد",
+         "type": "number"
+       },
+       {
+         "name": "الگو بری",
+         "type": "select",
+         "sourceItems": "custom",
+         "sorceTable": null,
+         "items": [
+           {"title": "0","value": "1","is_selected": true},
+           {"title": "10","value": "2","is_selected": false},
+           {"title": "20","value": "3","is_selected": false}
+         ]
+       },
+       {
+         "name": "سختی تولید",
+         "type": "select",
+         "sourceItems": "custom",
+         "sorceTable": null,
+         "items": [
+           {"title": "0","value": "1","is_selected": true},
+           {"title": "10","value": "2","is_selected": false},
+           {"title": "20","value": "3","is_selected": false}
+         ]
+       },
+       {
+         "name": "بلوک",
+         "type": "number"
+       },
+       {
+         "name": "طبقه",
+         "type": "number"
+       },
+       {
+         "name": "واحد",
+         "type": "number"
+       },
+       {
+         "name": "جمع مبلغ",
+         "type": "number"
+       }
+     ],
+      "view": "custom"
   }
 
 ]

@@ -14,20 +14,21 @@ class RadioButton extends StatelessWidget {
   String? initalValue;
   GlobalKey<FormBuilderState>? fbKey = GlobalKey<FormBuilderState>();
   var column;
-   RadioButton({this.name , this.radioButtonItems , this.initalValue , this.fbKey , this.onChanged , this.column});
+  Rx<bool>? isSelectedItem = false.obs;
+   RadioButton({this.name , this.radioButtonItems , this.initalValue , this.fbKey , this.onChanged , this.column , this.isSelectedItem});
 
   @override
   Widget build(BuildContext context) {
     print('radioButtonItems>>>${radioButtonItems}');
     var inputRequired;
     String? errorMessage;
-    Rx<bool> isSelectedItem = false.obs;
+
     if(this.column['validators'] != null){
       inputRequired = this.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }
     return Obx((){
-      print('${isSelectedItem.value}');
+      print('${isSelectedItem!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +39,7 @@ class RadioButton extends StatelessWidget {
             initialValue: this.initalValue,
             options: this.radioButtonItems!,
             onChanged: (text){
-              isSelectedItem.value = true;
+              isSelectedItem!.value = true;
               if(this.onChanged!=null)
                 this.onChanged!(text);
             },
@@ -46,7 +47,7 @@ class RadioButton extends StatelessWidget {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedCreateBtn.value == true &&  isSelectedItem.value == false?
+              ViewController.isClickedBtn.value == true &&  isSelectedItem!.value == false || ViewController.isClickedEditBtn.value == true && isSelectedItem!.value == false ?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );
