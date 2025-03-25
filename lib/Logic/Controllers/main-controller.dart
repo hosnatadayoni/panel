@@ -865,6 +865,28 @@ class MainController extends GetxController {
     return dataExlJson;
   }
 
+  static getColumnInfoTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere((
+        element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
+      print('table info>d>>${tableInfo['columns']}');
+      return tableInfo['columns'];
+    }
+    return null;
+  }
+
+  static getTypeOfField(String tableName,String name,) {
+    var type;
+    var column=getColumnInfoTable(tableName);
+    for(var item in column){
+      if(item['name']==name){
+        print('name iss>>${item['name']}');
+        type=item['type'];
+        return type;
+      }
+    }
+  }
   static getColumnInfo(String title) {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       var column = MainController.tableInfo['columns'][j];

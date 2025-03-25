@@ -83,16 +83,10 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                       PopupMenuItem(
                           onTap: () {
                             setState(()  {
-                              // MainController.isClickedItem.value = false;
-
-                              //dehdar remove
-                              // ViewController.selectedDate!.value = Jalali.now();
-                              // ViewController.selectedColor = Colors.blue;
                               ViewController.isClickedBtn.value = false;
                               ViewController.isClickedEditBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
-
                               await Get.to(() => CreatePage());
                             });
                           },

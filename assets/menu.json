@@ -1,41 +1,5 @@
 [
-    {
-        "title":"مشتری",
-        "tooltip":"",
-        "main-menu": true,
-        "table-name":"customer",
-        "currentPage":1,
-        "countShowRow":10,
-        "columns":[
-          {
-            "name": "نام و نام خانوادگی",
-            "type": "string",
-            "validators": [
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-            ]
-          },
-          {
-            "name": "شماره موبایل",
-            "type": "mobile",
-            "validators": [
-              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"},
-              {"type": "mobile" , "message": "شماره موبایل با فرمت نادرست وارد شده است"}
-            ]
-          },
-          {
-            "name": "آدرس",
-            "type": "string"
-          },
-          {
-            "name": "سقف اعتبار",
-            "type": "number"
-          },
-          {
-            "name": "کد مشتری",
-            "type": "number"
-          }
-        ]
-    },
+
     {
         "title":"محصولات",
         "tooltip":"",
@@ -65,136 +29,27 @@
         ]
     },
     {
-    "title":"سفارشات",
-    "tooltip":"",
-    "main-menu": true,
-    "table-name":"order",
-    "currentPage":1,
-    "countShowRow":10,
-    "columns":[
-      {
-        "name": "مشتری",
-        "type": "select",
-        "sourceItems": "table",
-        "sourceTable": "customer",
-        "items": []
-      },
-      {
-        "name": "کد ورودی",
-        "type": "number"
-      },
-      {
-        "name": "تاریخ",
-        "type": "date"
-      },
-      {
-        "name": "شماره نقشه",
-        "type": "number"
-      },
-      {
-        "name": "(مشتری)شماره نقشه",
-        "type": "number"
-      },
-      {
-        "name": "نوع",
-        "type": "select",
-        "sourceItems": "custom",
-        "sorceTable": null,
-        "items": [
-          {"title": "معمولی","value": "1","is_selected": true},
-          {"title": "ویژه","value": "2","is_selected": false}
+        "title":"دسته بندی",
+        "tooltip":"",
+        "main-menu": true,
+        "table-name":"category",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[
+            {
+                "name": "عنوان",
+                "type": "string",
+              "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            },
+            {
+                "name": "نام",
+                "type": "string",
+              "validators": [
+                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+              ]
+            }
         ]
-      },
-      {
-        "name": "عکس",
-        "type": "file",
-        "isPictureSelected" : true
-      }
-    ],
-    "view": "custom"
-  },
-    {
-      "title":"لیست سفارش ها",
-      "tooltip":"",
-     "main-menu": true,
-     "table-name":"order-item",
-     "currentPage":1,
-     "countShowRow":10,
-     "columns":[
-      {
-        "name": "نام کالا",
-        "type": "select",
-        "sourceItems": "table",
-        "sourceTable": "product",
-        "items": []
-      },
-       {
-         "name": "سفارش",
-         "type": "select",
-         "sourceItems": "table",
-         "sourceTable": "order",
-         "items": []
-       },
-       {
-         "name": "قیمت",
-         "type": "number"
-       },
-       {
-         "name": "بعد اول",
-         "type": "number"
-       },
-       {
-         "name": "بعد دوم",
-         "type": "number"
-       },
-       {
-         "name": "جمع متراژ",
-         "type": "number"
-       },
-       {
-         "name": "تعداد",
-         "type": "number"
-       },
-       {
-         "name": "الگو بری",
-         "type": "select",
-         "sourceItems": "custom",
-         "sorceTable": null,
-         "items": [
-           {"title": "0","value": "1","is_selected": true},
-           {"title": "10","value": "2","is_selected": false},
-           {"title": "20","value": "3","is_selected": false}
-         ]
-       },
-       {
-         "name": "سختی تولید",
-         "type": "select",
-         "sourceItems": "custom",
-         "sorceTable": null,
-         "items": [
-           {"title": "0","value": "1","is_selected": true},
-           {"title": "10","value": "2","is_selected": false},
-           {"title": "20","value": "3","is_selected": false}
-         ]
-       },
-       {
-         "name": "بلوک",
-         "type": "number"
-       },
-       {
-         "name": "طبقه",
-         "type": "number"
-       },
-       {
-         "name": "واحد",
-         "type": "number"
-       },
-       {
-         "name": "جمع مبلغ",
-         "type": "number"
-       }
-     ],
-      "view": "custom"
-  }
-
+    }
 ]

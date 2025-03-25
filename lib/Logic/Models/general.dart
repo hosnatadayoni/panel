@@ -9,14 +9,14 @@ class General{
       return value.toString();
     }else if(type=='number'){
       return double.parse(value.toString());
-    }else if(type=='number'){
-      return double.parse(value.toString());
     }else if(type=='checkbox'){
       if(value=='true'){
         return true;
       }else{
         return false;
       }
+    }else{
+      value;
     }
   }
 }
