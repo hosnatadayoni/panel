@@ -144,7 +144,7 @@ class Header extends StatelessWidget {
                           child: Row(
                             children: [
                               Txt('${AppController.of(context)!.value('user account information')}' , fontSize: 16, fontWeight: FontWeight.w400,color: whiteColor,),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 5,),
                               Icon(Icons.arrow_drop_down_sharp , size: 20, color: whiteColor,),
                             ],
                           ),

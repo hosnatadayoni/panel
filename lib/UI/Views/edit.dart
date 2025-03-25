@@ -3,6 +3,7 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -119,34 +120,35 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                 ViewController.isClickedEditBtn.value = true;
-                                  final data = DataModel(
-                                    id: widget.data!.id,
-                                    data: ViewController.request,
-                                  );
-                                  print('xxxx>>>${data.data}');
-                                 bool isValidator;
-                                  List<bool> isValidatorList=[];
-                                  for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                    isValidator = await ValidatorController.checkInputValidation(j,data.data);
-                                    isValidatorList.add(isValidator);
-                                  }
-                                  print('isValidatorList>>>${isValidatorList}');
-                                  bool isExsistsValidation = isValidatorList.contains(false);
-                                  print('isExsistsValidation>>>${isExsistsValidation}');
-                                  if(isExsistsValidation){
-                                    isValidatorList=[];
-                                  }
-                                  else{
-                                    dataController.allData.value[widget.index] =  data;
-                                    MainController.tableData.value[widget.index] = data;
-                                    await box.putAt(widget.index,data);
-                                    print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                                    print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                                    MainController.isClickedItem.value = true;
-                                    ViewController.isClickedEditBtn.value = false;
-                                    Get.to(() => TablePage());
-                                  }
+                                 DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
+
+                                //  final data = DataModel(
+                                 //    id: widget.data!.id,
+                                 //    data: ViewController.request,
+                                 //  );
+                                 //  print('xxxx>>>${data.data}');
+                                 // bool isValidator;
+                                 //  List<bool> isValidatorList=[];
+                                 //  for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+                                 //    isValidator = await ValidatorController.checkInputValidation(j,data.data);
+                                 //    isValidatorList.add(isValidator);
+                                 //  }
+                                 //  print('isValidatorList>>>${isValidatorList}');
+                                 //  bool isExsistsValidation = isValidatorList.contains(false);
+                                 //  print('isExsistsValidation>>>${isExsistsValidation}');
+                                 //  if(isExsistsValidation){
+                                 //    isValidatorList=[];
+                                 //  }
+                                 //  else{
+                                 //    dataController.allData.value[widget.index] =  data;
+                                 //    MainController.tableData.value[widget.index] = data;
+                                 //    await box.putAt(widget.index,data);
+                                 //    print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+                                 //    print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
+                                 //    MainController.isClickedItem.value = true;
+                                 //    ViewController.isClickedEditBtn.value = false;
+                                 //    Get.to(() => TablePage());
+                                 //  }
 
 
                               },
@@ -191,35 +193,31 @@ class _EditPageState extends State<EditPage> {
                             InkWell(
                               onTap: ()async{
                                 ViewController.isClickedEditBtn.value = true;
-                                final data = DataModel(
-                                  id: widget.data!.id,
-                                  data: ViewController.request,
-                                );
-                                print('xxxx>>>${data.data}');
-                                bool isValidator;
-                                List<bool> isValidatorList=[];
-                                for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                  isValidator = await ValidatorController.checkInputValidation(j,data.data);
-                                  isValidatorList.add(isValidator);
-                                }
-                                print('isValidatorList>>>${isValidatorList}');
-                                bool isExsistsValidation = isValidatorList.contains(false);
-                                print('isExsistsValidation>>>${isExsistsValidation}');
-                                if(isExsistsValidation){
-                                  isValidatorList=[];
-                                }
-                                else{
-                                  dataController.allData.value[widget.index] =  data;
-                                  MainController.tableData.value[widget.index] = data;
-                                  await box.putAt(widget.index,data);
-                                  print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                                  print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                                  MainController.isClickedItem.value = true;
-                                  ViewController.isClickedEditBtn.value = false;
-                                  Get.to(() => TablePage());
-                                }
-
-
+                                // final data = DataModel(
+                                //   id: widget.data!.id,
+                                //   data: ViewController.request,
+                                // );
+                                // print('xxxx>>>${data.data}');
+                                // bool isValidator;
+                                // List<bool> isValidatorList=[];
+                                // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+                                //   isValidator = await ValidatorController.checkInputValidation(j,data.data);
+                                //   isValidatorList.add(isValidator);
+                                // }
+                                // print('isValidatorList>>>${isValidatorList}');
+                                // bool isExsistsValidation = isValidatorList.contains(false);
+                                // print('isExsistsValidation>>>${isExsistsValidation}');
+                                // if(isExsistsValidation){
+                                //   isValidatorList=[];
+                                // }
+                                // else{
+                                //   dataController.allData.value[widget.index] =  data;
+                                //   MainController.tableData.value[widget.index] = data;
+                                //   await box.putAt(widget.index,data);
+                                //   MainController.isClickedItem.value = true;
+                                //   ViewController.isClickedEditBtn.value = false;
+                                //   Get.to(() => TablePage());
+                                // }
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10),

@@ -1,9 +1,7 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
-import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/validator-controller.dart';
+import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
-import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-order-custom.dart';
@@ -13,13 +11,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:uuid/uuid.dart';
+import '../../Logic/Models/db.dart';
 import '../../Public/styles.dart';
-import '../../boxes.dart';
 import '../Componenets/General/column-scroll.dart';
 import '../Componenets/General/txt.dart';
 
 class CreatePage extends StatefulWidget {
+  // String tableName;
   CreatePage();
 
   @override
@@ -28,10 +26,10 @@ class CreatePage extends StatefulWidget {
 
 class _CreatePageState extends State<CreatePage> {
   DateTime? startTime;
-
   DateTime? endTime;
   late Future<Widget> _future;
   Map<String , dynamic> dataJson = {};
+
   @override
   void initState() {
     super.initState();
@@ -39,12 +37,9 @@ class _CreatePageState extends State<CreatePage> {
   }
 
   @override
-
   Widget build(BuildContext context) {
-
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-
     return Scaffold(
       body: Container(
           width: size.width,
@@ -116,57 +111,9 @@ class _CreatePageState extends State<CreatePage> {
                                             },
                                             child: InkWell(
                                               onTap: () async{
-                                                // startTime =  DateTime.now();
-                                                // print('startTime>>>${startTime}');
-                                                // for(var i=0;i<100000;i++){
-                                                //   var Id =Uuid().v4();
-                                                //   print("add record manual:${dataJson}");
-                                                //   DataModel newData = DataModel(
-                                                //     id: '${Id}',
-                                                //     data: dataJson,
-                                                //   );
-                                                //   await box.add(newData);
-                                                //   print('box.length>>>>${box.length}');
-                                                //   dataController.allData.value.add(newData);
-                                                //   print('newData.data${newData.data}');
-                                                //
-                                                // }
-                                                // endTime = DateTime.now();
-                                                // print('endTime>>>${endTime}');
-                                                ViewController.isClickedBtn.value = true;
-                                                var Id =Uuid().v4();
-                                                print("add record manual:${dataJson}");
-                                                DataModel newData = DataModel(
-                                                  id: '${Id}',
-                                                  data: ViewController.request
-                                                  // data: dataJson,
-                                                );
-                                                bool isValidator;
-                                                List<bool> isValidatorList=[];
-                                                print('newData.data>>>${newData.data}');
-                                                for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                                                  isValidator = await ValidatorController.checkInputValidation(j,newData.data);
-                                                  isValidatorList.add(isValidator);
-                                                }
-                                                print('isValidatorList>>>${isValidatorList}');
-                                                bool isExsistsValidation = isValidatorList.contains(false);
-                                                if(isExsistsValidation){
-                                                  isValidatorList=[];
-                                                }
-                                                else{
-                                                  await box.add(newData);
-                                                  print('box.length>>>>${box.length}');
-                                                  dataController.allData.value.add(newData);
-                                                  print('newData.data${newData.data}');
-                                                  print('dataController.allData.value>>>${dataController.allData.value}');
-                                                  print('newData.id>>>${newData.id}');
-                                                  await MainController.loadData();
-                                                  MainController.renderPagination();
-                                                  // }
-                                                  ViewController.isClickedBtn.value = false;
-                                                  Get.to(() => TablePage());
-                                                }
-                                              },
+                                                await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                                Get.to(() => TablePage());
+                                                },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),
                                                 decoration: BoxDecoration(
@@ -222,16 +169,12 @@ class _CreatePageState extends State<CreatePage> {
                           //     return Container(); // Return an empty container for other cases
                           //   }).toList(),
                           // ),
-
-
                           MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ? Column(
                             children: [
                               FormCreateOrderCustom(),
                               FormCreateOrderItemCustom(),
                             ],
                           ):FormCreateOrderItemCustom(),
-
-
                         ],
                       )
                     )
