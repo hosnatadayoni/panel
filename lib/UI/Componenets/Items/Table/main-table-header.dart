@@ -92,7 +92,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               ViewController.isClickedEditBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
-
+                              ViewController.request={};
                               await Get.to(() => CreatePage());
                             });
                           },

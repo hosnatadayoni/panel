@@ -44,7 +44,7 @@ class _CreatePageState extends State<CreatePage> {
 
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    ViewController.request={};
+
     return Scaffold(
       body: Container(
           width: size.width,
