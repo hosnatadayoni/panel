@@ -1,3 +1,5 @@
+import 'package:finance/Logic/Models/db.dart';
+import 'package:finance/Logic/Models/order-item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
@@ -21,7 +23,15 @@ class HelperController extends GetxController {
   static beforeStoreValidation(DataModel newData){
     return AppController.responceHelper(newData,true);
   }
-  static afterStore(dataJson,DataModel customData){
+  static afterStore(dataJson,DataModel customData) async {
+    if(MainController.tableInfo['table-name'] == 'order'){
+     for(var list in OrderItem.orderItemsList){
+       print('list.values>>>${list.values}');
+
+     }
+     await DB('order-item').storeRecord(ViewController.request);
+
+    }
     return AppController.responceHelper(customData,true);
   }
   //end store

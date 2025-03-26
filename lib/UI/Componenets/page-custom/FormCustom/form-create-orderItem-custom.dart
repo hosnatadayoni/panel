@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -42,6 +45,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Map<String, Future<Map<String, dynamic>>>  _future={};
   Map<String , dynamic> dataJson = {};
   var getDataTable = ViewCustomController.getDataTable('order-item');
+  Map newOrderItem ={};
 
   void initState() {
     super.initState();
@@ -72,6 +76,25 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
       String newKey = Id;
       containers[newKey] = buildContainer(newKey);
       print('containers map>>>${containers}');
+      // orderItemsList.add({newKey : {newOrderItem} });
+      // print('orderItemsList>>>${orderItemsList}');
+
+      if(ViewController.request.isNotEmpty){
+        print('ViewController.request is not empty');
+        OrderItem.orderItemsList.add({newKey: ViewController.request});
+        for(var list in OrderItem.orderItemsList){
+          print('list.values>>>${list.values}');
+
+          if(list.values is Map<String, dynamic>){
+            print('list val is map');
+          }
+
+        }
+      }
+
+
+      ViewController.request= {};
+
     });
   }
   void _removeContainer(String key) {
@@ -88,98 +111,101 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-
     return Column(
             children: [
               if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order')
-                Obx((){
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        children: [
-                          MouseRegion(
-                            onEnter: (_){
-                              isHoverBtnBack.value = true;
-                            },
-                            onExit: (_){
-                              isHoverBtnBack.value = false;
-                            },
-                            child: InkWell(
-                              onTap: (){
-
-                                Get.to(() => TableCustomPage());
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  border: Border.all(color: colorBtn , width: 1),
-                                  color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                                ),
-                                child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5,),
-                          MouseRegion(
-                            onEnter: (_){
-                            },
-                            onExit: (_){
-                            },
-                            child: InkWell(
-                              onTap: () async{
-                                ViewController.isClickedBtn.value = true;
-                                var Id =Uuid().v4();
-                                print("add record manual:${dataJson}");
-                                DataModel newData = DataModel(
-                                    id: '${Id}',
-                                    data: ViewController.request
-                                  // data: dataJson,
-                                );
-                                bool isValidator;
-                                List<bool> isValidatorList=[];
-                                print('newData.data>>>${newData.data}');
-                                for (var j = 0; j < getDataTable['columns'].length; j++) {
-                                  isValidator = await ValidatorController.checkInputValidation(j,newData.data ,  tableData: getDataTable);
-                                  isValidatorList.add(isValidator);
-                                }
-                                print('isValidatorList>>>${isValidatorList}');
-                                bool isExsistsValidation = isValidatorList.contains(false);
-                                if(isExsistsValidation){
-                                  isValidatorList=[];
-                                }
-                                else{
-                                  await MainController.loadData(tableData: getDataTable);
-                                  await box.add(newData);
-                                  print('box.length>>>>${box.length}');
-                                  dataController.allData.value.add(newData);
-                                  print('newData.data${newData.data}');
-                                  print('newData.id>>>${newData.id}');
-                                  await MainController.loadData();
-                                  MainController.renderPagination();
-
-                                  // }
-                                  ViewController.isClickedBtn.value = false;
-
-                                  Get.to(() => TableCustomPage());
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: colorBtn,
-                                ),
-                                child: Txt('${AppController.of(context)!.value('save')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  );
-                }),
+                // Obx((){
+                //   return Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Row(
+                //         children: [
+                //           MouseRegion(
+                //             onEnter: (_){
+                //               isHoverBtnBack.value = true;
+                //             },
+                //             onExit: (_){
+                //               isHoverBtnBack.value = false;
+                //             },
+                //             child: InkWell(
+                //               onTap: (){
+                //
+                //                 Get.to(() => TableCustomPage());
+                //               },
+                //               child: Container(
+                //                 padding: EdgeInsets.all(10),
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+                //                   border: Border.all(color: colorBtn , width: 1),
+                //                   color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+                //                 ),
+                //                 child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                //               ),
+                //             ),
+                //           ),
+                //           SizedBox(width: 5,),
+                //           MouseRegion(
+                //             onEnter: (_){
+                //             },
+                //             onExit: (_){
+                //             },
+                //             child: InkWell(
+                //               onTap: () async{
+                //                 // ViewController.isClickedBtn.value = true;
+                //                 // var Id =Uuid().v4();
+                //                 // print("add record manual:${dataJson}");
+                //                 // DataModel newData = DataModel(
+                //                 //     id: '${Id}',
+                //                 //     data: ViewController.request
+                //                 //   // data: dataJson,
+                //                 // );
+                //                 // bool isValidator;
+                //                 // List<bool> isValidatorList=[];
+                //                 // print('newData.data>>>${newData.data}');
+                //                 // for (var j = 0; j < getDataTable['columns'].length; j++) {
+                //                 //   isValidator = await ValidatorController.checkInputValidation(j,newData.data ,  tableData: getDataTable);
+                //                 //   isValidatorList.add(isValidator);
+                //                 // }
+                //                 // print('isValidatorList>>>${isValidatorList}');
+                //                 // bool isExsistsValidation = isValidatorList.contains(false);
+                //                 // if(isExsistsValidation){
+                //                 //   isValidatorList=[];
+                //                 // }
+                //                 // else{
+                //                 //   await MainController.loadData(tableData: getDataTable);
+                //                 //   await box.add(newData);
+                //                 //   print('box.length>>>>${box.length}');
+                //                 //   dataController.allData.value.add(newData);
+                //                 //   print('newData.data${newData.data}');
+                //                 //   print('newData.id>>>${newData.id}');
+                //                 //   await MainController.loadData();
+                //                 //   MainController.renderPagination();
+                //                 //
+                //                 //   // }
+                //                 //   ViewController.isClickedBtn.value = false;
+                //                 //
+                //                 //   Get.to(() => TableCustomPage());
+                //                 // }
+                //                 await DB('order-item').storeRecord(ViewController.request);
+                //                 if(ViewController.isClickedBtn.value == false){
+                //                   Get.to(() => TableCustomPage());
+                //                 }
+                //               },
+                //               child: Container(
+                //                 padding: EdgeInsets.all(10),
+                //                 decoration: BoxDecoration(
+                //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+                //                   color: colorBtn,
+                //                 ),
+                //                 child: Txt('${AppController.of(context)!.value('save')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       )
+                //     ],
+                //   );
+                // }),
                 SizedBox(height: 20,),
                 Container(
                 padding: EdgeInsets.all(20),
@@ -195,21 +221,12 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         InkWell(
                           onTap: (){
                             _addContainer();
+
                           },
                           child: Container(
                             padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
                             child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: (){
-                            // _addContainer();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.red,),
-                            child: Center(child: Txt('${AppController.of(context)!.value('add')}')),
                           ),
                         ),
                       ],
@@ -272,6 +289,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               onChange: (text) {
                                 ViewController.request['${getDataTable['columns'][j]['name']}'] = text;
                                 print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ ViewController.request['${getDataTable['columns'][j]['name']}']}');
+                                newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request['${getDataTable['columns'][j]['name']}'];
+                                print('newOrderItem>>>${newOrderItem}');
                               },
                               column: getDataTable['columns'][j],
                             )
@@ -425,6 +444,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                 } else {
                                                   ViewController.request[getDataTable['columns'][j]['name']] = '';
                                                 }
+                                                newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request['${getDataTable['columns'][j]['name']}'];
                                               },
                                               hintText: data['hint'],
                                               isSeleted: ViewController.request[getDataTable['columns'][j]['name']] == '' || ViewController.request[getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,

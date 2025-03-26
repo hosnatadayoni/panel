@@ -80,7 +80,7 @@ class _CreatePageState extends State<CreatePage> {
                                     Txt('${MainController.tableInfo['title']}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,),
                                   ],
                                 ),
-                                if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
+                                // if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
                                    Obx((){
                                   return Row(
                                     children: [
