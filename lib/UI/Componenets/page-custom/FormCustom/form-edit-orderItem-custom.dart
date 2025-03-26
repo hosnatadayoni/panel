@@ -201,6 +201,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
               SizedBox(height: 20,),
               Container(
                 width: size.width,
+
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -238,6 +239,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                                         onChange: (text) {
                                           ViewController.request['${getDataTable['columns'][j]['name']}'] = text;
+                                          print('getDataTable>>>${getDataTable}');
                                         },
                                         column: getDataTable['columns'][j],
                                       )

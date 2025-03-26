@@ -114,9 +114,7 @@ class DB {
   }
 
   storeRecord(Map<String, dynamic> request) async {
-    print('store record>>>${request}');
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-
     ViewController.isClickedBtn.value = true;
     var Id = Uuid().v4();
     DataModel newData = DataModel(id: '${Id}', data: request);
@@ -124,8 +122,6 @@ class DB {
     if (beforValidate['status'] == false) {
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      print('validate record>>>${await RecordController.validate(this.tableName!, newData)}');
-
       if (await RecordController.validate(this.tableName!, newData) == false) {
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
@@ -147,7 +143,7 @@ class DB {
           }
           ViewController.isClickedBtn.value = false;
           request = {};
-          Get.to(() => TablePage());
+
         }
       }
     }

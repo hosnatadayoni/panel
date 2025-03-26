@@ -118,7 +118,9 @@ class _CreatePageState extends State<CreatePage> {
                                             child: InkWell(
                                               onTap: () async{
                                                 await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
-
+                                                if(ViewController.isClickedBtn.value == false){
+                                                  Get.to(() => TablePage());
+                                                }
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),

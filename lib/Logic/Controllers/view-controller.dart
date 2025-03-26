@@ -526,7 +526,7 @@ class ViewController extends GetxController {
       int indexColumn, int indexRow , {var table}) async {
     var size = MediaQuery.of(Get.context!).size;
     DataModel dataModel = MainController.tableData.value[indexRow];
-    print('dataModel.id 2>>>${dataModel.id}');
+    // print('dataModel.id 2>>>${dataModel.id}');
 
     String type='';
     String name='';

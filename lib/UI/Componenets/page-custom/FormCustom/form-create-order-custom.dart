@@ -159,10 +159,12 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
           SizedBox(height: 20,),
           Container(
             width: size.width,
+
             padding: EdgeInsets.all(20),
             decoration:  BoxDecoration(
                 border: Border.all(width: 2,color: MainController.isLightMode.value == true ? whiteColor:primaryDark),
-              borderRadius:  BorderRadius.circular(10)
+              borderRadius:  BorderRadius.circular(10),
+
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -185,7 +187,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Obx(() {
-                                return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                return Txt('${MainController.tableInfo['columns'][j]['title']}  ${MainController.tableInfo['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
                               }),
                               SizedBox(height: 10,),
                               Container(
