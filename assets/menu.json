@@ -4,7 +4,7 @@
         "title":"محصولات",
         "tooltip":"",
         "main-menu": true,
-        "table-name":"product",
+        "table-name":"product2",
         "currentPage":1,
         "countShowRow":10,
         "columns":[
@@ -32,7 +32,7 @@
         "title":"دسته بندی",
         "tooltip":"",
         "main-menu": true,
-        "table-name":"category",
+        "table-name":"category2",
         "currentPage":1,
         "countShowRow":10,
         "columns":[

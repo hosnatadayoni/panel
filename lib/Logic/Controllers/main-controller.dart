@@ -1032,9 +1032,6 @@ class MainController extends GetxController {
       // }
 
       MainController.tableData.value = box.values.toList();
-      for(var i=0;i<MainController.tableData.value.length;i++){
-        print('swqrtyuiopnv>>>${MainController.tableData.value[i].data}');
-      }
 
 
     } else {
