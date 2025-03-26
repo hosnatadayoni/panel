@@ -3,6 +3,8 @@ import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
+import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -67,99 +69,103 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
       width: size.width,
       child: Column(
         children: [
-          Obx((){
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    MouseRegion(
-                      onEnter: (_){
-                        isHoverBtnBack.value = true;
-                      },
-                      onExit: (_){
-                        isHoverBtnBack.value = false;
-                      },
-                      child: InkWell(
-                        onTap: (){
-
-                          Get.to(() => TablePage());
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(color: colorBtn , width: 1),
-                            color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                          ),
-                          child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5,),
-                    MouseRegion(
-                      onEnter: (_){
-                      },
-                      onExit: (_){
-                      },
-                      child: InkWell(
-                        onTap: () async{
-                          ViewController.isClickedBtn.value = true;
-                          var Id =Uuid().v4();
-                          print("add record manual:${dataJson}");
-                          DataModel newData = DataModel(
-                              id: '${Id}',
-                              data: ViewController.request
-                            // data: dataJson,
-                          );
-                          bool isValidator;
-                          List<bool> isValidatorList=[];
-                          print('newData.data>>>${newData.data}');
-                          for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                            isValidator = await ValidatorController.checkInputValidation(j,newData.data);
-                            isValidatorList.add(isValidator);
-                          }
-                          print('isValidatorList>>>${isValidatorList}');
-                          bool isExsistsValidation = isValidatorList.contains(false);
-                          if(isExsistsValidation){
-                            isValidatorList=[];
-                          }
-                          else{
-                            Box orderBox = await ViewController.getBox('order');
-                            Box orderItemBox = await ViewController.getBox('order-item');
-                            await orderBox.add(newData);
-                            await orderItemBox.add(newData);
-                            print('box.length>>>>${box.length}');
-                            dataController.allData.value.add(newData);
-                            print('newData.data${newData.data}');
-                            print('dataController.allData.value>>>${dataController.allData.value}');
-                            print('newData.id>>>${newData.id}');
-                            await MainController.loadData();
-                            MainController.renderPagination();
-                            // }
-                            ViewController.isClickedBtn.value = false;
-                            Get.to(() => TablePage());
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: colorBtn,
-                          ),
-                          child: Txt('${AppController.of(context)!.value('save')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            );
-          }),
+          // Obx((){
+          //   return Row(
+          //     mainAxisAlignment: MainAxisAlignment.end,
+          //     children: [
+          //       Row(
+          //         children: [
+          //           MouseRegion(
+          //             onEnter: (_){
+          //               isHoverBtnBack.value = true;
+          //             },
+          //             onExit: (_){
+          //               isHoverBtnBack.value = false;
+          //             },
+          //             child: InkWell(
+          //               onTap: (){
+          //
+          //                 Get.to(() => TablePage());
+          //               },
+          //               child: Container(
+          //                 padding: EdgeInsets.all(10),
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+          //                   border: Border.all(color: colorBtn , width: 1),
+          //                   color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+          //                 ),
+          //                 child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+          //               ),
+          //             ),
+          //           ),
+          //           SizedBox(width: 5,),
+          //           MouseRegion(
+          //             onEnter: (_){
+          //             },
+          //             onExit: (_){
+          //             },
+          //             child: InkWell(
+          //               onTap: () async{
+          //                 // ViewController.isClickedBtn.value = true;
+          //                 // var Id =Uuid().v4();
+          //                 // print("add record manual:${dataJson}");
+          //                 // DataModel newData = DataModel(
+          //                 //     id: '${Id}',
+          //                 //     data: ViewController.request
+          //                 //   // data: dataJson,
+          //                 // );
+          //                 // bool isValidator;
+          //                 // List<bool> isValidatorList=[];
+          //                 // print('newData.data>>>${newData.data}');
+          //                 // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+          //                 //   isValidator = await ValidatorController.checkInputValidation(j,newData.data);
+          //                 //   isValidatorList.add(isValidator);
+          //                 // }
+          //                 // print('isValidatorList>>>${isValidatorList}');
+          //                 // bool isExsistsValidation = isValidatorList.contains(false);
+          //                 // if(isExsistsValidation){
+          //                 //   isValidatorList=[];
+          //                 // }
+          //                 // else{
+          //                 //   Box orderBox = await ViewController.getBox('order');
+          //                 //   Box orderItemBox = await ViewController.getBox('order-item');
+          //                 //   await orderBox.add(newData);
+          //                 //   await orderItemBox.add(newData);
+          //                 //   print('box.length>>>>${box.length}');
+          //                 //   dataController.allData.value.add(newData);
+          //                 //   print('newData.data${newData.data}');
+          //                 //   print('dataController.allData.value>>>${dataController.allData.value}');
+          //                 //   print('newData.id>>>${newData.id}');
+          //                 //   await MainController.loadData();
+          //                 //   MainController.renderPagination();
+          //                 //   // }
+          //                 //   ViewController.isClickedBtn.value = false;
+          //                 //   Get.to(() => TablePage());
+          //                 // }
+          //                 await DB('order-item').storeRecord(ViewController.request);
+          //                 if(ViewController.isClickedBtn.value == false){
+          //                   Get.to(() => TablePage());
+          //                 }
+          //
+          //               },
+          //               child: Container(
+          //                 padding: EdgeInsets.all(10),
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.all(Radius.circular(10)),
+          //                   color: colorBtn,
+          //                 ),
+          //                 child: Txt('${AppController.of(context)!.value('save')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   );
+          // }),
           SizedBox(height: 20,),
           Container(
             width: size.width,
-
             padding: EdgeInsets.all(20),
             decoration:  BoxDecoration(
                 border: Border.all(width: 2,color: MainController.isLightMode.value == true ? whiteColor:primaryDark),
@@ -187,7 +193,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Obx(() {
-                                return Txt('${MainController.tableInfo['columns'][j]['title']}  ${MainController.tableInfo['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
                               }),
                               SizedBox(height: 10,),
                               Container(

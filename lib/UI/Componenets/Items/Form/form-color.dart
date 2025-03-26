@@ -63,10 +63,13 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
-    if(widget.column['validators'] != null){
-      inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-      errorMessage = inputRequired['message'];
+    if(widget.column != null){
+      if(widget.column['validators'] != null){
+        inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+        errorMessage = inputRequired['message'];
+      }
     }
+
     return Obx((){
       print('${ViewController.isClickedBtn.value}');
       return Column(

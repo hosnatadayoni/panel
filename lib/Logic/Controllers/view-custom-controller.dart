@@ -24,12 +24,15 @@ class ViewCustomController extends GetxController{
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
       items = await ViewController.itemsList(column);
       initValue = await ViewController.getInitValue(column, items);
-      selectedItem = items.firstWhere(
-              (element) => element['value'] == ViewController.request[column['name']],
-          orElse: () => items.first);
-      if(selectedItem['value'] != null){
-        initValue = selectedItem['value'];
+      if(items.length != 0){
+        selectedItem = items.firstWhere(
+                (element) => element['value'] == ViewController.request[column['name']],
+            orElse: () => items.first);
+        if(selectedItem['value'] != null){
+          initValue = selectedItem['value'];
+        }
       }
+
     }
 
     return {
