@@ -12,6 +12,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../../Logic/Models/db.dart';
+
 class MenuBox extends StatefulWidget {
    MenuBox({Key? key}) : super(key: key);
 
@@ -54,7 +56,6 @@ class _MenuBoxState extends State<MenuBox>{
                                   Column(children:[
                                   InkWell(
                                       onTap: ()async {
-                                        print('index>>>${j}');
                                         MainController.selectedSubItem.value = j;
                                         await MainController.loadData();
                                         MainController.renderPagination();

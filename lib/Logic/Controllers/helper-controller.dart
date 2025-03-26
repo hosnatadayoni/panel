@@ -41,8 +41,8 @@ class HelperController extends GetxController {
   //delete
   static beforeDelete(int index){
     return AppController.responceHelper(null,true);
-
   }
+
   static afterDelete(int index,DataModel data){
     return AppController.responceHelper(data,true);
   }

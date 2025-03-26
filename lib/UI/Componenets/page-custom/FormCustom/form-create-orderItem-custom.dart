@@ -72,7 +72,11 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
       String newKey = Id;
       containers[newKey] = buildContainer(newKey);
       print('containers map>>>${containers}');
+      List<Map<String,dynamic>>l=<Map<String,dynamic>>[];
+      l.add({newKey:{ViewController.request}});
+      print('l>>>>>>>${l}');
     });
+
   }
   void _removeContainer(String key) {
     setState(() {
@@ -202,16 +206,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                             child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
                           ),
                         ),
-                        InkWell(
-                          onTap: (){
-                            // _addContainer();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.red,),
-                            child: Center(child: Txt('${AppController.of(context)!.value('add')}')),
-                          ),
-                        ),
+
                       ],
                     ),
                     SizedBox(height: 20,),
@@ -271,7 +266,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                               onChange: (text) {
                                 ViewController.request['${getDataTable['columns'][j]['name']}'] = text;
-                                print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ ViewController.request['${getDataTable['columns'][j]['name']}']}');
+                                print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ViewController.request}');
                               },
                               column: getDataTable['columns'][j],
                             )
