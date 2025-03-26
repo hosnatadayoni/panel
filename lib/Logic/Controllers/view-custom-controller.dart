@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -29,7 +30,6 @@ class ViewCustomController extends GetxController{
       if(selectedItem['value'] != null){
         initValue = selectedItem['value'];
       }
-      print('sadfg>>>${initValue}');
     }
 
     return {
@@ -39,21 +39,26 @@ class ViewCustomController extends GetxController{
     };
   }
 
-  /// for show table
+  // for show table
   static Future<String> getTitleSelectBoxFormCustom(var column , DataModel dataModel) async {
     String tableName = '';
     if (column['sourceItems'] != 'custom') {
       tableName = column['sourceTable'];
     }
     String titleSelect='';
-    if(dataModel.data['${column['name']}'] != null){
-      titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
-          dataModel.data['${column['name']}'] , column);
+
+      if(dataModel.data['${column['name']}'] != null){
+        titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
+            dataModel.data['${column['name']}'] , column);
+      }
+
+    else{
+      titleSelect = dataModel.id!;
     }
     return titleSelect;
   }
 
-  // muilt select
+  // multi select
   static Future<Map<String, dynamic>> getMultiSelectBoxData(Map<String, dynamic> column) async{
 
     List<dynamic> items=[];
@@ -129,6 +134,16 @@ class ViewCustomController extends GetxController{
   }
   return selectedFilesMap;
 
+  }
+
+  static Map<String,dynamic> getDataTable(String tableName){
+    Map<String,dynamic> dataTableName={};
+    for(var subMenu in MainController.SubMenuList){
+      if(subMenu['table-name'] == tableName){
+        dataTableName = subMenu;
+      }
+    }
+      return dataTableName;
   }
 
 }

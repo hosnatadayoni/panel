@@ -1,17 +1,15 @@
-import 'package:finance/Logic/Controllers/record-controller.dart';
-import 'package:finance/Logic/Models/general.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
-import '../../UI/Views/create.dart';
 import '../../UI/Views/table-page.dart';
 import '../Controllers/helper-controller.dart';
 import '../Controllers/main-controller.dart';
+import '../Controllers/record-controller.dart';
 import '../Controllers/view-controller.dart';
 import 'dataModel.dart';
+import 'general.dart';
 
 class DB {
   String? tableName;
@@ -126,27 +124,30 @@ class DB {
     if (beforValidate['status'] == false) {
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      print(
-          'validate record>>>${await RecordController.validate(this.tableName!, newData)}');
+      print('validate record>>>${await RecordController.validate(this.tableName!, newData)}');
 
       if (await RecordController.validate(this.tableName!, newData) == false) {
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          var customData = await HelperController.beforeStore(newData)['data'];
+          DataModel customData = await HelperController.beforeStore(newData)['data'];
+          print('customData>>>${customData.data}');
           await box.add(customData);
-          dataController.allData.value.add(customData);
+          dataController.allData.add(customData);
+          print('allData is length>>>${dataController.allData.length}');
+          for(var d in dataController.allData){
+            print('allData is >>>${d.id}');
+          }
           await MainController.loadData();
           MainController.renderPagination();
-          var afterData =
-              await HelperController.afterStore(request, customData);
+          var afterData = await HelperController.afterStore(request, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
           ViewController.isClickedBtn.value = false;
           request = {};
-
+          Get.to(() => TablePage());
         }
       }
     }

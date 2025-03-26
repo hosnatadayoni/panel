@@ -28,7 +28,7 @@ class SelectBox extends StatefulWidget {
     this.onChanged,
     this.initalValue,
     this.column,
-    this.isSeleted
+    this.isSeleted,
   });
 
   @override
@@ -64,7 +64,7 @@ class _SelectBoxState extends State<SelectBox> {
               isExpanded: true,
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.only(right: 40),
-                contentPadding: EdgeInsets.only(right: 40 , top: 21,bottom: 21),
+                contentPadding:EdgeInsets.only(right: 10 , top: 21,bottom: 21),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),

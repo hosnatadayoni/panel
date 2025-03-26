@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainTableBox extends StatelessWidget {
-  var table;
-   MainTableBox({this.table});
+
+   MainTableBox();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class MainTableBox extends StatelessWidget {
             children: [
               TableHeader(),
               SizedBox(height: 10,),
-              TableBox(table: this.table),
+              TableBox(),
               SizedBox(height: 20,),
               TableFooter(),
             ],

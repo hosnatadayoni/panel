@@ -46,7 +46,7 @@ class ViewController extends GetxController {
         var column = MainController.tableInfo['columns'][j];
         print('column table>>>${column}');
         var type = column['type'];
-        String name = column['name'];
+        String name = column['title'];
         var defaultValue = column['default_value'];
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
@@ -185,7 +185,7 @@ class ViewController extends GetxController {
       if (MainController.tableInfo['columns'][j]['is-show-edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
-        var name = column['name'];
+        var name = column['title'];
         var maxValidator;
         var minValidator;
         List<dynamic> items = [];
@@ -526,6 +526,7 @@ class ViewController extends GetxController {
       int indexColumn, int indexRow , {var table}) async {
     var size = MediaQuery.of(Get.context!).size;
     DataModel dataModel = MainController.tableData.value[indexRow];
+    print('dataModel.id 2>>>${dataModel.id}');
 
     String type='';
     String name='';
@@ -778,13 +779,13 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
         }),
         SizedBox(height: 10,),
         FormTextField(
-          name: '${column['name']}',
+          name: '${column['title']}',
           fbKey: _fbKey,
-          hint: '${column['name']}',
+          hint: '${column['title']}',
           lable: '',
           column: column,
           initValue: initValue,
@@ -843,11 +844,11 @@ class ViewController extends GetxController {
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
            Obx(() {
-             return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+             return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
            }),
            SizedBox(height: 10,),
            SelectBox(
-               name: '${column['name']}',
+               name: '${column['title']}',
                column: column,
                items: [
                  for (var item in items)
@@ -891,8 +892,8 @@ class ViewController extends GetxController {
   static Widget generateFormCheckBox(
        var column, var defaultValue, Map dataJson) {
     return new CheckBox(
-      checkBoxName: '${column['name']}',
-      checkBoxTitle: '${column['name']}',
+      checkBoxName: '${column['title']}',
+      checkBoxTitle: '${column['title']}',
       defaultValue: defaultValue,
       onChange: (text) {
         ViewController.request[column['name']] = text;
@@ -914,7 +915,7 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
         }),
         SizedBox(height: 10,),
         RadioButton(
@@ -954,7 +955,7 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
         }),
         SizedBox(height: 10,),
         DateBox(
@@ -977,7 +978,7 @@ class ViewController extends GetxController {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(() {
-            return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+            return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
           }),
         Obx(() {
           return MultiSelectDropdown(
@@ -1053,7 +1054,7 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
         }),
         SizedBox(height: 10,),
         Container(
@@ -1090,11 +1091,11 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['name']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
         }),
         SizedBox(height: 10,),
         FormFile(
-          columnName: column['name'],
+          columnName: column['title'],
           onChanged: (selecetdFiles) {
             // dataJson[columnName] = selecetdFiles;
             ViewController.request[column['name']] = selecetdFiles;
@@ -1321,6 +1322,12 @@ class ViewController extends GetxController {
       }
     }
     return titles.join(',');
+  }
+
+  static getBox(String tableName) async {
+    Box box;
+    box = await Hive.openBox<DataModel>('${tableName}');
+    return box;
   }
 
 }
