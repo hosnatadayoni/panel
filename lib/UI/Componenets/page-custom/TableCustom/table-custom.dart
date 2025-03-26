@@ -43,6 +43,8 @@ class _TableCustomBoxState extends State<TableCustomBox> {
     });
     var size = MediaQuery.of(context).size;
     return Obx((){
+      List<dynamic> columnList = ViewController.getColumnList('order-item');
+
       return Container(
           color: MainController.isLightMode.value == true ? background :whiteColor,
           padding: EdgeInsets.all(15),
@@ -57,16 +59,16 @@ class _TableCustomBoxState extends State<TableCustomBox> {
               controller: _scrollController,
               child: Table(
                 // defaultColumnWidth: FixedColumnWidth(200.0),
-                defaultColumnWidth: FixedColumnWidth((MainController.tableInfo['columns'].length > 8 ? 200.0 : size.width / (MainController.tableInfo['columns'].length + 1))),
+                defaultColumnWidth: FixedColumnWidth((columnList.length > 8 ? 200.0 : size.width / (columnList.length + 1))),
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 border: TableBorder.all(color: MainController.isLightMode.value == true?  whiteColor:color1),
                 children: [
                   TableRow(children: [
-                    for(var i =0 ; i<MainController.tableInfo['columns'].length;i++)
-                      if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
+                    for(var i =0 ; i<columnList.length;i++)
+                      if(columnList[i]['is-show-table'] == true)
                         Center(child: Container(
                             padding: EdgeInsets.all(10),
-                            child: Txt('${MainController.tableInfo['columns'][i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
+                            child: Txt('${columnList[i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
 
                     Container(
                         padding: EdgeInsets.all(10),
@@ -77,18 +79,18 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                     if(MainController.tableData.value.length > i)
                       TableRow(
                           children: [
-                            for(var j =0 ; j<MainController.tableInfo['columns'].length;j++)
-                              if(MainController.tableInfo['columns'][j]['is-show-table'] == true)
-                                if (MainController.tableInfo['columns'][j]['type'] == 'string' ||
-                                    MainController.tableInfo['columns'][j]['type'] == 'number' ||
-                                    MainController.tableInfo['columns'][j]['type'] == 'date'||
-                                    MainController.tableInfo['columns'][j]['type'] == 'mobile' ||
-                                    MainController.tableInfo['columns'][j]['type'] == 'email'
+                            for(var j =0 ; j<columnList.length;j++)
+                              if(columnList[j]['is-show-table'] == true)
+                                if (columnList[j]['type'] == 'string' ||
+                                    columnList[j]['type'] == 'number' ||
+                                    columnList[j]['type'] == 'date'||
+                                    columnList[j]['type'] == 'mobile' ||
+                                    columnList[j]['type'] == 'email'
                                 )
                                   Center(
                                     child: Container(
                                       child: Txt(
-                                        '${MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] != null ? MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']]:''}',
+                                        '${MainController.tableData.value[i].data[columnList[j]['name']] != null ? MainController.tableData.value[i].data[columnList[j]['name']]:''}',
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -96,14 +98,14 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                       ),
                                     ),
                                   )
-                                else if (MainController.tableInfo['columns'][j]['type'] == 'checkbox')
+                                else if (columnList[j]['type'] == 'checkbox')
                                   Center(
                                     child: Container(
                                       padding: EdgeInsets.all(5),
                                       child: CheckBox(
-                                        checkBoxName: '${MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']]}',
+                                        checkBoxName: '${MainController.tableData.value[i].data[columnList[j]['name']]}',
                                         checkBoxTitle: '',
-                                        defaultValue: MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']],
+                                        defaultValue: MainController.tableData.value[i].data[columnList[j]['name']],
                                         onChange: (text) async {
                                           DataModel dataModel = MainController.tableData.value[i];
                                           dataModel.data['${MainController.SubMenuList[MainController.selectedSubItem.value]['columns'][j]['name']}'] = text;
@@ -121,15 +123,15 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                       ),
                                     ),
                                   )
-                                else if (MainController.tableInfo['columns'][j]['type'] == 'color')
+                                else if (columnList[j]['type'] == 'color')
                                     Container(
                                       padding: EdgeInsets.all(10),
-                                      child: MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] != null
+                                      child: MainController.tableData.value[i].data[columnList[j]['name']] != null
                                           ? Center(
                                             child: Container(
                                         width: 50,
                                         height: 50,
-                                        color: Color(int.parse('${MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']]}')),
+                                        color: Color(int.parse('${MainController.tableData.value[i].data[columnList[j]['name']]}')),
                                       ),
                                           )
                                           : Container(),
@@ -138,10 +140,10 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                   //   child: Container(
                                   //     padding: EdgeInsets.all(10),
                                   //     child: Checkbox(
-                                  //       value: MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] ?? false,
+                                  //       value: MainController.tableData.value[i].data[columnList[j]['name']] ?? false,
                                   //       onChanged: (bool? value) {
                                   //         setState(() {
-                                  //           MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] = value ?? false;
+                                  //           MainController.tableData.value[i].data[columnList[j]['name']] = value ?? false;
                                   //         });
                                   //       },
                                   //     ),
@@ -167,9 +169,9 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                             // Txt('${MainController.tableData.value[i].data['a']}', fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2, textAlign: TextAlign.center,),
                             // Txt('${MainController.tableData.value[i].data['b']}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2, textAlign: TextAlign.center,),
                             // Txt('${MainController.tableData.value[i].data['c']}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2, textAlign: TextAlign.center,),
-                                else if(MainController.tableInfo['columns'][j]['type'] == 'select')
+                                else if(columnList[j]['type'] == 'select')
                                       FutureBuilder<String>(
-                                      future:ViewCustomController.getTitleSelectBoxFormCustom(MainController.tableInfo['columns'][j] , MainController.tableData.value[i]),
+                                      future:ViewCustomController.getTitleSelectBoxFormCustom(columnList[j] , MainController.tableData.value[i]),
                                       builder: (BuildContext context, AsyncSnapshot<String> snapshot){
                                         if (snapshot.connectionState == ConnectionState.waiting) {
                                          return CircularProgressIndicator();
@@ -193,9 +195,9 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                       }
                                       }
                                       )
-                                else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
+                                else if(columnList[j]['type'] == 'multiSelect')
                                         FutureBuilder<String>(
-                                            future:ViewCustomController.getTitleMultiSelctBoxFormCustom(MainController.tableInfo['columns'][j] , MainController.tableData.value[i]),
+                                            future:ViewCustomController.getTitleMultiSelctBoxFormCustom(columnList[j] , MainController.tableData.value[i]),
                                             builder: (BuildContext context, AsyncSnapshot<String> snapshot){
                                               if (snapshot.connectionState == ConnectionState.waiting) {
                                                 return CircularProgressIndicator();
@@ -219,9 +221,9 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                               }
                                             }
                                         )
-                                else if(MainController.tableInfo['columns'][j]['type'] == 'radiobutton')
+                                else if(columnList[j]['type'] == 'radiobutton')
                                         FutureBuilder<String>(
-                                              future:ViewCustomController.getTitleSelectBoxFormCustom(MainController.tableInfo['columns'][j] , MainController.tableData.value[i]),
+                                              future:ViewCustomController.getTitleSelectBoxFormCustom(columnList[j] , MainController.tableData.value[i]),
                                               builder: (BuildContext context, AsyncSnapshot<String> snapshot){
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
                                                   return CircularProgressIndicator();
@@ -245,13 +247,13 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                                 }
                                               }
                                           )
-                                else if(MainController.tableInfo['columns'][j]['type'] == 'file')
+                                else if(columnList[j]['type'] == 'file')
                                         Obx(() {
                                               return Center(
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
                                                   child: Txt(
-                                                    '${MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] != null ? MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']].length != 0 ? MainController.tableData.value[i].data[MainController.tableInfo['columns'][j]['name']] :'':''}',
+                                                    '${MainController.tableData.value[i].data[columnList[j]['name']] != null ? MainController.tableData.value[i].data[columnList[j]['name']].length != 0 ? MainController.tableData.value[i].data[columnList[j]['name']] :'':''}',
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
                                                     color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -260,6 +262,9 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                                 ),
                                               );
                                             }),
+
+
+
 
                             Center(
                               child: Container(

@@ -1,6 +1,5 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
-import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +12,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'Logic/Controllers/app_localization_delegate.dart';
-import 'Logic/Controllers/record-controller.dart';
-import 'Logic/Models/record.dart';
 import 'UI/Views/table-page.dart';
 
 void main()async {
@@ -26,28 +23,7 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-  var data=await DB('product').where('قیمت', '==', 5000000).getRecords();
-  Map<String, dynamic> map1 = {
-    'name': 'Alice',
-    'city': 'isf',
-    'country': 'New York',
-    'dd': 'fff',
-  };
 
-  Map<String, dynamic> map2 = {
-    'name': 'Alice',
-    'city': 'Los Angeles',
-    'country': 'USA',
-  };
-
-  // اضافه کردن کلید‌های موجود در map1 که در map2 نیستند
-  map1.forEach((key, value) {
-    if (!map2.containsKey(key)) {
-      map2[key] = value;
-    }
-  });
-
-  print('data get where>>>${map2}');
 
   runApp(MyApp());
 }

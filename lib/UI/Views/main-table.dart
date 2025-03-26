@@ -22,8 +22,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 class MainTable extends StatefulWidget {
-  var table;
-   MainTable({this.table});
+
+   MainTable();
 
   @override
   State<MainTable> createState() => _MainTableState();
@@ -54,7 +54,7 @@ class _MainTableState extends State<MainTable> {
                           SizedBox(height: 80,),
                           MainTableHeader(),
                           SizedBox(height: 25,),
-                          MainTableBox(table: widget.table),
+                          MainTableBox(),
                         ],
                       ),
                     ),

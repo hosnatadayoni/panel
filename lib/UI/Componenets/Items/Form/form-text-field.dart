@@ -389,7 +389,7 @@ class _FormTextFieldState extends State<FormTextField> {
                       },
                       child: Icon(UserController.isVisibility.value == true ? Icons.visibility :Icons.visibility_off, size: 15, color: MainController.isLightMode.value == true ? whiteColor:primaryDark,));
                 }):
-                Icon(Icons.circle , color: Colors.transparent, size: 5,),
+                null,
                 labelText: '${this.widget.lable}',
                 labelStyle: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
                 border: OutlineInputBorder(),

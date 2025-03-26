@@ -1,26 +1,70 @@
 [
-
+    {
+        "title":"مشتری",
+        "tooltip":"",
+        "main-menu": true,
+        "table-name":"customer",
+        "currentPage":1,
+        "countShowRow":10,
+        "columns":[
+          {
+            "name": "نام و نام خانوادگی",
+            "title": "نام و نام خانوادگی",
+            "type": "string",
+            "validators": [
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+            ]
+          },
+          {
+            "name": "شماره موبایل",
+            "title": "شماره موبایل",
+            "type": "mobile",
+            "validators": [
+              {"type": "required" , "message": "وارد کردن این فیلد الزامی است"},
+              {"type": "mobile" , "message": "شماره موبایل با فرمت نادرست وارد شده است"}
+            ]
+          },
+          {
+            "name": "آدرس",
+            "title": "آدرس",
+            "type": "string"
+          },
+          {
+            "name": "سقف اعتبار",
+            "title": "سقف اعتبار",
+            "type": "number"
+          },
+          {
+            "name": "کد مشتری",
+            "title": "کد مشتری",
+            "type": "number"
+          }
+        ]
+    },
     {
         "title":"محصولات",
         "tooltip":"",
         "main-menu": true,
-        "table-name":"product2",
+        "table-name":"product",
         "currentPage":1,
         "countShowRow":10,
         "columns":[
             {
                 "name": "عنوان",
+                "title": "عنوان",
                 "type": "string",
               "validators": [
                 {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
               ]
             },
-          {
+            {
             "name": "عنوان(کوتاه)",
+            "title": "عنوان(کوتاه)",
             "type": "string"
           },
             {
                 "name": "قیمت",
+                "title": "قیمت",
                 "type": "number",
               "validators": [
                 {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
@@ -29,27 +73,158 @@
         ]
     },
     {
-        "title":"دسته بندی",
-        "tooltip":"",
-        "main-menu": true,
-        "table-name":"category2",
-        "currentPage":1,
-        "countShowRow":10,
-        "columns":[
-            {
-                "name": "عنوان",
-                "type": "string",
-              "validators": [
-                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
-            },
-            {
-                "name": "نام",
-                "type": "string",
-              "validators": [
-                {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
-              ]
-            }
+    "title":"سفارشات",
+    "tooltip":"",
+    "main-menu": true,
+    "table-name":"order",
+    "currentPage":1,
+    "countShowRow":10,
+    "columns":[
+      {
+        "name": "مشتری",
+        "title": "مشتری",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "customer",
+        "items": []
+      },
+      {
+        "name": "کد ورودی",
+        "title": "کد ورودی",
+        "type": "number"
+      },
+      {
+        "name": "تاریخ",
+        "title": "تاریخ",
+        "type": "date"
+      },
+      {
+        "name": "شماره نقشه",
+        "title": "شماره نقشه",
+        "type": "number"
+      },
+      {
+        "name": "(مشتری)شماره نقشه",
+        "title": "(مشتری)شماره نقشه",
+        "type": "number"
+      },
+      {
+        "name": "نوع",
+        "title": "نوع",
+        "type": "select",
+        "sourceItems": "custom",
+        "sorceTable": null,
+        "items": [
+          {"title": "معمولی","value": "1","is_selected": true},
+          {"title": "ویژه","value": "2","is_selected": false}
         ]
-    }
+      },
+      {
+        "name": "عکس",
+        "title": "عکس",
+        "type": "file",
+        "isPictureSelected" : true
+      }
+    ],
+    "view": "custom"
+  },
+    {
+      "title":"جزئیات سفارش",
+      "tooltip":"",
+     "main-menu": true,
+     "table-name":"order-item",
+     "currentPage":1,
+     "countShowRow":10,
+     "columns":[
+      {
+        "name": "نام کالا",
+        "title": "نام کالا",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "product",
+        "items": []
+      },
+       {
+         "name": "سفارش",
+         "title": "سفارش",
+         "type": "select",
+         "sourceItems": "table",
+         "sourceTable": "order",
+         "items": [],
+         "is-show-store": false,
+         "is-show-edit": false
+       },
+       {
+         "name": "قیمت",
+         "title": "قیمت",
+         "type": "number"
+       },
+       {
+         "name": "بعد اول",
+         "title": "بعد اول",
+         "type": "number"
+       },
+       {
+         "name": "بعد دوم",
+         "title": "بعد دوم",
+         "type": "number"
+       },
+       {
+         "name": "جمع متراژ",
+         "title": "جمع متراژ",
+         "type": "number"
+       },
+       {
+         "name": "تعداد",
+         "title": "تعداد",
+         "type": "number"
+       },
+       {
+         "name": "الگو بری",
+         "title": "الگو بری",
+         "type": "select",
+         "sourceItems": "custom",
+         "sorceTable": null,
+         "items": [
+           {"title": "0","value": "1","is_selected": true},
+           {"title": "10","value": "2","is_selected": false},
+           {"title": "20","value": "3","is_selected": false}
+         ]
+       },
+       {
+         "name": "سختی تولید",
+         "title": "سختی تولید",
+         "type": "select",
+         "sourceItems": "custom",
+         "sorceTable": null,
+         "items": [
+           {"title": "0","value": "1","is_selected": true},
+           {"title": "10","value": "2","is_selected": false},
+           {"title": "20","value": "3","is_selected": false}
+         ]
+       },
+       {
+         "name": "بلوک",
+         "title": "بلوک",
+         "type": "number"
+       },
+       {
+         "name": "طبقه",
+         "title": "طبقه",
+         "type": "number"
+       },
+       {
+         "name": "واحد",
+         "title": "واحد",
+         "type": "number"
+       },
+       {
+         "name": "جمع مبلغ",
+         "title": "جمع مبلغ",
+         "type": "number"
+       }
+     ],
+      "view": "custom"
+  }
+
 ]

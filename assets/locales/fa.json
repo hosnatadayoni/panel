@@ -42,5 +42,7 @@
   "Please select the desired file": "لطفا فایل مورد نظر خود را انتخاب کنید",
   "The corresponding item has been deleted": "آیتم مربوطه وجود ندارد",
   "error": "خطا",
-  "The corresponding item was not found": "آیتم مربوطه یافت نشد"
+  "The corresponding item was not found": "آیتم مربوطه یافت نشد",
+  "surcharge": "اضافه کردن",
+  "remove": "حذف"
 }

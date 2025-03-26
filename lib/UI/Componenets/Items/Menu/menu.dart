@@ -3,6 +3,7 @@ import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/page-custom/TableCustom/table-custom-page.dart';
+import 'package:finance/UI/Views/login-page.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +56,14 @@ class _MenuBoxState extends State<MenuBox>{
                                       onTap: ()async {
                                         print('index>>>${j}');
                                         MainController.selectedSubItem.value = j;
-                                        Get.to(() => TablePage());
                                         await MainController.loadData();
                                         MainController.renderPagination();
+                                        if(MainController.tableInfo['table-name'] != 'order-item'){
+                                          Get.to(() => TablePage());
+                                        }
+                                        else{
+                                          Get.to(() => TableCustomPage());
+                                        }
 
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,

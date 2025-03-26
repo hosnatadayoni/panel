@@ -132,7 +132,7 @@ class Header extends StatelessWidget {
                       },
                       child:  Container(
                         // padding: EdgeInsets.all(10),
-                        width: 190,
+                        width: 195,
                         height: 300,
                         padding: EdgeInsets.only(right: 10),
                         decoration: BoxDecoration(
@@ -144,7 +144,7 @@ class Header extends StatelessWidget {
                           child: Row(
                             children: [
                               Txt('${AppController.of(context)!.value('user account information')}' , fontSize: 16, fontWeight: FontWeight.w400,color: whiteColor,),
-                              SizedBox(width: 5,),
+                              SizedBox(width: 10,),
                               Icon(Icons.arrow_drop_down_sharp , size: 20, color: whiteColor,),
                             ],
                           ),

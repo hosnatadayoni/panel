@@ -14,8 +14,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../../../../Logic/Models/db.dart';
 
 class TableBox extends StatefulWidget {
-  var table;
-  TableBox({this.table});
+
+  TableBox();
 
   @override
   State<TableBox> createState() => _TableBoxState();
@@ -42,7 +42,6 @@ class _TableBoxState extends State<TableBox> {
     });
     var size = MediaQuery.of(context).size;
     return Obx((){
-
       return Container(
         color: MainController.isLightMode.value == true ? background :whiteColor,
         padding: EdgeInsets.all(15),
@@ -175,7 +174,6 @@ class _TableBoxState extends State<TableBox> {
                                 ) ),
                           )
                         ])
-
               ],
             )
           ),
