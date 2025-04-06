@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
@@ -11,7 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/get_rx.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+
 class MainTableHeader extends StatefulWidget {
   const MainTableHeader({Key? key}) : super(key: key);
 
@@ -92,8 +93,16 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               ViewController.isClickedEditBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
+                              print('page>>>${MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']}');
                               ViewController.request={};
-                              await Get.to(() => CreatePage());
+                              if(MainController.SubMenuList[MainController.selectedSubItem.value]['view']=='custom'){
+                                HelperController.createPageFunction();
+                              //   await Get.to(() => MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']);
+                              }
+                              else{
+                                await Get.to(() => CreatePage());
+                              }
+
                             });
                           },
                           value: 'create',

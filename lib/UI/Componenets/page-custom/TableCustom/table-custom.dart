@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
@@ -42,7 +43,7 @@ class _TableCustomBoxState extends State<TableCustomBox> {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
-      List<dynamic> columnList = ViewController.getColumnList('order-item');
+      List<dynamic> columnList = ViewController.getColumnList('order-items');
 
       return Container(
           color: MainController.isLightMode.value == true
@@ -299,11 +300,12 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                         ...MainController
                                             .tableData.value[i].data
                                       };
-                                      Get.to(() => EditPage(
-                                            data: MainController
-                                                .tableData.value[i],
-                                            index: i,
-                                          ));
+                                      HelperController.editPageFunction(  MainController.tableData.value[i], i,);
+                                      // Get.to(() => EditPage(
+                                      //       data: MainController
+                                      //           .tableData.value[i],
+                                      //       index: i,
+                                      //     ));
                                     },
                                     icon: Icon(Icons.edit,
                                         color:

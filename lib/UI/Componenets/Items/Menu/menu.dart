@@ -42,7 +42,8 @@ class _MenuBoxState extends State<MenuBox>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for(var i=0 ; i<MainController.items.length ; i++)
-                      MainController.selectedItem == i &&  MainController.isClickedItem.value == true? Container(
+                      MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
+                      Container(
                       width: 250,
                       height: size.height,
                       color: MainController.isLightMode.value == true ?background:whiteColor,
@@ -59,12 +60,13 @@ class _MenuBoxState extends State<MenuBox>{
                                         MainController.selectedSubItem.value = j;
                                         await MainController.loadData();
                                         MainController.renderPagination();
-                                        if(MainController.tableInfo['table-name'] != 'order-item'){
-                                          Get.to(() => TablePage());
-                                        }
-                                        else{
-                                          Get.to(() => TableCustomPage());
-                                        }
+                                        await MainController.goToTablePage();
+                                        // if(MainController.tableInfo['table-name'] != 'order-items'){
+                                        //   Get.to(() => TablePage());
+                                        // }
+                                        // else{
+                                        //   Get.to(() => TableCustomPage());
+                                        // }
 
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,

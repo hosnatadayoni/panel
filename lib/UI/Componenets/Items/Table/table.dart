@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
@@ -100,8 +101,9 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i].data};
-                                      Get.to(() =>
-                                          EditPage(data: MainController.tableData.value[i], index: i,));
+                                      HelperController.editPageFunction(MainController.tableData.value[i], i);
+                                      // Get.to(() =>
+                                      //     EditPage(data: MainController.tableData.value[i], index: i,));
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(
                                       onPressed: () {

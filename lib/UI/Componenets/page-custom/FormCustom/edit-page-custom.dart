@@ -57,7 +57,8 @@ class _EditPageCustomState extends State<EditPageCustom> {
                     onTap: (){
                       print('widget.data!.data>>>${widget.data!.data}');
                       MainController.isClickedItem.value = true;
-                      Get.to(() => TablePage());
+                      MainController.goToTablePage();
+
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -99,7 +100,7 @@ class _EditPageCustomState extends State<EditPageCustom> {
                       print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
                       MainController.isClickedItem.value = true;
                       ViewController.isClickedEditBtn.value = false;
-                      Get.to(() => TablePage());
+                      MainController.goToTablePage();
                     }
 
 
@@ -128,7 +129,7 @@ class _EditPageCustomState extends State<EditPageCustom> {
                     onTap: (){
                       print('widget.data!.data>>>${widget.data!.data}');
                       MainController.isClickedItem.value = true;
-                      Get.to(() => TablePage());
+                      MainController.goToTablePage();
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -170,7 +171,7 @@ class _EditPageCustomState extends State<EditPageCustom> {
                       print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
                       MainController.isClickedItem.value = true;
                       ViewController.isClickedEditBtn.value = false;
-                      Get.to(() => TablePage());
+                      MainController.goToTablePage();
                     }
 
 

@@ -27,6 +27,9 @@ import 'package:excel/excel.dart' as exl;
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+import '../../UI/Views/table-page.dart';
+import 'helper-controller.dart';
 // import 'dart:html' as html;
 
 class MainController extends GetxController {
@@ -1094,5 +1097,14 @@ class MainController extends GetxController {
       }
     }
     return true;
+  }
+
+  static goToTablePage() async {
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['view']=='custom'){
+      HelperController.tablePageFunction();
+    }
+    else{
+      await Get.to(() => TablePage());
+    }
   }
 }

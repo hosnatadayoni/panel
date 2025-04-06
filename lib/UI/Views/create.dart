@@ -3,8 +3,6 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-orderItem-custom.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +89,7 @@ class _CreatePageState extends State<CreatePage> {
                                             child: InkWell(
                                               onTap: (){
 
-                                                Get.to(() => TablePage());
+                                                MainController.goToTablePage();
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.all(10),
@@ -114,7 +112,7 @@ class _CreatePageState extends State<CreatePage> {
                                               onTap: () async{
                                                 await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
                                                 if(ViewController.isClickedBtn.value == false){
-                                                  Get.to(() => TablePage());
+                                                  MainController.goToTablePage();
                                                 }
                                               },
                                               child: Container(
@@ -136,7 +134,7 @@ class _CreatePageState extends State<CreatePage> {
                             ),
                           ),
                           SizedBox(height: 10,),
-                          MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?
+                          // MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?
                           Container(
                             child:
                             FutureBuilder<Widget>(
@@ -150,7 +148,8 @@ class _CreatePageState extends State<CreatePage> {
                                   return snapshot.data ?? Container(); 
                                 }
                               },
-                            )):
+                            ))
+                              // :
                           // Column(
                           //   children: MainController.SubMenuList.map((subMenu) {
                           //     if (subMenu['table-name'] == 'order') {
@@ -172,14 +171,15 @@ class _CreatePageState extends State<CreatePage> {
                           // ),
 
 
-                          MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ?
-                          Column(
-                            children: [
-                              FormCreateOrderCustom(),
-                              SizedBox(height: 20,),
-                              FormCreateOrderItemCustom(),
-                            ],
-                          ):FormCreateOrderItemCustom(),
+                          // MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom' ?
+                          // Column(
+                          //   children: [
+                          //     FormCreateOrderCustom(),
+                          //     SizedBox(height: 20,),
+                          //     FormCreateOrderItemCustom(),
+                          //   ],
+                          // )
+                              // :FormCreateOrderItemCustom(),
 
 
                         ],

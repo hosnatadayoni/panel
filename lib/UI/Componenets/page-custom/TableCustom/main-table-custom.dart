@@ -41,7 +41,6 @@ class _MainTableCustomState extends State<MainTableCustom> {
                           SizedBox(height: 80,),
                           MainTableHeader(),
                           SizedBox(height: 25,),
-                          // MainTableBox(),
                           MainTableCustomBox(),
                         ],
                       ),

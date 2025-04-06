@@ -69,239 +69,86 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
       width: size.width,
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            width: size.width,
-            // child:size.width > 550?
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     MouseRegion(
-            //       onEnter: (_){
-            //         isHoverBtnBack.value = true;
-            //       },
-            //       onExit: (_){
-            //         isHoverBtnBack.value = false;
-            //       },
-            //       child: InkWell(
-            //         onTap: (){
-            //           print('widget.data!.data>>>${widget.data!.data}');
-            //           MainController.isClickedItem.value = true;
-            //           Get.to(() => TablePage());
-            //         },
-            //         child: Container(
-            //           padding: EdgeInsets.all(10),
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.all(Radius.circular(10)),
-            //             border: Border.all(color: colorBtn , width: 1),
-            //             color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-            //           ),
-            //           child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-            //         ),
-            //       ),
-            //     ),
-            //     SizedBox(width: 5,),
-            //     InkWell(
-            //       onTap: ()async{
-            //         ViewController.isClickedEditBtn.value = true;
-            //         final data = DataModel(
-            //           id: widget.data!.id,
-            //           data: ViewController.request,
-            //         );
-            //         print('xxxx>>>${data.data}');
-            //         bool isValidator;
-            //         List<bool> isValidatorList=[];
-            //         for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-            //           isValidator = await ValidatorController.checkInputValidation(j,data.data);
-            //           isValidatorList.add(isValidator);
-            //         }
-            //         print('isValidatorList>>>${isValidatorList}');
-            //         bool isExsistsValidation = isValidatorList.contains(false);
-            //         print('isExsistsValidation>>>${isExsistsValidation}');
-            //         if(isExsistsValidation){
-            //           isValidatorList=[];
-            //         }
-            //         else{
-            //           dataController.allData.value[widget.index] =  data;
-            //           MainController.tableData.value[widget.index] = data;
-            //
-            //           Box orderBox = await ViewController.getBox('order');
-            //           Box orderItemBox = await ViewController.getBox('order-item');
-            //           await orderBox.putAt(widget.index,data);
-            //           await orderItemBox.putAt(widget.index,data);
-            //
-            //           print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-            //           print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-            //           MainController.isClickedItem.value = true;
-            //           ViewController.isClickedEditBtn.value = false;
-            //           Get.to(() => TablePage());
-            //         }
-            //       },
-            //       child: Container(
-            //         padding: EdgeInsets.all(10),
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.all(Radius.circular(10)),
-            //           color: colorBtn,
-            //         ),
-            //         child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-            //       ),
-            //     ),
-            //   ],
-            // ):
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.end,
-            //   children: [
-            //     MouseRegion(
-            //       onEnter: (_){
-            //         isHoverBtnBack.value = true;
-            //       },
-            //       onExit: (_){
-            //         isHoverBtnBack.value = false;
-            //       },
-            //       child: InkWell(
-            //         onTap: (){
-            //           print('widget.data!.data>>>${widget.data!.data}');
-            //           MainController.isClickedItem.value = true;
-            //           Get.to(() => TablePage());
-            //         },
-            //         child: Container(
-            //           padding: EdgeInsets.all(10),
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.all(Radius.circular(10)),
-            //             border: Border.all(color: colorBtn , width: 1),
-            //             color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-            //           ),
-            //           child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-            //         ),
-            //       ),
-            //     ),
-            //     SizedBox(height: 10,),
-            //     InkWell(
-            //       onTap: ()async{
-            //         ViewController.isClickedEditBtn.value = true;
-            //         final data = DataModel(
-            //           id: widget.data!.id,
-            //           data: ViewController.request,
-            //         );
-            //         bool isValidator;
-            //         List<bool> isValidatorList=[];
-            //         for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-            //           isValidator = await ValidatorController.checkInputValidation(j,data.data);
-            //           isValidatorList.add(isValidator);
-            //         }
-            //         print('isValidatorList>>>${isValidatorList}');
-            //         bool isExsistsValidation = isValidatorList.contains(false);
-            //         print('isExsistsValidation>>>${isExsistsValidation}');
-            //         if(isExsistsValidation){
-            //           isValidatorList=[];
-            //         }
-            //         else{
-            //           // dataController.allData.value[widget.index] =  data;
-            //           // MainController.tableData.value[widget.index] = data;
-            //           // await box.putAt(widget.index,data);
-            //           dataController.allData.value[widget.index] =  data;
-            //           MainController.tableData.value[widget.index] = data;
-            //
-            //           Box orderBox = await ViewController.getBox('order');
-            //           Box orderItemBox = await ViewController.getBox('order-item');
-            //           await orderBox.putAt(widget.index,data);
-            //           await orderItemBox.putAt(widget.index,data);
-            //           print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-            //           print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-            //           MainController.isClickedItem.value = true;
-            //           ViewController.isClickedEditBtn.value = false;
-            //           Get.to(() => TablePage());
-            //         }
-            //
-            //
-            //       },
-            //       child: Container(
-            //         padding: EdgeInsets.all(10),
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.all(Radius.circular(10)),
-            //           color: colorBtn,
-            //         ),
-            //         child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            child: Wrap(
-              alignment: WrapAlignment.end,
-              children: [
-                MouseRegion(
-                  onEnter: (_){
-                    isHoverBtnBack.value = true;
-                  },
-                  onExit: (_){
-                    isHoverBtnBack.value = false;
-                  },
-                  child: InkWell(
-                    onTap: (){
-                      print('widget.data!.data>>>${widget.data!.data}');
-                      MainController.isClickedItem.value = true;
-                      Get.to(() => TablePage());
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(color: colorBtn , width: 1),
-                        color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                      ),
-                      child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5,),
-                InkWell(
-                  onTap: ()async{
-                    ViewController.isClickedEditBtn.value = true;
-                    final data = DataModel(
-                      id: widget.data!.id,
-                      data: ViewController.request,
-                    );
-                    print('xxxx>>>${data.data}');
-                    bool isValidator;
-                    List<bool> isValidatorList=[];
-                    for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-                      isValidator = await ValidatorController.checkInputValidation(j,data.data);
-                      isValidatorList.add(isValidator);
-                    }
-                    print('isValidatorList>>>${isValidatorList}');
-                    bool isExsistsValidation = isValidatorList.contains(false);
-                    print('isExsistsValidation>>>${isExsistsValidation}');
-                    if(isExsistsValidation){
-                      isValidatorList=[];
-                    }
-                    else{
-                      dataController.allData.value[widget.index] =  data;
-                      MainController.tableData.value[widget.index] = data;
-
-                      Box orderBox = await ViewController.getBox('order');
-                      Box orderItemBox = await ViewController.getBox('order-item');
-                      await orderBox.putAt(widget.index,data);
-                      await orderItemBox.putAt(widget.index,data);
-
-                      print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                      print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                      MainController.isClickedItem.value = true;
-                      ViewController.isClickedEditBtn.value = false;
-                      Get.to(() => TablePage());
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: colorBtn,
-                    ),
-                    child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Container(
+          //   padding: EdgeInsets.all(10),
+          //   width: size.width,
+          //   child:
+          //   Wrap(
+          //     alignment: WrapAlignment.end,
+          //     children: [
+          //       MouseRegion(
+          //         onEnter: (_){
+          //           isHoverBtnBack.value = true;
+          //         },
+          //         onExit: (_){
+          //           isHoverBtnBack.value = false;
+          //         },
+          //         child: InkWell(
+          //           onTap: (){
+          //             print('widget.data!.data>>>${widget.data!.data}');
+          //             MainController.isClickedItem.value = true;
+          //             MainController.goToTablePage();
+          //           },
+          //           child: Container(
+          //             padding: EdgeInsets.all(10),
+          //             decoration: BoxDecoration(
+          //               borderRadius: BorderRadius.all(Radius.circular(10)),
+          //               border: Border.all(color: colorBtn , width: 1),
+          //               color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+          //             ),
+          //             child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(width: 5,),
+          //       InkWell(
+          //         onTap: ()async{
+          //           ViewController.isClickedEditBtn.value = true;
+          //           final data = DataModel(
+          //             id: widget.data!.id,
+          //             data: ViewController.request,
+          //           );
+          //           print('xxxx>>>${data.data}');
+          //           bool isValidator;
+          //           List<bool> isValidatorList=[];
+          //           for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+          //             isValidator = await ValidatorController.checkInputValidation(j,data.data);
+          //             isValidatorList.add(isValidator);
+          //           }
+          //           print('isValidatorList>>>${isValidatorList}');
+          //           bool isExsistsValidation = isValidatorList.contains(false);
+          //           print('isExsistsValidation>>>${isExsistsValidation}');
+          //           if(isExsistsValidation){
+          //             isValidatorList=[];
+          //           }
+          //           else{
+          //             dataController.allData.value[widget.index] =  data;
+          //             MainController.tableData.value[widget.index] = data;
+          //
+          //             Box orderBox = await ViewController.getBox('order');
+          //             Box orderItemBox = await ViewController.getBox('order-items');
+          //             await orderBox.putAt(widget.index,data);
+          //             await orderItemBox.putAt(widget.index,data);
+          //
+          //             print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+          //             print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
+          //             MainController.isClickedItem.value = true;
+          //             ViewController.isClickedEditBtn.value = false;
+          //             MainController.goToTablePage();
+          //           }
+          //         },
+          //         child: Container(
+          //           padding: EdgeInsets.all(10),
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.all(Radius.circular(10)),
+          //             color: colorBtn,
+          //           ),
+          //           child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           SizedBox(height: 20,),
           Container(
             width: size.width,
