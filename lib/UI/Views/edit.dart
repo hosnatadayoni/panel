@@ -65,7 +65,8 @@ class _EditPageState extends State<EditPage> {
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?FutureBuilder<Widget>(
+                      // MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?
+                      FutureBuilder<Widget>(
                         future: _future,
                         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -76,13 +77,14 @@ class _EditPageState extends State<EditPage> {
                             return snapshot.data ?? Container();
                           }
                         },
-                      ):
-                      MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ? Column(
-                        children: [
-                          FormEditOrderCustom(index: widget.index , data: widget.data),
-                          FormEditOrderItemCustom(index: widget.index , data: widget.data),
-                        ],
-                      ):FormEditOrderItemCustom(index: widget.index , data: widget.data),
+                      ),
+                      //     :
+                      // MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ? Column(
+                      //   children: [
+                      //     FormEditOrderCustom(index: widget.index , data: widget.data),
+                      //     FormEditOrderItemCustom(index: widget.index , data: widget.data),
+                      //   ],
+                      // ):FormEditOrderItemCustom(index: widget.index , data: widget.data),
                       // ViewController.generateEditFormView(widget.data!.data),
                       SizedBox(height: 20,),
                       if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
@@ -104,7 +106,7 @@ class _EditPageState extends State<EditPage> {
                                 onTap: (){
                                   print('widget.data!.data>>>${widget.data!.data}');
                                   MainController.isClickedItem.value = true;
-                                  Get.to(() => TablePage());
+                                  MainController.goToTablePage();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),

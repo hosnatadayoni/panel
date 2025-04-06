@@ -1,5 +1,5 @@
 class OrderItem {
-  static List<Map<String, dynamic>> orderItemsList =<Map<String, dynamic>>[] ;
+  static Map<String, Map<String, dynamic>> orderItemsList =<String, Map<String, dynamic>>{} ;
 
   // OrderItem({List<Map<String, dynamic>>? orderItemsList})
   //     : orderItemsList = orderItemsList ?? [];

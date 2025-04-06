@@ -1,5 +1,6 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,6 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-
 
   runApp(MyApp());
 }

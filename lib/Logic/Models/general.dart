@@ -16,7 +16,7 @@ class General{
         return false;
       }
     }else{
-      value;
+     return value;
     }
   }
 }

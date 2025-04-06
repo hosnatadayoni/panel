@@ -12,6 +12,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../../Logic/Models/db.dart';
+
 class MenuBox extends StatefulWidget {
    MenuBox({Key? key}) : super(key: key);
 
@@ -40,7 +42,8 @@ class _MenuBoxState extends State<MenuBox>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for(var i=0 ; i<MainController.items.length ; i++)
-                      MainController.selectedItem == i &&  MainController.isClickedItem.value == true? Container(
+                      MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
+                      Container(
                       width: 250,
                       height: size.height,
                       color: MainController.isLightMode.value == true ?background:whiteColor,
@@ -54,16 +57,16 @@ class _MenuBoxState extends State<MenuBox>{
                                   Column(children:[
                                   InkWell(
                                       onTap: ()async {
-                                        print('index>>>${j}');
                                         MainController.selectedSubItem.value = j;
                                         await MainController.loadData();
                                         MainController.renderPagination();
-                                        if(MainController.tableInfo['table-name'] != 'order-item'){
-                                          Get.to(() => TablePage());
-                                        }
-                                        else{
-                                          Get.to(() => TableCustomPage());
-                                        }
+                                        await MainController.goToTablePage();
+                                        // if(MainController.tableInfo['table-name'] != 'order-items'){
+                                        //   Get.to(() => TablePage());
+                                        // }
+                                        // else{
+                                        //   Get.to(() => TableCustomPage());
+                                        // }
 
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,

@@ -1,13 +1,12 @@
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
-import '../../UI/Views/table-page.dart';
 import '../Controllers/helper-controller.dart';
 import '../Controllers/main-controller.dart';
 import '../Controllers/record-controller.dart';
 import '../Controllers/view-controller.dart';
+import '../Controllers/view-custom-controller.dart';
 import 'dataModel.dart';
 import 'general.dart';
 
@@ -63,10 +62,13 @@ class DB {
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       List<dynamic> data = getTypeOfField(box.values.toList());
       print('data length first>>>${data}');
+      print('this.list.length${this.list.length}');
       if (data.length != 0)
         for (var d in data) {
           if (this.list.length != 0) {
             for (int j = 1; j <= list.length; j++) {
+
+
               if (list[j]!.oprator == '==') {
                 if (d['${list[j]!.fieldName}'] == list[j]!.value) {
                   dataItems.add(d);
@@ -103,8 +105,18 @@ class DB {
                   print('dataItems 5 >>>${dataItems}');
                 }
                 break;
+              } else if (list[j]!.oprator == null) {
+                  dataItems.add(d);
+                  print('dataItems 6 >>>${dataItems}');
+
+                break;
               }
+
             }
+          }
+          else{
+            dataItems.add(d);
+            print('dataItems 6 >>>${dataItems}');
           }
         }
       data = dataItems;
@@ -122,29 +134,26 @@ class DB {
     if (beforValidate['status'] == false) {
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      if (await RecordController.validate(this.tableName!, newData) == false) {
+      if (await RecordController.validate(this.tableName!, newData,ViewCustomController.getDataTable(this.tableName!)) == false) {
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
           DataModel customData = await HelperController.beforeStore(newData)['data'];
-          print('customData>>>${customData.data}');
           await box.add(customData);
           dataController.allData.add(customData);
-          print('allData is length>>>${dataController.allData.length}');
-          for(var d in dataController.allData){
-            print('allData is >>>${d.id}');
-          }
-          await MainController.loadData();
-          MainController.renderPagination();
-          var afterData = await HelperController.afterStore(request, customData);
+
+          var afterData = await HelperController.afterStore(this.tableName!,request, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
+          await MainController.loadData(tableData:ViewCustomController.getDataTable(this.tableName!) );
+          MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
           request = {};
-
         }
+      }else{
+        showSnackbar(snackTypes.error, "خطا");
       }
     }
   }
@@ -171,7 +180,7 @@ class DB {
       if (beforeValidate['status'] == false) {
         showSnackbar(snackTypes.error, beforeValidate['message']);
       } else {
-       var validate= await RecordController.validate(this.tableName!, record);
+       var validate= await RecordController.validate(this.tableName!, record,ViewCustomController.getDataTable(this.tableName!));
         if (validate == false) {
           var before = await HelperController.beforeUpdate(record);
           if (before['status'] == false) {
@@ -188,12 +197,13 @@ class DB {
             MainController.tableData.value[tableDataIndex] = customUpdate;
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
-            var after = await HelperController.afterStore(data, customUpdate);
+            var after = await HelperController.afterStore(this.tableName!,data, customUpdate);
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
             ViewController.isClickedEditBtn.value = false;
-            Get.to(() => TablePage());
+            MainController.goToTablePage();
+            // Get.to(() => TablePage());
           }
         }
         else{
