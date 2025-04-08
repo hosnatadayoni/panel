@@ -7,19 +7,20 @@ import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderItemEdit extends StatelessWidget {
-  OrderItemEdit({required this.index , this.data});
-  DataModel? data;
-  int index;
+  OrderItemEdit({this.data});
+  var data;
+
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    print('data2>>>${data}');
     return Scaffold(
       body: Container(
         width: size.width,

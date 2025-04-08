@@ -3,6 +3,7 @@ import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -13,6 +14,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/page-custom/TableCustom/table-custom-page.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,9 +30,8 @@ import 'package:finance/Logic/Controllers/dataController.dart';
 
 class FormEditOrderCustom extends StatefulWidget {
 
-  FormEditOrderCustom({required this.index , this.data});
-  DataModel? data;
-  int index;
+  FormEditOrderCustom({this.data});
+  var data;
 
   @override
   State<FormEditOrderCustom> createState() => _FormEditOrderCustomState();
@@ -64,7 +65,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-
     return  Container(
       width: size.width,
       child: Column(
@@ -149,6 +149,64 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
           //     ],
           //   ),
           // ),
+          Container(
+              padding: EdgeInsets.all(10),
+              width: size.width,
+              child: Wrap(
+                // mainAxisAlignment: MainAxisAlignment.end,
+                alignment: WrapAlignment.end,
+                children: [
+                  MouseRegion(
+                    onEnter: (_){
+                      isHoverBtnBack.value = true;
+                    },
+                    onExit: (_){
+                      isHoverBtnBack.value = false;
+                    },
+                    child: InkWell(
+                      onTap: (){
+                        print('widget.data!.data>>>${widget.data!.data}');
+                        MainController.isClickedItem.value = true;
+                        Get.to(() => TablePage());
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: colorBtn , width: 1),
+                          color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+                        ),
+                        child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 5,),
+                  InkWell(
+                    onTap: ()async{
+                      // print('dddddddddddd>>>>${await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').getRecords()}');
+                      // for(var row in await ViewController.getRowTable('order-items')){
+                      //   print('dddddddddddd2>>>>${await DB('order-items').where('id', '==', '${row.id}').getRecords()}');
+                      // }
+                      DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
+                      // DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
+                      // // print('ViewController.request 34>>>${ViewController.request}');
+                      // for(var row in await ViewController.getRowTable('order-items')){
+                      //   // print('ViewController.getRowTable(order-items)>>>${row.id}');
+                      //   DB('order-items').where('id', '==', '${row.id}').updateRecord(ViewController.request2);
+                      // }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: colorBtn,
+                      ),
+                      child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                    ),
+                  ),
+                ],
+              )
+          ),
           SizedBox(height: 20,),
           Container(
             width: size.width,
@@ -169,7 +227,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         MainController.tableInfo['columns'][j]['type'] == 'number' ||
                         MainController.tableInfo['columns'][j]['type'] == 'mobile'||
                         MainController.tableInfo['columns'][j]['type'] == 'email'
-
                     )
                       Row(
                         children: [

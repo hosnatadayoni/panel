@@ -53,7 +53,7 @@ class DataModel {
   factory DataModel.fromJson(Map<String, dynamic> json){
     return DataModel(
       id : json['id'],
-      data : json['data'],
+      data: json['data']
     );
   }
 

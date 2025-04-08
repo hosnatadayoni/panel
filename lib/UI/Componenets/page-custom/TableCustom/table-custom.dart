@@ -42,8 +42,13 @@ class _TableCustomBoxState extends State<TableCustomBox> {
   Widget build(BuildContext context) {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
+    for (var i = MainController.startIndex.value; i < MainController.endIndex.value; i++){
+      print('id order items>>>>${MainController.tableData.value[i].id}');
+    }
+
     return Obx(() {
       List<dynamic> columnList = ViewController.getColumnList('order-items');
+
 
       return Container(
           color: MainController.isLightMode.value == true
@@ -300,7 +305,7 @@ class _TableCustomBoxState extends State<TableCustomBox> {
                                         ...MainController
                                             .tableData.value[i].data
                                       };
-                                      HelperController.editPageFunction(  MainController.tableData.value[i], i,);
+                                      HelperController.editPageFunction(MainController.tableData.value[i]);
                                       // Get.to(() => EditPage(
                                       //       data: MainController
                                       //           .tableData.value[i],
