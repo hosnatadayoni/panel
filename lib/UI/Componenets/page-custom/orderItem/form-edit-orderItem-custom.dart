@@ -3,6 +3,7 @@ import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -28,9 +29,8 @@ import 'package:finance/Logic/Controllers/dataController.dart';
 
 class FormEditOrderItemCustom extends StatefulWidget {
 
-  FormEditOrderItemCustom({required this.index , this.data});
-  DataModel? data;
-  int index;
+  FormEditOrderItemCustom({this.data});
+  var data;
 
   @override
   State<FormEditOrderItemCustom> createState() => _FormEditOrderItemCustomState();
@@ -71,6 +71,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+    print('widget.data order item edit page>>>${widget.data}');
+    
+
+
 
     return Column(
       children: [
@@ -109,42 +113,42 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                 SizedBox(width: 5,),
                 InkWell(
                   onTap: ()async{
-                    ViewController.isClickedEditBtn.value = true;
-                    final data = DataModel(
-                      id: widget.data!.id,
-                      data: ViewController.request,
-                    );
-                    print('xxxx>>>${ViewController.request}');
-                    bool isValidator;
-                    List<bool> isValidatorList=[];
-                    for (var j = 0; j < getDataTable['columns'].length; j++) {
-                      isValidator = await ValidatorController.checkInputValidation(j,data.data , tableData: getDataTable);
-                      isValidatorList.add(isValidator);
-                    }
-                    print('isValidatorList>>>${isValidatorList}');
-                    bool isExsistsValidation = isValidatorList.contains(false);
-                    print('isExsistsValidation>>>${isExsistsValidation}');
-                    if(isExsistsValidation){
-                      isValidatorList=[];
-                    }
-                    else{
-                      await MainController.loadData(tableData: getDataTable);
-                      dataController.allData.value[widget.index] =  data;
-                      MainController.tableData.value[widget.index] = data;
-                      // await box.putAt(widget.index,data);
-                      Box orderItemBox = await ViewController.getBox('order-items');
-                      await orderItemBox.putAt(widget.index,data);
-
-                      Box orderBox = await ViewController.getBox('order');
-                      await orderBox.putAt(widget.index,data);
-
-                      print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                      print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                      MainController.isClickedItem.value = true;
-                      ViewController.isClickedEditBtn.value = false;
-                      Get.to(() => TableCustomPage());
-                    }
-
+                    // ViewController.isClickedEditBtn.value = true;
+                    // final data = DataModel(
+                    //   id: widget.data!.id,
+                    //   data: ViewController.request,
+                    // );
+                    // print('xxxx>>>${ViewController.request}');
+                    // bool isValidator;
+                    // List<bool> isValidatorList=[];
+                    // for (var j = 0; j < getDataTable['columns'].length; j++) {
+                    //   isValidator = await ValidatorController.checkInputValidation(j,data.data , tableData: getDataTable);
+                    //   isValidatorList.add(isValidator);
+                    // }
+                    // print('isValidatorList>>>${isValidatorList}');
+                    // bool isExsistsValidation = isValidatorList.contains(false);
+                    // print('isExsistsValidation>>>${isExsistsValidation}');
+                    // if(isExsistsValidation){
+                    //   isValidatorList=[];
+                    // }
+                    // else{
+                    //   await MainController.loadData(tableData: getDataTable);
+                    //   dataController.allData.value[widget.index] =  data;
+                    //   MainController.tableData.value[widget.index] = data;
+                    //   // await box.putAt(widget.index,data);
+                    //   Box orderItemBox = await ViewController.getBox('order-items');
+                    //   await orderItemBox.putAt(widget.index,data);
+                    //
+                    //   Box orderBox = await ViewController.getBox('order');
+                    //   await orderBox.putAt(widget.index,data);
+                    //
+                    //   print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+                    //   print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
+                    //   MainController.isClickedItem.value = true;
+                    //   ViewController.isClickedEditBtn.value = false;
+                    //   Get.to(() => TableCustomPage());
+                    // }
+                    DB('order-items').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request2);
 
                   },
                   child: Container(
@@ -218,12 +222,12 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         name: '${getDataTable['columns'][j]['title']}',
                                         hint: '${getDataTable['columns'][j]['title']}',
                                         lable: '',
-                                        initValue: '${ViewController.request['${getDataTable['columns'][j]['name']}'] != null ? ViewController.request['${getDataTable['columns'][j]['name']}'] : ''}',
+                                        initValue: '${widget.data['${getDataTable['columns'][j]['name']}'] != null ? widget.data['${getDataTable['columns'][j]['name']}'] : ''}',
                                         isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
                                         isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
                                         isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                                         onChange: (text) {
-                                          ViewController.request['${getDataTable['columns'][j]['name']}'] = text;
+                                          ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                                           print('getDataTable>>>${getDataTable}');
                                         },
                                         column: getDataTable['columns'][j],
@@ -240,9 +244,9 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                 CheckBox(
                                   checkBoxName: '${getDataTable['columns'][j]['title']}',
                                   checkBoxTitle: '${getDataTable['columns'][j]['title']}',
-                                  defaultValue: ViewController.request['${getDataTable['columns'][j]['name']}'],
+                                  defaultValue: widget.data['${getDataTable['columns'][j]['name']}'],
                                   onChange: (text) {
-                                    ViewController.request['${getDataTable['columns'][j]['name']}'] = text;
+                                    ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                                   },
                                   column: getDataTable['columns'][j],
                                 ),
@@ -264,13 +268,13 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                       SizedBox(height: 10),
                                       Container(
                                         child: ColorPickerBox(
-                                          selectedColor: ViewController.request['${getDataTable['columns'][j]['name']}'] != null
-                                              ? Color(int.parse('${ViewController.request['${getDataTable['columns'][j]['name']}']}'))
+                                          selectedColor: widget.data['${getDataTable['columns'][j]['name']}'] != null
+                                              ? Color(int.parse('${widget.data['${getDataTable['columns'][j]['name']}']}'))
                                               : Colors.blue,
                                           onChanged: (color) {
                                             colorChanged = color;
                                             String hexColor = '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
-                                            ViewController.request['${getDataTable['columns'][j]['name']}'] = hexColor;
+                                            ViewController.request2['${getDataTable['columns'][j]['name']}'] = hexColor;
                                           },
                                           column: getDataTable['columns'][j],
                                         ),
@@ -295,18 +299,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                             );
                                           }),
                                           SizedBox(height: 10),
-                                          ViewController.request['${getDataTable['columns'][j]['name']}'] != null
-                                              ? DateBox(
-                                            selectedDate: ViewCustomController.parseDate(ViewController.request['${getDataTable['columns'][j]['name']}']),
+                                          DateBox(
+                                            selectedDate: widget.data['${getDataTable['columns'][j]['name']}'] != null ? ViewCustomController.parseDate(ViewController.request['${getDataTable['columns'][j]['name']}']):Jalali.now(),
                                             onDateChanged: (date) {
-                                              ViewController.request['${getDataTable['columns'][j]['name']}'] = date;
-                                            },
-                                            column: getDataTable['columns'][j],
-                                          )
-                                              : DateBox(
-                                            selectedDate: Jalali.now(),
-                                            onDateChanged: (date) {
-                                              ViewController.request['${getDataTable['columns'][j]['name']}'] = date;
+                                              ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
                                             },
                                             column: getDataTable['columns'][j],
                                           )
@@ -375,13 +371,13 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                            }
                                                          }
                                                          if (value != '-1') {
-                                                           ViewController.request[getDataTable['columns'][j]['name']] = value;
+                                                           ViewController.request2['${getDataTable['columns'][j]['name']}'] = value;
                                                          } else {
-                                                           ViewController.request[getDataTable['columns'][j]['name']] = '';
+                                                           ViewController.request2['${getDataTable['columns'][j]['name']}'] = '';
                                                          }
                                                        },
                                                        hintText: data['hint'],
-                                                       isSeleted: ViewController.request[getDataTable['columns'][j]['name']] == '' || ViewController.request[getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,
+                                                       isSeleted: ViewController.request2['${getDataTable['columns'][j]['name']}'] == '' ||ViewController.request2['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
                                                        selectedValue: '',
                                                      ),
                                                    ],
@@ -459,7 +455,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                                                 data['isSelectedItem'].value = true;
                                                                               }
                                                                               data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
-                                                                              ViewController.request[getDataTable['columns'][j]['name']] = data['selectedItemsList'];
+                                                                              ViewController.request2['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
                                                                             }
                                                                           },
                                                                         ),
@@ -476,7 +472,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                         isSelectedItem: data['isSelectedItem'],
                                                         onChanged: (selectedList) {
                                                           data['selectedItemsList'].value = selectedList;
-                                                          ViewController.request[getDataTable['columns'][j]['name']] = selectedList;
+                                                          ViewController.request2[getDataTable['columns'][j]['name']] = selectedList;
                                                           data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], selectedList);
                                                         },
                                                         column: getDataTable['columns'][j],
@@ -545,11 +541,11 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                                 ),
                                                             ],
                                                             onChanged: (text) {
-                                                              ViewController.request[getDataTable['columns'][j]['name']] = text;
+                                                              ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                                                             },
                                                             initalValue: data['initValue'],
                                                             column: getDataTable['columns'][j],
-                                                            isSelectedItem: ViewController.request[getDataTable['columns'][j]['name']] == '' ? false.obs : true.obs,
+                                                            isSelectedItem: widget.data['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                                           ),
                                                         ),
                                                       ],
@@ -580,10 +576,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   child: FormFile(
                                                     columnName: getDataTable['columns'][j]['title'],
                                                     onChanged: (selecetdFiles) {
-                                                      ViewController.request[getDataTable['columns'][j]['name']] = selecetdFiles;
+                                                      ViewController.request2['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
                                                     },
                                                     filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
-                                                    selectedFilesTxt: ViewController.request[getDataTable['columns'][j]['name']],
+                                                    selectedFilesTxt: widget.data['${getDataTable['columns'][j]['name']}'],
                                                     column: getDataTable['columns'][j],
                                                   ),
                                                 ),

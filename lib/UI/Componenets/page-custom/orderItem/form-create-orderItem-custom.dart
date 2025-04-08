@@ -108,7 +108,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         InkWell(
                           onTap: (){
                             _addContainer();
-
                           },
                           child: Container(
                             padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
@@ -175,9 +174,9 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                               onChange: (text) {
                                 ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
-                                print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ ViewController.request2['${getDataTable['columns'][j]['name']}']}');
-                                newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request2['${getDataTable['columns'][j]['name']}'];
-                                print('newOrderItem>>>${newOrderItem}');
+                                print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ViewController.request2['${getDataTable['columns'][j]['name']}']}');
+                                // newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request2['${getDataTable['columns'][j]['name']}'];
+                                // print('newOrderItem>>>${newOrderItem}');
                               },
                               column: getDataTable['columns'][j],
                             )

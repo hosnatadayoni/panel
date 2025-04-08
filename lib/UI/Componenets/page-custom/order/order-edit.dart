@@ -7,22 +7,34 @@ import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/order/form-edit-order-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../Logic/Models/db.dart';
 
-class OrderEdit extends StatelessWidget {
-  OrderEdit({required this.index , this.data});
-  DataModel? data;
-  int index;
+class OrderEdit extends StatefulWidget {
+  OrderEdit({this.data});
+  var data;
+
+  @override
+  State<OrderEdit> createState() => _OrderEditState();
+}
+
+class _OrderEditState extends State<OrderEdit> {
+  late Future<Widget> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = getOrderItems(widget.data);
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Rx<bool> isHoverBtnBack = false.obs;
+
     return Scaffold(
       body: Container(
         width: size.width,
@@ -46,10 +58,9 @@ class OrderEdit extends StatelessWidget {
                       SizedBox(height: 80,),
                       Column(
                         children: [
-                          FormEditOrderCustom(index: index , data: data),
+                          FormEditOrderCustom(data: widget.data),
                           FutureBuilder<Widget>(
-                            future:getOrderItems(data),
-
+                            future:_future,
                             builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return CircularProgressIndicator();
@@ -63,56 +74,55 @@ class OrderEdit extends StatelessWidget {
 
                         ],
                       ),
-
                       SizedBox(height: 20,),
-                        Container(
-                            padding: EdgeInsets.all(10),
-                            width: size.width,
-                            child: Wrap(
-                              // mainAxisAlignment: MainAxisAlignment.end,
-                              alignment: WrapAlignment.end,
-                              children: [
-                                MouseRegion(
-                                  onEnter: (_){
-                                    isHoverBtnBack.value = true;
-                                  },
-                                  onExit: (_){
-                                    isHoverBtnBack.value = false;
-                                  },
-                                  child: InkWell(
-                                    onTap: (){
-                                      print('widget.data!.data>>>${data!.data}');
-                                      MainController.isClickedItem.value = true;
-                                      MainController.goToTablePage();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                        border: Border.all(color: colorBtn , width: 1),
-                                        color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                                      ),
-                                      child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 5,),
-                                InkWell(
-                                  onTap: ()async{
-                                    DB('${MainController.tableInfo['table-name']}').where('id', '==', '${data!.id}').updateRecord(ViewController.request);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      color: colorBtn,
-                                    ),
-                                    child: Txt('${AppController.of(context)!.value('edit')} ' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                                  ),
-                                ),
-                              ],
-                            )
-                        )
+                     // Container(
+                        //     padding: EdgeInsets.all(10),
+                        //     width: size.width,
+                        //     child: Wrap(
+                        //       // mainAxisAlignment: MainAxisAlignment.end,
+                        //       alignment: WrapAlignment.end,
+                        //       children: [
+                        //         MouseRegion(
+                        //           onEnter: (_){
+                        //             isHoverBtnBack.value = true;
+                        //           },
+                        //           onExit: (_){
+                        //             isHoverBtnBack.value = false;
+                        //           },
+                        //           child: InkWell(
+                        //             onTap: (){
+                        //               print('widget.data!.data>>>${widget.data!.data}');
+                        //               MainController.isClickedItem.value = true;
+                        //               MainController.goToTablePage();
+                        //             },
+                        //             child: Container(
+                        //               padding: EdgeInsets.all(10),
+                        //               decoration: BoxDecoration(
+                        //                 borderRadius: BorderRadius.all(Radius.circular(10)),
+                        //                 border: Border.all(color: colorBtn , width: 1),
+                        //                 color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+                        //               ),
+                        //               child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //         SizedBox(width: 5,),
+                        //         InkWell(
+                        //           onTap: ()async{
+                        //             DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
+                        //           },
+                        //           child: Container(
+                        //             padding: EdgeInsets.all(10),
+                        //             decoration: BoxDecoration(
+                        //               borderRadius: BorderRadius.all(Radius.circular(10)),
+                        //               color: colorBtn,
+                        //             ),
+                        //             child: Txt('${AppController.of(context)!.value('edit')} ' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     )
+                        // )
                     ],
                   ),
                 ),
@@ -127,14 +137,19 @@ class OrderEdit extends StatelessWidget {
   }
 }
 Future<Widget> getOrderItems(var data) async {
-  print('items length>>${data!.id}');
+  print('data id>>${data!.id}');
   List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
   print('items length>>${items.length}');
+  print('items order list>>>${items}');
+  for(var item in items){
+    print('item oerder item>>>${item}');
+    print('item.runtimeType>>>${item.runtimeType}');
+  }
   return Column(
     children: [
       for(var item in items)
         // Text('${item}')
-        FormEditOrderItemCustom(index: 1 , data: item)
+        FormEditOrderItemCustom(data:item)
     ],
   );
 

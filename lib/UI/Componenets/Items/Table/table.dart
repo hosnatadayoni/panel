@@ -42,6 +42,9 @@ class _TableBoxState extends State<TableBox> {
 
     });
     var size = MediaQuery.of(context).size;
+    for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++){
+      print('k90000>>>${MainController.tableData.value[i].data}');
+    }
     return Obx((){
       return Container(
         color: MainController.isLightMode.value == true ? background :whiteColor,
@@ -101,7 +104,7 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i].data};
-                                      HelperController.editPageFunction(MainController.tableData.value[i], i);
+                                      HelperController.editPageFunction(MainController.tableData.value[i]);
                                       // Get.to(() =>
                                       //     EditPage(data: MainController.tableData.value[i], index: i,));
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),

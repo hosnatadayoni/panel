@@ -8,10 +8,10 @@ import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-orderItem-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/order/form-edit-order-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/order/form-create-order-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-create-orderItem-custom.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +22,8 @@ import '../../Logic/Models/db.dart';
 import '../../boxes.dart';
 
 class EditPage extends StatefulWidget {
-  EditPage({required this.index , this.data});
+  EditPage({this.data});
   DataModel? data;
-  int index;
 
   @override
   State<EditPage> createState() => _EditPageState();

@@ -1,9 +1,10 @@
 import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Logic/Models/order-item.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-create-orderItem-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/FormCustom/form-edit-orderItem-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/orderItem/oredre-item-create.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-create-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/order/form-edit-order-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
+import 'package:finance/UI/Componenets/page-custom/orderItem/order-item-create.dart';
+import 'package:finance/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finance/Logic/Controllers/validator-controller.dart';
@@ -15,7 +16,7 @@ import 'package:uuid/uuid.dart';
 import '../../UI/Componenets/page-custom/TableCustom/table-custom-page.dart';
 import '../../UI/Componenets/page-custom/order/order-create.dart';
 import '../../UI/Componenets/page-custom/order/order-edit.dart';
-import '../../UI/Componenets/page-custom/orderItem/oredre-item-edit.dart';
+import '../../UI/Componenets/page-custom/orderItem/order-item-edit.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/dataModel.dart';
 import 'app-controller.dart';
@@ -95,12 +96,15 @@ class HelperController extends GetxController {
     Get.to(() => TablePage());
   }
 
-  static editPageFunction(DataModel data, int index) async {
+  static editPageFunction(var data) async {
     if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
-      await Get.to(() => OrderEdit(data: data,index: index));
+      await Get.to(() => OrderEdit(data: data));
     }
     if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-items'){
-      await Get.to(() => OrderItemEdit(data:data,index: index));
+      await Get.to(() => OrderItemEdit(data:data));
+    }
+    else{
+      await Get.to(() => EditPage(data: data));
     }
   }
 
