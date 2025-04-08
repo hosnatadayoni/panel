@@ -159,12 +159,12 @@ class DB {
   }
 
   updateRecord(Map<String, dynamic> request) async {
+    dataController.allData.value=[];
     List<dynamic> records = await getRecords();
     print('list is>>>${records.first['id']}');
     ViewController.isClickedEditBtn.value = true;
-
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-
+    dataController.allData.add(box.values.toList());
     for (var data in records) {
       data.forEach((key, value) {
         if (!request.containsKey(key)) {
@@ -194,7 +194,7 @@ class DB {
                 .indexWhere((element) => element.id == data['id']);
             print('allDataIndex>>>${allDataIndex}');
             dataController.allData.value[allDataIndex] = customUpdate;
-            MainController.tableData.value[tableDataIndex] = customUpdate;
+            // MainController.tableData.value[tableDataIndex] = customUpdate;
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterStore(this.tableName!,data, customUpdate);

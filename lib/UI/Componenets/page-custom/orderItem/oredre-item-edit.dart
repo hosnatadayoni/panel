@@ -41,7 +41,7 @@ class OrderItemEdit extends StatelessWidget {
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      FormEditOrderItemCustom(index: index , data: data),
+                      FormEditOrderItemCustom(data: data),
                       SizedBox(height: 20,),
                     ],
                   ),

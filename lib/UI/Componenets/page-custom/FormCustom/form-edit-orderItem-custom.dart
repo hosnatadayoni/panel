@@ -28,9 +28,9 @@ import 'package:finance/Logic/Controllers/dataController.dart';
 
 class FormEditOrderItemCustom extends StatefulWidget {
 
-  FormEditOrderItemCustom({required this.index , this.data});
-  DataModel? data;
-  int index;
+  FormEditOrderItemCustom({ this.data});
+  var data;
+
 
   @override
   State<FormEditOrderItemCustom> createState() => _FormEditOrderItemCustomState();
@@ -91,7 +91,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                   },
                   child: InkWell(
                     onTap: (){
-                      print('widget.data!.data>>>${widget.data!.data}');
+                      // print('widget.data!.data>>>${widget.data!.data}');
                       MainController.isClickedItem.value = true;
                       Get.to(() => TableCustomPage());
                     },
@@ -109,41 +109,41 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                 SizedBox(width: 5,),
                 InkWell(
                   onTap: ()async{
-                    ViewController.isClickedEditBtn.value = true;
-                    final data = DataModel(
-                      id: widget.data!.id,
-                      data: ViewController.request,
-                    );
-                    print('xxxx>>>${ViewController.request}');
-                    bool isValidator;
-                    List<bool> isValidatorList=[];
-                    for (var j = 0; j < getDataTable['columns'].length; j++) {
-                      isValidator = await ValidatorController.checkInputValidation(j,data.data , tableData: getDataTable);
-                      isValidatorList.add(isValidator);
-                    }
-                    print('isValidatorList>>>${isValidatorList}');
-                    bool isExsistsValidation = isValidatorList.contains(false);
-                    print('isExsistsValidation>>>${isExsistsValidation}');
-                    if(isExsistsValidation){
-                      isValidatorList=[];
-                    }
-                    else{
-                      await MainController.loadData(tableData: getDataTable);
-                      dataController.allData.value[widget.index] =  data;
-                      MainController.tableData.value[widget.index] = data;
-                      // await box.putAt(widget.index,data);
-                      Box orderItemBox = await ViewController.getBox('order-items');
-                      await orderItemBox.putAt(widget.index,data);
-
-                      Box orderBox = await ViewController.getBox('order');
-                      await orderBox.putAt(widget.index,data);
-
-                      print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-                      print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-                      MainController.isClickedItem.value = true;
-                      ViewController.isClickedEditBtn.value = false;
-                      Get.to(() => TableCustomPage());
-                    }
+                    // ViewController.isClickedEditBtn.value = true;
+                    // final data = DataModel(
+                    //   id: widget.data!['id'],
+                    //   data: ViewController.request,
+                    // );
+                    // print('xxxx>>>${ViewController.request}');
+                    // bool isValidator;
+                    // List<bool> isValidatorList=[];
+                    // for (var j = 0; j < getDataTable['columns'].length; j++) {
+                    //   isValidator = await ValidatorController.checkInputValidation(j,data.data , tableData: getDataTable);
+                    //   isValidatorList.add(isValidator);
+                    // }
+                    // print('isValidatorList>>>${isValidatorList}');
+                    // bool isExsistsValidation = isValidatorList.contains(false);
+                    // print('isExsistsValidation>>>${isExsistsValidation}');
+                    // if(isExsistsValidation){
+                    //   isValidatorList=[];
+                    // }
+                    // else{
+                    //   await MainController.loadData(tableData: getDataTable);
+                    //   dataController.allData.value[widget.index] =  data;
+                    //   MainController.tableData.value[widget.index] = data;
+                    //   // await box.putAt(widget.index,data);
+                    //   Box orderItemBox = await ViewController.getBox('order-items');
+                    //   await orderItemBox.putAt(widget.index,data);
+                    //
+                    //   Box orderBox = await ViewController.getBox('order');
+                    //   await orderBox.putAt(widget.index,data);
+                    //
+                    //   print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
+                    //   print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
+                    //   MainController.isClickedItem.value = true;
+                    //   ViewController.isClickedEditBtn.value = false;
+                    //   Get.to(() => TableCustomPage());
+                    // }
 
 
                   },
@@ -168,21 +168,21 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: (){
-                      _addContainer();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
-                      child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     InkWell(
+              //       onTap: (){
+              //         _addContainer();
+              //       },
+              //       child: Container(
+              //         padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
+              //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
+              //         child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: 20,),
               Container(
                 width: size.width,

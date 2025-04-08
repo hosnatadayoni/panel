@@ -134,7 +134,7 @@ Future<Widget> getOrderItems(var data) async {
     children: [
       for(var item in items)
         // Text('${item}')
-        FormEditOrderItemCustom(index: 1 , data: item)
+        FormEditOrderItemCustom( data: item)
     ],
   );
 
