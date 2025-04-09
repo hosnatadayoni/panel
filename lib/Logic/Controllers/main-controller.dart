@@ -866,7 +866,7 @@ class MainController extends GetxController {
         (element) => element['table-name'] == '${tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
-      print('table info>d>>${tableInfo['columns']}');
+
       return tableInfo['columns'];
     }
     return null;

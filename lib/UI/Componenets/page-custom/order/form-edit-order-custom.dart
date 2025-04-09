@@ -69,86 +69,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
       width: size.width,
       child: Column(
         children: [
-          // Container(
-          //   padding: EdgeInsets.all(10),
-          //   width: size.width,
-          //   child:
-          //   Wrap(
-          //     alignment: WrapAlignment.end,
-          //     children: [
-          //       MouseRegion(
-          //         onEnter: (_){
-          //           isHoverBtnBack.value = true;
-          //         },
-          //         onExit: (_){
-          //           isHoverBtnBack.value = false;
-          //         },
-          //         child: InkWell(
-          //           onTap: (){
-          //             print('widget.data!.data>>>${widget.data!.data}');
-          //             MainController.isClickedItem.value = true;
-          //             MainController.goToTablePage();
-          //           },
-          //           child: Container(
-          //             padding: EdgeInsets.all(10),
-          //             decoration: BoxDecoration(
-          //               borderRadius: BorderRadius.all(Radius.circular(10)),
-          //               border: Border.all(color: colorBtn , width: 1),
-          //               color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-          //             ),
-          //             child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-          //           ),
-          //         ),
-          //       ),
-          //       SizedBox(width: 5,),
-          //       InkWell(
-          //         onTap: ()async{
-          //           ViewController.isClickedEditBtn.value = true;
-          //           final data = DataModel(
-          //             id: widget.data!.id,
-          //             data: ViewController.request,
-          //           );
-          //           print('xxxx>>>${data.data}');
-          //           bool isValidator;
-          //           List<bool> isValidatorList=[];
-          //           for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          //             isValidator = await ValidatorController.checkInputValidation(j,data.data);
-          //             isValidatorList.add(isValidator);
-          //           }
-          //           print('isValidatorList>>>${isValidatorList}');
-          //           bool isExsistsValidation = isValidatorList.contains(false);
-          //           print('isExsistsValidation>>>${isExsistsValidation}');
-          //           if(isExsistsValidation){
-          //             isValidatorList=[];
-          //           }
-          //           else{
-          //             dataController.allData.value[widget.index] =  data;
-          //             MainController.tableData.value[widget.index] = data;
-          //
-          //             Box orderBox = await ViewController.getBox('order');
-          //             Box orderItemBox = await ViewController.getBox('order-items');
-          //             await orderBox.putAt(widget.index,data);
-          //             await orderItemBox.putAt(widget.index,data);
-          //
-          //             print('dataController.allData.value[widget.index]>>>${dataController.allData.value[widget.index].data}');
-          //             print('MainController.tableData.value[widget.index]>>>>${MainController.tableData.value[widget.index]}');
-          //             MainController.isClickedItem.value = true;
-          //             ViewController.isClickedEditBtn.value = false;
-          //             MainController.goToTablePage();
-          //           }
-          //         },
-          //         child: Container(
-          //           padding: EdgeInsets.all(10),
-          //           decoration: BoxDecoration(
-          //             borderRadius: BorderRadius.all(Radius.circular(10)),
-          //             color: colorBtn,
-          //           ),
-          //           child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Container(
               padding: EdgeInsets.all(10),
               width: size.width,
@@ -183,17 +103,16 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      // print('dddddddddddd>>>>${await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').getRecords()}');
-                      // for(var row in await ViewController.getRowTable('order-items')){
-                      //   print('dddddddddddd2>>>>${await DB('order-items').where('id', '==', '${row.id}').getRecords()}');
-                      // }
                       DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
-                      // DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
-                      // // print('ViewController.request 34>>>${ViewController.request}');
-                      // for(var row in await ViewController.getRowTable('order-items')){
-                      //   // print('ViewController.getRowTable(order-items)>>>${row.id}');
-                      //   DB('order-items').where('id', '==', '${row.id}').updateRecord(ViewController.request2);
-                      // }
+                      var orderItems=await DB('order-items').where('سفارش', '==', '${widget.data!.id}').getRecords();
+                      print('request 2 is >>>${ViewController.request2.keys}');
+                      for(var orderItem in  orderItems){
+                          print('orderItem is >>>${orderItem['id']}');
+                         var w=await DB('order-items').where('id', '==', '${orderItem['id']}').getRecords();
+                          print('order-items find >>>${w}');
+                          print('ViewController.request2[orderItem >>>${ViewController.request2[orderItem['id']]}');
+                          DB('order-items').where('id', '==', '${orderItem['id']}').updateRecord(ViewController.request2[orderItem['id']]);
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
