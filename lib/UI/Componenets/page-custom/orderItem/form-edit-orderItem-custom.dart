@@ -1030,26 +1030,4 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
       ),
     );
   }
-  // Future<Widget> getOrderItems(var data) async {
-  //   print('data id>>${data!.id}');
-  //   List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
-  //   print('items length>>${items.length}');
-  //   print('items order list>>>${items}');
-  //   for(var item in items){
-  //     print('item oerder item>>>${item}');
-  //     print('item.runtimeType>>>${item.runtimeType}');
-  //   }
-  //   print('containers 3>>>${containers}');
-  //   return Column(
-  //     children: [
-  //       for(var item in items)
-  //       // Text('${item}')
-  //         FormEditOrderItem(data:item, containers:containers,)
-  //     ],
-  //   );
-  //
-  //
-  //
-  //
-  // }
 }
