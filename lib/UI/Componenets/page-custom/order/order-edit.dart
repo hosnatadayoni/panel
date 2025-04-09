@@ -1,7 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/view-controller.dart';
-import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -71,7 +69,6 @@ class _OrderEditState extends State<OrderEdit> {
                               }
                             },
                           ),
-
                         ],
                       ),
                       SizedBox(height: 20,),
@@ -140,11 +137,6 @@ Future<Widget> getOrderItems(var data) async {
   print('data id>>${data!.id}');
   List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
   print('items length>>${items.length}');
-  print('items order list>>>${items}');
-  for(var item in items){
-    print('item oerder item>>>${item}');
-    print('item.runtimeType>>>${item.runtimeType}');
-  }
   return Column(
     children: [
       for(var item in items)
@@ -152,8 +144,4 @@ Future<Widget> getOrderItems(var data) async {
         FormEditOrderItemCustom(data:item)
     ],
   );
-
-
-
-
 }

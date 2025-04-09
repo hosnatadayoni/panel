@@ -47,7 +47,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
       String columnName = getDataTable['columns'][j]['title'];
       if (getDataTable['columns'][j]['type'] == 'select' ||
           getDataTable['columns'][j]['type'] == 'radiobutton') {
-        _future['${columnName}'] = ViewCustomController.getSelectBoxData(getDataTable['columns'][j]);
+        _future['${columnName}'] = ViewCustomController.getSelectBoxOrderItemData(getDataTable['columns'][j] , null);
       }
       else if(getDataTable['columns'][j]['type'] == 'multiSelect'){
         _future['${columnName}'] = ViewCustomController.getMultiSelectBoxData(getDataTable['columns'][j]);
@@ -70,10 +70,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
         OrderItem.orderItemsList[newKey]= ViewController.request2;
 
       }
-
-
       ViewController.request2= {};
-
     });
   }
   void _removeContainer(String key) {
@@ -85,7 +82,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -94,42 +90,44 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
             children: [
               if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order')
                 SizedBox(height: 20,),
-                Container(
-                padding: EdgeInsets.all(20),
-                decoration:  BoxDecoration(
-                    border: Border.all(width: 2,color: MainController.isLightMode.value == true ? whiteColor:primaryDark),
-                    borderRadius:  BorderRadius.circular(10)
-                ),
-                child: ColumnScroll(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                Obx((){
+                  return Container(
+                    padding: EdgeInsets.all(20),
+                    decoration:  BoxDecoration(
+                        border: Border.all(width: 2,color: MainController.isLightMode.value == true ? whiteColor:primaryDark),
+                        borderRadius:  BorderRadius.circular(10)
+                    ),
+                    child: ColumnScroll(
                       children: [
-                        InkWell(
-                          onTap: (){
-                            _addContainer();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
-                            child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            InkWell(
+                              onTap: (){
+                                _addContainer();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
+                                child: Center(child: Txt('${AppController.of(context)!.value('surcharge')}')),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20,),
+
+                        Container(
+                          child: Column(
+                            children: [
+                              for (var key in containers.keys)
+                                containers[key]!,
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20,),
-
-                    Container(
-                      child: Column(
-                        children: [
-                          for (var key in containers.keys)
-                            containers[key]!,
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                  );
+                })
             ],
           );
   }

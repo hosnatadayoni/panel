@@ -16,7 +16,7 @@ class ViewCustomController extends GetxController{
     return Jalali(year, month, day);
   }
 
-  // select
+  // select order
   static Future<Map<String, dynamic>> getSelectBoxData(Map<String, dynamic> column) async {
     List<dynamic> items=[];
     var initValue;
@@ -28,6 +28,38 @@ class ViewCustomController extends GetxController{
         selectedItem = items.firstWhere(
                 (element) => element['value'] == ViewController.request[column['name']],
             orElse: () => items.first);
+        if(selectedItem['value'] != null){
+          initValue = selectedItem['value'];
+        }
+      }
+
+    }
+
+    return {
+      'items': items,
+      'initValue': initValue,
+      'hint' :selectedItem['title']
+    };
+  }
+
+  // select order item
+  static Future<Map<String, dynamic>> getSelectBoxOrderItemData(Map<String, dynamic> column , var data) async {
+    List<dynamic> items=[];
+    var initValue;
+    Map<String, dynamic> selectedItem={};
+    if(column['type'] == 'select' || column['type'] == 'radiobutton'){
+      items = await ViewController.itemsList(column);
+      initValue = await ViewController.getInitValue(column, items);
+      if(items.length != 0){
+        if(data != null){
+          selectedItem = items.firstWhere(
+                  (element) => element['value'] == data[column['name']],
+              orElse: () => items.first);
+        }
+        else{
+          selectedItem = items.first;
+        }
+
         if(selectedItem['value'] != null){
           initValue = selectedItem['value'];
         }
