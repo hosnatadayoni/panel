@@ -1,5 +1,8 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -69,57 +72,10 @@ class _OrderEditState extends State<OrderEdit> {
                               }
                             },
                           ),
+
                         ],
                       ),
                       SizedBox(height: 20,),
-                     // Container(
-                        //     padding: EdgeInsets.all(10),
-                        //     width: size.width,
-                        //     child: Wrap(
-                        //       // mainAxisAlignment: MainAxisAlignment.end,
-                        //       alignment: WrapAlignment.end,
-                        //       children: [
-                        //         MouseRegion(
-                        //           onEnter: (_){
-                        //             isHoverBtnBack.value = true;
-                        //           },
-                        //           onExit: (_){
-                        //             isHoverBtnBack.value = false;
-                        //           },
-                        //           child: InkWell(
-                        //             onTap: (){
-                        //               print('widget.data!.data>>>${widget.data!.data}');
-                        //               MainController.isClickedItem.value = true;
-                        //               MainController.goToTablePage();
-                        //             },
-                        //             child: Container(
-                        //               padding: EdgeInsets.all(10),
-                        //               decoration: BoxDecoration(
-                        //                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                        //                 border: Border.all(color: colorBtn , width: 1),
-                        //                 color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                        //               ),
-                        //               child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //         SizedBox(width: 5,),
-                        //         InkWell(
-                        //           onTap: ()async{
-                        //             DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
-                        //           },
-                        //           child: Container(
-                        //             padding: EdgeInsets.all(10),
-                        //             decoration: BoxDecoration(
-                        //               borderRadius: BorderRadius.all(Radius.circular(10)),
-                        //               color: colorBtn,
-                        //             ),
-                        //             child: Txt('${AppController.of(context)!.value('edit')} ' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     )
-                        // )
                     ],
                   ),
                 ),
@@ -133,15 +89,20 @@ class _OrderEditState extends State<OrderEdit> {
     );
   }
 }
+
 Future<Widget> getOrderItems(var data) async {
   print('data id>>${data!.id}');
   List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
   print('items length>>${items.length}');
+  print('items order list>>>${items}');
+  for(var item in items){
+    print('item >>${item}');
+    ViewController.request2[item['id']]=item;
+  }
+  print('ViewController.request2>>>#${ViewController.request2}');
   return Column(
     children: [
-      for(var item in items)
-        // Text('${item}')
-        FormEditOrderItemCustom(data:item)
+        FormEditOrderItemCustom(items:items)
     ],
   );
 }
