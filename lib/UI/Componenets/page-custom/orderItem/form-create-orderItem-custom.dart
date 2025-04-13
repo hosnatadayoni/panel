@@ -33,9 +33,7 @@ class FormCreateOrderItemCustom extends StatefulWidget {
 class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Color? colorChanged;
   Map<String, Future<Map<String, dynamic>>>  _future={};
-  Map<String , dynamic> dataJson = {};
   var getDataTable = ViewCustomController.getDataTable('order-items');
-  Map newOrderItem ={};
 
   void initState() {
     super.initState();
@@ -50,7 +48,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
         _future['${columnName}'] = ViewCustomController.getSelectBoxOrderItemData(getDataTable['columns'][j] , null);
       }
       else if(getDataTable['columns'][j]['type'] == 'multiSelect'){
-        _future['${columnName}'] = ViewCustomController.getMultiSelectBoxData(getDataTable['columns'][j]);
+        _future['${columnName}'] = ViewCustomController.getMultiSelectBoxOrderItemData(getDataTable['columns'][j] , null);
 
       }
     }
@@ -59,26 +57,38 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Map<String, Widget> containers = {};
 
   void _addContainer() {
+    // setState(() {
+    //   var Id =Uuid().v4();
+    //   String newKey = Id;
+    //   containers[newKey] = buildContainer(newKey);
+    //   print('containers map>>>${containers}');
+    //
+    //   if(ViewController.request2.isNotEmpty){
+    //     print('ViewController.request2 is not empty');
+    //     OrderItem.orderItemsList[newKey]= ViewController.request2;
+    //   }
+    //    ViewController.request2= {};
+    // });
     setState(() {
-      var Id =Uuid().v4();
+      var Id = Uuid().v4();
       String newKey = Id;
       containers[newKey] = buildContainer(newKey);
-      print('containers map>>>${containers}');
-
-      if(ViewController.request2.isNotEmpty){
-        print('ViewController.request2 is not empty');
-        OrderItem.orderItemsList[newKey]= ViewController.request2;
-
-      }
-      ViewController.request2= {};
+      OrderItem.orderItemsList[newKey] = {};
     });
   }
   void _removeContainer(String key) {
     setState(() {
-      print('index delete>>>>>>${key}');
-      // containers.removeAt(index);
+      // print('index delete>>>>>>${key}');
+      // containers.remove(key);
+      // // print('ViewController.request2 23>>>${ViewController.request2}');
+      // print('OrderItem.orderItemsList before delete>>>${OrderItem.orderItemsList}');
+      // OrderItem.orderItemsList.remove(key);
+      // print('OrderItem.orderItemsList after delete>>>${OrderItem.orderItemsList}');
+      // print('ViewController.request2 before delete>>>${ViewController.request2}');
+      // ViewController.request2.removeWhere((key, value) => key == key);
+      // print('ViewController.request2 after delete>>>${ViewController.request2}');
       containers.remove(key);
-      print('containers map after remove>>>${containers}');
+      OrderItem.orderItemsList.remove(key);
     });
   }
 
@@ -86,10 +96,12 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+
     return Column(
             children: [
-              if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order')
-                SizedBox(height: 20,),
+              if(MainController.selectedSubItem.value != -1)
+                if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order')
+                  SizedBox(height: 20,),
                 Obx((){
                   return Container(
                     padding: EdgeInsets.all(20),
@@ -134,6 +146,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Widget buildContainer(String key) {
     var size = MediaQuery.of(context).size;
     return Container(
+      key: ValueKey(key),
       width: size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -157,7 +170,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                           children: [
                             Obx(() {
                               return Txt(
-                                '${getDataTable['columns'][j]['title']}',
+                                '${getDataTable['columns'][j]['title']} ${key}',
                                 color: MainController.isLightMode.value == true ? whiteColor : color2,
                               );
                             }),
@@ -166,15 +179,16 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               name: '${getDataTable['columns'][j]['title']}',
                               hint: '${getDataTable['columns'][j]['title']}',
                               lable: '',
+                              initValue: OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] ?? '',
                               // initValue: '${ViewController.request2['${getDataTable['columns'][j]['name']}'] != null ? ViewController.request2['${getDataTable['columns'][j]['name']}'] : ''}',
                               isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
                               isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                               onChange: (text) {
-                                ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
-                                print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ViewController.request2['${getDataTable['columns'][j]['name']}']}');
-                                // newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request2['${getDataTable['columns'][j]['name']}'];
-                                // print('newOrderItem>>>${newOrderItem}');
+                                // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
+                                // print('getDataTabl>>>>>>>>>>>${getDataTable['columns'][j]['name']}>>>${ViewController.request2['${getDataTable['columns'][j]['name']}']}');
+                                OrderItem.orderItemsList[key] ??= {};
+                                OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
                               },
                               column: getDataTable['columns'][j],
                             )
@@ -190,9 +204,11 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                       CheckBox(
                         checkBoxName: '${getDataTable['columns'][j]['title']}',
                         checkBoxTitle: '${getDataTable['columns'][j]['title']}',
-                        defaultValue: ViewController.request2['${getDataTable['columns'][j]['name']}'],
+                        defaultValue: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'],
                         onChange: (text) {
-                          ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
+                          // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
+                          OrderItem.orderItemsList[key] ??= {};
+                          OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
                         },
                         column: getDataTable['columns'][j],
                       ),
@@ -214,13 +230,15 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                             SizedBox(height: 10),
                             Container(
                               child: ColorPickerBox(
-                                selectedColor: ViewController.request2['${getDataTable['columns'][j]['name']}'] != null
-                                    ? Color(int.parse('${ViewController.request2['${getDataTable['columns'][j]['name']}']}'))
+                                selectedColor: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null
+                                    ? Color(int.parse('${OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']}'))
                                     : Colors.blue,
                                 onChanged: (color) {
                                   colorChanged = color;
                                   String hexColor = '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
-                                  ViewController.request2['${getDataTable['columns'][j]['name']}'] = hexColor;
+                                  // ViewController.request2['${getDataTable['columns'][j]['name']}'] = hexColor;
+                                  OrderItem.orderItemsList[key] ??= {};
+                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = hexColor;
                                 },
                                 column: getDataTable['columns'][j],
                               ),
@@ -245,18 +263,21 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                   );
                                 }),
                                 SizedBox(height: 10),
-                                ViewController.request2['${getDataTable['columns'][j]['name']}'] != null
+                                OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null
                                     ? DateBox(
-                                  selectedDate: ViewCustomController.parseDate(ViewController.request2['${getDataTable['columns'][j]['name']}']),
+                                  selectedDate: ViewCustomController.parseDate(OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']),
                                   onDateChanged: (date) {
-                                    ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
+                                    // ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
+                                    OrderItem.orderItemsList[key] ??= {};
+                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
                                   },
                                   column: getDataTable['columns'][j],
                                 )
                                     : DateBox(
                                   selectedDate: Jalali.now(),
                                   onDateChanged: (date) {
-                                    ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
+                                    OrderItem.orderItemsList[key] ??= {};
+                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
                                   },
                                   column: getDataTable['columns'][j],
                                 )
@@ -294,7 +315,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                           children: [
                                             Obx(() {
                                               return Txt(
-                                                '${getDataTable['columns'][j]['title']}',
+                                                '${getDataTable['columns'][j]['title']} ${key}',
                                                 color: MainController.isLightMode.value == true ? whiteColor : color2,
                                               );
                                             }),
@@ -316,6 +337,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                               initalValue: data['initValue'],
                                               onChanged: (value) async {
                                                 print('selected item ${value}');
+                                                OrderItem.orderItemsList[key] ??= {};
                                                 for (var item in data['items']) {
                                                   if (item['title'] == value) {
                                                     if (item['value'] == '-1') {
@@ -324,14 +346,15 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                   }
                                                 }
                                                 if (value != '-1') {
-                                                  ViewController.request2[getDataTable['columns'][j]['name']] = value;
+                                                  // ViewController.request2[getDataTable['columns'][j]['name']] = value;
+                                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = value;
                                                 } else {
-                                                  ViewController.request2[getDataTable['columns'][j]['name']] = '';
+                                                  // ViewController.request2[getDataTable['columns'][j]['name']] = '';
+                                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = '';
                                                 }
-                                                newOrderItem[getDataTable['columns'][j]['name']] = ViewController.request2['${getDataTable['columns'][j]['name']}'];
                                               },
                                               hintText: data['hint'],
-                                              isSeleted: ViewController.request2[getDataTable['columns'][j]['name']] == '' || ViewController.request2[getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,
+                                              isSeleted: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
                                               selectedValue: '',
                                             ),
                                           ],
@@ -394,6 +417,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                                 activeColor: colorBtn,
                                                                 value: data['selectedItemsList'].contains(item['value']),
                                                                 onChanged: (isChecked) {
+                                                                  OrderItem.orderItemsList[key] ??= {};
                                                                   if (isChecked != null) {
                                                                     if (!data['selectedItemsList'].contains(item['value'])) {
                                                                       data['selectedItemsList'].add(item['value']);
@@ -409,7 +433,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                                       data['isSelectedItem'].value = true;
                                                                     }
                                                                     data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
-                                                                    ViewController.request2[getDataTable['columns'][j]['name']] = data['selectedItemsList'];
+                                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
+                                                                    // ViewController.request2[getDataTable['columns'][j]['name']] = data['selectedItemsList'];
                                                                   }
                                                                 },
                                                               ),
@@ -426,7 +451,9 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                               isSelectedItem: data['isSelectedItem'],
                                               onChanged: (selectedList) {
                                                 data['selectedItemsList'].value = selectedList;
-                                                ViewController.request2[getDataTable['columns'][j]['name']] = selectedList;
+                                                OrderItem.orderItemsList[key] ??= {};
+                                                OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = selectedList;
+                                                // ViewController.request2[getDataTable['columns'][j]['name']] = selectedList;
                                                 data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], selectedList);
                                               },
                                               column: getDataTable['columns'][j],
@@ -495,11 +522,13 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                       ),
                                                   ],
                                                   onChanged: (text) {
-                                                    ViewController.request2[getDataTable['columns'][j]['name']] = text;
+                                                    // ViewController.request2[getDataTable['columns'][j]['name']] = text;
+                                                    OrderItem.orderItemsList[key] ??= {};
+                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
                                                   },
                                                   initalValue: data['initValue'],
                                                   column: getDataTable['columns'][j],
-                                                  isSelectedItem: ViewController.request2[getDataTable['columns'][j]['name']] == '' ? false.obs : true.obs,
+                                                  isSelectedItem: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == '' ? false.obs : true.obs,
                                                 ),
                                               ),
                                             ],
@@ -530,10 +559,12 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                         child: FormFile(
                                           columnName: getDataTable['columns'][j]['title'],
                                           onChanged: (selecetdFiles) {
-                                            ViewController.request2[getDataTable['columns'][j]['name']] = selecetdFiles;
+                                            // ViewController.request2[getDataTable['columns'][j]['name']] = selecetdFiles;
+                                            OrderItem.orderItemsList[key] ??= {};
+                                            OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
                                           },
                                           filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
-                                          selectedFilesTxt: ViewController.request2[getDataTable['columns'][j]['name']],
+                                          selectedFilesTxt: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']],
                                           column: getDataTable['columns'][j],
                                         ),
                                       ),
@@ -556,7 +587,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),
                     padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                    child: Txt('${AppController.of(context)!.value('remove')}'),
+                    child: Txt('${AppController.of(context)!.value('remove')} ${key}'),
                   ),
                 ),
               ],

@@ -2,6 +2,7 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/db.dart';
+import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -97,13 +98,14 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     onTap: ()async{
                       DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
                       var orderItems=await DB('order-items').where('سفارش', '==', '${widget.data!.id}').getRecords();
-                      print('request 2 is >>>${ViewController.request2.keys}');
+                      print('orderItems order-items>>>${orderItems}');
+                      print('request 2 is >>>${OrderItem.orderItemsList.keys}');
                       for(var orderItem in  orderItems){
                           print('orderItem is >>>${orderItem['id']}');
                          var w=await DB('order-items').where('id', '==', '${orderItem['id']}').getRecords();
                           print('order-items find >>>${w}');
-                          print('ViewController.request2[orderItem >>>${ViewController.request2[orderItem['id']]}');
-                          DB('order-items').where('id', '==', '${orderItem['id']}').updateRecord(ViewController.request2[orderItem['id']]);
+                          print('OrderItem.orderItemsList[orderItem[id]]>>>${OrderItem.orderItemsList[orderItem['id']]}');
+                          DB('order-items').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
                       }
                     },
                     child: Container(

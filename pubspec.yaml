@@ -51,6 +51,7 @@ dependencies:
   responsive_table: ^0.2.0+2
   expandable_datatable: ^0.0.7
   flutter_expandable_table: ^2.1.0
+  fl_chart: ^0.55.1
 
 
 

@@ -3,6 +3,7 @@ import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/page-custom/TableCustom/table-custom-page.dart';
+import 'package:finance/UI/Views/dashboard.dart';
 import 'package:finance/UI/Views/login-page.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,13 +62,6 @@ class _MenuBoxState extends State<MenuBox>{
                                         await MainController.loadData();
                                         MainController.renderPagination();
                                         await MainController.goToTablePage();
-                                        // if(MainController.tableInfo['table-name'] != 'order-items'){
-                                        //   Get.to(() => TablePage());
-                                        // }
-                                        // else{
-                                        //   Get.to(() => TableCustomPage());
-                                        // }
-
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
                                         color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
@@ -111,9 +105,16 @@ class _MenuBoxState extends State<MenuBox>{
                                   child: InkWell(
                                       onTap: (){
                                         MainController.selectedItem.value = i;
-                                        MainController.isClickedItem.value =true;
+                                        if(MainController.selectedItem.value == 0){
+                                          Get.to(() => DashboardPage());
+                                          MainController.isClickedItem.value =false;
+                                        }
+                                        else{
+                                          MainController.isClickedItem.value =true;
+                                        }
                                         MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
                                         // Get.to(() => TablePage());
+                                        MainController.selectedSubItem.value = -1;
                                       },
                                       child: Container(
                                           width: 50,

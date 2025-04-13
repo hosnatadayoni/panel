@@ -80,6 +80,7 @@ class HelperController extends GetxController {
 //end delete
 
   static createPageFunction() async {
+    OrderItem.orderItemsList = {};
     if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
       await Get.to(() => OrderCreatePage());
     }
@@ -97,6 +98,7 @@ class HelperController extends GetxController {
   }
 
   static editPageFunction(var data) async {
+    OrderItem.orderItemsList = {};
     if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
       await Get.to(() => OrderEdit(data: data));
     }

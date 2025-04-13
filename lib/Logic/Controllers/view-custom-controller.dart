@@ -47,6 +47,7 @@ class ViewCustomController extends GetxController{
     List<dynamic> items=[];
     var initValue;
     Map<String, dynamic> selectedItem={};
+    print('data select>>>${data}');
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
       items = await ViewController.itemsList(column);
       initValue = await ViewController.getInitValue(column, items);
@@ -59,6 +60,7 @@ class ViewCustomController extends GetxController{
         else{
           selectedItem = items.first;
         }
+        print('selectedItem select box>>>${selectedItem}');
 
         if(selectedItem['value'] != null){
           initValue = selectedItem['value'];
@@ -66,7 +68,6 @@ class ViewCustomController extends GetxController{
       }
 
     }
-
     return {
       'items': items,
       'initValue': initValue,
@@ -74,7 +75,7 @@ class ViewCustomController extends GetxController{
     };
   }
 
-  // for show table
+  //show table
   static Future<String> getTitleSelectBoxFormCustom(var column , DataModel dataModel) async {
     String tableName = '';
     if (column['sourceItems'] != 'custom') {
@@ -93,7 +94,7 @@ class ViewCustomController extends GetxController{
     return titleSelect;
   }
 
-  // multi select
+  // multi select order
   static Future<Map<String, dynamic>> getMultiSelectBoxData(Map<String, dynamic> column) async{
 
     List<dynamic> items=[];
@@ -125,6 +126,54 @@ class ViewCustomController extends GetxController{
       if(multiSelectedTitleList.length != 0){
         hintTxt = RxString(multiSelectedTitleList.join(','));
         selectedItemsList.value = ViewController.request[column['name']];
+      }
+      else{
+        hintTxt = RxString('${items[0]['title']}');
+      }
+    }
+
+    return {
+      'items': items,
+      'multiSelectedTitleList': multiSelectedTitleList,
+      'isSelectedItem':isSelectedItem,
+      'hintTxt':hintTxt,
+      'selectedItemsList': selectedItemsList,
+    };
+
+  }
+
+  // multi select order item
+  static Future<Map<String, dynamic>> getMultiSelectBoxOrderItemData(Map<String, dynamic> column ,var data) async{
+
+    List<dynamic> items=[];
+
+    var initValue;
+    Map<String, dynamic> selectedItem={};
+
+    String tableName= '';
+    List<String> multiSelectedTitleList = [];
+    Rx<bool> isSelectedItem = false.obs;
+    Rx<String> hintTxt=''.obs;
+    RxList<String> selectedItemsList = <String>[].obs;
+
+    if(column['type'] == 'multiSelect'){
+
+      items = await ViewController.itemsList(column);
+      if (column['sourceItems'] != 'custom'){
+        if(column['sourceTable'] != null){
+          tableName = column['sourceTable'];
+        }
+      }
+      if(data[column['name']] != null){
+        multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, data[column['name']], column);
+      }
+      else{
+        multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
+      }
+
+      if(multiSelectedTitleList.length != 0){
+        hintTxt = RxString(multiSelectedTitleList.join(','));
+        selectedItemsList.value = data[column['name']];
       }
       else{
         hintTxt = RxString('${items[0]['title']}');

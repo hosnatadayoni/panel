@@ -45,7 +45,8 @@ class OrderCreatePage extends StatelessWidget {
                       // width: MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50,
                         width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                         height: size.height,
-                        color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                        // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                        color: MainController.isLightMode.value == false ? color6 :color9,
                         child: ColumnScroll(
                           children: [
                             SizedBox(height: 80,),
@@ -139,7 +140,7 @@ class OrderCreatePage extends StatelessWidget {
                     )
                 );
               }),
-              Header(title: ''),
+              Header(),
               MenuBox(),
             ],
           )
