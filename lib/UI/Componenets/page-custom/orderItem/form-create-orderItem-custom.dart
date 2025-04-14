@@ -70,22 +70,24 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
         OrderItem.orderItemsList[newKey]= ViewController.request2;
 
       }
-
-
       ViewController.request2= {};
 
     });
   }
   void _removeContainer(String key) {
-    setState(() {
+    // setState(() {
       print('index delete>>>>>>${key}');
       // containers.removeAt(index);
+      // containers.remove(key);
       containers.remove(key);
-      print('containers map after remove>>>${containers}');
-    });
+      OrderItem.orderItemsList.remove(key);
+
+      print('containers map after remove>>>${containers.length}');
+      print('OrderItem.orderItemsList ${OrderItem.orderItemsList.length}');
+    // });
   }
 
-
+int counter=1;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -136,6 +138,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Widget buildContainer(String key) {
     var size = MediaQuery.of(context).size;
     return Container(
+      key: ValueKey(key),
       width: size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -159,14 +162,14 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                           children: [
                             Obx(() {
                               return Txt(
-                                '${getDataTable['columns'][j]['title']}',
+                                ' ${getDataTable['columns'][j]['title']}',
                                 color: MainController.isLightMode.value == true ? whiteColor : color2,
                               );
                             }),
                             SizedBox(height: 10),
                             FormTextField(
                               name: '${getDataTable['columns'][j]['title']}',
-                              hint: '${getDataTable['columns'][j]['title']}',
+                              hint: '',
                               lable: '',
                               // initValue: '${ViewController.request2['${getDataTable['columns'][j]['name']}'] != null ? ViewController.request2['${getDataTable['columns'][j]['name']}'] : ''}',
                               isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
@@ -547,7 +550,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
             Column(
               children: [
                 Obx((){
-                  return Txt('${AppController.of(context)!.value('remove')}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+
+                  return Txt('${AppController.of(context)!.value('remove')} ' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
                 }),
                 SizedBox(height: 20,),
                 InkWell(
@@ -558,7 +562,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),
                     padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                    child: Txt('${AppController.of(context)!.value('remove')}'),
+                    child: Txt('${AppController.of(context)!.value('remove')} ${key}'),
                   ),
                 ),
               ],
