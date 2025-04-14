@@ -1,7 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/view-controller.dart';
-import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
@@ -53,13 +51,15 @@ class _OrderEditState extends State<OrderEdit> {
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                   height: size.height,
                   padding: EdgeInsets.all(15),
-                  color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                  // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                  color: MainController.isLightMode.value == false ? color6 :color9,
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
                       Column(
                         children: [
                           FormEditOrderCustom(data: widget.data),
+                          SizedBox(height: 20,),
                           FutureBuilder<Widget>(
                             future:_future,
                             builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
@@ -72,7 +72,6 @@ class _OrderEditState extends State<OrderEdit> {
                               }
                             },
                           ),
-
                         ],
                       ),
                       SizedBox(height: 20,),
@@ -81,7 +80,7 @@ class _OrderEditState extends State<OrderEdit> {
                 ),
               );
             }),
-            Header(title: ''),
+            Header(),
             MenuBox(),
           ],
         ),
@@ -97,9 +96,8 @@ Future<Widget> getOrderItems(var data) async {
   print('items order list>>>${items}');
   for(var item in items){
     print('item >>${item}');
-    ViewController.request2[item['id']]=item;
+    OrderItem.orderItemsList[item['id']]=item;
   }
-  print('ViewController.request2>>>#${ViewController.request2}');
   return Column(
     children: [
         FormEditOrderItemCustom(items:items)

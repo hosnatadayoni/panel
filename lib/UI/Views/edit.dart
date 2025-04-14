@@ -1,6 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
@@ -8,18 +7,10 @@ import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/UI/Componenets/page-custom/order/form-edit-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/order/form-create-order-custom.dart';
-import 'package:finance/UI/Componenets/page-custom/orderItem/form-create-orderItem-custom.dart';
-import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import '../../Logic/Controllers/dataController.dart';
 import '../../Logic/Models/db.dart';
-import '../../boxes.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.data});
@@ -60,7 +51,8 @@ class _EditPageState extends State<EditPage> {
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                   height: size.height,
                   padding: EdgeInsets.all(15),
-                  color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                  // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                  color: MainController.isLightMode.value == false ? color6 :color9,
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
@@ -86,8 +78,9 @@ class _EditPageState extends State<EditPage> {
                       // ):FormEditOrderItemCustom(index: widget.index , data: widget.data),
                       // ViewController.generateEditFormView(widget.data!.data),
                       SizedBox(height: 20,),
-                      if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
-                        Container(
+                      if(MainController.selectedSubItem.value != -1)
+                         if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
+                            Container(
                         padding: EdgeInsets.all(10),
                         width: size.width,
                         child: Wrap(
@@ -140,7 +133,7 @@ class _EditPageState extends State<EditPage> {
                 ),
               );
             }),
-            Header(title: ''),
+            Header(),
             MenuBox(),
           ],
         ),

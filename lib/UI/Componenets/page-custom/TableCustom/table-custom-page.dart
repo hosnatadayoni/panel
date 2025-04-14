@@ -22,7 +22,7 @@ class TableCustomPage extends StatelessWidget {
             color: MainController.isLightMode.value == false ? primary :primaryDark,
             child: Stack(
               children: [
-                Header(title: ''),
+                Header(),
                 MenuBox(),
                 if(MainController.selectedSubItem.value != -1)
                   MainTableCustom(),

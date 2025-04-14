@@ -45,7 +45,8 @@ class _CreatePageState extends State<CreatePage> {
           height: size.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+            // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+            color: MainController.isLightMode.value == false ? color6 :color9,
           ),
           child: Stack(
             children: [
@@ -57,7 +58,8 @@ class _CreatePageState extends State<CreatePage> {
                       // width: MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50,
                       width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                       height: size.height,
-                      color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                      // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
+                        color: MainController.isLightMode.value == false ? color6 :color9,
                       child: ColumnScroll(
                         children: [
                           SizedBox(height: 80,),
@@ -187,7 +189,7 @@ class _CreatePageState extends State<CreatePage> {
                     )
                 );
               }),
-              Header(title: ''),
+              Header(),
               MenuBox(),
             ],
           )

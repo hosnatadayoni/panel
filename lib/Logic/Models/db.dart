@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
@@ -9,6 +10,8 @@ import '../Controllers/view-controller.dart';
 import '../Controllers/view-custom-controller.dart';
 import 'dataModel.dart';
 import 'general.dart';
+import 'package:get/get.dart';
+
 
 class DB {
   String? tableName;
@@ -210,7 +213,7 @@ class DB {
           }
         }
         else{
-          showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد.');
+          showSnackbar(snackTypes.error, '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
 
         }
       }

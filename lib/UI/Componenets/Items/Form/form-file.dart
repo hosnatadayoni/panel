@@ -49,8 +49,9 @@ class _FormFileState extends State<FormFile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom' ?
-          Row(
+          if(MainController.selectedSubItem.value != -1)
+             MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom' ?
+             Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               InkWell(

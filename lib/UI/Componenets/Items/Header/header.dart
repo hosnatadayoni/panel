@@ -3,7 +3,6 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/user-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
-import 'package:finance/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,8 +11,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 
 class Header extends StatelessWidget {
-   Header({this.title});
-   String? title;
+   Header();
   Rx<bool> isHoverMenu = false.obs;
 
   @override
@@ -24,7 +22,8 @@ class Header extends StatelessWidget {
          right:size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
         child: Container(
           padding: EdgeInsets.all(15),
-          color: MainController.isLightMode.value == true? background:whiteColor,
+          // color: MainController.isLightMode.value == true? background:whiteColor,
+          color: MainController.isLightMode.value == false ? color6 :color9,
           width: size.width > 800 ? MainController.isClickedItem.value == true ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
           height: 60,
           child: Row(
@@ -32,13 +31,15 @@ class Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
-                onTap: (){
-                  MainController.isClickedItem.value = false;
-                  MainController.selectedItem.value = -1;
-                  MainController.selectedSubItem.value = -1;
-                  Get.to(() => DashboardPage());
-                },
-                  child: Txt('${this.title}' , fontSize: 20 , fontWeight: FontWeight.w500 , color: MainController.isLightMode.value == true? whiteColor : color3)),
+                // onTap: (){
+                //   MainController.isClickedItem.value = false;
+                //   // MainController.selectedItem.value = -1;
+                //   MainController.selectedItem.value = 0;
+                //   // MainController.selectedSubItem.value = -1;
+                //   MainController.selectedSubItem.value = 0;
+                //   Get.to(() => DashboardPage());
+                // },
+                  child: Txt('${AppController.of(context)!.value('management panel')}' , fontSize: 20 , fontWeight: FontWeight.w500 , color: MainController.isLightMode.value == true? whiteColor : color3)),
               // InkWell(
               //   onTap: (){
               //   },

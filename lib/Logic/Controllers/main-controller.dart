@@ -30,6 +30,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../UI/Views/table-page.dart';
 import 'helper-controller.dart';
+import 'package:intl/intl.dart';
 // import 'dart:html' as html;
 
 class MainController extends GetxController {
@@ -40,13 +41,18 @@ class MainController extends GetxController {
   //dehdar remove this section read icon of json
   static List<Item> items = [
     Item(
+      title: 'داشبورد',
+      icon: Icons.bar_chart,
+    ),
+    Item(
       title: 'Home',
       icon: Icons.home,
     ),
   ];
 
   //
-  static Rx<int> selectedItem = (-1).obs;
+  // static Rx<int> selectedItem = (-1).obs;
+  static Rx<int> selectedItem = 0.obs;
   static Rx<int> selectedSubItem = (-1).obs;
   static Rx<Item> itemSelected = Item().obs;
   static Rx<int> subItemSelectedIndex = (-1).obs;
@@ -57,6 +63,10 @@ class MainController extends GetxController {
   static RxList<dynamic> tableData = [].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
+
+  //dasboard page
+  static var hoveredIndex = (-1).obs;
+
 
   static List<dynamic> data = [];
 
