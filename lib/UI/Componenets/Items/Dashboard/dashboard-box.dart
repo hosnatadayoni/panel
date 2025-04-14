@@ -33,10 +33,11 @@ class DashboardBox extends StatelessWidget {
           child: Obx((){
             return Container(
               padding: EdgeInsets.all(30),
-              width:  size.width > 1000 ? (size.width - 300)/3: size.width,
+              width:  size.width > 800 ? size.width /3: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color:MainController.isLightMode.value == true ?background : whiteColor,
+                boxShadow: shadow
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -4,13 +4,19 @@ import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-box.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info2.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info3.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/line-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/circle-progress-bar.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -74,6 +80,52 @@ class DashboardPage extends StatelessWidget {
                               width: size.width,
                               child: WeeklyChart(),
                             ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Container(
+                        width: size.width,
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          alignment: WrapAlignment.start,
+                          children: [
+                            DashboardInfo(count: '72525' , description: 'No of Visits' , color: Colors.green , icon: Icons.supervised_user_circle,),
+                            DashboardInfo(count: '11255' , description: 'Comments' , color: Colors.lightBlueAccent , icon: CupertinoIcons.chat_bubble_2_fill,),
+                            DashboardInfo(count: '25550' , description: 'Salers' , color: Colors.orangeAccent , icon: CupertinoIcons.shopping_cart,),
+                            DashboardInfo(count: '16150' , description: 'Daily Visits' , color: redColor , icon: CupertinoIcons.eye,),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Container(
+                        width: size.width,
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          alignment: WrapAlignment.start,
+                          children: [
+                            DashboardInfo2(title: 'Salers', color: Colors.yellow, num: 55),
+                            DashboardInfo2(title: 'Customers', color: Colors.greenAccent, num: 84),
+                            DashboardInfo2(title: 'No. of Visits', color: warningColor, num: 46),
+                            DashboardInfo2(title: 'Profit', color: Colors.lightBlueAccent, num: 82),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Container(
+                        width: size.width,
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          alignment: WrapAlignment.start,
+                          children: [
+                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
+
                           ],
                         ),
                       ),
