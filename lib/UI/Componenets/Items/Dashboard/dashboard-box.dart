@@ -4,21 +4,18 @@ import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:intl/intl.dart';
+
 class DashboardBox extends StatelessWidget {
    DashboardBox({required this.icon , required this.count ,this.text , required this.index});
    IconData icon;
    int count;
    var text;
    int index;
-
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Obx((){
       final isHovered = MainController.hoveredIndex.value == index;
-
       return InkWell(
         onTap: (){
           MainController.hoveredIndex.value = this.index;
@@ -66,6 +63,5 @@ class DashboardBox extends StatelessWidget {
         ),
       );
     });
-
   }
 }

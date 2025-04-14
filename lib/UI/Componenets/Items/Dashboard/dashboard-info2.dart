@@ -19,7 +19,6 @@ class DashboardInfo2 extends StatelessWidget {
          color: whiteColor,
       ),
       width:size.width > 800 ?  size.width / 4: size.width,
-
       child: Column(
         children: [
           Txt('${this.title}' , fontSize: 16 , fontWeight: FontWeight.w200, color: color1),

@@ -48,6 +48,7 @@ const Color color8 = Color(0xff424e8f);
 const Color color9 = Color(0xff131c26);
 const Color color11 = Color(0xffFF982E);
 const Color color12 = Color(0xffe5e7f2);
+const Color color13 = Color(0xff6c757d);
 final LinearGradient gradiant1 =  LinearGradient(
   begin: Alignment.bottomLeft,
   end: Alignment.topRight,

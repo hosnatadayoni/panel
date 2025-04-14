@@ -8,14 +8,12 @@ import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info2.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info3.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/line-chart.dart';
-import 'package:finance/UI/Componenets/Items/Dashboard/circle-progress-bar.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 
 class DashboardPage extends StatelessWidget {
@@ -121,11 +119,13 @@ class DashboardPage extends StatelessWidget {
                           runSpacing: 20,
                           alignment: WrapAlignment.start,
                           children: [
-                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
-                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
-                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
-                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',),
-
+                            DashboardInfo3(icon: Icons.bar_chart,count: '4',description: 'Total Static Page',color: Colors.lightBlueAccent),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '15',description: 'Total Slider', color: CupertinoColors.systemOrange),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '70',description: 'Total Team',color: redColor),
+                            DashboardInfo3(icon: Icons.bar_chart,count: '20',description: 'Total Services',color: Colors.green),
+                            DashboardInfo3(icon: Icons.pie_chart_sharp,count: '30',description: 'Total Port',color: Colors.blueAccent),
+                            DashboardInfo3(icon: Icons.supervised_user_circle,count: '50',description: 'Total User',color: Colors.pinkAccent),
+                            DashboardInfo3(icon: Icons.supervised_user_circle,count: '65',description: 'Total Enquiries',color: Colors.green),
                           ],
                         ),
                       ),
