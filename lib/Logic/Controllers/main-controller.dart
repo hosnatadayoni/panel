@@ -51,6 +51,15 @@ class MainController extends GetxController {
   ];
 
   //
+
+  static String formatNumber(String number) {
+    try {
+      final num value = num.tryParse(number) ?? 0;
+      return NumberFormat.decimalPattern().format(value);
+    } catch (e) {
+      return number;
+    }
+  }
   // static Rx<int> selectedItem = (-1).obs;
   static Rx<int> selectedItem = 0.obs;
   static Rx<int> selectedSubItem = (-1).obs;

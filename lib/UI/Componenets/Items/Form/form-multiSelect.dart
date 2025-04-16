@@ -36,7 +36,6 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
       errorMessage = inputRequired['message'];
     }
     return  Obx((){
-      print('asghyuio>>>${widget.isSelectedItem!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -3,13 +3,19 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/bar-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/bar-chart2.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/line-chart2.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-box.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info2.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info3.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/line-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/pie-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/visitors-chart.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -129,6 +135,57 @@ class DashboardPage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      SizedBox(height: 30),
+                      Container(
+                        width: size.width,
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          children: [
+                            Container(
+                                height: 350,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: shadow,
+                                  color: whiteColor,
+                                ),
+                                child: LineChartSample1()),
+                            Container(
+                                height: 350,
+                                width: size.width > 600 ? size.width/2 : size.width,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: shadow,
+                                  color: whiteColor,
+                                ),
+                                child: MainBarChart()),
+                            Container(
+                                // height: 350,
+                                width: size.width > 600 ? size.width/2 : size.width,
+                                padding: EdgeInsets.all(30),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: shadow,
+                                  color: whiteColor,
+                                ),
+                                child: VisitorsChart()),
+                            Container(
+                                height: 350,
+                                width: size.width > 600 ? size.width/2 : size.width,
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: shadow,
+                                  color: whiteColor,
+                                ),
+                                child: PieChartSample()),
+                          ],
+                        ),
+                      ),
+
                     ],
                   ),
                 ),

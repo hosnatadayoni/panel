@@ -29,8 +29,9 @@ class DashboardBox extends StatelessWidget {
           },
           child: Obx((){
             return Container(
-              padding: EdgeInsets.all(30),
-              width:  size.width > 800 ? size.width /3: size.width,
+              padding: EdgeInsets.all(20),
+              width:  size.width > 600 ? size.width /3: size.width,
+              constraints: BoxConstraints(minHeight: 120),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color:MainController.isLightMode.value == true ?background : whiteColor,
@@ -40,22 +41,22 @@ class DashboardBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: 70,
-                    height: 70,
+                    width: 60,
+                    height: 60,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                       color: isHovered ? primary:color11,
                     ),
-                    child: Icon(this.icon , color: whiteColor,size: 32,),
+                    child: Icon(this.icon , color: whiteColor,size: 28,),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Txt('${this.count}' , fontSize: 30 , fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ?whiteColor : color1,),
-                      SizedBox(height: 5,),
-                      Txt('${this.text}' , fontSize: 16 , fontWeight: FontWeight.w200, color: MainController.isLightMode.value == true ?whiteColor : color1,),
-                    ],
-                  )
+                 Flexible(child:  Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Txt('${this.count}' , fontSize: 30 , fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ?whiteColor : color1,),
+                     SizedBox(height: 5,),
+                     Txt('${this.text}' , fontSize: 16 , fontWeight: FontWeight.w200, color: MainController.isLightMode.value == true ?whiteColor : color1,),
+                   ],
+                 ))
                 ],
               ),
             );

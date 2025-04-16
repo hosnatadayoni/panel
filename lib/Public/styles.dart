@@ -49,6 +49,22 @@ const Color color9 = Color(0xff131c26);
 const Color color11 = Color(0xffFF982E);
 const Color color12 = Color(0xffe5e7f2);
 const Color color13 = Color(0xff6c757d);
+const Color color14 = Color(0xffA3A3A3);
+const Color color15 = Color(0xfffF3F2F7);
+const Color color16 = Color(0xffffbb54);
+const Color color17 = Color(0xff00a389);
+const Color color18 = Color(0xff6beec2);
+const Color color19 = Color(0xfffebc3b);
+const Color color20 = Color(0xff464255);
+const Color color21 = Color(0xff00A389);
+const Color color22 = Color(0xfff1e6b9);
+const Color color23 = Color(0xffef9a91);
+const Color lightPurple = Color(0xffeae0ef);
+const Color purpleColor = Color(0xffAB54DB);
+const Color lightBlueColor = Color(0xff00AAFF);
+const Color lightBlackColor = Color(0xff17161E);
+
+
 final LinearGradient gradiant1 =  LinearGradient(
   begin: Alignment.bottomLeft,
   end: Alignment.topRight,
