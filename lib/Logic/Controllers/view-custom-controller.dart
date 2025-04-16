@@ -83,7 +83,8 @@ class ViewCustomController extends GetxController{
     }
     String titleSelect='';
 
-      if(dataModel.data['${column['name']}'] != null){
+    print('dataModel.data>>>>>${dataModel.data['${column['name']}'] }');
+    if(dataModel.data['${column['name']}'] != null){
         titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
             dataModel.data['${column['name']}'] , column);
       }

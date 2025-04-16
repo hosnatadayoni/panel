@@ -90,10 +90,10 @@ class HelperController extends GetxController {
   }
 
   static tablePageFunction() async {
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-items'){
-      await Get.to(() => TableCustomPage());
-    }
-    else
+    // if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-items'){
+    //   await Get.to(() => TablePage());
+    // }
+    // else
     Get.to(() => TablePage());
   }
 

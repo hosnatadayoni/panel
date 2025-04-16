@@ -162,12 +162,16 @@ class DB {
   }
 
   updateRecord(Map<String, dynamic> request) async {
-    // dataController.allData.value=[];
+
+    dataController.allData.value=[];
     List<dynamic> records = await getRecords();
     print('list is>>>${records.first['id']}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    // dataController.allData.add(box.values.toList());
+    print('box Data>>>${box.values.toList()}');
+    dataController.allData.value=box.values.toList();
+    for(DataModel da in dataController.allData.value)
+      print('all Data>>>${da.data}');
     for (var data in records) {
       data.forEach((key, value) {
         if (!request.containsKey(key)) {
@@ -189,26 +193,25 @@ class DB {
           if (before['status'] == false) {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
-            var customUpdate =
-            await HelperController.beforeUpdate(record)['data'];
+            var customUpdate = await HelperController.beforeUpdate(record)['data'];
 
-            var allDataIndex = dataController.allData.value
-                .indexWhere((element) => element.id == data['id']);
+            var allDataIndex = dataController.allData.value.indexWhere((element) => element.id == data['id']);
 
-            var tableDataIndex = MainController.tableData.value
-                .indexWhere((element) => element.id == data['id']);
+            var tableDataIndex = MainController.tableData.value.indexWhere((element) => element.id == data['id']);
+
             print('allDataIndex>>>${allDataIndex}');
             dataController.allData.value[allDataIndex] = customUpdate;
-            MainController.tableData.value[tableDataIndex] = customUpdate;
+            // MainController.tableData.value[tableDataIndex] = customUpdate;
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
-            var after = await HelperController.afterStore(this.tableName!,data, customUpdate);
+            var after = await HelperController.afterUpdate(this.tableName!,customUpdate);
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
+
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
-            MainController.goToTablePage();
+
             // Get.to(() => TablePage());
           }
         }
@@ -225,15 +228,16 @@ class DB {
     print('list is>>>${records.first['id']}');
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     for (var data in records) {
-      var tableDataIndex = MainController.tableData.value.indexWhere((element) => element.id == data['id']);
-      DataModel item=MainController.tableData.value[tableDataIndex];
+      var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['id']);
+
+      DataModel item=box.values.toList()[tableDataIndex];
       var index=  box.values.toList().indexWhere((element) => element.id == data['id']);
       var before = await HelperController.beforeDelete(index);
       if (before['status'] == false) {
         showSnackbar(snackTypes.error, before['message']);
       } else {
         box.deleteAt(index);
-        MainController.tableData.value.removeAt(tableDataIndex);
+        // MainController.tableData.value.removeAt(tableDataIndex);
         await MainController.loadData();
         MainController.renderPagination();
         var after = HelperController.afterDelete(index, item);

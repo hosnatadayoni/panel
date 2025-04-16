@@ -126,10 +126,7 @@
         "isPictureSelected" : true
       }
     ],
-    "view": "custom",
-      "create-view-address": "OrderCreatePage()",
-      "tabel-view-address": "DataTableOrderItem()",
-      "update-view-address": "UpdateOrderItem()"
+    "view": "custom"
   },
     {
       "title":"جزئیات سفارش",
@@ -138,6 +135,7 @@
      "table-name":"order-items",
      "currentPage":1,
      "countShowRow":10,
+
      "columns":[
       {
         "name": "نام کالا",
@@ -157,6 +155,7 @@
          "is-show-store": false,
          "is-show-edit": false
        },
+
        {
          "name": "قیمت",
          "title": "قیمت",
@@ -227,6 +226,7 @@
          "type": "number"
        }
      ],
+
       "view": "custom"
     }
 

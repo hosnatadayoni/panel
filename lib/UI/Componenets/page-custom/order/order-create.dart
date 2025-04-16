@@ -18,7 +18,6 @@ import '../orderItem/form-create-orderItem-custom.dart';
 class OrderCreatePage extends StatelessWidget {
   OrderCreatePage();
 
-  Map<String , dynamic> dataJson = {};
 
   @override
 

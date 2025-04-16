@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+// import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 
 class DashboardPage extends StatelessWidget {

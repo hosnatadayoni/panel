@@ -78,15 +78,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   }
   void _removeContainer(String key) {
     setState(() {
-      // print('index delete>>>>>>${key}');
-      // containers.remove(key);
-      // // print('ViewController.request2 23>>>${ViewController.request2}');
-      // print('OrderItem.orderItemsList before delete>>>${OrderItem.orderItemsList}');
-      // OrderItem.orderItemsList.remove(key);
-      // print('OrderItem.orderItemsList after delete>>>${OrderItem.orderItemsList}');
-      // print('ViewController.request2 before delete>>>${ViewController.request2}');
-      // ViewController.request2.removeWhere((key, value) => key == key);
-      // print('ViewController.request2 after delete>>>${ViewController.request2}');
       containers.remove(key);
       OrderItem.orderItemsList.remove(key);
     });
@@ -94,8 +85,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    Rx<bool> isHoverBtnBack = false.obs;
 
     return Column(
             children: [
@@ -170,7 +159,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                           children: [
                             Obx(() {
                               return Txt(
-                                '${getDataTable['columns'][j]['title']} ${key}',
+                                '${getDataTable['columns'][j]['title']} ',
                                 color: MainController.isLightMode.value == true ? whiteColor : color2,
                               );
                             }),
@@ -206,7 +195,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         checkBoxTitle: '${getDataTable['columns'][j]['title']}',
                         defaultValue: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'],
                         onChange: (text) {
-                          // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                           OrderItem.orderItemsList[key] ??= {};
                           OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
                         },
@@ -236,7 +224,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                 onChanged: (color) {
                                   colorChanged = color;
                                   String hexColor = '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
-                                  // ViewController.request2['${getDataTable['columns'][j]['name']}'] = hexColor;
                                   OrderItem.orderItemsList[key] ??= {};
                                   OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = hexColor;
                                 },
@@ -267,7 +254,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                     ? DateBox(
                                   selectedDate: ViewCustomController.parseDate(OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']),
                                   onDateChanged: (date) {
-                                    // ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
                                     OrderItem.orderItemsList[key] ??= {};
                                     OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
                                   },
@@ -315,7 +301,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                           children: [
                                             Obx(() {
                                               return Txt(
-                                                '${getDataTable['columns'][j]['title']} ${key}',
+                                                '${getDataTable['columns'][j]['title']} ',
                                                 color: MainController.isLightMode.value == true ? whiteColor : color2,
                                               );
                                             }),
@@ -587,7 +573,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                   child: Container(
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),
                     padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                    child: Txt('${AppController.of(context)!.value('remove')} ${key}'),
+                    child: Txt('${AppController.of(context)!.value('remove')} '),
                   ),
                 ),
               ],
