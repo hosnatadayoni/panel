@@ -175,7 +175,7 @@ class _TableBoxState extends State<TableBox> {
                                       },
                                       icon: Icon(CupertinoIcons.trash , color:MainController.isLightMode.value == true ? whiteColor : color3,),
                                     ),
-                                    for()
+
                                   ],
                                 ) ),
                           )
