@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -964,6 +965,77 @@ class MainController extends GetxController {
     //   jsonFileString = await File(jsonFile).readAsString();
     // }
     SubMenuList = json.decode(jsonFileString);
+    // await createMultiSelectTable(String tableData);
+    for(var name in tableNames()){
+      createMultiSelectTable('${name}');
+      addParentForRelations('${name}');
+      print('name menu list>>>${name}');
+    }
+
+    print('sub menu length1>>>${SubMenuList.length}');
+
+  }
+
+  static List<dynamic> tableNames(){
+
+    var list=[];
+    for(var table in SubMenuList ){
+      list.add(table['table-name']);
+    }
+    print('SubMenuList table name>>>${list}');
+    return list;
+  }
+  static createMultiSelectTable(String tableName){
+
+    var getDataTable=ViewCustomController.getDataTable(tableName);
+    List<dynamic> columnList = ViewController.getColumnList(tableName);
+    for(var column in columnList){
+      if(column['type']=='multiSelect' && column['sourceItems']=='table'){
+        print('multiSelect>>${column['sourceTable']}');
+        String tableNameNew='${tableName}_${column['sourceTable']}';
+        if(!tableNames().contains('${tableNameNew}')){
+          var table=
+          {
+            'title':'${tableNameNew}',
+            "table-name": '${tableNameNew}',
+            "tooltip": "",
+            'columns':[
+              {"title":'${getDataTable['table-name']}_id',
+                "type": "number",
+                "name":'${getDataTable['table-name']}_id',
+              },
+              {"title":'${column['sourceTable']}_id',
+                "type": "number",
+                "name":'${column['sourceTable']}_id',
+              },
+            ],
+            "main-menu": false,
+            "currentPage": 1,
+            "countShowRow": 10,
+          };
+          SubMenuList.add(table);
+        }
+        else{
+          showSnackbar(snackTypes.error, "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+        }
+      }
+    }
+    print('sub menu list>>>${SubMenuList}');
+    print('sub menu length2>>>${SubMenuList.length}');
+
+  }
+
+  static addParentForRelations(String tableName){
+     var getDataTable=ViewCustomController.getDataTable(tableName);
+     if(getDataTable['relations'].length!=0){
+       for(var relate in getDataTable['relations']){
+         var index=SubMenuList.indexWhere((element) => element['table-name']==relate['table-name']);
+         var items=SubMenuList[index];
+         items['parent_slug']="";
+         items['parent_id']="";
+         print('items>>${items}');
+      }
+     }
   }
 
   static Future<void> loadData({var tableData}) async {
