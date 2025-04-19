@@ -11,8 +11,9 @@ import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info2.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/dashboard-info3.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/line-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/main-pie-chart.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/pie-chart.dart';
-import 'package:finance/UI/Componenets/Items/Dashboard/visitors-chart.dart';
+import 'package:finance/UI/Componenets/Items/Dashboard/main-bar-chart.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -144,7 +145,8 @@ class DashboardPage extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.start,
                           children: [
                             Container(
-                                height: 350,
+                                height: 400,
+                                width: size.width > 996 ?  (size.width - 150) / 2 : size.width,
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(24),
@@ -153,9 +155,19 @@ class DashboardPage extends StatelessWidget {
                                 ),
                                 child: LineChartSample1()),
                             Container(
-                                height: 350,
-                                width: size.width > 600 ? size.width/2 : size.width,
+                                height: 400,
+                                width: size.width > 996 ? (size.width - 150) / 2 : size.width,
                                 padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: shadow,
+                                  color: whiteColor,
+                                ),
+                                child: BarChartSample()),
+                            Container(
+                                height: 400,
+                                width: size.width > 996 ? (size.width - 150) / 2 : size.width,
+                                padding: EdgeInsets.all(30),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(24),
                                   boxShadow: shadow,
@@ -163,25 +175,15 @@ class DashboardPage extends StatelessWidget {
                                 ),
                                 child: MainBarChart()),
                             Container(
-                                // height: 350,
-                                width: size.width > 600 ? size.width/2 : size.width,
-                                padding: EdgeInsets.all(30),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(24),
-                                  boxShadow: shadow,
-                                  color: whiteColor,
-                                ),
-                                child: VisitorsChart()),
-                            Container(
-                                height: 350,
-                                width: size.width > 600 ? size.width/2 : size.width,
+                                height: 400,
+                                width: size.width > 996 ? (size.width - 150) / 2 : size.width,
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(24),
                                   boxShadow: shadow,
                                   color: whiteColor,
                                 ),
-                                child: PieChartSample()),
+                                child: MainPieChart()),
                           ],
                         ),
                       ),

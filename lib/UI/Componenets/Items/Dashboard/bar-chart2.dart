@@ -3,120 +3,16 @@ import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-//
-// class MainBarChart2 extends StatefulWidget {
-//   const MainBarChart2({Key? key}) : super(key: key);
-//
-//   @override
-//   _MainBarChart2State createState() => _MainBarChart2State();
-// }
-//
-// class _MainBarChart2State extends State<MainBarChart2> {
-//   late int showingTooltip;
-//   final List<String> weekDays = ['جمعه', 'پنج شنبه', 'چهارشنبه', 'سه‌شنبه', 'دوشنبه', 'یکشنبه', 'شنبه'];
-//   final List<int> values = [40 , 31 , 40, 10 , 40 , 36 , 32];
-//
-//   @override
-//   void initState() {
-//     showingTooltip = -1;
-//     super.initState();
-//   }
-//
-//   BarChartGroupData generateGroupData(int x, int y) {
-//     final mediaQuery = MediaQuery.of(context);
-//     final isPortrait = mediaQuery.orientation == Orientation.portrait;
-//     final barWidth = isPortrait ? 20.0 : 30.0;
-//     return BarChartGroupData(
-//       x: x,
-//       showingTooltipIndicators: showingTooltip == x ? [0] : [],
-//       barRods: [
-//         BarChartRodData(
-//           toY: y.toDouble(),
-//           fromY: 0,
-//           color: lightPurple,
-//           borderRadius: BorderRadius.only(
-//             topLeft: Radius.circular(5),
-//             topRight: Radius.circular(5),
-//           ),
-//           width: barWidth,
-//         ),
-//       ],
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final mediaQuery = MediaQuery.of(context);
-//     final isPortrait = mediaQuery.orientation == Orientation.portrait;
-//     return AspectRatio(
-//       aspectRatio: 0.5,
-//       child: BarChart(
-//         BarChartData(
-//           // alignment: BarChartAlignment.spaceAround,
-//           barGroups: List.generate(
-//             weekDays.length,
-//                 (index) => generateGroupData(index, values[index]),
-//           ),
-//           barTouchData: BarTouchData(
-//             enabled: true,
-//             handleBuiltInTouches: false,
-//             touchCallback: (event, response) {
-//               if (response != null && response.spot != null && event is FlTapUpEvent) {
-//                 setState(() {
-//                   final x = response.spot!.touchedBarGroup.x;
-//                   final isShowing = showingTooltip == x;
-//                   if (isShowing) {
-//                     showingTooltip = -1;
-//                   } else {
-//                     showingTooltip = x;
-//                   }
-//                 });
-//               }
-//             },
-//           ),
-//           titlesData: FlTitlesData(
-//             show: true,
-//             bottomTitles: AxisTitles(
-//               sideTitles: SideTitles(
-//                 showTitles: true,
-//                 getTitlesWidget: (value, meta) {
-//                   return Transform.rotate(
-//                     angle: isPortrait ? -0.4 :0,
-//                     child: Txt(
-//                       weekDays[value.toInt()],
-//                       fontSize: 12,
-//                     ),
-//                   );
-//                 },
-//                 reservedSize: 40,
-//               ),
-//             ),
-//             leftTitles: AxisTitles(
-//               sideTitles: SideTitles(showTitles: false),
-//             ),
-//             rightTitles: AxisTitles(
-//               sideTitles: SideTitles(showTitles: false),
-//             ),
-//             topTitles: AxisTitles(
-//               sideTitles: SideTitles(showTitles: false),
-//             ),
-//           ),
-//           gridData: FlGridData(show: false),
-//           borderData: FlBorderData(show: false),
-//         ),
-//       ),
-//     );
-//   }
-// }
-class MainBarChart2 extends StatefulWidget {
-   MainBarChart2({required this.allVisistors});
+
+class BarChartSample2 extends StatefulWidget {
+   BarChartSample2({required this.allVisistors});
   String allVisistors;
 
   @override
-  _MainBarChart2State createState() => _MainBarChart2State();
+  _BarChartSample2State createState() => _BarChartSample2State();
 }
 
-class _MainBarChart2State extends State<MainBarChart2> {
+class _BarChartSample2State extends State<BarChartSample2> {
   int? hoveredIndex;
   final List<String> weekDays = ['جمعه', 'پنج شنبه', 'چهارشنبه', 'سه‌شنبه', 'دوشنبه', 'یکشنبه', 'شنبه'];
   final List<int> values = [40, 31, 40, 10, 40, 36, 32];
@@ -152,8 +48,11 @@ class _MainBarChart2State extends State<MainBarChart2> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isPortrait = mediaQuery.orientation == Orientation.portrait;
-    return SizedBox(
-      height: 300,
+    var size = MediaQuery.of(context).size;
+
+    return Container(
+      height: 200,
+      width: size.width,
       child: AspectRatio(
         aspectRatio: 2.5,
         child: BarChart(

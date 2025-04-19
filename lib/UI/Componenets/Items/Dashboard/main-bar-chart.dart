@@ -1,11 +1,12 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Public/styles.dart';
+import 'package:finance/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/bar-chart2.dart';
 import 'package:flutter/material.dart';
-class VisitorsChart extends StatelessWidget {
-   VisitorsChart({Key? key}) : super(key: key);
+class MainBarChart extends StatelessWidget {
+   MainBarChart({Key? key}) : super(key: key);
   String allVisitors= '98425';
 
   @override
@@ -20,7 +21,7 @@ class VisitorsChart extends StatelessWidget {
           SizedBox(height: 10,),
           Wrap(
             spacing: 10,
-            runSpacing: 20,
+            runSpacing: 10,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Txt('${MainController.formatNumber(allVisitors)}' , fontSize: 45, fontWeight: FontWeight.w400, color: color21,),
@@ -37,8 +38,8 @@ class VisitorsChart extends StatelessWidget {
 
         ],
       ),
-        SizedBox(height: 20,),
-        MainBarChart2(allVisistors: allVisitors),
+        SizedBox(height: 10,),
+        Expanded(child: BarChartSample2(allVisistors: allVisitors)),
       ],
     );
   }
