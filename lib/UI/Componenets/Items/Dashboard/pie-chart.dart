@@ -1,3 +1,4 @@
+import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/services.dart';
@@ -46,13 +47,11 @@ class _PieChartSampleState extends State<PieChartSample> {
               color: data['color'],
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(
+            child: Txt(
               '${data['title'] as String} : ${data['value']}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
@@ -65,7 +64,6 @@ class _PieChartSampleState extends State<PieChartSample> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return Container(
       height: 250,
       child: MouseRegion(

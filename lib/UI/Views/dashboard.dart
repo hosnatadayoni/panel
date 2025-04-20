@@ -16,11 +16,18 @@ import 'package:finance/UI/Componenets/Items/Dashboard/pie-chart.dart';
 import 'package:finance/UI/Componenets/Items/Dashboard/main-bar-chart.dart';
 import 'package:finance/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/UI/Componenets/Items/Menu/menu.dart';
+import 'package:finance/UI/Componenets/accordion.dart';
+import 'package:finance/UI/Componenets/alert.dart';
+import 'package:finance/UI/Componenets/badge.dart';
+import 'package:finance/UI/Componenets/breadCrumb.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../Componenets/btn.dart';
+import '../Componenets/dissmisiable-alert.dart';
 
 
 class DashboardPage extends StatelessWidget {
@@ -33,7 +40,6 @@ class DashboardPage extends StatelessWidget {
       body: Obx((){
         return Container(
           width: size.width,
-          // height: size.height,
           color: MainController.isLightMode.value == false ? color6 :color9,
           child: Stack(
             children: [
@@ -187,6 +193,146 @@ class DashboardPage extends StatelessWidget {
                           ],
                         ),
                       ),
+
+
+                      //test component//
+                      SizedBox(height: 30),
+                      //acccordian
+                      CustomAccordion(accordianTitle: 'item1' ,accordianTitleColor: redColor , accordianBoxColor: Colors.lightBlueAccent , accordianDescription: 'des1' , accordianDescriptionColor: Colors.black , colorIcon: color20 , colorBoxDescription: Colors.black26),
+                      CustomAccordion(accordianTitle: 'item2' ,accordianTitleColor: Colors.blue , accordianBoxColor: Colors.white , accordianDescription: 'des2' , accordianDescriptionColor: Colors.yellow , colorIcon: color20 , colorBoxDescription: Colors.pink),
+                      SizedBox(height: 30),
+                      //alert
+                      InkWell(
+                        onTap: (){
+                          // showCustomAnimatedAlert(context ,
+                          //   'errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr' ,
+                          //   Colors.black,purpleColor, CupertinoColors.extraLightBackgroundGray,
+                          //   linkText: 'اینجا',
+                          //   onLinkTap: () {
+                          //     print('لینک کلیک شد');
+                          //   },
+                          // );
+                          showCustomAnimatedAlert(
+                            context,
+                            '',
+                            Colors.black,
+                            Colors.white,
+                            Colors.blue,
+                            textSegments: [
+                              TextSegment(text: 'شرایط '),
+                              TextSegment(
+                                text: 'حریم خصوصی',
+                                isLink: true,
+                                color: Colors.red,
+                                onTap: () => print('حریم خصوصی'),
+                              ),
+                              TextSegment(text: ' و '),
+                              TextSegment(
+                                text: 'قوانین',
+                                isLink: true,
+                                color: Colors.green,
+                                onTap: () => print('قوانین'),
+                              ),
+                              TextSegment(text: ' را مطالعه کنید.'),
+                            ],
+                          );
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          color: Colors.red,
+                          child: Center(child: Txt('click' , color: Colors.white,)),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      //dismissible-alert
+                      DismissibleAlert(
+                        message: 'این یک پیام تست است',
+                        type: AlertType.warning,
+                        alignment: Alignment.centerRight,
+                      ),
+                      SizedBox(height: 30),
+                      DismissibleAlert(
+                        message: 'این یک پیام تست است',
+                        type: AlertType.success,
+                      ),
+                      SizedBox(height: 30),
+                      DismissibleAlert(
+                        message: 'این یک پیام تست است',
+                        type: AlertType.error,
+                      ),
+                      SizedBox(height: 30),
+                      //badge
+                      // AdvancedBadge(
+                      //   color: Colors.grey,
+                      //   textColor: Colors.white,
+                      //   child: Icon(Icons.notifications, size: 30),
+                      //   text: '3',
+                      //   shape: BadgeShape.rectangular,
+                      //   size: 14,
+                      // ),
+                      // AdvancedBadge(
+                      //   child: Text('سبد خرید', style: TextStyle(color: Colors.blue)),
+                      //   text: '5',
+                      //   isInteractive: true,
+                      //   shape: BadgeShape.rectangular,
+                      //   onTap: () {
+                      //
+                      //   },
+                      // )
+
+                      //Breadcrumb
+                      Breadcrumb(
+                        itemClickedColor: Colors.blue,
+                        itemColor: Colors.red,
+                        items: [
+                          BreadcrumbItem(
+                            label: 'خانه',
+                            onPressed: (){}
+                          ),
+                          BreadcrumbItem(
+                            label: 'محصولات',
+                          ),
+                          BreadcrumbItem(
+                            label: 'الکترونیک',
+                          ),
+                          BreadcrumbItem(
+                            label: 'گوشی موبایل',
+                          ),
+                        ],
+                      ),
+
+                      //btn
+                      Btn(btnType.custom,color: Colors.blue , text: 'primary', hoverColor: Colors.blueAccent, isBlock: true),
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, hoverPrimaryTypeColor: Colors.black,isBlock: false),
+                      // LayoutBuilder(
+                      //   builder: (context, constraints) {
+                      //     final bool isVertical = constraints.maxWidth < 768;
+                      //     return isVertical
+                      //         ? Column(
+                      //       children: [
+                      //         Btn(btnType.primary, text: "دکمه ۱", color: Colors.blue ,),
+                      //         SizedBox(height: 8),
+                      //         Btn(btnType.primary, text: "دکمه ۲", color: Colors.blue ,),
+                      //       ],
+                      //     )
+                      //         : Row(
+                      //       children: [
+                      //         Btn(btnType.primary, text: "دکمه ۱", color: Colors.blue ,),
+                      //         SizedBox(width: 8),
+                      //         Btn(btnType.primary, text: "دکمه ۲", color: Colors.blue ,),
+                      //       ],
+                      //     );
+                      //   },
+                      // )
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, hoverPrimaryTypeColor: Colors.black,isToggle: true),
+
+
+
+
+
 
                     ],
                   ),
