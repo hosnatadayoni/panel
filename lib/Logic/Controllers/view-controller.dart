@@ -1245,8 +1245,7 @@ class ViewController extends GetxController {
       for (var i = 0; i < dropDownListItems.length; i++) {
         print('id data:${dropDownListItems[i].id}');
         items.add({
-          'title': dropDownListItems[i]
-              .data[columnList.first['name']],
+          'title': dropDownListItems[i].data[columnList.first['name']],
           'value': dropDownListItems[i].id
         });
 

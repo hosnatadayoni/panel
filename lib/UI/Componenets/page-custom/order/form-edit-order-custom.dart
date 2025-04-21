@@ -98,12 +98,12 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     onTap: ()async{
                       print('ViewController.request>>>${ViewController.request}>>>${widget.data!.id}');
                       await DB('order').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
-                      var orderItems=await DB('order-items').where('سفارش', '==', '${widget.data!.id}').getRecords();
+                      var orderItems=await DB('order-itemss').where('سفارش', '==', '${widget.data!.id}').getRecords();
                       for(var orderItem in  orderItems){
                         if(OrderItem.orderItemsList.containsKey([orderItem['id']]))
-                          DB('order-items').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
+                          DB('order-itemss').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
                         else
-                          DB('order-items').where('id', '==', '${orderItem['id']}').deleteRecord();
+                          DB('order-itemss').where('id', '==', '${orderItem['id']}').deleteRecord();
                       }
                       if (OrderItem.orderItemsList2.values.length != 0) {
                           for (var key in OrderItem.orderItemsList2.keys) {
@@ -115,7 +115,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                           }
                           for (var list in OrderItem.orderItemsList2.values) {
                             if(list.isNotEmpty){
-                            await DB('order-items').storeRecord(list);
+                            await DB('order-itemss').storeRecord(list);
                             }
                           }
                         }

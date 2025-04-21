@@ -91,7 +91,7 @@ class _OrderEditState extends State<OrderEdit> {
 }
 
 Future<Widget> getOrderItems(var data) async {
-  List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
+  List<dynamic>items=await DB('order-itemss').where("سفارش", '==', "${data.id}").getRecords();
   for(var item in items){
     OrderItem.orderItemsList[item['id']]=item;
   }

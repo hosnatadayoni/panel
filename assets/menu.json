@@ -6,8 +6,6 @@
     "table-name": "customers",
     "currentPage": 1,
     "countShowRow": 10,
-    "parent_slug": "",
-    "parent_id": "",
     "relations": [],
     "columns": [
 
@@ -58,11 +56,9 @@
     "title": "محصولات",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "product",
+    "table-name": "products",
     "currentPage": 1,
     "countShowRow": 10,
-    "parent_slug": "",
-    "parent_id": "",
     "relations": [],
     "columns": [
 
@@ -100,15 +96,19 @@
     "tooltip": "",
     "main-menu": true,
     "table-name": "order",
-    "parent_slug": "",
-    "parent_id": "",
     "currentPage": 1,
     "countShowRow": 10,
+    "relations": [
+      {
+        "title": "جزئیات سفارش",
+        "table-name": "order-itemss"
+      }
+    ],
     "columns": [
       {
         "name": "مشتری",
         "title": "مشتری",
-        "type": "multiSelect",
+        "type": "select",
         "sourceItems": "table",
         "sourceTable": "customers",
         "items": []
@@ -159,26 +159,17 @@
         "isPictureSelected": true
       }
     ],
-    "relations": [],
     "view": "custom"
   },
   {
     "title": "جزئیات سفارش",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "order-items",
-    "parent_slug": "",
-    "parent_id": "",
+    "table-name": "order-itemss",
     "currentPage": 1,
     "countShowRow": 10,
-    "relations": [
-      {
-        "title": "سفارش",
-        "table-name": "order"
-      }
-    ],
+    "relations": [],
     "columns": [
-
       {
         "name": "نام کالا",
         "title": "نام کالا",
@@ -186,17 +177,6 @@
         "sourceItems": "table",
         "sourceTable": "product",
         "items": []
-      },
-
-      {
-        "name": "سفارش",
-        "title": "سفارش",
-        "type": "select",
-        "sourceItems": "table",
-        "sourceTable": "order",
-        "items": [],
-        "is-show-store": false,
-        "is-show-edit": false
       },
       {
         "name": "قیمت",

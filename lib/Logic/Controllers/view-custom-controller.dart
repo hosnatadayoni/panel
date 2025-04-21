@@ -225,6 +225,7 @@ class ViewCustomController extends GetxController{
     Map<String,dynamic> dataTableName={};
     for(var subMenu in MainController.SubMenuList){
       if(subMenu['table-name'] == tableName){
+        print('ViewCustomController.getDataTable>>>${subMenu}');
         dataTableName = subMenu;
       }
     }

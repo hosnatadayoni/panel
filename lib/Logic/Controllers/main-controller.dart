@@ -68,7 +68,6 @@ class MainController extends GetxController {
   //dasboard page
   static var hoveredIndex = (-1).obs;
 
-
   static List<dynamic> data = [];
 
   static Map<String, dynamic> dataJson = {};
@@ -581,7 +580,7 @@ class MainController extends GetxController {
     await box.add(newData);
     print('newData>>>${newData}');
     dataController.allData.value.add(newData);
-    MainController.tableData.value.add(newData);
+    MainController.tableData.add(newData);
     await MainController.loadData();
     MainController.renderPagination();
   }
@@ -966,47 +965,46 @@ class MainController extends GetxController {
     // }
     SubMenuList = json.decode(jsonFileString);
     // await createMultiSelectTable(String tableData);
-    for(var name in tableNames()){
+    for (var name in tableNames()) {
       createMultiSelectTable('${name}');
       addParentForRelations('${name}');
       print('name menu list>>>${name}');
     }
 
     print('sub menu length1>>>${SubMenuList.length}');
-
   }
 
-  static List<dynamic> tableNames(){
-
-    var list=[];
-    for(var table in SubMenuList ){
+  static List<dynamic> tableNames() {
+    var list = [];
+    for (var table in SubMenuList) {
       list.add(table['table-name']);
     }
     print('SubMenuList table name>>>${list}');
     return list;
   }
-  static createMultiSelectTable(String tableName){
 
-    var getDataTable=ViewCustomController.getDataTable(tableName);
+  static createMultiSelectTable(String tableName) {
+    var getDataTable = ViewCustomController.getDataTable(tableName);
     List<dynamic> columnList = ViewController.getColumnList(tableName);
-    for(var column in columnList){
-      if(column['type']=='multiSelect' && column['sourceItems']=='table'){
+    for (var column in columnList) {
+      if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         print('multiSelect>>${column['sourceTable']}');
-        String tableNameNew='${tableName}_${column['sourceTable']}';
-        if(!tableNames().contains('${tableNameNew}')){
-          var table=
-          {
-            'title':'${tableNameNew}',
+        String tableNameNew = '${tableName}_${column['sourceTable']}';
+        if (!tableNames().contains('${tableNameNew}')) {
+          var table = {
+            'title': '${tableNameNew}',
             "table-name": '${tableNameNew}',
             "tooltip": "",
-            'columns':[
-              {"title":'${getDataTable['table-name']}_id',
+            'columns': [
+              {
+                "title": '${getDataTable['table-name']}_id',
                 "type": "number",
-                "name":'${getDataTable['table-name']}_id',
+                "name": '${getDataTable['table-name']}_id',
               },
-              {"title":'${column['sourceTable']}_id',
+              {
+                "title": '${column['sourceTable']}_id',
                 "type": "number",
-                "name":'${column['sourceTable']}_id',
+                "name": '${column['sourceTable']}_id',
               },
             ],
             "main-menu": false,
@@ -1014,28 +1012,40 @@ class MainController extends GetxController {
             "countShowRow": 10,
           };
           SubMenuList.add(table);
-        }
-        else{
-          showSnackbar(snackTypes.error, "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+        } else {
+          showSnackbar(snackTypes.error,
+              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
         }
       }
     }
     print('sub menu list>>>${SubMenuList}');
     print('sub menu length2>>>${SubMenuList.length}');
-
   }
 
-  static addParentForRelations(String tableName){
-     var getDataTable=ViewCustomController.getDataTable(tableName);
-     if(getDataTable['relations'].length!=0){
-       for(var relate in getDataTable['relations']){
-         var index=SubMenuList.indexWhere((element) => element['table-name']==relate['table-name']);
-         var items=SubMenuList[index];
-         items['parent_slug']="";
-         items['parent_id']="";
-         print('items>>${items}');
+  static addParentForRelations(String tableName) {
+    var getDataTable = ViewCustomController.getDataTable(tableName);
+    if (getDataTable['relations'].length != 0) {
+      for (var relate in getDataTable['relations']) {
+        var index = SubMenuList.indexWhere(
+            (element) => element['table-name'] == relate['table-name']);
+        var items = SubMenuList[index];
+        print('MainController.addParentForRelations>>${items['columns']}');
+        items['columns'].add({
+          'name': 'parent_table',
+          'title': 'parent_table',
+          'type': 'string',
+          'is-show-table': false,
+        });
+        items['columns'].add({
+          'name': 'parent_id',
+          'title': 'parent_id',
+          'type': 'string',
+          'is-show-table': false,
+        });
+
+        print('items>>${items['columns']}');
       }
-     }
+    }
   }
 
   static Future<void> loadData({var tableData}) async {
@@ -1048,6 +1058,9 @@ class MainController extends GetxController {
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
       }
 
+      for(var i in box.values.toList()){
+        print('MainController.loadData>>>${i.data}');
+      }
       MainController.tableData.value = box.values.toList();
     } else {
       if (SubMenuList.length > 0) {
@@ -1182,10 +1195,11 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['view']=='custom'){
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]
+            ['view'] ==
+        'custom') {
       HelperController.tablePageFunction();
-    }
-    else{
+    } else {
       await Get.to(() => TablePage());
     }
   }
