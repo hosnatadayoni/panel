@@ -1146,15 +1146,11 @@ class ViewController extends GetxController {
       List<DataModel> objectItem = await getRowTable(tableName);
 
       if(selectedId != ''){
-        // DataModel objectTitleSelected = objectItem.firstWhere(
-        //         (element) => element.id == selectedId,
-        //     orElse: () => DataModel(
-        //         id: 'not_found', data: {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'}));
         DataModel objectTitleSelected = objectItem.firstWhere(
                 (element) => element.id == selectedId,
             orElse: () => DataModel(
                 id: 'not_found', data: {'error': ''}));
-        selectedTitle = objectTitleSelected.data.values.first;
+        selectedTitle = objectTitleSelected.id.toString();
       }
       else{
         selectedTitle = '';
@@ -1162,9 +1158,6 @@ class ViewController extends GetxController {
 
     } else {
       if(selectedId != ''){
-        // Map<String, dynamic> selectedItem = column['items'].firstWhere(
-        //         (element) => element['value'] == selectedId,
-        //     orElse: () => {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'});
         Map<String, dynamic> selectedItem = column['items'].firstWhere(
                 (element) => element['value'] == selectedId,
             orElse: () => {'error': ''});
@@ -1252,8 +1245,7 @@ class ViewController extends GetxController {
       for (var i = 0; i < dropDownListItems.length; i++) {
         print('id data:${dropDownListItems[i].id}');
         items.add({
-          'title': dropDownListItems[i]
-              .data[columnList.first['name']],
+          'title': dropDownListItems[i].data[columnList.first['name']],
           'value': dropDownListItems[i].id
         });
 

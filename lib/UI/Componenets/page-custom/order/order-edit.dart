@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/Public/styles.dart';
@@ -90,17 +91,13 @@ class _OrderEditState extends State<OrderEdit> {
 }
 
 Future<Widget> getOrderItems(var data) async {
-  print('data id>>${data!.id}');
-  List<dynamic>items=await DB('order-items').where("سفارش", '==', "${data.id}").getRecords();
-  print('items length>>${items.length}');
-  print('items order list>>>${items}');
+  List<dynamic>items=await DB('order-itemss').where("سفارش", '==', "${data.id}").getRecords();
   for(var item in items){
-    print('item >>${item}');
     OrderItem.orderItemsList[item['id']]=item;
   }
   return Column(
     children: [
-        FormEditOrderItemCustom(items:items)
+        FormEditOrderItemCustom()
     ],
   );
 }

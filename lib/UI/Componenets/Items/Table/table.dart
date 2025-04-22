@@ -1,23 +1,20 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
-import 'package:finance/UI/Views/edit.dart';
-import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
 import '../../../../Logic/Models/db.dart';
+import '../../../Views/table-page.dart';
 
 class TableBox extends StatefulWidget {
-
   TableBox();
-
   @override
   State<TableBox> createState() => _TableBoxState();
 }
@@ -175,6 +172,27 @@ class _TableBoxState extends State<TableBox> {
                                       },
                                       icon: Icon(CupertinoIcons.trash , color:MainController.isLightMode.value == true ? whiteColor : color3,),
                                     ),
+                                    if(MainController.tableInfo['relations'].length!=0)
+                                      for(var item in MainController.tableInfo['relations'])
+                                      InkWell(
+                                        onTap: () async {
+                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i].id ,parentTable:MainController.tableInfo['table-name']).getRecords();
+
+                                          for(var item in items){
+                                            print('_TableBoxState.build>>${MainController.tableData.value[i]}');
+                                            print('_TableBoxState.build>>${item.values}');
+                                            MainController.tableData.add(item.values);
+                                          }
+
+                                          MainController.tableInfo=MainController.SubMenuList.where((element) => element['table-name']==item['table-name']);
+                                          print('_TableBoxState.build>>${MainController.tableInfo}');
+                                          // await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']));
+                                          Get.to(() => TablePage());
+                                          },
+                                        child: Container(
+                                          child: Text(item['title']),
+                                        ),
+                                      )
                                   ],
                                 ) ),
                           )

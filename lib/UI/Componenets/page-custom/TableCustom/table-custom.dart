@@ -47,7 +47,7 @@ class _TableCustomBoxState extends State<TableCustomBox> {
     }
 
     return Obx(() {
-      List<dynamic> columnList = ViewController.getColumnList('order-items');
+      List<dynamic> columnList = ViewController.getColumnList('order-itemss');
 
 
       return Container(
