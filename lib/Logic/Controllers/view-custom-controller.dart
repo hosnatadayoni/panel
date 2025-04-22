@@ -199,8 +199,7 @@ class ViewCustomController extends GetxController{
     }
     List<String> titleMultiSelectList=[];
     if(dataModel.data['${column['name']}'] != null){
-      titleMultiSelectList = await ViewController.getTitleMultiSelectedItem('${tableName}',
-          dataModel.data['${column['name']}'] , column);
+      titleMultiSelectList = await ViewController.getTitleMultiSelectedItem('${tableName}', dataModel.data['${column['name']}'] , column);
     }
     return titleMultiSelectList.join(',');
   }

@@ -61,7 +61,6 @@
     "countShowRow": 10,
     "relations": [],
     "columns": [
-
       {
         "name": "عنوان",
         "title": "عنوان",
@@ -88,6 +87,35 @@
             "message": "وارد کردن این فیلد الزامی است"
           }
         ]
+      }
+    ]
+  },
+  {
+    "title": "دسته بندی",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "category",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "relations": [],
+    "columns": [
+
+      {
+        "name": "عنوان",
+        "title": "عنوان",
+        "type": "string"
+      },
+      {
+        "name": "عنوان(کوتاه)",
+        "title": "عنوان(کوتاه)",
+        "type": "string"
+      },
+      {
+        "name": "محصولات",
+        "title": "product",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "products"
       }
     ]
   },

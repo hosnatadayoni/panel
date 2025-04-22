@@ -28,6 +28,7 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
   static Map<String, dynamic> request = {};
+  static Map<String, dynamic> requestMultiSelect =<String, dynamic>{};
   static Map<String, dynamic> request2 = {};
 
   static Future<Widget> generateStoreFormView(
@@ -710,19 +711,14 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-
     String tableName = '';
-    // for (var subMenu in MainController.SubMenuList) {
     if (column['sourceItems'] != 'custom') {
-      // if (column['sourceTable'] == subMenu['table-name']) {
       tableName = column['sourceTable'];
-      // }
     }
-    // }
+
     List<String> titleMultiSelectList=[];
     if(dataModel != null){
-    titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}',
-          dataModel , column);
+    titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}', dataModel , column);
     }
 
     return Txt(
@@ -1032,9 +1028,12 @@ class ViewController extends GetxController {
                                         }
                                         print('isSelectedItem.value clcick check box>>>${isSelectedItem.value}');
                                         print('selectedItemsList.value.length clcick check box>>>${selectedItemsList.value.length}');
-
+                                        print('selectedItemsList.value >>>${selectedItemsList.value}');
+                                        print('column name>>>${column}');
                                         hintTxt.value = hintMultiSelectBox(items, selectedItemsList.value);
-                                        ViewController.request[column['name']] = selectedItemsList.value;
+                                        requestMultiSelect[column['sourceTable']]=selectedItemsList.value;
+                                        print('ViewController.genarateFormMuiltiSelectBox>>>${requestMultiSelect}');
+                                              // ViewController.request[column['name']] = selectedItemsList.value;
                                       }
                                     },
                                   );
@@ -1222,12 +1221,6 @@ class ViewController extends GetxController {
 
       }
       else {
-        // Map<String, dynamic> selectedItem = column['items'].firstWhere(
-        //         (element) => element['value'] == selectedId[i],
-        //     orElse: () => {
-        //       'error': '${AppController.of(Get.context!)!.value(
-        //           'The corresponding item has been deleted')}'
-        //     });
         Map<String, dynamic> selectedItem = column['items'].firstWhere(
                 (element) => element['value'] == selectedId[i],
             orElse: () => {
@@ -1235,12 +1228,7 @@ class ViewController extends GetxController {
             });
         if (selectedItem['title'] != null) {
           multiSelectedTitleList.add(selectedItem['title']);
-          // selectedTitleList = selectedItem['title'];
         }
-        // else {
-        //   multiSelectedTitleList.add(selectedItem['error']);
-        //   // selectedTitleList = selectedItem['error'];
-        // }
       }
     }
     return multiSelectedTitleList;

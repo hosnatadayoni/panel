@@ -999,7 +999,7 @@ class MainController extends GetxController {
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         print('multiSelect>>${column['sourceTable']}');
-        String tableNameNew = '${tableName}_${column['sourceTable']}';
+        String tableNameNew = '${tableName}_${column['title']}_${column['sourceTable']}';
         if (!tableNames().contains('${tableNameNew}')) {
           var table = {
             'title': '${tableNameNew}',
@@ -1008,12 +1008,12 @@ class MainController extends GetxController {
             'columns': [
               {
                 "title": '${getDataTable['table-name']}_id',
-                "type": "number",
+                "type": "string",
                 "name": '${getDataTable['table-name']}_id',
               },
               {
                 "title": '${column['sourceTable']}_id',
-                "type": "number",
+                "type": "string",
                 "name": '${column['sourceTable']}_id',
               },
             ],
@@ -1023,13 +1023,26 @@ class MainController extends GetxController {
           };
           SubMenuList.add(table);
         } else {
-          showSnackbar(snackTypes.error,
-              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+          showSnackbar(snackTypes.error,"امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
         }
       }
     }
     print('sub menu list>>>${SubMenuList}');
     print('sub menu length2>>>${SubMenuList.length}');
+  }
+
+  static multiSelectStore(String tableName,var id){
+    var getDataTable = ViewCustomController.getDataTable(tableName);
+    print('getDataTable >#${getDataTable}');
+    for(var item in getDataTable['columns']){
+      if(item['type']=='multiSelect'){
+
+        print('MainController.multiSelectStore>>>${ViewController.requestMultiSelect}>>>>${item['sourceTable']}');
+        for(var data in ViewController.requestMultiSelect[item['sourceTable']]){
+          DB(tableName+"_"+item['title']+"_"+item['sourceTable']).storeRecord({'${tableName}_id':id,'${item['sourceTable']}_id':data});
+        }
+      }
+    }
   }
 
   static addParentForRelations(String tableName) {
@@ -1052,22 +1065,23 @@ class MainController extends GetxController {
           'type': 'string',
           'is-show-table': false,
         });
-
         print('items>>${items['columns']}');
       }
     }
   }
 
-  static Future<void> loadData({var tableData}) async {
+  static Future<void> loadData({var tableData,var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
-      tableInfo = SubMenuList[MainController.selectedSubItem.value];
+
       // box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       if (tableData == null) {
+        tableInfo = SubMenuList[MainController.selectedSubItem.value];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
+        tableInfo = tableData;
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
-        MainController.tableData.value = await DB('${tableData['table-name']}').getRecords();
+        MainController.tableData.value = tableDataItems;
       }
 
       for(var i in box.values.toList()){
@@ -1097,7 +1111,8 @@ class MainController extends GetxController {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
         }
       }
-    } else {
+    }
+    else {
       print('tableData 12>>>${tableData}');
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
@@ -1209,9 +1224,7 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]
-            ['view'] ==
-        'custom') {
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
       await Get.to(() => TablePage());
