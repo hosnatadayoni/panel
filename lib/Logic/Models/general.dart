@@ -10,7 +10,7 @@ class General{
     }else if(type=='number'){
       return double.parse(value.toString());
     }else if(type=='checkbox'){
-      if(value=='true' || value==true){
+      if(value=='true'|| value==true){
         return true;
       }else{
         return false;

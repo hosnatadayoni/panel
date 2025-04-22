@@ -41,7 +41,7 @@ class _TableBoxState extends State<TableBox> {
     });
     var size = MediaQuery.of(context).size;
     for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++){
-      print('k90000>>>${MainController.tableData.value[i].data}');
+      print('k90000>>>${MainController.tableData.value[i]}');
     }
     return Obx((){
       return Container(
@@ -101,8 +101,9 @@ class _TableBoxState extends State<TableBox> {
                                       MainController.isClickedItem.value = false;
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
-                                      ViewController.request = {...MainController.tableData.value[i].data};
+                                      ViewController.request = {...MainController.tableData.value[i]};
                                       HelperController.editPageFunction(MainController.tableData.value[i]);
+
                                       // Get.to(() =>
                                       //     EditPage(data: MainController.tableData.value[i], index: i,));
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
@@ -147,7 +148,8 @@ class _TableBoxState extends State<TableBox> {
                                                             InkWell(
                                                               onTap: ()async{
                                                                 setState(()  {
-                                                                  DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i].id}').deleteRecord();
+                                                                  DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i]['id']}').deleteRecord();
+
                                                                 });
                                                                 Navigator.pop(context);
                                                               },

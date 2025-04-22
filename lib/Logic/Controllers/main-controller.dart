@@ -53,6 +53,15 @@ class MainController extends GetxController {
   ];
 
   //
+
+  static String formatNumber(String number) {
+    try {
+      final num value = num.tryParse(number) ?? 0;
+      return NumberFormat.decimalPattern().format(value);
+    } catch (e) {
+      return number;
+    }
+  }
   // static Rx<int> selectedItem = (-1).obs;
   static Rx<int> selectedItem = 0.obs;
   static Rx<int> selectedSubItem = (-1).obs;
@@ -1074,7 +1083,9 @@ class MainController extends GetxController {
       for(var i in box.values.toList()){
         print('MainController.loadData>>>${i.data}');
       }
-      MainController.tableData.value = box.values.toList();
+      // MainController.tableData.value = box.values.toList();
+      MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+      print('MainController.tableData.value24>>>${MainController.tableData.value}');
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
