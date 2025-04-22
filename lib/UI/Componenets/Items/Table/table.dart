@@ -5,22 +5,16 @@ import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
-import 'package:finance/UI/Views/edit.dart';
-import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
-import '../../../../Logic/Controllers/view-custom-controller.dart';
 import '../../../../Logic/Models/db.dart';
 import '../../../Views/table-page.dart';
 
 class TableBox extends StatefulWidget {
-
   TableBox();
-
   @override
   State<TableBox> createState() => _TableBoxState();
 }

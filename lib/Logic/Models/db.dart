@@ -18,6 +18,8 @@ class DB {
   String? parentTable;
   String? parentId;
   Map<int, Where> list = <int, Where>{};
+  int?takeCount;
+  int? skipCount;
   Map<String, dynamic>parentItem = <String, dynamic>{};
   int counter = 0;
   List<Where> w = [];
@@ -57,11 +59,19 @@ class DB {
     return this;
   }
 
+  take(int count){
+    this.takeCount=count;
+    return this;
+  }
+  skip(int count){
+    this.skipCount=count;
+    return this;
+  }
   getRecords() async {
     List<dynamic> dataItems = [];
     Box box;
-    int index = MainController.SubMenuList.indexWhere(
-            (element) => element['table-name'] == '${this.tableName}');
+    int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
+
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
@@ -126,6 +136,12 @@ class DB {
             }
           }
           data = dataItems;
+      if(takeCount!=null){
+        data=data.take(this.takeCount!).toList();
+      }
+      if(skipCount!=null){
+        data=data.skip(this.takeCount!).toList();
+      }
           print('data length sec>>>${data}');
           return data;
         }
