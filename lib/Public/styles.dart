@@ -59,6 +59,7 @@ const Color color20 = Color(0xff464255);
 const Color color21 = Color(0xff00A389);
 const Color color22 = Color(0xfff1e6b9);
 const Color color23 = Color(0xffef9a91);
+const Color color24 = Color(0xffbbbbbb);
 const Color lightPurple = Color(0xffeae0ef);
 const Color purpleColor = Color(0xffAB54DB);
 const Color lightBlueColor = Color(0xff00AAFF);

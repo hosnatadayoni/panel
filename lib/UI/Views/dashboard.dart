@@ -20,6 +20,8 @@ import 'package:finance/UI/Componenets/accordion.dart';
 import 'package:finance/UI/Componenets/alert.dart';
 import 'package:finance/UI/Componenets/badge.dart';
 import 'package:finance/UI/Componenets/breadCrumb.dart';
+import 'package:finance/UI/Componenets/card.dart';
+import 'package:finance/UI/Componenets/carousel-slider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -305,7 +307,7 @@ class DashboardPage extends StatelessWidget {
                       //btn
                       Btn(btnType.custom,color: Colors.blue , text: 'primary', hoverColor: Colors.blueAccent, isBlock: true),
                       SizedBox(height: 30),
-                      Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, hoverPrimaryTypeColor: Colors.black,isBlock: false),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, ),
                       // LayoutBuilder(
                       //   builder: (context, constraints) {
                       //     final bool isVertical = constraints.maxWidth < 768;
@@ -327,11 +329,67 @@ class DashboardPage extends StatelessWidget {
                       //   },
                       // )
                       SizedBox(height: 30),
-                      Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, hoverPrimaryTypeColor: Colors.black,isToggle: true),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary3', hoverColor: Colors.greenAccent,isToggle: true),
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary4', hoverColor: Colors.greenAccent,isToggle: true , isLink: true),
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'primary5', hoverColor: Colors.greenAccent,size: ButtonSize.small,),
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'd-md-block', hoverColor: Colors.greenAccent,responsive: true,),
+                      SizedBox(height: 30),
+                      Btn(btnType.primary,color: Colors.green , text: 'col-6 mx-auto', hoverColor: Colors.greenAccent, responsive: true,gridColumns: 6, centerHorizontal: true, ),
 
 
+                      SizedBox(height: 30),
+                      //badge
+                      CustomBadge(
+                        child:  Icon(Icons.shopping_cart, size: 30),
+                        value: '3',
+                        color: Colors.blue,
+                        size: 10,
+                        colorText: Colors.black,
+                        right: -2,
+                        top: -20,
+                      ),
+                      SizedBox(height: 30),
+                      //card
+                      // CustomCard(
+                      //   elevation: 4,
+                      //   borderRadius: 12,
+                      //   borderColor: Color.fromRGBO(0, 0, 0, 0.175),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Icon(Icons.star, size: 40),
+                      //       SizedBox(height: 10),
+                      //       Text('کارت سفارشی', style: TextStyle(fontWeight: FontWeight.bold)),
+                      //     ],
+                      //   ),
+                      // )
+                      //carousel slider
 
-
+                      //carousel slider
+                      MyCarousel(imageUrls: [
+                          'https://images.unsplash.com/photo-1506744038136-46273834b3fb', // تصویر کوهستان
+                          'https://images.unsplash.com/photo-1472214103451-9374bd1c798e', // تصویر آبشار
+                          'https://images.unsplash.com/photo-1433086966358-54859d0ed716'  // تصویر جنگل
+                          ]),
+                      SizedBox(height: 30),
+                      MyCarousel(imageUrls: [
+                        'https://images.unsplash.com/photo-1506744038136-46273834b3fb', // تصویر کوهستان
+                        'https://images.unsplash.com/photo-1472214103451-9374bd1c798e', // تصویر آبشار
+                        'https://images.unsplash.com/photo-1433086966358-54859d0ed716'  // تصویر جنگل
+                      ],showIndicators: true),
+                      SizedBox(height: 30),
+                      MyCarousel(imageUrls: [
+                        'https://images.unsplash.com/photo-1506744038136-46273834b3fb', // تصویر کوهستان
+                        'https://images.unsplash.com/photo-1472214103451-9374bd1c798e', // تصویر آبشار
+                        'https://images.unsplash.com/photo-1433086966358-54859d0ed716'  // تصویر جنگل
+                      ],showIndicators: true , isCaption: true , captions: [
+                        Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
+                        Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
+                        Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
+                      ],),
 
 
                     ],
