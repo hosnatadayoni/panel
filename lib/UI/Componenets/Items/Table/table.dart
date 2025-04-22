@@ -180,16 +180,18 @@ class _TableBoxState extends State<TableBox> {
                                       InkWell(
                                         onTap: () async {
                                           var orders=await DB('category_product_products').getRecords();
-                                          print('orders take>>>${orders}');
-                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i].id ,parentTable:MainController.tableInfo['table-name']).getRecords();
+                                          print('orders take>>>${MainController.tableData.value[i]['id'] }');
+                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
                                           print('items take>>>${items}');
-                                          print('getDataTable take>>>${ViewCustomController.getDataTable('category_products')}');
-
-                                            for(var item in items){
-                                            print('_TableBoxState.build>>${MainController.tableData.value[i]}');
-                                            print('_TableBoxState.build>>${item.values}');
-                                            // MainController.tableData.add(item.values);
-                                          }
+                                          print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
+                                          await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
+                                          MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
+                                          await MainController.goToTablePage();
+                                          //   for(var item in items){
+                                          //   print('_TableBoxState.build>>${MainController.tableData.value[i]}');
+                                          //   print('_TableBoxState.build>>${item.values}');
+                                          //   // MainController.tableData.add(item.values);
+                                          // }
 
                                           // MainController.tableInfo=MainController.SubMenuList.where((element) => element['table-name']==item['table-name']);
                                           // print('_TableBoxState.build>>${MainController.tableInfo}');

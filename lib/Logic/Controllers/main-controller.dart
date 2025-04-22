@@ -1070,21 +1070,25 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> loadData({var tableData}) async {
+  static Future<void> loadData({var tableData,var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
-      tableInfo = SubMenuList[MainController.selectedSubItem.value];
+
       // box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       if (tableData == null) {
+        tableInfo = SubMenuList[MainController.selectedSubItem.value];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
+        tableInfo = tableData;
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
+        MainController.tableData.value = tableDataItems;
       }
 
       for(var i in box.values.toList()){
         print('MainController.loadData>>>${i.data}');
       }
       // MainController.tableData.value = box.values.toList();
-      MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+
       print('MainController.tableData.value24>>>${MainController.tableData.value}');
     } else {
       if (SubMenuList.length > 0) {
@@ -1107,7 +1111,8 @@ class MainController extends GetxController {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
         }
       }
-    } else {
+    }
+    else {
       print('tableData 12>>>${tableData}');
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
@@ -1219,9 +1224,7 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]
-            ['view'] ==
-        'custom') {
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
       await Get.to(() => TablePage());

@@ -73,12 +73,14 @@ class DB {
     this.randomCount=count;
     return this;
   }
+
   List getRandomItems(List list, int count) {
     if (count <= 0 || list.isEmpty) return [];
     if (count >= list.length) return List.from(list)..shuffle();
     final shuffled = List.from(list)..shuffle();
     return shuffled.take(count).toList();
   }
+
   getRecords() async {
     List<dynamic> dataItems = [];
     Box box;
@@ -88,15 +90,12 @@ class DB {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       List<dynamic> data = getTypeOfField(box.values.toList());
-      print('data length first>>>${data}');
-      print('this.list.length${this.list.length}');
       if (this.parentItem.length != 0) {
         data = data
             .where((element) =>
                 element['parent_id'] == this.parentItem['parent_id'])
             .toList();
       }
-      print('DB.getRecords##>>${data}');
       if (data.length != 0)
         for (var d in data) {
           if (this.list.length != 0) {

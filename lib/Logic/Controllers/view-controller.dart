@@ -710,19 +710,14 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-
     String tableName = '';
-    // for (var subMenu in MainController.SubMenuList) {
     if (column['sourceItems'] != 'custom') {
-      // if (column['sourceTable'] == subMenu['table-name']) {
       tableName = column['sourceTable'];
-      // }
     }
-    // }
+
     List<String> titleMultiSelectList=[];
     if(dataModel != null){
-    titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}',
-          dataModel , column);
+    titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}', dataModel , column);
     }
 
     return Txt(
@@ -1225,12 +1220,6 @@ class ViewController extends GetxController {
 
       }
       else {
-        // Map<String, dynamic> selectedItem = column['items'].firstWhere(
-        //         (element) => element['value'] == selectedId[i],
-        //     orElse: () => {
-        //       'error': '${AppController.of(Get.context!)!.value(
-        //           'The corresponding item has been deleted')}'
-        //     });
         Map<String, dynamic> selectedItem = column['items'].firstWhere(
                 (element) => element['value'] == selectedId[i],
             orElse: () => {
@@ -1238,12 +1227,7 @@ class ViewController extends GetxController {
             });
         if (selectedItem['title'] != null) {
           multiSelectedTitleList.add(selectedItem['title']);
-          // selectedTitleList = selectedItem['title'];
         }
-        // else {
-        //   multiSelectedTitleList.add(selectedItem['error']);
-        //   // selectedTitleList = selectedItem['error'];
-        // }
       }
     }
     return multiSelectedTitleList;
