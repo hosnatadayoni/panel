@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import '../../../../Logic/Controllers/view-custom-controller.dart';
 import '../../../../Logic/Models/db.dart';
 import '../../../Views/table-page.dart';
 
@@ -176,18 +177,21 @@ class _TableBoxState extends State<TableBox> {
                                       for(var item in MainController.tableInfo['relations'])
                                       InkWell(
                                         onTap: () async {
+                                          var orders=await DB('category_product_products').getRecords();
+                                          print('orders take>>>${orders}');
                                           var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i].id ,parentTable:MainController.tableInfo['table-name']).getRecords();
+                                          print('items take>>>${items}');
+                                          print('getDataTable take>>>${ViewCustomController.getDataTable('category_products')}');
 
-                                          for(var item in items){
+                                            for(var item in items){
                                             print('_TableBoxState.build>>${MainController.tableData.value[i]}');
                                             print('_TableBoxState.build>>${item.values}');
-                                            MainController.tableData.add(item.values);
+                                            // MainController.tableData.add(item.values);
                                           }
 
-                                          MainController.tableInfo=MainController.SubMenuList.where((element) => element['table-name']==item['table-name']);
-                                          print('_TableBoxState.build>>${MainController.tableInfo}');
-                                          // await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']));
-                                          Get.to(() => TablePage());
+                                          // MainController.tableInfo=MainController.SubMenuList.where((element) => element['table-name']==item['table-name']);
+                                          // print('_TableBoxState.build>>${MainController.tableInfo}');
+                                          // Get.to(() => TablePage());
                                           },
                                         child: Container(
                                           child: Text(item['title']),

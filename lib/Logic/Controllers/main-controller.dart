@@ -6,6 +6,7 @@ import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -989,7 +990,7 @@ class MainController extends GetxController {
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         print('multiSelect>>${column['sourceTable']}');
-        String tableNameNew = '${tableName}_${column['sourceTable']}';
+        String tableNameNew = '${tableName}_${column['title']}_${column['sourceTable']}';
         if (!tableNames().contains('${tableNameNew}')) {
           var table = {
             'title': '${tableNameNew}',
@@ -998,12 +999,12 @@ class MainController extends GetxController {
             'columns': [
               {
                 "title": '${getDataTable['table-name']}_id',
-                "type": "number",
+                "type": "string",
                 "name": '${getDataTable['table-name']}_id',
               },
               {
                 "title": '${column['sourceTable']}_id',
-                "type": "number",
+                "type": "string",
                 "name": '${column['sourceTable']}_id',
               },
             ],
@@ -1013,13 +1014,26 @@ class MainController extends GetxController {
           };
           SubMenuList.add(table);
         } else {
-          showSnackbar(snackTypes.error,
-              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+          showSnackbar(snackTypes.error,"امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
         }
       }
     }
     print('sub menu list>>>${SubMenuList}');
     print('sub menu length2>>>${SubMenuList.length}');
+  }
+
+  static multiSelectStore(String tableName,var id){
+    var getDataTable = ViewCustomController.getDataTable(tableName);
+    print('getDataTable >#${getDataTable}');
+    for(var item in getDataTable['columns']){
+      if(item['type']=='multiSelect'){
+
+        print('MainController.multiSelectStore>>>${ViewController.requestMultiSelect}>>>>${item['sourceTable']}');
+        for(var data in ViewController.requestMultiSelect[item['sourceTable']]){
+          DB(tableName+"_"+item['title']+"_"+item['sourceTable']).storeRecord({'${tableName}_id':id,'${item['sourceTable']}_id':data});
+        }
+      }
+    }
   }
 
   static addParentForRelations(String tableName) {
@@ -1042,7 +1056,6 @@ class MainController extends GetxController {
           'type': 'string',
           'is-show-table': false,
         });
-
         print('items>>${items['columns']}');
       }
     }

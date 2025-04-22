@@ -28,6 +28,7 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
   static Map<String, dynamic> request = {};
+  static Map<String, dynamic> requestMultiSelect =<String, dynamic>{};
   static Map<String, dynamic> request2 = {};
 
   static Future<Widget> generateStoreFormView(
@@ -1017,9 +1018,12 @@ class ViewController extends GetxController {
                                         }
                                         print('isSelectedItem.value clcick check box>>>${isSelectedItem.value}');
                                         print('selectedItemsList.value.length clcick check box>>>${selectedItemsList.value.length}');
-
+                                        print('selectedItemsList.value >>>${selectedItemsList.value}');
+                                        print('column name>>>${column}');
                                         hintTxt.value = hintMultiSelectBox(items, selectedItemsList.value);
-                                        ViewController.request[column['name']] = selectedItemsList.value;
+                                        requestMultiSelect[column['sourceTable']]=selectedItemsList.value;
+                                        print('ViewController.genarateFormMuiltiSelectBox>>>${requestMultiSelect}');
+                                              // ViewController.request[column['name']] = selectedItemsList.value;
                                       }
                                     },
                                   );
