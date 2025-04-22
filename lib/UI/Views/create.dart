@@ -113,6 +113,7 @@ class _CreatePageState extends State<CreatePage> {
                                             child: InkWell(
                                               onTap: () async{
                                                 await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                                print('MainController.tableData.value add>>>${MainController.tableData.value}');
                                                 if(ViewController.isClickedBtn.value == false){
                                                   MainController.goToTablePage();
                                                 }

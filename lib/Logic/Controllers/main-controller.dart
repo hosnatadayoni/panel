@@ -6,6 +6,7 @@ import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -1070,7 +1071,9 @@ class MainController extends GetxController {
       for(var i in box.values.toList()){
         print('MainController.loadData>>>${i.data}');
       }
-      MainController.tableData.value = box.values.toList();
+      // MainController.tableData.value = box.values.toList();
+      MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+      print('MainController.tableData.value24>>>${MainController.tableData.value}');
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];

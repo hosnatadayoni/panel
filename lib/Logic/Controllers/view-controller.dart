@@ -168,7 +168,9 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Column(children: children);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+        children: children);
   }
 
   static Future<Widget> generateEditFormView(
@@ -526,11 +528,16 @@ class ViewController extends GetxController {
   static Future<Widget> generateDataColumn(
       int indexColumn, int indexRow , {var table}) async {
     var size = MediaQuery.of(Get.context!).size;
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    String name='';
+    name = MainController.tableInfo['columns'][indexColumn]['name'];
+    print('MainController.tableData.value[indexRow]>>>${MainController.tableData.value[indexRow]}');
+    // print('MainController.tableData.value[indexRow]2>>>${MainController.tableData.value[indexRow]['${name}']} ${name} ${MainController.tableData.value[indexRow].runtimeType}');
+    // DataModel dataModel = MainController.tableData.value[indexRow];
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
     // print('dataModel.id 2>>>${dataModel.id}');
+    print('dataModel>>>${dataModel} ${dataModel.runtimeType}');
 
     String type='';
-    String name='';
     if(table == null){
        type = MainController.tableInfo['columns'][indexColumn]['type'];
        name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -542,11 +549,11 @@ class ViewController extends GetxController {
 
     var child;
     if (type == 'checkbox') {
-      print('row generate data cell:${dataModel.id}');
+      // print('row generate data cell:${dataModel.id}');
       print('type:${type}');
       print('name:${name}');
       print('index:${indexRow}');
-      print('data:${dataModel.data['${name}']}');
+      // print('data:${dataModel.data['${name}']}');
       print('-------------------');
       child = generateCheckBox(indexColumn, indexRow , tableData: table);
     } else if (type == 'color') {
@@ -602,7 +609,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateCheckBox(int indexColumn, int indexRow , {var tableData}) {
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
     String name='';
     if(tableData == null){
        name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -610,15 +617,16 @@ class ViewController extends GetxController {
     else{
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
-    if (dataModel.data['${name}'] == null) {
-      dataModel.data['${name}'] = false;
+    if (dataModel == null) {
+      dataModel = false;
     }
     return CheckBox(
-      defaultValue: dataModel.data['${name}'],
+      defaultValue: dataModel,
       checkBoxTitle: '',
       onChange: (text) async {
-        dataModel.data['${name}'] = text;
+        dataModel = text;
         final data = DataModel(
           id: dataModel.id,
           data: dataModel.data,
@@ -632,7 +640,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateColor(int indexColumn, int indexRow , {var tableData}) {
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
     String name;
     if(tableData == null){
        name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -640,20 +648,21 @@ class ViewController extends GetxController {
     else{
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     return Center(
-      child: dataModel.data['${name}'] != null
+      child: dataModel != null
           ? Container(
               width: 50,
               height: 50,
-              color: Color(int.parse('${dataModel.data['${name}']}')),
+              color: Color(int.parse('${dataModel}')),
             )
           : Container(),
     );
   }
 
   static Future<Widget> generateSelectBox(int indexColumn, int indexRow , {var tableData}) async {
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
     var column;
     String name;
     if(tableData == null){
@@ -664,6 +673,7 @@ class ViewController extends GetxController {
       column = tableData['columns'][indexColumn];
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     String tableName = '';
       if (column['sourceItems'] != 'custom') {
@@ -672,9 +682,9 @@ class ViewController extends GetxController {
       }
 
     String titleSelect='';
-    if(dataModel.data['${name}'] != null){
+    if(dataModel != null){
       titleSelect = await getTitleSelectedItem('${tableName}',
-          dataModel.data['${name}'] , column);
+          dataModel , column);
     }
 
     return Txt(
@@ -687,7 +697,7 @@ class ViewController extends GetxController {
   }
 
   static Future<Widget> generateMultiSelectBox(int indexColumn, int indexRow ,{var tableData}) async {
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
     var column;
     String name;
     if(tableData == null){
@@ -698,6 +708,7 @@ class ViewController extends GetxController {
       column = tableData['columns'][indexColumn];
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     String tableName = '';
     // for (var subMenu in MainController.SubMenuList) {
@@ -708,9 +719,9 @@ class ViewController extends GetxController {
     }
     // }
     List<String> titleMultiSelectList=[];
-    if(dataModel.data['${name}'] != null){
+    if(dataModel != null){
     titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}',
-          dataModel.data['${name}'] , column);
+          dataModel , column);
     }
 
     return Txt(
@@ -723,7 +734,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateCellFileBox(int indexColumn, int indexRow , {var tableData}){
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
     String name;
     if(tableData == null){
        name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -731,11 +742,12 @@ class ViewController extends GetxController {
     else{
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     return Obx(() {
       return Center(
         child: Txt(
-          '${dataModel.data['${name}'] != null ? dataModel.data['${name}'].length != 0 ? dataModel.data['${name}'] : '':''}',
+          '${dataModel != null ? dataModel.length != 0 ? dataModel : '':''}',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -747,7 +759,8 @@ class ViewController extends GetxController {
   }
 
   static Widget generateData(int indexColumn, int indexRow , {var tableData}) {
-    DataModel dataModel = MainController.tableData.value[indexRow];
+    // DataModel dataModel = MainController.tableData.value[indexRow];
+
 
     String name;
     if(tableData == null){
@@ -756,11 +769,12 @@ class ViewController extends GetxController {
     else{
       name = tableData['columns'][indexColumn]['name'];
     }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     return Obx(() {
       return Center(
         child: Txt(
-          '${dataModel.data['${name}'] != null ?  dataModel.data['${name}'] : ''}',
+          '${dataModel != null ?  dataModel : ''}',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: MainController.isLightMode.value == true ? whiteColor : color2,
