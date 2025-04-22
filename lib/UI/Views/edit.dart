@@ -14,7 +14,7 @@ import '../../Logic/Models/db.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.data});
-  DataModel? data;
+  var data;
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -26,7 +26,8 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
-    _future = ViewController.generateEditFormView(widget.data!.data);
+    // _future = ViewController.generateEditFormView(widget.data!.data);
+    _future = ViewController.generateEditFormView(widget.data!);
   }
   @override
   Widget build(BuildContext context) {
@@ -96,7 +97,7 @@ class _EditPageState extends State<EditPage> {
                               },
                               child: InkWell(
                                 onTap: (){
-                                  print('widget.data!.data>>>${widget.data!.data}');
+                                  print('widget.data!.data>>>${widget.data!}');
                                   MainController.isClickedItem.value = true;
                                   MainController.goToTablePage();
                                 },
@@ -114,7 +115,7 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
+                                DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10),

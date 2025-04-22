@@ -1,5 +1,6 @@
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/img.dart';
+import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 // class DetailSlider extends StatefulWidget {
@@ -220,38 +221,20 @@ class _MyCarouselState extends State<MyCarousel> {
                         children: [
                           // Header
                           if (widget.captions![_currentIndex].header != null)
-                            Text(
+                            Txt(
                             widget.captions![_currentIndex].header!,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                              Shadow(
-                              blurRadius: 10.0,
-                              color: Colors.black,
-                              offset: Offset(2.0, 2.0),
-                              ),
-                              ],
-                            ),
+                            color: whiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                           if (widget.captions![_currentIndex].header != null) SizedBox(height: 15),
                           // Body
                           if (widget.captions![_currentIndex].body != null)
-                             Text(
+                             Txt(
                             widget.captions![_currentIndex].body!,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 10.0,
-                                  color: Colors.black,
-                                  offset: Offset(2.0, 2.0),
-                                ),
-                                  ],
-                            ),
-                                ),
+                            color: whiteColor,
+                            fontSize: 14,
+                           ),
                         ],
                       ),
                     ),

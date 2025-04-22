@@ -187,7 +187,6 @@ class DB {
                 newData)['data'];
             await box.add(customData);
             dataController.allData.add(customData);
-
             var afterData = await HelperController.afterStore(
                 this.tableName!, newRequest, customData);
             if (afterData['status'] == false) {
@@ -244,12 +243,13 @@ class DB {
             } else {
               var customUpdate = await HelperController.beforeUpdate(
                   record)['data'];
+              print('customUpdate>>>${data['id']}');
 
               var allDataIndex = dataController.allData.value.indexWhere((
                   element) => element.id == data['id']);
 
               var tableDataIndex = MainController.tableData.value.indexWhere((
-                  element) => element.id == data['id']);
+                      element) => element['id'] == data['id']);
 
               print('allDataIndex>>>${allDataIndex}');
               dataController.allData.value[allDataIndex] = customUpdate;
@@ -261,11 +261,9 @@ class DB {
               if (after['status'] == false) {
                 showSnackbar(snackTypes.error, after['message']);
               }
-
               ViewController.isClickedEditBtn.value = false;
-              // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
-
-              // Get.to(() => TablePage());
+              MainController.loadData();
+              MainController.goToTablePage();
             }
           }
           else {

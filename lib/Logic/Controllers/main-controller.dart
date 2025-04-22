@@ -1064,15 +1064,17 @@ class MainController extends GetxController {
       // box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       if (tableData == null) {
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
+        MainController.tableData.value = await DB('${tableData['table-name']}').getRecords();
       }
 
       for(var i in box.values.toList()){
         print('MainController.loadData>>>${i.data}');
       }
       // MainController.tableData.value = box.values.toList();
-      MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+
       print('MainController.tableData.value24>>>${MainController.tableData.value}');
     } else {
       if (SubMenuList.length > 0) {

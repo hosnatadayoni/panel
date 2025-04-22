@@ -627,9 +627,10 @@ class ViewController extends GetxController {
       checkBoxTitle: '',
       onChange: (text) async {
         dataModel = text;
+        MainController.tableData.value[indexRow]['${name}'] = dataModel;
         final data = DataModel(
-          id: dataModel.id,
-          data: dataModel.data,
+          id: MainController.tableData.value[indexRow]['id'],
+          data: MainController.tableData.value[indexRow],
         );
         dataController.allData.value[indexRow] = data;
         await box.putAt(indexRow, data);
