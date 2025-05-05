@@ -50,6 +50,27 @@ class DB {
     return newData;
   }
 
+  getTypeOfFieldJson(Map<String, dynamic> d) {
+    var type;
+    Map<String, dynamic> newData = <String, dynamic>{};
+
+      print('data that is>>>${d}');
+
+      Map<String, dynamic> e = <String, dynamic>{};
+      for (var key in d.keys) {
+        type = MainController.getTypeOfField(this.tableName!, key);
+        print('d.data[key]>>${d[key]}>>>${type}');
+        if (type != null) {
+          e['id'] = d['id'];
+          e[key] = General.withFormat(type, d[key]);
+        }
+      }
+      newData=(e);
+      print('new>>>${newData}');
+
+    return newData;
+  }
+
   where(String? fieldName, String? oprator, var value) {
     counter++;
     Where l = Where(fieldName, oprator, value);
@@ -200,35 +221,24 @@ class DB {
     if (parentItem != {}) {
       newRequest.addAll(parentItem);
     }
-    print('DB.storeRecord>>${newRequest}');
+
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
-    print('new data>>${newData.data}');
     var beforValidate = HelperController.beforeStoreValidation(newData);
-    print('new data1>>${newData.data}');
     if (beforValidate['status'] == false) {
-      print('new data2>>${newData.data}');
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      print('new data2>>${newData.data}');
       if (await RecordController.validate(this.tableName!, newData, ViewCustomController.getDataTable(this.tableName!)) ==
           false) {
-        print('new data3>>${newData.data}');
-
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          print('new data4>>${newData.data}');
           DataModel customData = await HelperController.beforeStore(newData)['data'];
-          print('new data6>>>${customData.data}');
           await box.add(customData);
-          print('box after is >>>${box.values.toList()}');
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
-          print('DB.storeRecord2>>${(this.tableName!)}');
-          print('DB.storeRecord3>>${ViewCustomController.getDataTable(this.tableName!)}');
           // await MainController.multiSelectStore(this.tableName!, Id);
           await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           MainController.renderPagination();

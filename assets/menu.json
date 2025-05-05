@@ -363,7 +363,7 @@
       {
         "name": "طبقه",
         "title": "طبقه",
-        "type": "number int"
+        "type": "number"
       },
       {
         "name": "واحد",

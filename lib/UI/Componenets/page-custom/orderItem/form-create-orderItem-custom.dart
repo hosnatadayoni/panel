@@ -309,6 +309,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                             SizedBox(height: 10),
 
                                             column['sourceItems']!='custom'?
+
                                             SelectBox(
                                                 name: '${column['title']}',
                                                 column: column,

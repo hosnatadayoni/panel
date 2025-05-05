@@ -275,6 +275,7 @@ class ViewController extends GetxController {
         }
         else if (type == 'multiSelect') {
           print('dataModel multi is>>${dataModel}');
+          print('column multi is>>${column}');
           List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
           print('items id>>>#${items}');
           if(items.length != 0){
@@ -289,7 +290,6 @@ class ViewController extends GetxController {
             children.add(SizedBox(height: 20,));
             children.add(multiSelectBox);
           }
-
         }
         else if (type == 'color') {
           colorBox = generateFormColorBox(
@@ -802,11 +802,9 @@ class ViewController extends GetxController {
       var column , Rx<String> hintTxt , RxList<dynamic> selectedItemsList , Rx<bool> isSelectedItem) async {
     List<dynamic> items=await DB(column['sourceTable']).getRecords();
     RxList<String> selectedItemId = <String>[].obs;
-    print('items is ss>>${items}');
-
-    if(items.length!=0){
+    if(selectedItemsList.length!=0){
       // items.add({'id':'',});
-      for(var selectedItem in items){
+      for(var selectedItem in selectedItemsList){
         selectedItemId.add(selectedItem['id']);
       }
     }
@@ -1145,8 +1143,15 @@ class ViewController extends GetxController {
     if (type != 'custom') {
 
       if(dataModel!=null) {
-        for (var item in dataModel[column['name']])
-          dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+        print('ViewController.itemsList1>>>${dataModel}>>>${dataModel[column['name']]}');
+        if(dataModel[column['name']]!=null){
+          for (var item in dataModel[column['name']])
+            dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+        }else{
+
+          dropDownListItems.add((await DB(tableName).getRecords()).first);
+        }
+
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic>a = [];
           for (var field in column['items']) {
@@ -1157,7 +1162,7 @@ class ViewController extends GetxController {
             'value': dropDownListItems[i]['id']
           });
         }
-
+        print('ViewController.itemsList2');
       }
       else{
         print('data>>model>>null');
