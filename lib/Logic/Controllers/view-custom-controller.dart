@@ -23,7 +23,7 @@ class ViewCustomController extends GetxController{
     Map<String, dynamic> selectedItem={};
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
       items = await ViewController.itemsList(column);
-      initValue = await ViewController.getInitValue(column, items);
+      // initValue = await ViewController.getInitValue(column, items);
       if(items.length != 0){
         selectedItem = items.firstWhere(
                 (element) => element['value'] == ViewController.request[column['name']],
@@ -37,7 +37,7 @@ class ViewCustomController extends GetxController{
 
     return {
       'items': items,
-      'initValue': initValue,
+      'initValue': '',
       'hint' :selectedItem['title']
     };
   }
@@ -50,7 +50,7 @@ class ViewCustomController extends GetxController{
     print('data select>>>${data}');
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
       items = await ViewController.itemsList(column);
-      initValue = await ViewController.getInitValue(column, items);
+      // initValue = await ViewController.getInitValue(column, items);
       if(items.length != 0){
         if(data != null){
           selectedItem = items.firstWhere(
@@ -70,7 +70,7 @@ class ViewCustomController extends GetxController{
     }
     return {
       'items': items,
-      'initValue': initValue,
+      'initValue': '',
       'hint' :selectedItem['title']
     };
   }
@@ -104,7 +104,7 @@ class ViewCustomController extends GetxController{
     Map<String, dynamic> selectedItem={};
 
     String tableName= '';
-    List<String> multiSelectedTitleList = [];
+    List<dynamic> multiSelectedTitleList = [];
     Rx<bool> isSelectedItem = false.obs;
     Rx<String> hintTxt=''.obs;
     RxList<String> selectedItemsList = <String>[].obs;
@@ -152,13 +152,12 @@ class ViewCustomController extends GetxController{
     Map<String, dynamic> selectedItem={};
 
     String tableName= '';
-    List<String> multiSelectedTitleList = [];
+    List<dynamic> multiSelectedTitleList = [];
     Rx<bool> isSelectedItem = false.obs;
     Rx<String> hintTxt=''.obs;
     RxList<String> selectedItemsList = <String>[].obs;
 
     if(column['type'] == 'multiSelect'){
-
       items = await ViewController.itemsList(column);
       if (column['sourceItems'] != 'custom'){
         if(column['sourceTable'] != null){
@@ -171,7 +170,6 @@ class ViewCustomController extends GetxController{
       else{
         multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
       }
-
       if(multiSelectedTitleList.length != 0){
         hintTxt = RxString(multiSelectedTitleList.join(','));
         selectedItemsList.value = data[column['name']];
@@ -191,13 +189,12 @@ class ViewCustomController extends GetxController{
 
   }
 
-
   static Future<String> getTitleMultiSelctBoxFormCustom(var column , DataModel dataModel) async {
     String tableName = '';
     if (column['sourceItems'] != 'custom') {
       tableName = column['sourceTable'];
     }
-    List<String> titleMultiSelectList=[];
+    List<dynamic> titleMultiSelectList=[];
     if(dataModel.data['${column['name']}'] != null){
       titleMultiSelectList = await ViewController.getTitleMultiSelectedItem('${tableName}', dataModel.data['${column['name']}'] , column);
     }

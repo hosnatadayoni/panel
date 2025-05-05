@@ -94,7 +94,7 @@
     "title": "دسته بندی",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "category",
+    "table-name": "categoriess",
     "currentPage": 1,
     "countShowRow": 10,
     "relations": [],
@@ -112,10 +112,25 @@
       },
       {
         "name": "محصولات",
-        "title": "product",
+        "title": "محصولات",
         "type": "multiSelect",
         "sourceItems": "table",
-        "sourceTable": "products"
+        "sourceTable": "products",
+        "items":["عنوان","قیمت"],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "مشتری",
+        "title": "مشتری",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "customers",
+        "items":["شماره موبایل"]
       }
     ]
   },
@@ -139,7 +154,13 @@
         "type": "select",
         "sourceItems": "table",
         "sourceTable": "customers",
-        "items": []
+        "items":["شماره موبایل"],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
       },
       {
         "name": "کد ورودی",
@@ -166,7 +187,7 @@
         "title": "نوع",
         "type": "select",
         "sourceItems": "custom",
-        "sorceTable": null,
+        "sourceTable": null,
         "items": [
           {
             "title": "معمولی",
@@ -190,6 +211,61 @@
     "view": "custom"
   },
   {
+    "title": "سفارشات2",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "orders",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "relations": [
+      {
+        "title": "جزئیات سفارش",
+        "table-name": "order-itemss"
+      }
+    ],
+    "columns": [
+      {
+        "name": "مشتری",
+        "title": "مشتری",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "customers",
+        "items":["شماره موبایل"]
+      },
+      {
+        "name": "کد ورودی",
+        "title": "کد ورودی",
+        "type": "number"
+      },
+      {
+        "name": "تاریخ",
+        "title": "تاریخ",
+        "type": "date"
+      },
+      {
+        "name": "شماره نقشه",
+        "title": "شماره نقشه",
+        "type": "number"
+      },
+      {
+        "name": "(مشتری)شماره نقشه",
+        "title": "(مشتری)شماره نقشه",
+        "type": "number"
+      },
+
+      {
+        "name": "عکس",
+        "title": "عکس",
+        "type": "file",
+        "isPictureSelected": true
+      }
+    ],
+    "filters": [
+      {"column": "مشتری"},
+      {"column": "کد ورودی"}
+    ]
+  },
+  {
     "title": "جزئیات سفارش",
     "tooltip": "",
     "main-menu": true,
@@ -203,8 +279,8 @@
         "title": "نام کالا",
         "type": "select",
         "sourceItems": "table",
-        "sourceTable": "product",
-        "items": []
+        "sourceTable": "products",
+        "items":["عنوان","قیمت"]
       },
       {
         "name": "قیمت",
@@ -236,7 +312,7 @@
         "title": "الگو بری",
         "type": "select",
         "sourceItems": "custom",
-        "sorceTable": null,
+        "sourceTable": null,
         "items": [
           {
             "title": "0",
@@ -260,7 +336,7 @@
         "title": "سختی تولید",
         "type": "select",
         "sourceItems": "custom",
-        "sorceTable": null,
+        "sourceTable": null,
         "items": [
           {
             "title": "0",

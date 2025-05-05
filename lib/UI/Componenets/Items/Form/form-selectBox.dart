@@ -18,8 +18,6 @@ class SelectBox extends StatefulWidget {
    String? initalValue;
   var column;
   Rx<bool>? isSeleted = false.obs;
-
-
   SelectBox({
      this.name,
     this.items,
@@ -36,10 +34,7 @@ class SelectBox extends StatefulWidget {
 }
 
 class _SelectBoxState extends State<SelectBox> {
-  String? _errorText='';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-
   @override
   Widget build(BuildContext context) {
     var inputRequired;
@@ -48,16 +43,13 @@ class _SelectBoxState extends State<SelectBox> {
        inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
        errorMessage = inputRequired['message'];
     }
-    // String? initialValue = widget.initalValue;
-    // bool initialValueExists = widget.items!.any((item) => item.value == initialValue);
     return widget.items!.isNotEmpty? FormBuilder(
       child: Obx((){
         print('xsder>>>${widget.isSeleted!.value}');
+        print('xsder>>>${widget.items}');
         return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Txt('${widget.column['name']}' , fontSize: 16, fontWeight: FontWeight.w200, color: MainController.isLightMode.value == true ? whiteColor:primaryDark,),
-            // SizedBox(height: 10,),
             FormBuilderDropdown(
               name: widget.name!,
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
@@ -74,7 +66,6 @@ class _SelectBoxState extends State<SelectBox> {
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),
               initialValue: widget.initalValue,
-
               items: widget.items!,
               onChanged: (value) {
               setState(() {
@@ -97,65 +88,3 @@ class _SelectBoxState extends State<SelectBox> {
     ):Container();
   }
 }
-
-// class SelectBox extends StatefulWidget {
-//   String? name;
-//   List<DropdownMenuItem<String>> items;
-//   String? hintText;
-//   Rx<String>? selectedValue;
-//    Function(String?)? onChanged;
-//    String? initalValue;
-//   var column;
-//   SelectBox({
-//      this.name,
-//     required this.items,
-//      this.hintText,
-//      this.selectedValue,
-//     this.onChanged,
-//     this.initalValue,
-//     this.column
-//   });
-//   @override
-//   _SelectBoxState createState() => _SelectBoxState();
-// }
-//
-// class _SelectBoxState extends State<SelectBox> {
-//   // final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-//   String? selectedValue;
-//   var column;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return FormBuilder(
-//       key:MainController.fbKey,
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           FormBuilderDropdown<String>(
-//             name: 'dropdown',
-//             decoration: InputDecoration(labelText: 'یک گزینه انتخاب کنید'),
-//             items: ['گزینه 1', 'گزینه 2', 'گزینه 3']
-//                 .map((option) =>
-//                 DropdownMenuItem(
-//                   value: option,
-//                   child: Text(option),
-//                 ))
-//                 .toList(),
-//             onChanged: (value) {
-//               setState(() {
-//                 selectedValue = value; // ذخیره مقدار انتخاب شده
-//               });
-//             },
-//             validator: (value) {
-//               if (value == null) {
-//                 return 'لطفاً یک گزینه انتخاب کنید.';
-//               }
-//               return null;
-//             },
-//           ),
-//           SizedBox(height: 20),
-//         ],
-//       ),
-//     );
-//   }
-// }

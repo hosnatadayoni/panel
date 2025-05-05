@@ -15,9 +15,13 @@ import 'package:finance/boxes.dart';
 
 class RecordController extends GetxController {
   static Future<bool> validate(String tableName, DataModel newData,var dataTable) async {
+    print('new data7>>${newData.data}');
+
     bool isValidator;
     List<bool> isValidatorList = [];
     var columns = ViewController.getColumnList(tableName);
+    print('new data8>>${newData.data}');
+
     for (var j = 0; j < columns.length; j++) {
       isValidator = await ValidatorController.checkInputValidation(j, newData.data,tableData: dataTable);
       isValidatorList.add(isValidator);
@@ -37,7 +41,7 @@ class RecordController extends GetxController {
     DataModel existingData = MainController.tableData.value[recordIndex];
     existingData.data = excelJson;
     await box.putAt(recordIndex, existingData);
-    dataController.allData.value[recordIndex] = existingData;
+    // dataController.allData.value[recordIndex] = existingData;
   }
 
   static storeRecordByEcel(var excelJson) async {
@@ -48,7 +52,7 @@ class RecordController extends GetxController {
       data: excelJson,
     );
     await box.add(newData);
-    dataController.allData.value.add(newData);
+    // dataController.allData.value.add(newData);
     await MainController.loadData();
     MainController.renderPagination();
   }

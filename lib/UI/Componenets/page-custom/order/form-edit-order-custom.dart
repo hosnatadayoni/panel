@@ -78,7 +78,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     },
                     child: InkWell(
                       onTap: (){
-                        print('widget.data!.data>>>${widget.data!.data}');
+                        print('widget.data!.data>>>${widget.data}');
                         MainController.isClickedItem.value = true;
                         Get.to(() => TablePage());
                       },
@@ -96,26 +96,20 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      print('ViewController.request>>>${ViewController.request}>>>${widget.data!.id}');
-                      await DB('order').where('id', '==', '${widget.data!.id}').updateRecord(ViewController.request);
-                      var orderItems=await DB('order-itemss').where('سفارش', '==', '${widget.data!.id}').getRecords();
+                      await DB('order').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
+                      var orderItems=await DB('order-itemss').where('parent_id', '==', '${widget.data!['id']}').getRecords();
                       for(var orderItem in  orderItems){
-                        if(OrderItem.orderItemsList.containsKey([orderItem['id']]))
-                          DB('order-itemss').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
-                        else
+                        if(OrderItem.orderItemsList.containsKey(orderItem['id'])){
+                            DB('order-itemss').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
+                        }
+                        else{
                           DB('order-itemss').where('id', '==', '${orderItem['id']}').deleteRecord();
+                        }
                       }
                       if (OrderItem.orderItemsList2.values.length != 0) {
-                          for (var key in OrderItem.orderItemsList2.keys) {
-                            if( OrderItem.orderItemsList2[key]!.isNotEmpty)
-                            OrderItem.orderItemsList2[key] = {
-                              ...OrderItem.orderItemsList2[key]!,
-                              'سفارش': widget.data!.id
-                            };
-                          }
                           for (var list in OrderItem.orderItemsList2.values) {
                             if(list.isNotEmpty){
-                            await DB('order-itemss').storeRecord(list);
+                            await DB('order-itemss').parent(parentId:'${widget.data['id']}' ,parentTable: 'order').storeRecord(list);
                             }
                           }
                         }

@@ -23,27 +23,23 @@ class ValidatorController extends GetxController {
       if(column['type']=='multiSelect'){
         if(dataJson[name] != null){
           print('dataJson[name] multi select 123>>>${dataJson[name]}');
-          // if(dataJson[name].length == 1 && dataJson[name].contains('آیتم مربوطه یافت نشد')){
-          //   dataJson[name]=[];
+          // List<dynamic> items = await ViewController.itemsList(column);
+          // if(items.length != 0) {
+          //   if (dataJson[name] != null) {
+          //     for (var id in dataJson[name]) {
+          //       var selectedItem = items.firstWhere(
+          //             (element) => element['value'] == id,
+          //         orElse: () => null,
+          //       );
+          //       if(selectedItem == null){
+          //         if(dataJson[name].length == 1){
+          //           dataJson[name] = [];
+          //         }
+          //
+          //       }
+          //     }
+          //   }
           // }
-          List<dynamic> items = await ViewController.itemsList(
-              column);
-          if(items.length != 0) {
-            if (dataJson[name] != null) {
-              for (var id in dataJson[name]) {
-                var selectedItem = items.firstWhere(
-                      (element) => element['value'] == id,
-                  orElse: () => null,
-                );
-                if(selectedItem == null){
-                  if(dataJson[name].length == 1){
-                    dataJson[name] = [];
-                  }
-
-                }
-              }
-            }
-          }
           if(dataJson[name].length == 0){
             return checkInputRequiredValidator(indexColumn , dataJson ,tableData: tableData);
           }
@@ -53,15 +49,18 @@ class ValidatorController extends GetxController {
         // if(dataJson[name] == 'آیتم مربوطه یافت نشد'){
         //   dataJson[name] = '';
         // }
-        List<dynamic> items = await ViewController.itemsList(
-            column);
-        if(items.length != 0){
-          Map<String, dynamic> selectedItem = items.firstWhere(
-                  (element) => element['value'] == dataJson[name],
-              orElse: () => {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'});
-          if(selectedItem['title'] == null){
-            dataJson[name] = '';
-          }
+        // List<dynamic> items = await ViewController.itemsList(
+        //     column);
+        // if(items.length != 0){
+        //   Map<String, dynamic> selectedItem = items.firstWhere(
+        //           (element) => element['value'] == dataJson[name],
+        //       orElse: () => {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'});
+        //   if(selectedItem['title'] == null){
+        //     dataJson[name] = '';
+        //   }
+        // }
+        if(dataJson[name]=='' || dataJson[name]==null){
+          return checkInputRequiredValidator(indexColumn , dataJson ,tableData: tableData);
         }
 
       }

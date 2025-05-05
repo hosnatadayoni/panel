@@ -62,6 +62,7 @@ class MainController extends GetxController {
       return number;
     }
   }
+
   // static Rx<int> selectedItem = (-1).obs;
   static Rx<int> selectedItem = 0.obs;
   static Rx<int> selectedSubItem = (-1).obs;
@@ -149,7 +150,7 @@ class MainController extends GetxController {
                 tableName = column['sourceTable'];
               }
             }
-            List<String> listTitle = [];
+            List<dynamic> listTitle = [];
             if (data.data[name] != null) {
               listTitle = await ViewController.getTitleMultiSelectedItem(
                   '${tableName}', data.data[name], column);
@@ -574,7 +575,7 @@ class MainController extends GetxController {
     DataModel existingData = MainController.tableData.value[recordIndex];
     existingData.data = excelJson;
     await box.putAt(recordIndex, existingData);
-    dataController.allData.value[recordIndex] = existingData;
+    // dataController.allData.value[recordIndex] = existingData;
     MainController.tableData.value[recordIndex] = existingData;
   }
 
@@ -589,7 +590,7 @@ class MainController extends GetxController {
     );
     await box.add(newData);
     print('newData>>>${newData}');
-    dataController.allData.value.add(newData);
+    // dataController.allData.value.add(newData);
     MainController.tableData.add(newData);
     await MainController.loadData();
     MainController.renderPagination();
@@ -936,15 +937,15 @@ class MainController extends GetxController {
   }
 
   static Future<void> search(String query) async {
-    dataController.allData.value = box.values.toList();
+    List<dynamic> allData = box.values.toList();
 
     searchQuery.value = query;
     // if (MainController.table['table-name'] == box.name) {
     if (query.isEmpty) {
-      MainController.tableData.value = dataController.allData.value;
+      MainController.tableData.value = allData;
     } else {
       MainController.tableInfo['currentPage'] = 1;
-      tableData.value = dataController.allData.value.where((data) {
+      tableData.value = allData.where((data) {
         for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
@@ -999,7 +1000,8 @@ class MainController extends GetxController {
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         print('multiSelect>>${column['sourceTable']}');
-        String tableNameNew = '${tableName}_${column['title']}_${column['sourceTable']}';
+        String tableNameNew =
+            '${tableName}_${column['title']}_${column['sourceTable']}';
         if (!tableNames().contains('${tableNameNew}')) {
           var table = {
             'title': '${tableNameNew}',
@@ -1010,20 +1012,26 @@ class MainController extends GetxController {
                 "title": '${getDataTable['table-name']}_id',
                 "type": "string",
                 "name": '${getDataTable['table-name']}_id',
+                'is-show-store':false,
+                'is-show-edit':false,
               },
               {
                 "title": '${column['sourceTable']}_id',
                 "type": "string",
                 "name": '${column['sourceTable']}_id',
+                'is-show-store':false,
+                'is-show-edit':false,
               },
             ],
             "main-menu": false,
             "currentPage": 1,
             "countShowRow": 10,
+            "relations": [],
           };
           SubMenuList.add(table);
         } else {
-          showSnackbar(snackTypes.error,"امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+          showSnackbar(snackTypes.error,
+              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
         }
       }
     }
@@ -1031,15 +1039,20 @@ class MainController extends GetxController {
     print('sub menu length2>>>${SubMenuList.length}');
   }
 
-  static multiSelectStore(String tableName,var id){
+  static multiSelectStore(String tableName, var id) async {
     var getDataTable = ViewCustomController.getDataTable(tableName);
     print('getDataTable >#${getDataTable}');
-    for(var item in getDataTable['columns']){
-      if(item['type']=='multiSelect'){
-
-        print('MainController.multiSelectStore>>>${ViewController.requestMultiSelect}>>>>${item['sourceTable']}');
-        for(var data in ViewController.requestMultiSelect[item['sourceTable']]){
-          DB(tableName+"_"+item['title']+"_"+item['sourceTable']).storeRecord({'${tableName}_id':id,'${item['sourceTable']}_id':data});
+    for (var item in getDataTable['columns']) {
+      if (item['type'] == 'multiSelect') {
+        print(
+            'check multi >>${item['sourceItems'] != 'custom'}>>>>${item['sourceTable'] != null}');
+        if (item['sourceItems'] != 'custom' && item['sourceTable'] != null) {
+          print(
+              'MainController.multiSelectStore>>>${ViewController.requestMultiSelect}>>>>${item['sourceTable']}');
+          if (ViewController.requestMultiSelect.length != 0) if (ViewController.requestMultiSelect.containsKey(item['sourceTable']))
+            for (var data in ViewController.requestMultiSelect[item['sourceTable']]) {
+             await DB(tableName + "_" + item['title'] + "_" + item['sourceTable']).storeRecord({'${tableName}_id': id, '${item['sourceTable']}_id': data});
+            }
         }
       }
     }
@@ -1058,39 +1071,37 @@ class MainController extends GetxController {
           'title': 'parent_table',
           'type': 'string',
           'is-show-table': false,
+          'is-show-edit': false,
+          'is-show-store': false,
         });
         items['columns'].add({
           'name': 'parent_id',
           'title': 'parent_id',
           'type': 'string',
-          'is-show-table': false,
+          'is-show-edit': false,
+          'is-show-store': false,
         });
         print('items>>${items['columns']}');
       }
     }
   }
 
-  static Future<void> loadData({var tableData,var tableDataItems}) async {
+  static Future<void> loadData({var tableData, var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
-
-      // box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        print('table data>>${MainController.tableData.value}');
       } else {
         tableInfo = tableData;
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
-        MainController.tableData.value = tableDataItems;
-
+        if (tableDataItems != null)
+          MainController.tableData.value = tableDataItems;
+        else
+          MainController.tableData.value =
+              await DB('${tableInfo['table-name']}').getRecords();
       }
-
-      for(var i in box.values.toList()){
-        print('MainController.loadData>>>${i.data}');
-      }
-      // MainController.tableData.value = box.values.toList();
-
-      print('MainController.tableData.value24>>>${MainController.tableData.value}');
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
@@ -1112,8 +1123,7 @@ class MainController extends GetxController {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
         }
       }
-    }
-    else {
+    } else {
       print('tableData 12>>>${tableData}');
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
@@ -1225,7 +1235,9 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]
+            ['view'] ==
+        'custom') {
       HelperController.tablePageFunction();
     } else {
       await Get.to(() => TablePage());

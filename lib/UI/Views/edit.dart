@@ -26,8 +26,7 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
-    // _future = ViewController.generateEditFormView(widget.data!.data);
-    _future = ViewController.generateEditFormView(widget.data!);
+    _future = ViewController.generateEditFormView(widget.data);
   }
   @override
   Widget build(BuildContext context) {
@@ -97,7 +96,7 @@ class _EditPageState extends State<EditPage> {
                               },
                               child: InkWell(
                                 onTap: (){
-                                  print('widget.data!.data>>>${widget.data!}');
+                                  print('widget.data!.data>>>${widget.data}');
                                   MainController.isClickedItem.value = true;
                                   MainController.goToTablePage();
                                 },
