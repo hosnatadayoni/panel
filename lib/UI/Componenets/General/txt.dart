@@ -10,8 +10,9 @@ class Txt extends StatelessWidget {
    TextOverflow? textOverflow;
    TextDecoration? textDecoration;
    TextAlign? textAlign;
+   FontStyle? fontStyle;
 
-  Txt(this.text, {this.fontFamily = 'IRANSanse',this.maxLine, this.fontSize , this.fontWeight , this.color , this.textOverflow , this.textDecoration , this.textAlign});
+  Txt(this.text, {this.fontFamily = 'IRANSanse',this.maxLine, this.fontSize , this.fontWeight , this.color , this.textOverflow , this.textDecoration , this.textAlign , this.fontStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class Txt extends StatelessWidget {
           fontSize: fontSize,
           fontWeight: fontWeight ,
           color:color ,
-          decoration: textDecoration
+          decoration: textDecoration,
+        fontStyle: fontStyle
       ),
       textAlign: textAlign,
       maxLines: maxLine ,

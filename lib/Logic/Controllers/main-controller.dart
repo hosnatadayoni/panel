@@ -1082,6 +1082,7 @@ class MainController extends GetxController {
         tableInfo = tableData;
         box = await Hive.openBox<DataModel>('${tableData['table-name']}');
         MainController.tableData.value = tableDataItems;
+
       }
 
       for(var i in box.values.toList()){

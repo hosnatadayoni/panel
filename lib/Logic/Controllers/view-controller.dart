@@ -1050,7 +1050,8 @@ class ViewController extends GetxController {
             selectedItems: selectedItemsList,
             isSelectedItem:isSelectedItem ,
             onChanged: (selectedList){
-              selectedItemsList.value = selectedList;
+              print('ViewController.genarateFormMuiltiSelectBox>>${selectedList}');
+                    selectedItemsList.value = selectedList;
               hintTxt.value = hintMultiSelectBox(items , selectedItemsList.value);
               ViewController.request[column['name']] = selectedItemsList.value;
             },

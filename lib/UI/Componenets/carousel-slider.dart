@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:finance/Public/styles.dart';
-import 'package:finance/UI/Componenets/General/img.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -95,163 +96,529 @@ import 'package:carousel_slider/carousel_slider.dart';
 //   }
 // }
 
+// class MyCarousel extends StatefulWidget {
+//    List<dynamic>? imageUrls;
+//    bool isAutoPlay;
+//    bool showIndicators;
+//    Alignment indicatorAlignment;
+//    bool hasCaption;
+//    List<Caption>? captions;
+//    bool hasfadeEffect;
+//
+//
+//    MyCarousel({
+//     this.imageUrls,
+//     this.isAutoPlay = false,
+//     this.showIndicators = false,
+//     this.indicatorAlignment = Alignment.bottomCenter,
+//     this.hasCaption = false,
+//     this.captions,
+//      this.hasfadeEffect = false,
+//   });
+//
+//   @override
+//   _MyCarouselState createState() => _MyCarouselState();
+// }
+//
+// class _MyCarouselState extends State<MyCarousel> {
+//   final CarouselController _carouselController = CarouselController();
+//   int _currentIndex = 0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       alignment: Alignment.center,
+//       children: [
+//         CarouselSlider(
+//           carouselController: _carouselController,
+//           items: widget.imageUrls!.map((url) {
+//             return Builder(
+//               builder: (BuildContext context) {
+//                 return Container(
+//                   width: MediaQuery.of(context).size.width,
+//                   margin: EdgeInsets.symmetric(horizontal: 5.0),
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey,
+//                   ),
+//                   child: Image.network(
+//                     url,
+//                     fit: BoxFit.cover,
+//                     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+//                       if (loadingProgress == null) return child;
+//                       return Center(
+//                         child: CircularProgressIndicator(
+//                           value: loadingProgress.expectedTotalBytes != null
+//                               ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+//                               : null,
+//                         ),
+//                       );
+//                     },
+//                     errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+//                   ),
+//                 );
+//               },
+//             );
+//           }).toList(),
+//           options: CarouselOptions(
+//             height: 400,
+//             aspectRatio: 16/9,
+//             viewportFraction: 1.0,
+//             initialPage: 0,
+//             enableInfiniteScroll: true,
+//             reverse: false,
+//             autoPlay: widget.isAutoPlay,
+//             enlargeCenterPage: false,
+//             scrollDirection: Axis.horizontal,
+//             // scrollPhysics: widget.hasfadeEffect ? NeverScrollableScrollPhysics() :PageScrollPhysics(),
+//             // pageSnapping: widget.hasfadeEffect ? false: true,
+//             onPageChanged: (index, reason) {
+//               debugPrint('Index: $index, Reason: $reason');
+//               setState(() {
+//                 print('index>>>${index}');
+//                 _currentIndex = index;
+//               });
+//             },
+//           ),
+//         ),
+//
+//         Positioned(
+//           right: 10,
+//           child: IconButton(
+//             icon: Icon(Icons.chevron_left, color: Colors.white),
+//             style: IconButton.styleFrom(
+//               backgroundColor: Colors.black54,
+//               padding: EdgeInsets.all(12),
+//             ),
+//             onPressed: () {
+//               _carouselController.nextPage(
+//                   duration: Duration(milliseconds: 300),
+//                   curve: Curves.easeInOut);
+//             },
+//           ),
+//         ),
+//         Positioned(
+//           left: 10,
+//           child: IconButton(
+//             icon: Icon(Icons.chevron_right, color: Colors.white),
+//             style: IconButton.styleFrom(
+//               backgroundColor: Colors.black54,
+//               padding: EdgeInsets.all(12),
+//             ),
+//             onPressed: () {
+//               _carouselController.previousPage(
+//                   duration: Duration(milliseconds: 300),
+//                   curve: Curves.easeInOut);
+//             },
+//           ),
+//         ),
+//
+//             Positioned(
+//               bottom: 20,
+//               left: 0,
+//               right: 0,
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   if (widget.hasCaption && widget.captions != null && widget.captions!.isNotEmpty)
+//                     Container(
+//                       padding: const EdgeInsets.only(bottom: 20),
+//                       child: Column(
+//                         children: [
+//                           // Header
+//                           if (widget.captions![_currentIndex].header != null)
+//                             Txt(
+//                             widget.captions![_currentIndex].header!,
+//                             color: whiteColor,
+//                             fontSize: 18,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                           if (widget.captions![_currentIndex].header != null) SizedBox(height: 15),
+//                           // Body
+//                           if (widget.captions![_currentIndex].body != null)
+//                              Txt(
+//                             widget.captions![_currentIndex].body!,
+//                             color: whiteColor,
+//                             fontSize: 14,
+//                            ),
+//                         ],
+//                       ),
+//                     ),
+//                   if (widget.showIndicators)
+//                     Row(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: widget.imageUrls!.asMap().entries.map((entry) {
+//                       return InkWell(
+//                         onTap: () => {
+//                           _carouselController.animateToPage(entry.key),
+//                         },
+//                         child: Container(
+//                           width: 30,
+//                           height: 3,
+//                           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+//                           decoration: BoxDecoration(
+//                               color: color24
+//                           ),
+//                           child: _currentIndex == entry.key
+//                               ? Center(
+//                             child: Container(
+//                               width: 30,
+//                               height: 3,
+//                               decoration: BoxDecoration(
+//                                 color: whiteColor,
+//                               ),
+//                             ),
+//                           )
+//                               : null,
+//                         ),
+//                       );
+//                     }).toList(),
+//                   ),
+//                 ],
+//               )
+//             ),
+//       ],
+//     );
+//   }
+// }
+//
+// class Caption {
+//   String? header;
+//    String? body;
+//
+//   Caption({this.header, this.body});
+// }
+
+
 class MyCarousel extends StatefulWidget {
-   List<String>? imageUrls;
+   List<CarouselItem>? items;
    bool isAutoPlay;
    bool showIndicators;
    Alignment indicatorAlignment;
-   bool isCaption;
-   List<Caption>? captions;
-
+   bool hasCaption;
+   bool ride;
+   bool hasControl;
+   bool hasTouchSwipping;
+   // bool isDark;
+   Color colorBox;
+   Color colorIcon;
+   Color colorIndicator;
+   Color colorIndicatorActive;
+   Color colorTxt;
+   bool isCrossFade;
 
    MyCarousel({
-    this.imageUrls,
+    Key? key,
+    this.items,
     this.isAutoPlay = false,
     this.showIndicators = false,
     this.indicatorAlignment = Alignment.bottomCenter,
-    this.isCaption = false,
-    this.captions,
-  });
+    this.hasCaption = false,
+    this.ride = false,
+     this.hasControl = false,
+     this.hasTouchSwipping = true,
+     // this.isDark = false,
+     this.colorBox = color26,
+     this.colorIcon  = whiteColor,
+     this.colorIndicator = color27,
+     this.colorIndicatorActive = whiteColor,
+     this.colorTxt = whiteColor,
+     this.isCrossFade = false,
+
+
+  }) : super(key: key);
 
   @override
   _MyCarouselState createState() => _MyCarouselState();
 }
 
-class _MyCarouselState extends State<MyCarousel> {
+class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
   final CarouselController _carouselController = CarouselController();
+  Duration _currentInterval = Duration(seconds: 5);
   int _currentIndex = 0;
+  bool _isAutoPlayPaused = false;
+  bool pauseOnHover = true;
+  bool pauseOnVisibilityChange = true;
+  bool _isPageVisible = true;
+  double _duration = 1;
+  Timer? _autoPlayTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _startAutoPlay();
+  }
+
+  @override
+  void dispose() {
+    _stopAutoPlay();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!pauseOnVisibilityChange) return;
+
+    setState(() {
+      _isPageVisible = state == AppLifecycleState.resumed;
+    });
+
+    if (widget.isCrossFade) {
+      if (_isPageVisible && widget.isAutoPlay) {
+        _startAutoPlay();
+      } else {
+        _stopAutoPlay();
+      }
+    }
+  }
+
+  bool _hasUserInteracted = false;
+  bool get _shouldAutoPlay {
+    return widget.isAutoPlay &&
+        !_isAutoPlayPaused &&
+        _isPageVisible &&
+        (!widget.ride || _hasUserInteracted);
+  }
+  void _handleUserInteraction() {
+    if (!_hasUserInteracted) {
+     setState(() {
+       _hasUserInteracted = true;
+       widget.isAutoPlay = true;
+     });
+    }
+  }
+
+  void _startAutoPlay() {
+    if (!widget.isAutoPlay || !widget.isCrossFade) return;
+
+    _stopAutoPlay();
+
+    _autoPlayTimer = Timer.periodic(_currentInterval, (timer) {
+      if (_shouldAutoPlay) {
+        setState(() {
+          _currentIndex = (_currentIndex + 1) % widget.items!.length;
+          _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(seconds: 5);
+        });
+      }
+    });
+  }
+
+  void _stopAutoPlay() {
+    _autoPlayTimer?.cancel();
+    _autoPlayTimer = null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        CarouselSlider(
-          carouselController: _carouselController,
-          items: widget.imageUrls!.map((url) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                  ),
-                  child: Image.network(
-                    url,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                  ),
+    var size = MediaQuery.of(context).size;
+    return MouseRegion(
+      onEnter: pauseOnHover ? (_) => setState(() => _isAutoPlayPaused = true) : null,
+      onExit:  pauseOnHover ? (_) => setState(() => _isAutoPlayPaused = false) : null,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          widget.isCrossFade?AnimatedSwitcher(
+            duration: Duration(milliseconds: (_duration * 1000).toInt()),
+            child: Container(
+              key: ValueKey<String>(widget.items![_currentIndex].imageUrl),
+              width: double.infinity,
+              height: 400,
+              decoration: BoxDecoration(
+                color: widget.colorBox,
+              ),
+              child: Image.network(
+                widget.items![_currentIndex].imageUrl,
+                fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+              ),
+            ),
+          ):
+          IgnorePointer(
+            ignoring:widget.hasTouchSwipping == false ?  true : false,
+            child: CarouselSlider(
+              carouselController: _carouselController,
+              items: widget.items!.map((url) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        // color: widget.isDark ? color25 :color26,
+                        color: widget.colorBox
+                      ),
+                      child: Image.network(
+                        url.toString(),
+                        width: widget.hasControl ? double.infinity : size.width,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                      ),
+                    );
+                  },
                 );
+              }).toList(),
+              options: CarouselOptions(
+                height: 400,
+                aspectRatio: 16/9,
+                viewportFraction: 1.0,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: _shouldAutoPlay,
+                pauseAutoPlayOnTouch: true,
+                autoPlayInterval: _currentInterval,
+                autoPlayAnimationDuration: _currentInterval,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: false,
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    // print('current index>>>${index}');
+                    _currentIndex = index;
+                    _currentInterval = widget.items?[index].autoPlayInterval ?? Duration(seconds: 5);
+                    // print('_currentInterval>>>${_currentInterval}');
+                  });
+                },
+              ),
+            ),
+          ),
+         if(widget.hasControl == false)
+          Positioned(
+            right: 10,
+            child: IconButton(
+              // icon: Icon(Icons.chevron_left, color:widget.isDark ? color26 : whiteColor),
+              icon: Icon(Icons.chevron_left, color:widget.colorIcon),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black54,
+                padding: EdgeInsets.all(12),
+              ),
+              onPressed: () {
+                _handleUserInteraction();
+                if (widget.isCrossFade) {
+                  setState(() {
+                    _currentIndex = (_currentIndex + 1) % widget.items!.length;
+                  });
+                }
+                else{
+                  _carouselController.nextPage(
+                    // duration: Duration(milliseconds: 300),
+                    duration: _currentInterval,
+                    curve: Curves.easeInOut,
+                  );
+                }
+
               },
-            );
-          }).toList(),
-          options: CarouselOptions(
-            height: 400,
-            aspectRatio: 16/9,
-            viewportFraction: 1.0,
-            initialPage: 0,
-            enableInfiniteScroll: true,
-            reverse: false,
-            autoPlay: widget.isAutoPlay,
-            enlargeCenterPage: false,
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (index, reason) {
-              debugPrint('Index: $index, Reason: $reason');
-              setState(() {
-                print('index>>>${index}');
-                _currentIndex = index;
-              });
-            },
-          ),
-        ),
-
-        Positioned(
-          right: 10,
-          child: IconButton(
-            icon: Icon(Icons.chevron_left, color: Colors.white),
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.black54,
-              padding: EdgeInsets.all(12),
             ),
-            onPressed: () {
-              _carouselController.nextPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
-            },
           ),
-        ),
-        Positioned(
-          left: 10,
-          child: IconButton(
-            icon: Icon(Icons.chevron_right, color: Colors.white),
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.black54,
-              padding: EdgeInsets.all(12),
-            ),
-            onPressed: () {
-              _carouselController.previousPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
-            },
-          ),
-        ),
+         if(widget.hasControl == false)
+          Positioned(
+            left: 10,
+            child: IconButton(
+              // icon: Icon(Icons.chevron_right, color:widget.isDark ? color26 : whiteColor),
+              icon: Icon(Icons.chevron_right, color:widget.colorIcon),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black54,
+                padding: EdgeInsets.all(12),
+              ),
+              onPressed: () {
+                _handleUserInteraction();
+                if (widget.isCrossFade) {
+                  setState(() {
+                    _currentIndex = (_currentIndex - 1) % widget.items!.length;
+                  });
+                }
+                else{
+                  _carouselController.previousPage(
+                    // duration: Duration(milliseconds: 300),
+                    duration: _currentInterval,
+                    curve: Curves.easeInOut,
+                  );
+                }
 
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.isCaption && widget.captions != null && widget.captions!.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Column(
-                        children: [
-                          // Header
-                          if (widget.captions![_currentIndex].header != null)
-                            Txt(
-                            widget.captions![_currentIndex].header!,
-                            color: whiteColor,
+              },
+            ),
+          ),
+        if(widget.hasControl == false)
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.hasCaption)
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Column(
+                      children: [
+                        if (widget.items![_currentIndex].caption!.header != null)
+                          Txt(
+                            widget.items![_currentIndex].caption!.header!,
+                            // color:widget.isDark ? blackColor : whiteColor,
+                            color:widget.colorTxt,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
-                          if (widget.captions![_currentIndex].header != null) SizedBox(height: 15),
-                          // Body
-                          if (widget.captions![_currentIndex].body != null)
-                             Txt(
-                            widget.captions![_currentIndex].body!,
-                            color: whiteColor,
+                        if (widget.items![_currentIndex].caption!.header != null)
+                          SizedBox(height: 15),
+                        if (widget.items![_currentIndex].caption!.body != null)
+                          Txt(
+                            widget.items![_currentIndex].caption!.body!,
+                            // color:widget.isDark ? blackColor : whiteColor,
+                            color:widget.colorTxt,
                             fontSize: 14,
-                           ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
-                  if (widget.showIndicators)
-                    Row(
+                  ),
+                if (widget.showIndicators)
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: widget.imageUrls!.asMap().entries.map((entry) {
+                    children: widget.items!.asMap().entries.map((entry) {
                       return InkWell(
-                        onTap: () => {
-                          _carouselController.animateToPage(entry.key),
+                        // onTap: () => _carouselController.animateToPage(entry.key),
+                        onTap: (){
+                          _handleUserInteraction();
+                          print('_hasUserInteracted>>>${_hasUserInteracted}');
+                          print('_shouldAutoPlay>>>${_shouldAutoPlay}');
+                          if (widget.isCrossFade) {
+                            setState(() {
+                              _currentIndex = entry.key % widget.items!.length;
+                            });
+                          }
+                          else{
+                            _carouselController.animateToPage(entry.key);
+                          }
+
                         },
                         child: Container(
                           width: 30,
                           height: 3,
                           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
-                              color: color24
+                            // color: widget.isDark ? color26 :color27,
+                            color: widget.colorIndicator,
                           ),
                           child: _currentIndex == entry.key
                               ? Center(
@@ -259,7 +626,8 @@ class _MyCarouselState extends State<MyCarousel> {
                               width: 30,
                               height: 3,
                               decoration: BoxDecoration(
-                                color: whiteColor,
+                                // color:widget.isDark ? blackColor: whiteColor,
+                                color: widget.colorIndicatorActive,
                               ),
                             ),
                           )
@@ -268,19 +636,31 @@ class _MyCarouselState extends State<MyCarousel> {
                       );
                     }).toList(),
                   ),
-                ],
-              )
+              ],
             ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
 
 class Caption {
-  String? header;
-   String? body;
+  final String? header;
+  final String? body;
 
   Caption({this.header, this.body});
 }
 
+class CarouselItem {
+   String imageUrl;
+   Duration? autoPlayInterval;
+   Caption? caption;
+
+  CarouselItem({
+    required this.imageUrl,
+    this.autoPlayInterval,
+    this.caption,
+  });
+}
 
