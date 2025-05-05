@@ -73,7 +73,7 @@ class ViewController extends GetxController {
               (validator) => validator['type'] == 'min',
               orElse: () => null);
         }
-        if (type == 'string' || type == 'int' || type == 'number'|| type == 'email' ||  type == 'mobile') {
+        if (type == 'string' || type == 'int' || type == 'Number double' || type == 'Number int' || type == 'email' ||  type == 'mobile') {
           textField = generateFormTextField(_fbKey, column, type, '');
           children.add(SizedBox(
             height: 20,
@@ -165,7 +165,7 @@ class ViewController extends GetxController {
           minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);}
         if (type == 'string' ||
             type == 'int' ||
-            type == 'number' ||
+            type == 'Number double' || type == 'Number int' ||
             type == 'email' || type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(
@@ -275,7 +275,6 @@ class ViewController extends GetxController {
         }
         else if (type == 'multiSelect') {
           print('dataModel multi is>>${dataModel}');
-          print('column multi is>>${column}');
           List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
           print('items id>>>#${items}');
           if(items.length != 0){
@@ -290,6 +289,7 @@ class ViewController extends GetxController {
             children.add(SizedBox(height: 20,));
             children.add(multiSelectBox);
           }
+
         }
         else if (type == 'color') {
           colorBox = generateFormColorBox(
@@ -595,10 +595,20 @@ class ViewController extends GetxController {
           initValue: initValue,
           onChange: (text) {
             // dataJson[columnName] = text;
-            ViewController.request[column['name']] = text;
+            if(column['type'] == 'Number int'){
+              ViewController.request[column['name']] = int.parse('${text}');
+            }
+            else if(column['type'] == 'Number double'){
+              ViewController.request[column['name']] = double.parse('${text}');
+            }
+            else{
+              ViewController.request[column['name']] = text;
+            }
+
           },
           isMobile: type == 'mobile' ? true : false,
-          isNumber: type == 'number' ? true : false,
+          isNumberInt: type == 'Number int' ? true : false,
+          isNumberDouble: type == 'Number double'? true : false,
           isEmail: type == 'email' ? true : false,
 
         ),
@@ -633,16 +643,17 @@ class ViewController extends GetxController {
                column: column,
                items: [
 
-                   DropdownMenuItem(
-                       child: Obx(() {
-                         return Txt(
-                           'انتخاب نشده',
-                           color: MainController.isLightMode.value == true
-                               ? whiteColor
-                               : primaryDark,
-                         );
-                       }),
-                       value: '-1'),
+                   // DropdownMenuItem(
+                   //
+                   //     child: Obx(() {
+                   //       return Txt(
+                   //         '${itemsShowSelectItem(item,column['items'])}',
+                   //         color: MainController.isLightMode.value == true
+                   //             ? whiteColor
+                   //             : primaryDark,
+                   //       );
+                   //     }),
+                   //     value: item['id'].toString()),
                  for (var item in items)
                  DropdownMenuItem(
 
@@ -802,6 +813,8 @@ class ViewController extends GetxController {
       var column , Rx<String> hintTxt , RxList<dynamic> selectedItemsList , Rx<bool> isSelectedItem) async {
     List<dynamic> items=await DB(column['sourceTable']).getRecords();
     RxList<String> selectedItemId = <String>[].obs;
+    print('items is ss>>${items}');
+
     if(selectedItemsList.length!=0){
       // items.add({'id':'',});
       for(var selectedItem in selectedItemsList){
@@ -1057,8 +1070,6 @@ class ViewController extends GetxController {
           selectedTitle='نامشخص';
         }
         else{
-
-
         var objectItem=object.first;
         print('objectItem>>${objectItem}');
         List<dynamic> items=column['items'];
@@ -1143,15 +1154,8 @@ class ViewController extends GetxController {
     if (type != 'custom') {
 
       if(dataModel!=null) {
-        print('ViewController.itemsList1>>>${dataModel}>>>${dataModel[column['name']]}');
-        if(dataModel[column['name']]!=null){
-          for (var item in dataModel[column['name']])
-            dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
-        }else{
-
-          dropDownListItems.add((await DB(tableName).getRecords()).first);
-        }
-
+        for (var item in dataModel[column['name']])
+          dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic>a = [];
           for (var field in column['items']) {
@@ -1162,7 +1166,7 @@ class ViewController extends GetxController {
             'value': dropDownListItems[i]['id']
           });
         }
-        print('ViewController.itemsList2');
+
       }
       else{
         print('data>>model>>null');
@@ -1234,12 +1238,6 @@ class ViewController extends GetxController {
       }
     }
     return titles.join(',');
-  }
-
-  static getBox(String tableName) async {
-    Box box;
-    box = await Hive.openBox<DataModel>('${tableName}');
-    return box;
   }
 
 }

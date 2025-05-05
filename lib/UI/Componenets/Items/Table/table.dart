@@ -144,8 +144,9 @@ class _TableBoxState extends State<TableBox> {
                                                             SizedBox(width: 5,),
                                                             InkWell(
                                                               onTap: ()async{
-                                                                setState(()  {
+                                                                setState(() {
                                                                   DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i]['id']}').deleteRecord();
+
 
                                                                 });
                                                                 Navigator.pop(context);

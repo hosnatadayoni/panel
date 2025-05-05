@@ -1189,7 +1189,7 @@ class MainController extends GetxController {
 
       //cehcek not range cell
       else {
-        if (column['type'] == 'number') {
+        if (column['type'] == 'Number int' || column['type'] == 'Number double') {
           var minValidator = column['validators'].firstWhere(
               (validator) => validator['type'] == 'min',
               orElse: () => null);

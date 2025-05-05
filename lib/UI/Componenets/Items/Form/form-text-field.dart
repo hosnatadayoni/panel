@@ -16,7 +16,8 @@ class FormTextField extends StatefulWidget {
   String? lable;
   String? hint;
   Function? onChange;
-  bool? isNumber;
+  bool? isNumberInt;
+  bool? isNumberDouble;
   String? initValue;
   bool? isMobile;
   bool? isLoginPage;
@@ -30,7 +31,7 @@ class FormTextField extends StatefulWidget {
   bool? isEmail;
 
 
-   FormTextField({this.lable,  this.hint , this.onChange , this.isNumber =false , this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
+   FormTextField({this.lable,  this.hint , this.onChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
      this.fbKey , this.isLongTxt = false , required this.name , this.column , this.isEmail});
 
   @override
@@ -60,7 +61,19 @@ class _FormTextFieldState extends State<FormTextField> {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
      if(widget.column != null){
        if(ViewController.request[widget.column['name']] != null){
-         text.value =  ViewController.request[widget.column['name']];
+         if(widget.column['type'] == 'Number double'){
+           ViewController.request[widget.column['name']] = double.parse('${text.value}');
+           // double.parse('${text.value}') =  ViewController.request[widget.column['name']];
+         }
+         else if(widget.column['type'] == 'Number int'){
+           ViewController.request[widget.column['name']] = int.parse('${text.value}');
+           // int.parse('${text.value}') =  ViewController.request[widget.column['name']];
+         }
+         else{
+           // text.value = ViewController.request[widget.column['name']];
+           ViewController.request[widget.column['name']] = text.value;
+         }
+
        }
        if(widget.column['validators'] != null){
          var inputRequired;
@@ -84,7 +97,7 @@ class _FormTextFieldState extends State<FormTextField> {
            setState(() {
              _errorText = null;
            });
-           if(widget.isNumber == true){
+           if(widget.isNumberInt == true || widget.isNumberDouble == true){
              var maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
              var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
              var number = num.tryParse(text.value);
@@ -171,7 +184,7 @@ class _FormTextFieldState extends State<FormTextField> {
           else if(text.value != ''){
 
             if(widget.column['validators'] != null){
-              if(widget.isNumber == true){
+              if(widget.isNumberInt == true || widget.isNumberDouble == true){
                 var maxValidator;
                 var minValidator;
                 maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
@@ -236,7 +249,7 @@ class _FormTextFieldState extends State<FormTextField> {
               focusNode: _focusNode,
               controller: widget.initValue == null ? _formConroller : null,
               obscureText: widget.isPassword == true  && UserController.isVisibility.value == false? true : false,
-              keyboardType:widget.isLongTxt == true?TextInputType.multiline:widget.isNumber!?TextInputType.number:TextInputType.text,
+              keyboardType:widget.isLongTxt == true?TextInputType.multiline:widget.isNumberInt! || widget.isNumberDouble!?TextInputType.number:TextInputType.text,
               minLines: 1,
               maxLines: widget.isPassword == true ? 1:3,
               inputFormatters: [
@@ -246,9 +259,11 @@ class _FormTextFieldState extends State<FormTextField> {
                   LengthLimitingTextInputFormatter(11),
                 if (widget.isMobile == true)
                   FilteringTextInputFormatter.digitsOnly,
-                if (widget.isNumber == true)
+                if (widget.isNumberDouble == true)
                   // FilteringTextInputFormatter.digitsOnly,
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                if(widget.isNumberInt == true)
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 // if(widget.isNumber == true)
                 //   ThousandSeparatorInputFormatter(),
                 if (widget.isMobile == true)

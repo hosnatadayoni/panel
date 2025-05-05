@@ -103,7 +103,8 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                   initValue: '${ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] != null ?
                                   ViewController.request['${MainController.tableInfo['columns'][j]['name']}']:
                                   ''}',
-                                  isNumber:MainController.tableInfo['columns'][j]['type'] == 'number' ? true : false ,
+                                  isNumberInt:MainController.tableInfo['columns'][j]['type'] == 'Number int' ? true : false ,
+                                  isNumberDouble:MainController.tableInfo['columns'][j]['type'] == 'Number double' ? true : false ,
                                   isEmail:MainController.tableInfo['columns'][j]['type'] == 'email' ? true:false,
                                   isMobile: MainController.tableInfo['columns'][j]['type'] == 'mobile' ? true : false,
                                   onChange: (text) {

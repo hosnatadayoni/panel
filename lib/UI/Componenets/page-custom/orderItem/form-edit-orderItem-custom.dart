@@ -166,7 +166,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                               hint: '${getDataTable['columns'][j]['title']}',
                                               lable: '',
                                               initValue: '${OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null ? OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] : ''}',
-                                              isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
+                                              isNumberInt: getDataTable['columns'][j]['type'] == 'Number int' ? true : false,
+                                              isNumberDouble: getDataTable['columns'][j]['type'] == 'Number double' ? true : false,
                                               isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
                                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                                               onChange: (text) {
@@ -627,7 +628,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                               hint: '${getDataTable['columns'][j]['title']}',
                               lable: '',
                               initValue:OrderItem.orderItemsList2[key]?['${getDataTable['columns'][j]['name']}'] ?? '',
-                              isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
+                              isNumberInt: getDataTable['columns'][j]['type'] == 'Number int' ? true : false,
+                              isNumberDouble: getDataTable['columns'][j]['type'] == 'Number double' ? true : false,
                               isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                               onChange: (text) {

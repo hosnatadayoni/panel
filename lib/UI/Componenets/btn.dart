@@ -419,6 +419,7 @@ class _BtnState extends State<Btn> {
       final columnWidth = screenWidth / 12 * widget.gridColumns!;
       calculatedWidth = columnWidth;
     }
+    print('isValidGridColumns>>>${widget.responsive && size.width < widget.responsiveBreakpoint!}');
 
     final buttonWidget = Container(
       decoration: BoxDecoration(
@@ -491,12 +492,19 @@ class _BtnState extends State<Btn> {
         child: Focus(
           canRequestFocus: !widget.disabled,
           child: Container(
+            // width: widget.isBlock
+            //     ? size.width
+            //     : !isValidGridColumns
+            //     ? widget.width
+            //     : (widget.responsive && size.width < widget.responsiveBreakpoint!)
+            //     ? size.width
+            //     : calculatedWidth,
             width: widget.isBlock
+                ? size.width
+                : widget.responsive && size.width <= widget.responsiveBreakpoint!
                 ? size.width
                 : !isValidGridColumns
                 ? widget.width
-                : (widget.responsive && size.width < widget.responsiveBreakpoint!)
-                ? size.width
                 : calculatedWidth,
             margin: widget.centerHorizontal
                 ? EdgeInsets.symmetric(horizontal: (size.width - (calculatedWidth ?? widget.width ?? size.width)) / 2)
