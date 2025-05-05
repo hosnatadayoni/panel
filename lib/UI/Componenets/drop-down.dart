@@ -36,6 +36,7 @@ class Dropdown extends StatefulWidget {
   bool? hasForm;
 
 
+
   Dropdown({
      this.itemsDropDown,
     required this.dropDownTitle,
@@ -719,6 +720,20 @@ class _DropdownState extends State<Dropdown> {
       widget.hasForm == false ?
       [
         ...widget.itemsDropDown!.map((item) =>
+        item.isHeader! ?  PopupMenuItem<String>(
+                padding: EdgeInsets.zero,
+                enabled: false,
+                child: Container(
+                  width: size.width,
+                  padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                  child: Txt(
+                    item.text,
+                    color: Colors.grey.shade400,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ):
         item.isDisabled ? PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           enabled: false,
@@ -761,18 +776,22 @@ class _DropdownState extends State<Dropdown> {
           value: item.value,
           child: MouseRegion(
             onEnter: (_) {
-              hoveredIndex.value = item.text;
+              if (!item.isActive) {
+                hoveredIndex.value = item.text;
+              }
             },
             onExit: (_) {
               hoveredIndex.value = '';
             },
             child: Obx(() {
+              final isFirstItemAndActiveFirst = (item.isActiveFirst ?? false) &&
+                  widget.itemsDropDown!.indexOf(item) == 0;
+
               final isActive = item.isActive ||
                   selectedItem.value == item.text ||
-                  (selectedItem.value.isEmpty &&
-                      widget.itemsDropDown!.indexOf(item) == 0);
+                  (selectedItem.value.isEmpty && isFirstItemAndActiveFirst);
               return Container(
-                color: hoveredIndex.value == item.text
+                color: hoveredIndex.value == item.text && !isActive
                     ? Colors.grey[300]
                     : isActive
                     ? this.widget.ColorActiveBox
@@ -872,6 +891,7 @@ class DropdownItem {
    bool isActive;
    bool isDisabled;
    bool? isHeader;
+   bool? isActiveFirst;
 
 
 
@@ -882,6 +902,7 @@ class DropdownItem {
     this.isActive = false,
     this.isDisabled = false,
     this.isHeader = false,
+    this.isActiveFirst = false,
   });
 }
 

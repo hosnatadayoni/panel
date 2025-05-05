@@ -43,12 +43,12 @@
       {
         "name": "سقف اعتبار",
         "title": "سقف اعتبار",
-        "type": "number"
+        "type": "Number double"
       },
       {
         "name": "کد مشتری",
         "title": "کد مشتری",
-        "type": "number"
+        "type": "Number int"
       }
     ]
   },
@@ -80,7 +80,7 @@
       {
         "name": "قیمت",
         "title": "قیمت",
-        "type": "number",
+        "type": "Number double",
         "validators": [
           {
             "type": "required",
@@ -130,7 +130,7 @@
         "type": "multiSelect",
         "sourceItems": "table",
         "sourceTable": "customers",
-        "items":["شماره موبایل"]
+        "items":["شماره موبایل" , "نام و نام خانوادگی"]
       }
     ]
   },
@@ -165,7 +165,7 @@
       {
         "name": "کد ورودی",
         "title": "کد ورودی",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "تاریخ",
@@ -175,12 +175,12 @@
       {
         "name": "شماره نقشه",
         "title": "شماره نقشه",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "(مشتری)شماره نقشه",
         "title": "(مشتری)شماره نقشه",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "نوع",
@@ -235,7 +235,7 @@
       {
         "name": "کد ورودی",
         "title": "کد ورودی",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "تاریخ",
@@ -245,12 +245,12 @@
       {
         "name": "شماره نقشه",
         "title": "شماره نقشه",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "(مشتری)شماره نقشه",
         "title": "(مشتری)شماره نقشه",
-        "type": "number"
+        "type": "Number int"
       },
 
       {
@@ -285,27 +285,27 @@
       {
         "name": "قیمت",
         "title": "قیمت",
-        "type": "number"
+        "type": "Number double"
       },
       {
         "name": "بعد اول",
         "title": "بعد اول",
-        "type": "number"
+        "type": "Number double"
       },
       {
         "name": "بعد دوم",
         "title": "بعد دوم",
-        "type": "number"
+        "type": "Number double"
       },
       {
         "name": "جمع متراژ",
         "title": "جمع متراژ",
-        "type": "number"
+        "type": "Number double"
       },
       {
         "name": "تعداد",
         "title": "تعداد",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "الگو بری",
@@ -358,22 +358,22 @@
       {
         "name": "بلوک",
         "title": "بلوک",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "طبقه",
         "title": "طبقه",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "واحد",
         "title": "واحد",
-        "type": "number"
+        "type": "Number int"
       },
       {
         "name": "جمع مبلغ",
         "title": "جمع مبلغ",
-        "type": "number"
+        "type": "Number double"
       }
     ],
     "view": "custom"

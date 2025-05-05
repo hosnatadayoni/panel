@@ -151,7 +151,7 @@ class ValidatorController extends GetxController {
       minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
       emailValidator = column['validators'].firstWhere((validator) => validator['type'] == 'email', orElse: () => null);
     }
-    if(column['type'] == 'number'){
+    if(column['type'] == 'Number double' || column['type'] == 'Number int'){
       var number;
       if(dataJson[name] != null){
         print('dataJson[name] >>>${dataJson[name]} ${dataJson[name].runtimeType}');

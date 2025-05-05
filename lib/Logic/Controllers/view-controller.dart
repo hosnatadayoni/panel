@@ -73,7 +73,7 @@ class ViewController extends GetxController {
               (validator) => validator['type'] == 'min',
               orElse: () => null);
         }
-        if (type == 'string' || type == 'int' || type == 'number'|| type == 'email' ||  type == 'mobile') {
+        if (type == 'string' || type == 'int' || type == 'Number double' || type == 'Number int' || type == 'email' ||  type == 'mobile') {
           textField = generateFormTextField(_fbKey, column, type, '');
           children.add(SizedBox(
             height: 20,
@@ -165,7 +165,7 @@ class ViewController extends GetxController {
           minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);}
         if (type == 'string' ||
             type == 'int' ||
-            type == 'number' ||
+            type == 'Number double' || type == 'Number int' ||
             type == 'email' || type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(
@@ -595,10 +595,20 @@ class ViewController extends GetxController {
           initValue: initValue,
           onChange: (text) {
             // dataJson[columnName] = text;
-            ViewController.request[column['name']] = text;
+            if(column['type'] == 'Number int'){
+              ViewController.request[column['name']] = int.parse('${text}');
+            }
+            else if(column['type'] == 'Number double'){
+              ViewController.request[column['name']] = double.parse('${text}');
+            }
+            else{
+              ViewController.request[column['name']] = text;
+            }
+
           },
           isMobile: type == 'mobile' ? true : false,
-          isNumber: type == 'number' ? true : false,
+          isNumberInt: type == 'Number int' ? true : false,
+          isNumberDouble: type == 'Number double'? true : false,
           isEmail: type == 'email' ? true : false,
 
         ),
@@ -805,9 +815,9 @@ class ViewController extends GetxController {
     RxList<String> selectedItemId = <String>[].obs;
     print('items is ss>>${items}');
 
-    if(items.length!=0){
+    if(selectedItemsList.length!=0){
       // items.add({'id':'',});
-      for(var selectedItem in items){
+      for(var selectedItem in selectedItemsList){
         selectedItemId.add(selectedItem['id']);
       }
     }
@@ -1060,8 +1070,6 @@ class ViewController extends GetxController {
           selectedTitle='نامشخص';
         }
         else{
-
-
         var objectItem=object.first;
         print('objectItem>>${objectItem}');
         List<dynamic> items=column['items'];
@@ -1230,12 +1238,6 @@ class ViewController extends GetxController {
       }
     }
     return titles.join(',');
-  }
-
-  static getBox(String tableName) async {
-    Box box;
-    box = await Hive.openBox<DataModel>('${tableName}');
-    return box;
   }
 
 }

@@ -170,7 +170,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               lable: '',
                               initValue: OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] ?? '',
                               // initValue: '${ViewController.request2['${getDataTable['columns'][j]['name']}'] != null ? ViewController.request2['${getDataTable['columns'][j]['name']}'] : ''}',
-                              isNumber: getDataTable['columns'][j]['type'] == 'number' ? true : false,
+                              isNumberInt: getDataTable['columns'][j]['type'] == 'Number int' ? true : false,
+                              isNumberDouble: getDataTable['columns'][j]['type'] == 'Number double' ? true : false,
                               isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
                               isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
                               onChange: (text) {
