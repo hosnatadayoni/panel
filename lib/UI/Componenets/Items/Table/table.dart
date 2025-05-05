@@ -40,9 +40,6 @@ class _TableBoxState extends State<TableBox> {
 
     });
     var size = MediaQuery.of(context).size;
-    for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++){
-      print('k90000>>>${MainController.tableData.value[i]}');
-    }
     return Obx((){
       return Container(
         color: MainController.isLightMode.value == true ? background :whiteColor,

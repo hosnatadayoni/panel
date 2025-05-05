@@ -142,7 +142,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             for (var j = 0; j < getDataTable['columns'].length; j++)
-                              if(getDataTable['columns'][j]['is-show-store'] == true || getDataTable['columns'][j]['is-show-store'] == null)
+                              if(getDataTable['columns'][j]['is-show-edit'] == true || getDataTable['columns'][j]['is-show-edit'] == null)
                                 if (getDataTable['columns'][j]['type'] == 'string' ||
                                     getDataTable['columns'][j]['type'] == 'number' ||
                                     getDataTable['columns'][j]['type'] == 'mobile' ||
@@ -603,7 +603,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var j = 0; j < getDataTable['columns'].length; j++)
-              if(getDataTable['columns'][j]['is-show-store'] == true || getDataTable['columns'][j]['is-show-store'] == null)
+              if(getDataTable['columns'][j]['is-show-edit'] == true || getDataTable['columns'][j]['is-show-edit'] == null)
                 if (getDataTable['columns'][j]['type'] == 'string' ||
                     getDataTable['columns'][j]['type'] == 'number' ||
                     getDataTable['columns'][j]['type'] == 'mobile' ||

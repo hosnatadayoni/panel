@@ -14,6 +14,7 @@ import 'main-controller.dart';
 class HelperController extends GetxController {
   //store
   static beforeStore(DataModel newData) {
+    print('new data5>>${newData.data}');
     return AppController.responceHelper(newData, true);
   }
 
@@ -88,10 +89,8 @@ class HelperController extends GetxController {
     if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
       await Get.to(() => OrderEdit(data: data));
     }
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-itemss'){
-      await Get.to(() => OrderItemEdit(data:data));
-    }
     else{
+
       await Get.to(() => EditPage(data: data));
     }
   }

@@ -219,50 +219,10 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                               return Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Obx(() {
-                                                    return Txt(
-                                                      '${MainController.tableInfo['columns'][j]['title']}',
-                                                      color: MainController.isLightMode.value == true ? whiteColor : color2,
-                                                    );
-                                                  }),
-                                                  SizedBox(height: 10),
                                                   Container(
                                                     width: MainController.tableInfo['columns'][j]['name'] == 'مشتری'  ? 150:100,
                                                     // height: 100,
-                                                    child: SelectBox(
-                                                      name: '${MainController.tableInfo['columns'][j]['title']}',
-                                                      column: MainController.tableInfo['columns'][j],
-                                                      items: data['items'].map<DropdownMenuItem<String>>((item) {
-                                                        return DropdownMenuItem<String>(
-                                                          value: item['value'].toString(),
-                                                          child: Obx(() {
-                                                            return Txt(
-                                                              '${item['title']}',
-                                                              color: MainController.isLightMode.value == true ? whiteColor : primaryDark,
-                                                            );
-                                                          }),
-                                                        );
-                                                      }).toList(),
-                                                      initalValue: data['initValue'],
-                                                      onChanged: (value) async {
-                                                        print('selected item ${value}');
-                                                        for (var item in data['items']) {
-                                                          if (item['title'] == value) {
-                                                            if (item['value'] == '-1') {
-                                                              value = null;
-                                                            }
-                                                          }
-                                                        }
-                                                        if (value != '-1') {
-                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
-                                                        } else {
-                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
-                                                        }
-                                                      },
-                                                      hintText: data['hint'],
-                                                      isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null ? false.obs : true.obs,
-                                                      selectedValue: '',
-                                                    ),
+                                                    child:ViewController.generateStoreFormSelectBox(MainController.tableInfo['columns'][j],data['items'],'', '' , false.obs),
                                                   ),
                                                 ],
                                               );

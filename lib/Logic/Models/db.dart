@@ -69,8 +69,9 @@ class DB {
     this.skipCount = count;
     return this;
   }
-  random(int count){
-    this.randomCount=count;
+
+  random(int count) {
+    this.randomCount = count;
     return this;
   }
 
@@ -90,17 +91,21 @@ class DB {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       List<dynamic> data = getTypeOfField(box.values.toList());
+      print('data get record<>>>>${tableInfo['table-name']}>>${tableInfo}');
+      // if(tableInfo['type']=='multiSelect'){
+      //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
+      //
+      //   }
+        // dataItems.add(value)
+      // }
       if (this.parentItem.length != 0) {
-        data = data
-            .where((element) =>
-                element['parent_id'] == this.parentItem['parent_id'])
-            .toList();
+        data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
       }
       if (data.length != 0)
         for (var d in data) {
           if (this.list.length != 0) {
             for (int j = 1; j <= list.length; j++) {
-              if (d['${list[j]!.fieldName}'] != null){
+              if (d['${list[j]!.fieldName}'] != null) {
                 if (list[j]!.oprator == '==') {
                   if (d['${list[j]!.fieldName}'] == list[j]!.value) {
                     dataItems.add(d);
@@ -143,8 +148,9 @@ class DB {
 
                   break;
                 }
-            }}}
-          else {
+              }
+            }
+          } else {
             dataItems.add(d);
             print('dataItems 6 >>>${dataItems}');
           }
@@ -156,8 +162,8 @@ class DB {
       if (this.skipCount != null) {
         data = data.skip(this.skipCount!).toList();
       }
-      if(this.randomCount!=null){
-        data=getRandomItems(data, this.randomCount!);
+      if (this.randomCount != null) {
+        data = getRandomItems(data, this.randomCount!);
       }
       print('data length sec>>>${data}');
       return data;
@@ -186,29 +192,34 @@ class DB {
     }
     print('DB.storeRecord>>${newRequest}');
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
+    print('new data>>${newData.data}');
     var beforValidate = HelperController.beforeStoreValidation(newData);
+    print('new data1>>${newData.data}');
     if (beforValidate['status'] == false) {
+      print('new data2>>${newData.data}');
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      if (await RecordController.validate(this.tableName!, newData,
-              ViewCustomController.getDataTable(this.tableName!)) ==
+      print('new data2>>${newData.data}');
+      if (await RecordController.validate(this.tableName!, newData, ViewCustomController.getDataTable(this.tableName!)) ==
           false) {
+        print('new data3>>${newData.data}');
+
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          DataModel customData =
-              await HelperController.beforeStore(newData)['data'];
+          print('new data4>>${newData.data}');
+          DataModel customData = await HelperController.beforeStore(newData)['data'];
+          print('new data6>>>${customData.data}');
           await box.add(customData);
-          dataController.allData.add(customData);
-          var afterData = await HelperController.afterStore(
-              this.tableName!, newRequest, customData);
+          print('box after is >>>${box.values.toList()}');
+          var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
           print('DB.storeRecord2>>${(this.tableName!)}');
           print('DB.storeRecord3>>${ViewCustomController.getDataTable(this.tableName!)}');
-          MainController.multiSelectStore(this.tableName!,Id);
+          // await MainController.multiSelectStore(this.tableName!, Id);
           await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
@@ -222,15 +233,15 @@ class DB {
   }
 
   updateRecord(Map<String, dynamic> request) async {
-    dataController.allData.value = [];
+    List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
     print('list is>>>${records.first['id']}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     print('box Data>>>${box.values.toList()}');
-    dataController.allData.value = box.values.toList();
-    for (DataModel da in dataController.allData.value)
-      print('all Data>>>${da.data}');
+    allData = box.values.toList();
+    // for (DataModel da in dataController.allData.value)
+    //   print('all Data>>>${da.data}');
     for (var data in records) {
       data.forEach((key, value) {
         if (!request.containsKey(key)) {
@@ -255,16 +266,10 @@ class DB {
           } else {
             var customUpdate =
                 await HelperController.beforeUpdate(record)['data'];
-
-            var allDataIndex = dataController.allData.value
-                .indexWhere((element) => element.id == data['id']);
-
-            var tableDataIndex = MainController.tableData.value
-                .indexWhere((element) => element.id == data['id']);
-
+            var allDataIndex =
+                allData.indexWhere((element) => element.id == data['id']);
             print('allDataIndex>>>${allDataIndex}');
-            dataController.allData.value[allDataIndex] = customUpdate;
-            // MainController.tableData.value[tableDataIndex] = customUpdate;
+            allData[allDataIndex] = customUpdate;
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterUpdate(
@@ -288,12 +293,12 @@ class DB {
 
   deleteRecord() async {
     List<dynamic> records = await getRecords();
-    // print('list is>>>${records.first['id']}');
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    for (var data in records) {
-      var tableDataIndex =
-          box.values.toList().indexWhere((element) => element.id == data['id']);
+    var relations = ViewCustomController.getDataTable(this.tableName!);
+    print('DB.deleteRecord>>>${relations['relations']}');
 
+    for (var data in records) {
+      var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['id']);
       DataModel item = box.values.toList()[tableDataIndex];
       var index =
           box.values.toList().indexWhere((element) => element.id == data['id']);
@@ -301,8 +306,12 @@ class DB {
       if (before['status'] == false) {
         showSnackbar(snackTypes.error, before['message']);
       } else {
+        if(relations['relations'].length!=0){
+          for(var relation in relations['relations']){
+            DB(relation['table-name']).where('parent_id', '==', data['id']).deleteRecord();
+          }
+        }
         box.deleteAt(index);
-        // MainController.tableData.value.removeAt(tableDataIndex);
         await MainController.loadData();
         MainController.renderPagination();
         var after = HelperController.afterDelete(index, item);

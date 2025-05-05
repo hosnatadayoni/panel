@@ -11,9 +11,9 @@ class MultiSelectDropdown extends StatefulWidget {
   String? hintText;
   // List<String>items;
   List<DropdownMenuItem<dynamic>>? items;
-  RxList<String>? selectedItems = <String>[].obs;
+  RxList<dynamic>? selectedItems = <String>[].obs;
   // Function(List<String>)? onSelectChanged;
-  Function(List<String>)? onChanged;
+  Function(List<dynamic>)? onChanged;
   // Map<String, List<String>> selectedItemsMap;
   Rx<bool>? isSelectedItem = false.obs;
 
@@ -60,24 +60,24 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                       onChanged: (value) {
                         setState(() {
                           if (value != null) {
-                            if (!widget.selectedItems!.value.contains(value)) {
-                              widget.selectedItems!.value.add(value);
-                            } else {
-                              widget.selectedItems!.value.remove(value);
-                            }
-                            if(value == '-1'){
-                              widget.selectedItems!.value.remove(value);
-                            }
+                            // if (!widget.selectedItems!.value.contains(value)) {
+                            //   widget.selectedItems!.value.add(value);
+                            // } else {
+                            //   widget.selectedItems!.value.remove(value);
+                            // }
+                            // if(value == '-1'){
+                            //   widget.selectedItems!.value.remove(value);
+                            // }
                             if (widget.onChanged != null) {
                               widget.onChanged!(widget.selectedItems!.value);
                             }
-                            print('widget.selectedItems!.value>>>${widget.selectedItems!.value}');
-                            if(widget.selectedItems!.value.length ==0 ){
-                              widget.isSelectedItem?.value = false;
-                            }
-                            else{
-                              widget.isSelectedItem?.value = true;
-                            }
+                          //   print('widget.selectedItems!.value>>>${widget.selectedItems!.value}');
+                          //   if(widget.selectedItems!.value.length ==0 ){
+                          //     widget.isSelectedItem?.value = false;
+                          //   }
+                          //   else{
+                          //     widget.isSelectedItem?.value = true;
+                          //   }
                           }
                         });
                       },
@@ -87,7 +87,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
               ),
               Container(
                 padding: EdgeInsets.only(top: 13 , right: 45),
-                child: Txt('${dropDownSelected == null ? widget.hintText:dropDownSelected}', color: MainController.isLightMode.value ? whiteColor : primaryDark ,),
+                child: Txt('${widget.hintText}', color: MainController.isLightMode.value ? whiteColor : primaryDark ,),
               ),
             ],
           ),
