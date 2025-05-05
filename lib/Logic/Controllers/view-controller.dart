@@ -886,8 +886,6 @@ class ViewController extends GetxController {
     List<dynamic> items=await DB(column['sourceTable']).getRecords();
     List<dynamic> selectedId=[];
     print('items is ss>>${items}');
-
-    items.add({"انتخاب نشده":null});
     // if(items.length!=0){
     //   items.add({'id':'',});
     // }
