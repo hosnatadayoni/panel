@@ -65,11 +65,16 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-                      List<dynamic> d=[];
+                      List<dynamic> d=await DB('${MainController.tableInfo['table-name']}').getRecords();
                       List<dynamic> d2=[];
                       print('request>>${ViewController.request}');
-                      for(var filter in ViewController.request.keys)
-                      d=await DB('${MainController.tableInfo['table-name']}').where('${filter}','==',ViewController.request[filter]).getRecords();
+                      for(var filter in ViewController.request.keys){
+                        if(ViewController.request[filter]!=''){
+                          print('ViewController.request[filter]>>>${ViewController.request[filter].runtimeType}');
+                          d=await DB('${MainController.tableInfo['table-name']}').where('${filter}','==',ViewController.request[filter]).getRecords();
+
+                        }
+                      }
 
                       MainController.tableData.value=d;
                       print('filter btn >>>${d}>>${MainController.tableInfo['table-name']}');

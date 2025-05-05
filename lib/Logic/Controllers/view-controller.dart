@@ -633,17 +633,16 @@ class ViewController extends GetxController {
                column: column,
                items: [
 
-                   // DropdownMenuItem(
-                   //
-                   //     child: Obx(() {
-                   //       return Txt(
-                   //         '${itemsShowSelectItem(item,column['items'])}',
-                   //         color: MainController.isLightMode.value == true
-                   //             ? whiteColor
-                   //             : primaryDark,
-                   //       );
-                   //     }),
-                   //     value: item['id'].toString()),
+                   DropdownMenuItem(
+                       child: Obx(() {
+                         return Txt(
+                           'انتخاب نشده',
+                           color: MainController.isLightMode.value == true
+                               ? whiteColor
+                               : primaryDark,
+                         );
+                       }),
+                       value: '-1'),
                  for (var item in items)
                  DropdownMenuItem(
 

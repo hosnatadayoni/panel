@@ -92,6 +92,7 @@ class DB {
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       List<dynamic> data = getTypeOfField(box.values.toList());
       print('data get record<>>>>${tableInfo['table-name']}>>${tableInfo}');
+      print('this.list.length>>>>${this.list}');
       // if(tableInfo['type']=='multiSelect'){
       //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
       //
@@ -105,7 +106,10 @@ class DB {
         for (var d in data) {
           if (this.list.length != 0) {
             for (int j = 1; j <= list.length; j++) {
+
               if (d['${list[j]!.fieldName}'] != null) {
+                print('list my is>>>${d['${list[j]!.fieldName}'].runtimeType}>>>${list[j]!.value.runtimeType}>>>>>${list[j]!.value}>>>>${list[j]!.value!=null}>>>${list[j]!.value!=''}');
+                if( list[j]!.value!=''){
                 if (list[j]!.oprator == '==') {
                   if (d['${list[j]!.fieldName}'] == list[j]!.value) {
                     dataItems.add(d);
@@ -142,14 +146,20 @@ class DB {
                     print('dataItems 5 >>>${dataItems}');
                   }
                   break;
-                } else if (list[j]!.oprator == null) {
+                }
+                 else if (list[j]!.oprator == null) {
                   dataItems.add(d);
                   print('dataItems 6 >>>${dataItems}');
 
                   break;
                 }
               }
+                else{
+                  dataItems.add(d);
+                  print('dataItems 01 >>>${dataItems}');
+                }
             }
+          }
           } else {
             dataItems.add(d);
             print('dataItems 6 >>>${dataItems}');
