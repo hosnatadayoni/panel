@@ -46,7 +46,7 @@ class _MainTableBoxState extends State<MainTableBox> {
               if(MainController.tableInfo['filters']!=null && MainController.tableInfo['filters'].length!=0)
                 for(var filter in MainController.tableInfo['filters'])
                 FutureBuilder<Widget>(
-                  future: ViewController.generateFilterFormView(filter),
+                  future: ViewController.generateFilterView(filter),
                   builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
@@ -72,10 +72,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                         if(ViewController.request[filter]!=''){
                           print('ViewController.request[filter]>>>${ViewController.request[filter].runtimeType}');
                           d=await DB('${MainController.tableInfo['table-name']}').where('${filter}','==',ViewController.request[filter]).getRecords();
-
                         }
                       }
-
                       MainController.tableData.value=d;
                       print('filter btn >>>${d}>>${MainController.tableInfo['table-name']}');
                       print('filter bttn >>>${d2}>>${MainController.tableInfo['table-name']}');

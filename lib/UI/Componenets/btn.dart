@@ -419,7 +419,6 @@ class _BtnState extends State<Btn> {
       final columnWidth = screenWidth / 12 * widget.gridColumns!;
       calculatedWidth = columnWidth;
     }
-    print('isValidGridColumns>>>${widget.responsive && size.width < widget.responsiveBreakpoint!}');
 
     final buttonWidget = Container(
       decoration: BoxDecoration(
