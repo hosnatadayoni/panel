@@ -11,6 +11,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -52,6 +53,7 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+    var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
       print('ViewController.generateStoreFormView>>${columns}');
@@ -135,6 +137,13 @@ class ViewController extends GetxController {
           ));
           children.add(fileBox);
         }
+        else if(type == 'time'){
+          timeBox = generateFormTimeBox(column , TimeOfDay.now());
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(timeBox);
+        }
       }
     }
     return Column(
@@ -152,6 +161,7 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+    var timeBox;
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       if (MainController.tableInfo['columns'][j]['is-show-edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
@@ -320,6 +330,26 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(fileBox);
+        }
+        else if (type == 'time') {
+          List<String>? TimeParts;
+          int hour = TimeOfDay.now().hour;
+          int minute = TimeOfDay.now().minute;
+          print('dataModel[name]>>>${dataModel['${name}']}');
+          if (dataModel['${name}'] != null) {
+            TimeParts = dataModel['${name}'].split(':');
+            print('TimeParts>>>${TimeParts}');
+            hour = int.parse('${TimeParts![0]}');
+            minute = int.parse('${TimeParts[1]}');
+            print('hour minute>>>${hour} ${minute}');
+          }
+          print('TimeOfDay(hour: hour , minute: minute)>>>${TimeOfDay(hour: hour , minute: minute)}');
+          timeBox = generateFormTimeBox(
+              column, TimeOfDay(hour: hour , minute: minute));
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(timeBox);
         }
       }
     }
@@ -809,6 +839,25 @@ class ViewController extends GetxController {
     );
   }
 
+  static Widget generateFormTimeBox(var column , TimeOfDay selectedTime){
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+        }),
+        SizedBox(height: 10,),
+        TimePickerBox(
+          column: column ,
+          selectedTime: selectedTime,
+          onTimeChanged: (time) {
+            print('timeeeeeee3>>>${time}');
+          ViewController.request[column['name']] = time;
+        },
+        ),
+      ],
+    );
+  }
   static Future<Widget> genarateEditFormMuiltiSelectBox(
       var column , Rx<String> hintTxt , RxList<dynamic> selectedItemsList , Rx<bool> isSelectedItem) async {
     List<dynamic> items=await DB(column['sourceTable']).getRecords();

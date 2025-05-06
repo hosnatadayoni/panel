@@ -43,12 +43,38 @@
       {
         "name": "سقف اعتبار",
         "title": "سقف اعتبار",
-        "type": "Number double"
+        "type": "Number double",
+        "validators": [
+          {"type": "min","value": 200 , "message": "عدد وارد شده کمتر از 200 است"},
+          {"type": "max","value": 700 , "message": "عدد وارد شده بیشتر از 700 است"}
+        ]
       },
       {
         "name": "کد مشتری",
         "title": "کد مشتری",
-        "type": "Number int"
+        "type": "Number int",
+        "validators": [
+          {"type": "min","value": 430 , "message": "عدد وارد شده کمتر از 430 است"},
+          {"type": "max","value": 793 , "message": "عدد وارد شده بیشتر از 793 است"}
+        ]
+      },
+      {
+        "name": "time",
+        "title": "time",
+        "type": "time",
+        "format": 24,
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "time2",
+        "title": "time2",
+        "type": "time",
+        "format": 12
       }
     ]
   },

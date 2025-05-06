@@ -61,6 +61,7 @@ class _FormTextFieldState extends State<FormTextField> {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
      if(widget.column != null){
        if(ViewController.request[widget.column['name']] != null){
+
          if(widget.column['type'] == 'Number double'){
            ViewController.request[widget.column['name']] = double.parse('${text.value}');
            // double.parse('${text.value}') =  ViewController.request[widget.column['name']];
@@ -73,6 +74,7 @@ class _FormTextFieldState extends State<FormTextField> {
            // text.value = ViewController.request[widget.column['name']];
            ViewController.request[widget.column['name']] = text.value;
          }
+         print('text.value4>>>${ViewController.request[widget.column['name']]} ${ViewController.request[widget.column['name']].runtimeType} ${widget.column['name']}');
 
        }
        if(widget.column['validators'] != null){

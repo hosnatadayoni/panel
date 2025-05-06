@@ -39,7 +39,7 @@ class _FormFileState extends State<FormFile> {
     }
 
     return Obx((){
-      if(ViewController.isClickedBtn.value == true){
+      if(ViewController.isClickedBtn.value == true || ViewController.isClickedEditBtn.value == true){
         if(inputRequired != null){
           if(this.isSeletedFile!.value == false){
             _errorMasege = inputRequired['message'];

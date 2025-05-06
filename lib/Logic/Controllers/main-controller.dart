@@ -1198,7 +1198,16 @@ class MainController extends GetxController {
               orElse: () => null);
           // int numberExcel = int.parse('${cellExcel}');
           print('cellExcel number>>>${cellExcel}');
-          int intValue = int.parse(cellExcel);
+          num? intValue;
+          if(column['type'] == 'Number int'){
+            intValue = int.tryParse(cellExcel);
+          }
+          else if(column['type'] == 'Number double'){
+            intValue = double.tryParse(cellExcel);
+          }
+          if (intValue == null) {
+            return false;
+          }
           if (minValidator != null || maxValidator != null) {
             if (intValue < minValidator['value'] ||
                 intValue > maxValidator['value']) {
