@@ -254,13 +254,83 @@ class DB {
           }
       }
       else{
-     if(this.whereList.length != 0) {
-      bool check=true;
-      List<dynamic>dataNew=[];
-      dataItems=searchList(data,this.whereList);
-      print('dataItems searchList>>>${dataItems}');
+        if (this.whereList.length != 0){
+          if (data.length != 0)
+            for (var d in data) {
+              bool flag=true;
+                for (int j = 1; j <= whereList.length; j++) {
+                  if (d['${whereList[j]!.fieldName}'] != null) {
+                    if( whereList[j]!.value!=''){
+                      if (whereList[j]!.oprator == '==' || whereList[j]!.oprator == null) {
+                        if(d['${whereList[j]!.fieldName}'] is List){
+                          if (d['${whereList[j]!.fieldName}'].contains(whereList[j]!.value) && flag==true ) {
+                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
+                            flag=true;
+                          }
+                          else
+                            flag=false;
+                        }
+                        else{
+                          if (d['${whereList[j]!.fieldName}'] == whereList[j]!.value && flag==true ) {
+                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
+                            flag=true;
+                          }
+                          else
+                            flag=false;
+                        }
 
-    }
+
+                      } else if (whereList[j]!.oprator == '>=') {
+                        if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '<=') {
+                        if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value && flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '!=') {
+                        if (d['${whereList[j]!.fieldName}'] != whereList[j]!.value && flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '<') {
+                        if (d['${whereList[j]!.fieldName}'] < whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '>') {
+                        if (d['${whereList[j]!.fieldName}'] > whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }
+                    }
+                    else
+                      flag=false;
+
+                  }
+                  else
+                    flag=false;
+                }
+                if(flag==true){
+                dataItems.add(d);
+                print('flag is true>>>${flag}>>>${dataItems.length}');
+                }
+
+              }
+            }
      else{
        dataItems=data;
      }
