@@ -289,6 +289,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                     if (data['items'] == null || data['items'].isEmpty) {
                                       return Container();
                                     } else {
+                                      var column=getDataTable['columns'][j];
                                       return Container(
                                         width:getDataTable['columns'][j]['name'] == 'نام کالا'  ? 150:80,
                                         // height: 100,
@@ -302,43 +303,92 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                               );
                                             }),
                                             SizedBox(height: 10),
+
+                                            column['sourceItems']!='custom'?
+
                                             SelectBox(
-                                              name: '${getDataTable['columns'][j]['title']}',
-                                              column: getDataTable['columns'][j],
-                                              items: data['items'].map<DropdownMenuItem<String>>((item) {
-                                                return DropdownMenuItem<String>(
-                                                  value: item['value'].toString(),
-                                                  child: Obx(() {
-                                                    return Txt(
-                                                      '${item['title']}',
-                                                      color: MainController.isLightMode.value == true ? whiteColor : primaryDark,
-                                                    );
-                                                  }),
-                                                );
-                                              }).toList(),
-                                              initalValue: data['initValue'],
-                                              onChanged: (value) async {
-                                                print('selected item ${value}');
-                                                OrderItem.orderItemsList[key] ??= {};
-                                                for (var item in data['items']) {
-                                                  if (item['title'] == value) {
-                                                    if (item['value'] == '-1') {
-                                                      value = null;
+                                                name: '${column['title']}',
+                                                column: column,
+                                                items: [
+
+                                                  DropdownMenuItem(
+                                                      child: Obx(() {
+                                                        return Txt(
+                                                          'انتخاب نشده',
+                                                          color: MainController.isLightMode.value == true
+                                                              ? whiteColor
+                                                              : primaryDark,
+                                                        );
+                                                      }),
+                                                      value: '-1'),
+                                                  for (var item in data['items'])
+                                                    DropdownMenuItem(
+
+                                                        child: Obx(() {
+                                                          return Txt(
+                                                            '${ViewController.itemsShowSelectItem(item,column['items'])}',
+                                                            color: MainController.isLightMode.value == true
+                                                                ? whiteColor
+                                                                : primaryDark,
+                                                          );
+                                                        }),
+                                                        value: item['id'].toString()),
+
+                                                ],
+                                                initalValue:  data['items'].first['id'],
+                                                onChanged: (value) async {
+                                                  print('selected item ${value}');
+                                                  if(value != '-1'){
+                                                    // selectedValue=value!;
+                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = value;
+                                                  }
+                                                  else{
+                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = '';
+                                                  }
+
+                                                  print('request select>>${ OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']}');
+                                                },
+                                                hintText: '',
+                                                isSeleted: false.obs,
+                                                selectedValue: '') :
+                                            SelectBox(
+                                                name: '${column['title']}',
+                                                column: column,
+                                                items: [
+                                                  for (var item in data['items'])
+                                                    DropdownMenuItem(
+                                                        child: Obx(() {
+                                                          return Txt(
+                                                            '${item['title']}',
+                                                            color: MainController.isLightMode.value == true
+                                                                ? whiteColor
+                                                                : primaryDark,
+                                                          );
+                                                        }),
+                                                        value: item['value']),
+                                                ],
+                                                initalValue: data['items'].first['value'],
+                                                onChanged: (value) async {
+                                                  print('selected item ${value}');
+                                                  for (var item in data['items']) {
+                                                    if (item['title'] == value) {
+                                                      if (item['value'] == '-1') {
+                                                        value = null;
+                                                      }
                                                     }
                                                   }
-                                                }
-                                                if (value != '-1') {
-                                                  // ViewController.request2[getDataTable['columns'][j]['name']] = value;
-                                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = value;
-                                                } else {
-                                                  // ViewController.request2[getDataTable['columns'][j]['name']] = '';
-                                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = '';
-                                                }
-                                              },
-                                              hintText: data['hint'],
-                                              isSeleted: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
-                                              selectedValue: '',
-                                            ),
+                                                  if(value != '-1'){
+                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = value;
+                                                  }
+                                                  else{
+                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']= '';
+                                                  }
+
+                                                },
+                                                hintText: '',
+                                                isSeleted: false.obs,
+                                                selectedValue: ''),
+
                                           ],
                                         ),
                                       );

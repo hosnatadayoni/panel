@@ -1,7 +1,7 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
-import 'package:finance/Logic/Controllers/dataController.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
 import '../Controllers/helper-controller.dart';
 import '../Controllers/main-controller.dart';
@@ -17,7 +17,8 @@ class DB {
   String? tableName;
   String? parentTable;
   String? parentId;
-  Map<int, Where> list = <int, Where>{};
+  Map<int, Where> whereList = <int, Where>{};
+  Map<int, Where> orWhereList = <int, Where>{};
   int? takeCount;
   int? skipCount;
   int? randomCount;
@@ -50,12 +51,43 @@ class DB {
     return newData;
   }
 
+  getTypeOfFieldJson(Map<String, dynamic> d) {
+    var type;
+    Map<String, dynamic> newData = <String, dynamic>{};
+
+      print('data that is>>>${d}');
+
+      Map<String, dynamic> e = <String, dynamic>{};
+      for (var key in d.keys) {
+        type = MainController.getTypeOfField(this.tableName!, key);
+        print('d.data[key]>>${d[key]}>>>${type}');
+        if (type != null) {
+          e['id'] = d['id'];
+          e[key] = General.withFormat(type, d[key]);
+        }
+      }
+      newData=(e);
+      print('new>>>${newData}');
+
+    return newData;
+  }
+
   where(String? fieldName, String? oprator, var value) {
     counter++;
     Where l = Where(fieldName, oprator, value);
     w.add(l);
-    this.list[counter] = l;
-    print('w length>>${w.length}>>>list>>>${this.list}');
+    this.whereList[counter] = l;
+    print('w length>>${counter}>>>>>${w.length}>>>list>>>${this.whereList[counter]!.value}');
+
+    return this;
+  }
+  
+  orWhere(String? fieldName, String? oprator, var value) {
+    counter++;
+    Where l = Where(fieldName, oprator, value);
+    w.add(l);
+    this.orWhereList[counter] = l;
+    print('w length>>${counter}>>>>>${w.length}>>>list>>>${this.orWhereList}');
 
     return this;
   }
@@ -75,23 +107,69 @@ class DB {
     return this;
   }
 
-  List getRandomItems(List list, int count) {
+   getRandomItems(List list, int count) {
     if (count <= 0 || list.isEmpty) return [];
     if (count >= list.length) return List.from(list)..shuffle();
     final shuffled = List.from(list)..shuffle();
     return shuffled.take(count).toList();
   }
 
+  List<Map<String, dynamic>> searchList(
+      List<Map<String, dynamic>> mainList,
+      Map<int, Where> searchPattern,
+      ) {
+    print('DB.searchList mainList>>${mainList}');
+    // print('DB.searchList searchPattern>>${searchPattern}');
+    return mainList.where((item) {
+      // بررسی می‌کنیم که آیا تمام کلید-مقدارهای الگو در آیتم وجود دارد
+      return searchPattern.entries.every((entry) {
+        final key = entry.value.fieldName;
+        final value = entry.value.value;
+        print('DB.searchList searchPattern>>${key}>>>${value}>>item.key>>>${item[key]}');
+        // if(item[key])
+        return item.containsKey(key) &&( item[key] is List?item[key].contains(value): item[key] == value) ;
+      });
+    }).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> filterInBackground(
+      List<dynamic> mainList,
+      List<dynamic> searchPattern,
+      ) async {
+    return await compute(_filterListIsolate, {
+      'mainList': mainList,
+      'searchPattern': searchPattern,
+    });
+  }
+
+  List<Map<String, dynamic>> _filterListIsolate(Map<String, dynamic> data) {
+    final mainList = data['mainList'] as List<Map<String, dynamic>>;
+    final searchPattern = data['searchPattern'] as List<Map<String, dynamic>>;
+
+    return mainList.where((mainItem) {
+      return searchPattern.every((patternItem) {
+        return patternItem.entries.every((patternEntry) {
+          final key = patternEntry.key;
+          final value = patternEntry.value;
+          return mainItem.containsKey(key) && mainItem[key] == value;
+        });
+      });
+    }).toList();
+  }
+
   getRecords() async {
-    List<dynamic> dataItems = [];
+    List<Map<String,dynamic>> dataItems = [];
     Box box;
     int index = MainController.SubMenuList.indexWhere(
         (element) => element['table-name'] == '${this.tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-      List<dynamic> data = getTypeOfField(box.values.toList());
+      for(var i in box.values.toList())
+      print('data box is>>${this.tableName}>>>${i.data}');
+      List<Map<String,dynamic>> data = getTypeOfField(box.values.toList());
       print('data get record<>>>>${tableInfo['table-name']}>>${tableInfo}');
+      print('this.list.length>>>>${this.orWhereList}');
       // if(tableInfo['type']=='multiSelect'){
       //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
       //
@@ -101,60 +179,175 @@ class DB {
       if (this.parentItem.length != 0) {
         data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
       }
-      if (data.length != 0)
-        for (var d in data) {
-          if (this.list.length != 0) {
-            for (int j = 1; j <= list.length; j++) {
-              if (d['${list[j]!.fieldName}'] != null) {
-                if (list[j]!.oprator == '==') {
-                  if (d['${list[j]!.fieldName}'] == list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 1 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == '>=') {
-                  if (d['${list[j]!.fieldName}'] >= list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 3 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == '<=') {
-                  if (d['${list[j]!.fieldName}'] <= list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 4 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == '!=') {
-                  if (d['${list[j]!.fieldName}'] != list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 5 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == '<') {
-                  if (d['${list[j]!.fieldName}'] < list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 5 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == '>') {
-                  if (d['${list[j]!.fieldName}'] > list[j]!.value) {
-                    dataItems.add(d);
-                    print('dataItems 5 >>>${dataItems}');
-                  }
-                  break;
-                } else if (list[j]!.oprator == null) {
-                  dataItems.add(d);
-                  print('dataItems 6 >>>${dataItems}');
 
-                  break;
+      if (this.orWhereList.length != 0){
+        if (data.length != 0)
+          for (var d in data) {
+            if (this.orWhereList.length != 0) {
+              for (int j = 1; j <= orWhereList.length; j++) {
+                print('this.list is>>>${orWhereList[j]!.value}>>>${d['${orWhereList[j]!.fieldName}']}');
+                if (d['${orWhereList[j]!.fieldName}'] != null) {
+                  print('list my is>>>${d['${orWhereList[j]!.fieldName}'].runtimeType}>>>${orWhereList[j]!.value.runtimeType}>>>>>${orWhereList[j]!.value}>>>>${orWhereList[j]!.value!=null}>>>${orWhereList[j]!.value!=''}');
+                  if( orWhereList[j]!.value!=''){
+                    if (orWhereList[j]!.oprator == '==') {
+                      if(d['${orWhereList[j]!.fieldName}'] is List<dynamic>){
+                        if(d['${orWhereList[j]!.fieldName}'].contains(orWhereList[j]!.value)){
+                          print('contains');
+                          dataItems.add(d);
+                          break;
+                        }
+                      }
+                      if (d['${orWhereList[j]!.fieldName}'] == orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 1 >>>${dataItems}');
+                      }
+                      break;
+                    } else if (orWhereList[j]!.oprator == '>=') {
+                      if (d['${orWhereList[j]!.fieldName}'] >= orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 3 >>>${dataItems}');
+                      }
+                      break;
+                    } else if (orWhereList[j]!.oprator == '<=') {
+                      if (d['${orWhereList[j]!.fieldName}'] <= orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 4 >>>${dataItems}');
+                      }
+                      break;
+                    } else if (orWhereList[j]!.oprator == '!=') {
+                      if (d['${orWhereList[j]!.fieldName}'] != orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 5 >>>${dataItems}');
+                      }
+                      break;
+                    } else if (orWhereList[j]!.oprator == '<') {
+                      if (d['${orWhereList[j]!.fieldName}'] < orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 5 >>>${dataItems}');
+                      }
+                      break;
+                    } else if (orWhereList[j]!.oprator == '>') {
+                      if (d['${orWhereList[j]!.fieldName}'] > orWhereList[j]!.value) {
+                        dataItems.add(d);
+                        print('dataItems 5 >>>${dataItems}');
+                      }
+                      break;
+                    }
+                    else if (orWhereList[j]!.oprator == null) {
+                      dataItems.add(d);
+                      print('dataItems 6 >>>${dataItems}');
+
+                      break;
+                    }
+                  }
+                  else{
+                    dataItems.add(d);
+                    print('dataItems 01 >>>${dataItems}');
+                  }
                 }
               }
             }
-          } else {
-            dataItems.add(d);
-            print('dataItems 6 >>>${dataItems}');
+            else {
+              dataItems.add(d);
+              print('dataItems 6 >>>${dataItems}');
+            }
           }
-        }
+      }
+      else{
+     if(this.whereList.length != 0) {
+      bool check=true;
+      List<dynamic>dataNew=[];
+      dataItems=searchList(data,this.whereList);
+      print('dataItems searchList>>>${dataItems}');
+          // for (int j = 1; j <= whereList.length; j++) {
+      //   for (var d in data)
+      //     if (d['${whereList[j]!.fieldName}'] != null) {
+      //       if( whereList[j]!.value!=''){
+      //         if (whereList[j]!.oprator == '==') {
+      //           if(d['${whereList[j]!.fieldName}'].runtimeType==List){
+      //             if(d['${whereList[j]!.fieldName}'].contains(whereList[j]!.value)){
+      //               dataNew.add(d);
+      //               //   check=true;
+      //               // }else{
+      //               //   check=false;
+      //             }
+      //           }
+      //           if (d['${whereList[j]!.fieldName}'] == whereList[j]!.value) {
+      //             //   check=true;
+      //             // }else{
+      //             //   check=false;
+      //           }
+      //         }
+      //         else if (whereList[j]!.oprator == '>=') {
+      //           if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value) {
+      //             //   check=true;
+      //             //   print('dataItems 3 >>>${check}');
+      //             // }else{
+      //             //   check=false;
+      //           }
+      //           // break;
+      //         }
+      //         else if (whereList[j]!.oprator == '<=') {
+      //           if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value) {
+      //             //   check=true;
+      //             //   print('dataItems 4 >>>${check}');
+      //             // }else{
+      //             //   check=false;
+      //           }
+      //           // break;
+      //         }
+      //         else if (whereList[j]!.oprator == '!=') {
+      //           if (d['${whereList[j]!.fieldName}'] != whereList[j]!.value) {
+      //             //   check=true;
+      //             //   print('dataItems 5 >>>${check}');
+      //             // }else{
+      //             //   check=false;
+      //           }
+      //           // break;
+      //         }
+      //         else if (whereList[j]!.oprator == '<') {
+      //           if (d['${whereList[j]!.fieldName}'] < whereList[j]!.value) {
+      //             //   check=true;
+      //             //   print('dataItems 5 >>>${check}');
+      //             // }else{
+      //             check=false;
+      //           }
+      //           // break;
+      //         }
+      //         else if (whereList[j]!.oprator == '>') {
+      //           if (d['${whereList[j]!.fieldName}'] > whereList[j]!.value) {
+      //             //   check=true;
+      //             //   print('dataItems 5 >>>${check}');
+      //             // }else{
+      //             //   check=false;
+      //           }
+      //           // break;
+      //         }
+      //         // else if (whereList[j]!.oprator == null) {
+      //         //   check=true;
+      //         //   print('dataItems 6 >>>${check}');
+      //         //
+      //         //   // break;
+      //         // }
+      //         print('check issss>>${check}');
+      //         if(check==true){
+      //           dataItems.add(d);
+      //           print('dataItems 01 >>>${dataItems}');
+      //         }
+      //       }
+      //       // else{
+      //       //   dataItems.add(d);
+      //       //   print('dataItems 01 >>>${dataItems}');
+      //       // }
+      //     }
+      //
+      // }
+    }
+     else{
+       dataItems=data;
+     }
+      }
+
       data = dataItems;
       if (this.takeCount != null) {
         data = data.take(this.takeCount!).toList();
@@ -190,35 +383,24 @@ class DB {
     if (parentItem != {}) {
       newRequest.addAll(parentItem);
     }
-    print('DB.storeRecord>>${newRequest}');
+
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
-    print('new data>>${newData.data}');
     var beforValidate = HelperController.beforeStoreValidation(newData);
-    print('new data1>>${newData.data}');
     if (beforValidate['status'] == false) {
-      print('new data2>>${newData.data}');
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      print('new data2>>${newData.data}');
       if (await RecordController.validate(this.tableName!, newData, ViewCustomController.getDataTable(this.tableName!)) ==
           false) {
-        print('new data3>>${newData.data}');
-
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          print('new data4>>${newData.data}');
           DataModel customData = await HelperController.beforeStore(newData)['data'];
-          print('new data6>>>${customData.data}');
           await box.add(customData);
-          print('box after is >>>${box.values.toList()}');
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
-          print('DB.storeRecord2>>${(this.tableName!)}');
-          print('DB.storeRecord3>>${ViewCustomController.getDataTable(this.tableName!)}');
           // await MainController.multiSelectStore(this.tableName!, Id);
           await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           MainController.renderPagination();
