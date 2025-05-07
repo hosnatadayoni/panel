@@ -120,16 +120,19 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                     else if(MainController.tableInfo['columns'][j]['type'] == 'checkbox')
                       Row(
                         children: [
-                          CheckBox(
-                            checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
-                            checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
-                            defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
-                            isClickedBtn:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null ? false.obs : true.obs,
-                            onChange: (text) {
-                              ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
-                            },
-                            column: MainController.tableInfo['columns'][j],
+                          Container(
+                            width: 150,
+                            child: CheckBox(
+                              checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
+                              checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
+                              defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
+                              isClickedBtn:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null ? false.obs : true.obs,
+                              onChange: (text) {
+                                ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
+                              },
+                              column: MainController.tableInfo['columns'][j],
 
+                            ),
                           ),
                           SizedBox(width: 20,),
                         ],
@@ -192,7 +195,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                           ],
                         )
                     else if(MainController.tableInfo['columns'][j]['type'] == 'select')
-                            Row(
+                        Row(
                               children: [
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,7 +341,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                        var data = snapshot.data!;
                                        return data['items'].length != 0 ? Obx(() {
                                          return Container(
-                                           width: 150,
+                                           width: 250,
                                            child: MultiSelectDropdown(
                                              items: [
                                                for (var item in data['items'])
@@ -405,68 +408,78 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                          )
                     else if(MainController.tableInfo['columns'][j]['type'] == 'radiobutton')
                          Container(
-                           width: 700,
-                           child: Row(
-                             children: [
-                               Column(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   Obx(() {
-                                     return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                                   }),
-                                   SizedBox(height: 10,),
-                                   FutureBuilder(
-                                       future: _future[MainController.tableInfo['columns'][j]['title']],
-                                       builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot){
-                                         if (snapshot.connectionState == ConnectionState.waiting) {
-                                           return CircularProgressIndicator();
-                                         } else if (snapshot.hasError) {
-                                           if(snapshot.data != null){
-                                             return Txt('${AppController.of(context)!.value('error')}');
-                                           }
-                                           else{
-                                             return Container();
-                                           }
-                                         }
-                                         else{
-                                           var data = snapshot.data!;
-                                           return Column(
-                                             children: [
-                                               RadioButton(
-                                                 name: '',
-                                                 radioButtonItems: [
-                                                   for (var radioButtonItem in data['items'])
-                                                     FormBuilderChipOption(
-                                                         value: '${radioButtonItem['value']}',
-                                                         child: Obx(() {
-                                                           return Txt(
-                                                             '${radioButtonItem['title']}',
-                                                             color: MainController.isLightMode.value
-                                                                 ? whiteColor
-                                                                 : primaryDark,
-                                                           );
-                                                         })),
-                                                 ],
-                                                 onChanged: (text) {
-                                                   ViewController.request[MainController.tableInfo['columns'][j]['name']] = text;
-                                                   // dataJson[columnName] = selectedRadioButton.value;
-                                                 },
-                                                 initalValue: data['initValue'],
-                                                 column: MainController.tableInfo['columns'][j],
-                                                 isSelectedItem: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null ? false.obs : true.obs,
-                                               ),
-                                               SizedBox(height: 20),
-                                             ],
-                                           );
-                                         }
-                                       }
-                                   )
-                                 ],
-                               ),
-                               SizedBox(width: 20,),
-                             ],
-                           ),
-                         )
+                                  width: 400,
+                                  height: 150,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Obx(() {
+                                              return Txt(
+                                                '${MainController.tableInfo['columns'][j]['title']}',
+                                                color: MainController.isLightMode.value ? whiteColor : color2,
+                                              );
+                                            }),
+                                            SizedBox(height: 10),
+                                            FutureBuilder(
+                                              future: _future[MainController.tableInfo['columns'][j]['title']],
+                                              builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return SizedBox(
+                                                    width: 200,
+                                                    height: 50,
+                                                    child: CircularProgressIndicator(),
+                                                  );
+                                                } else if (snapshot.hasError) {
+                                                  return snapshot.data != null
+                                                      ? Txt('${AppController.of(context)!.value('error')}')
+                                                      : Container();
+                                                } else {
+                                                  var data = snapshot.data!;
+                                                  return ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                      minWidth: 300,
+                                                      minHeight: 60,
+                                                    ),
+                                                    child: RadioButton(
+                                                      name: '',
+                                                      radioButtonItems: [
+                                                        for (var radioButtonItem in data['items'])
+                                                          FormBuilderChipOption(
+                                                            value: '${radioButtonItem['value']}',
+                                                            child: Obx(() {
+                                                              return Txt(
+                                                                '${radioButtonItem['title']}',
+                                                                color: MainController.isLightMode.value
+                                                                    ? whiteColor
+                                                                    : primaryDark,
+                                                              );
+                                                            }),
+                                                          ),
+                                                      ],
+                                                      onChanged: (text) {
+                                                        ViewController.request[MainController.tableInfo['columns'][j]['name']] = text;
+                                                      },
+                                                      initalValue: data['initValue'],
+                                                      column: MainController.tableInfo['columns'][j],
+                                                      isSelectedItem: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] == null
+                                                          ? false.obs
+                                                          : true.obs,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 20),
+                                    ],
+                                  ),
+                                )
                     else if(MainController.tableInfo['columns'][j]['type'] == 'file')
                          Row(
                            children: [
@@ -507,13 +520,12 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                             SizedBox(height: 10,),
                                             Container(
                                               width: 100,
-                                              // height: 100,
                                               child: TimePickerBox(
                                                 column: MainController.tableInfo['columns'][j] ,
                                                 selectedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']!= null ?  ViewCustomController.parseTime(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']):TimeOfDay.now(),
                                                 isSeletedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== '' ? false.obs : true.obs,
                                                 onTimeChanged: (time) {
-                                                  ViewController.request[MainController.tableInfo['columns'][j]] = time;
+                                                  ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = time;
                                                 },
                                               ),
                                             )

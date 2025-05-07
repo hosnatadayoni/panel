@@ -13,6 +13,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/Items/Form/form-time.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -191,16 +192,19 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                 else if (getDataTable['columns'][j]['type'] == 'checkbox')
                   Row(
                     children: [
-                      CheckBox(
-                        checkBoxName: '${getDataTable['columns'][j]['title']}',
-                        checkBoxTitle: '${getDataTable['columns'][j]['title']}',
-                        defaultValue: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'],
-                        isClickedBtn:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' ?  false.obs : true.obs,
-                        onChange: (text) {
-                          OrderItem.orderItemsList[key] ??= {};
-                          OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
-                        },
-                        column: getDataTable['columns'][j],
+                      Container(
+                        width: 150,
+                        child: CheckBox(
+                          checkBoxName: '${getDataTable['columns'][j]['title']}',
+                          checkBoxTitle: '${getDataTable['columns'][j]['title']}',
+                          defaultValue: OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'],
+                          isClickedBtn:OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == '' ?  false.obs : true.obs,
+                          onChange: (text) {
+                            OrderItem.orderItemsList[key] ??= {};
+                            OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] = text;
+                          },
+                          column: getDataTable['columns'][j],
+                        ),
                       ),
                       SizedBox(width: 20,)
                     ],
@@ -220,15 +224,15 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                             SizedBox(height: 10),
                             Container(
                               child: ColorPickerBox(
-                                selectedColor: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null
-                                    ? Color(int.parse('${OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']}'))
+                                selectedColor: OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] != null
+                                    ? Color(int.parse('${OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}']}'))
                                     : Colors.blue,
-                                isSeletedColor:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null  ? false.obs : true.obs,
+                                isSeletedColor:OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == null  ? false.obs : true.obs,
                                 onChanged: (color) {
                                   colorChanged = color;
                                   String hexColor = '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
                                   OrderItem.orderItemsList[key] ??= {};
-                                  OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = hexColor;
+                                  OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] = hexColor;
                                 },
                                 column: getDataTable['columns'][j],
                               ),
@@ -247,6 +251,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Obx(() {
+                                  print('whdkd>>>>${OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}']}');
                                   return Txt(
                                     '${getDataTable['columns'][j]['title']}',
                                     color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -254,11 +259,11 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                 }),
                                 SizedBox(height: 10),
                                 DateBox(
-                                  selectedDate:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != ''? ViewCustomController.parseDate(OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']):Jalali.now(),
-                                  isSeletedDate:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
+                                  selectedDate:OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] != null ? ViewCustomController.parseDate(OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}']):Jalali.now(),
+                                  isSeletedDate:OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                   onDateChanged: (date) {
                                     OrderItem.orderItemsList[key] ??= {};
-                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
+                                    OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] = date;
                                   },
                                   column: getDataTable['columns'][j],
                                 )
@@ -431,7 +436,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                         return data['items'].length != 0
                                             ? Obx(() {
                                           return Container(
-                                            width: 150,
+                                            width: 250,
                                             child: MultiSelectDropdown(
                                               items: [
                                                 for (var item in data['items'])
@@ -465,7 +470,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                                       data['isSelectedItem'].value = true;
                                                                     }
                                                                     data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
-                                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
+                                                                    OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
                                                                     // ViewController.request2[getDataTable['columns'][j]['name']] = data['selectedItemsList'];
                                                                   }
                                                                 },
@@ -504,71 +509,59 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         else if (getDataTable['columns'][j]['type'] == 'radiobutton')
                             Row(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Obx(() {
-                                      return Txt(
-                                        '${getDataTable['columns'][j]['title']}',
-                                        color: MainController.isLightMode.value == true ? whiteColor : color2,
+                                FutureBuilder(
+                                  future: _future[getDataTable['columns'][j]['title']],
+                                  builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      if (snapshot.data != null) {
+                                        return Txt('${AppController.of(context)!.value('error')}');
+                                      } else {
+                                        return Container();
+                                      }
+                                    } else {
+                                      var data = snapshot.data!;
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Obx(() {
+                                            return Txt(
+                                              '${getDataTable['columns'][j]['title']}',
+                                              color: MainController.isLightMode.value == true ? whiteColor : color2,
+                                            );
+                                          }),
+                                          SizedBox(height: 10),
+                                          Container(
+                                            width:150,
+                                            child: RadioButton(
+                                              name: '',
+                                              radioButtonItems: [
+                                                for (var radioButtonItem in data['items'])
+                                                  FormBuilderChipOption(
+                                                    value: '${radioButtonItem['value']}',
+                                                    child: Obx(() {
+                                                      return Txt(
+                                                        '${radioButtonItem['title']}',
+                                                        color: MainController.isLightMode.value ? whiteColor : primaryDark,
+                                                      );
+                                                    }),
+                                                  ),
+                                              ],
+                                              onChanged: (text) {
+                                                // ViewController.request2[getDataTable['columns'][j]['name']] = text;
+                                                OrderItem.orderItemsList[key] ??= {};
+                                                OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
+                                              },
+                                              initalValue: data['initValue'],
+                                              column: getDataTable['columns'][j],
+                                              isSelectedItem: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == '' || OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,
+                                            ),
+                                          ),
+                                        ],
                                       );
-                                    }),
-                                    SizedBox(height: 10),
-                                    FutureBuilder(
-                                      future: _future[getDataTable['columns'][j]['title']],
-                                      builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        } else if (snapshot.hasError) {
-                                          if (snapshot.data != null) {
-                                            return Txt('${AppController.of(context)!.value('error')}');
-                                          } else {
-                                            return Container();
-                                          }
-                                        } else {
-                                          var data = snapshot.data!;
-                                          return Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Obx(() {
-                                                return Txt(
-                                                  '${getDataTable['columns'][j]['title']}',
-                                                  color: MainController.isLightMode.value == true ? whiteColor : color2,
-                                                );
-                                              }),
-                                              SizedBox(height: 10),
-                                              Container(
-                                                width:150,
-                                                child: RadioButton(
-                                                  name: '',
-                                                  radioButtonItems: [
-                                                    for (var radioButtonItem in data['items'])
-                                                      FormBuilderChipOption(
-                                                        value: '${radioButtonItem['value']}',
-                                                        child: Obx(() {
-                                                          return Txt(
-                                                            '${radioButtonItem['title']}',
-                                                            color: MainController.isLightMode.value ? whiteColor : primaryDark,
-                                                          );
-                                                        }),
-                                                      ),
-                                                  ],
-                                                  onChanged: (text) {
-                                                    // ViewController.request2[getDataTable['columns'][j]['name']] = text;
-                                                    OrderItem.orderItemsList[key] ??= {};
-                                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
-                                                  },
-                                                  initalValue: data['initValue'],
-                                                  column: getDataTable['columns'][j],
-                                                  isSelectedItem: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == '' || OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                      },
-                                    )
-                                  ],
+                                    }
+                                  },
                                 ),
                                 SizedBox(width: 20,)
                               ],
@@ -587,17 +580,17 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                       }),
                                       SizedBox(height: 10),
                                       Container(
-                                        width: 500,
+                                        width: 300,
                                         child: FormFile(
                                           columnName: getDataTable['columns'][j]['title'],
                                           onChanged: (selecetdFiles) {
                                             // ViewController.request2[getDataTable['columns'][j]['name']] = selecetdFiles;
                                             OrderItem.orderItemsList[key] ??= {};
-                                            OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
+                                            OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
                                           },
                                           filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
-                                          isSeletedFile:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
-                                          selectedFilesTxt: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']],
+                                          isSeletedFile:OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
+                                          selectedFilesTxt: OrderItem.orderItemsList[key]?[getDataTable['columns'][j]['name']],
                                           column: getDataTable['columns'][j],
                                         ),
                                       ),
@@ -605,7 +598,33 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                   ),
                                   SizedBox(width: 20,)
                                 ],
-                              ),
+                              )
+                          else if(getDataTable['columns'][j]['type'] == 'time')
+                                Row(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Obx(() {
+                                          return Txt('${getDataTable['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                        }),
+                                        SizedBox(height: 10,),
+                                        Container(
+                                          width: 100,
+                                          child: TimePickerBox(
+                                            column: getDataTable['columns'][j] ,
+                                            selectedTime: ViewController.request['${getDataTable['columns'][j]['name']}']!= null ?  ViewCustomController.parseTime(ViewController.request['${getDataTable['columns'][j]['name']}']):TimeOfDay.now(),
+                                            isSeletedTime: ViewController.request['${getDataTable['columns'][j]['name']}']== null || ViewController.request['${getDataTable['columns'][j]['name']}']== '' ? false.obs : true.obs,
+                                            onTimeChanged: (time) {
+                                              ViewController.request['${getDataTable['columns'][j]['name']}'] = time;
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(width: 20),
+                                  ],
+                                ),
             Column(
               children: [
                 Obx((){

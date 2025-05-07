@@ -13,6 +13,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -188,16 +189,19 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                      else if(MainController.tableInfo['columns'][j]['type'] == 'checkbox')
                          Row(
                         children: [
-                          CheckBox(
-                            checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
-                            checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
-                            defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
-                            isClickedBtn: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs:true.obs,
-                            onChange: (text) {
-                              ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
-                            },
-                            column: MainController.tableInfo['columns'][j],
+                          Container(
+                            width: 150,
+                            child: CheckBox(
+                              checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
+                              checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
+                              defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
+                              isClickedBtn: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs:true.obs,
+                              onChange: (text) {
+                                ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
+                              },
+                              column: MainController.tableInfo['columns'][j],
 
+                            ),
                           ),
                           SizedBox(width: 20,),
                         ],
@@ -367,7 +371,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                          var data = snapshot.data!;
                                          return data['items'].length != 0 ? Obx(() {
                                            return Container(
-                                             width: 150,
+                                             width: 250,
                                              child: MultiSelectDropdown(
                                                items: [
                                                  for (var item in data['items'])
@@ -521,6 +525,32 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                 SizedBox(width: 20,)
                               ],
                             )
+                     else if(MainController.tableInfo['columns'][j]['type'] == 'time')
+                            Row(
+                                       children: [
+                                         Column(
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           children: [
+                                             Obx(() {
+                                               return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                             }),
+                                             SizedBox(height: 10,),
+                                             Container(
+                                               width: 100,
+                                               child: TimePickerBox(
+                                                 column: MainController.tableInfo['columns'][j] ,
+                                                 selectedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']!= null ?  ViewCustomController.parseTime(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']):TimeOfDay.now(),
+                                                 isSeletedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== '' ? false.obs : true.obs,
+                                                 onTimeChanged: (time) {
+                                                   ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = time;
+                                                 },
+                                               ),
+                                             )
+                                           ],
+                                         ),
+                                         SizedBox(width: 20),
+                                       ],
+                                     )
                 ],
               ),
             ),

@@ -20,6 +20,7 @@ class ViewCustomController extends GetxController{
     List<String>? TimeParts;
     int hour = TimeOfDay.now().hour;
     int minute = TimeOfDay.now().minute;
+    print('dateString90>>>${dateString}');
       TimeParts = dateString.split(':');
       print('TimeParts>>>${TimeParts}');
       hour = int.parse('${TimeParts![0]}');
@@ -35,8 +36,13 @@ class ViewCustomController extends GetxController{
     var initValue;
     Map<String, dynamic> selectedItem={};
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
+
       items = await ViewController.itemsList(column);
       // initValue = await ViewController.getInitValue(column, items);
+      if(column['type'] == 'radiobutton'){
+        print('ddddd555>>>${column['name']}');
+        print('items r>>>${items}');
+      }
       if(items.length != 0){
         selectedItem = items.firstWhere(
                 (element) => element['value'] == ViewController.request[column['name']],
@@ -158,6 +164,7 @@ class ViewCustomController extends GetxController{
 
   // multi select order item
   static Future<Map<String, dynamic>> getMultiSelectBoxOrderItemData(Map<String, dynamic> column ,var data) async{
+    print('cccccccccc');
 
     List<dynamic> items=[];
 
@@ -177,12 +184,18 @@ class ViewCustomController extends GetxController{
           tableName = column['sourceTable'];
         }
       }
-      if(data[column['name']] != null){
-        multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, data[column['name']], column);
-      }
-      else{
-        multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
-      }
+     if(data != null){
+       if(data[column['name']] != null){
+         multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, data[column['name']], column);
+       }
+       else{
+         multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
+       }
+     }
+     else{
+       multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
+     }
+
       if(multiSelectedTitleList.length != 0){
         hintTxt = RxString(multiSelectedTitleList.join(','));
         selectedItemsList.value = data[column['name']];
@@ -190,6 +203,7 @@ class ViewCustomController extends GetxController{
       else{
         hintTxt = RxString('${items[0]['title']}');
       }
+      print('nkfl>>>${hintTxt}');
     }
 
     return {

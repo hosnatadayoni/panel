@@ -167,6 +167,7 @@ class ViewController extends GetxController {
               SizedBox(height: 10,),
               DateBox(
                 selectedDate: Jalali.now(),
+                isSeletedDate: false.obs,
                 onDateChanged: (date) {
                   // dataJson[columnName] =  date;
                   ViewController.request[column['name']] = date;
@@ -179,7 +180,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(dateBox);
-        } else if (type == 'multiSelect') {
+        }
+        else if (type == 'multiSelect') {
           List<dynamic> items = await itemsList(column);
           print('items items>>${items}');
           if(items.length != 0){
