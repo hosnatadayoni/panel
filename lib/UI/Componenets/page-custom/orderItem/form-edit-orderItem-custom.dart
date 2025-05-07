@@ -192,6 +192,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         checkBoxName: '${getDataTable['columns'][j]['title']}',
                                         checkBoxTitle: '${getDataTable['columns'][j]['title']}',
                                         defaultValue: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'],
+                                        isClickedBtn: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                         onChange: (text) {
                                           // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                                           // OrderItem.orderItemsList[item['id']] ??= {};
@@ -251,7 +252,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                 }),
                                                 SizedBox(height: 10),
                                                 DateBox(
-                                                  selectedDate: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null ? ViewCustomController.parseDate(OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}']):Jalali.now(),
+                                                  selectedDate: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null || OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != '' ? ViewCustomController.parseDate(OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}']):Jalali.now(),
+                                                  isSeletedDate: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null || OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != '' ? true.obs : false.obs,
                                                   onDateChanged: (date) {
                                                     // ViewController.request2['${getDataTable['columns'][j]['name']}'] = date;
                                                     // OrderItem.orderItemsList[item['id']] ??= {};
@@ -534,6 +536,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                             OrderItem.orderItemsList.values.toList()[i]!['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
                                                           },
                                                           filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
+                                                          isSeletedFile: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                                           selectedFilesTxt: OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'],
                                                           column: getDataTable['columns'][j],
                                                         ),
@@ -653,6 +656,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                         checkBoxName: '${getDataTable['columns'][j]['title']}',
                         checkBoxTitle: '${getDataTable['columns'][j]['title']}',
                         defaultValue: OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'],
+                        isClickedBtn: OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                         onChange: (text) {
                           // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                           OrderItem.orderItemsList2[key] ??= {};
@@ -1011,6 +1015,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                           },
                                           filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
                                           selectedFilesTxt: OrderItem.orderItemsList2[key]![getDataTable['columns'][j]['name']],
+                                          isSeletedFile: OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'] == null ||OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                           column: getDataTable['columns'][j],
                                         ),
                                       ),

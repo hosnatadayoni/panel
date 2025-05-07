@@ -1,6 +1,7 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -14,6 +15,18 @@ class ViewCustomController extends GetxController{
     int month = int.parse(dateParts[1]);
     int day = int.parse(dateParts[2]);
     return Jalali(year, month, day);
+  }
+  static TimeOfDay parseTime(String dateString){
+    List<String>? TimeParts;
+    int hour = TimeOfDay.now().hour;
+    int minute = TimeOfDay.now().minute;
+      TimeParts = dateString.split(':');
+      print('TimeParts>>>${TimeParts}');
+      hour = int.parse('${TimeParts![0]}');
+      minute = int.parse('${TimeParts[1]}');
+      print('hour minute>>>${hour} ${minute}');
+
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   // select order

@@ -147,7 +147,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
             for (var j = 0; j < getDataTable['columns'].length; j++)
               if(getDataTable['columns'][j]['is-show-store'] == true || getDataTable['columns'][j]['is-show-store'] == null)
                 if (getDataTable['columns'][j]['type'] == 'string' ||
-                    getDataTable['columns'][j]['type'] == 'number' ||
+                    getDataTable['columns'][j]['type'] == 'Number int' ||   getDataTable['columns'][j]['type'] == 'Number double' ||
                     getDataTable['columns'][j]['type'] == 'mobile' ||
                     getDataTable['columns'][j]['type'] == 'email')
                   Row(
@@ -195,6 +195,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         checkBoxName: '${getDataTable['columns'][j]['title']}',
                         checkBoxTitle: '${getDataTable['columns'][j]['title']}',
                         defaultValue: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'],
+                        isClickedBtn:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' ?  false.obs : true.obs,
                         onChange: (text) {
                           OrderItem.orderItemsList[key] ??= {};
                           OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = text;
@@ -222,6 +223,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                 selectedColor: OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null
                                     ? Color(int.parse('${OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']}'))
                                     : Colors.blue,
+                                isSeletedColor:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null  ? false.obs : true.obs,
                                 onChanged: (color) {
                                   colorChanged = color;
                                   String hexColor = '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
@@ -251,23 +253,16 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                   );
                                 }),
                                 SizedBox(height: 10),
-                                OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null
-                                    ? DateBox(
-                                  selectedDate: ViewCustomController.parseDate(OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']),
+                                DateBox(
+                                  selectedDate:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] != ''? ViewCustomController.parseDate(OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']):Jalali.now(),
+                                  isSeletedDate:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null || OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                   onDateChanged: (date) {
                                     OrderItem.orderItemsList[key] ??= {};
                                     OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
                                   },
                                   column: getDataTable['columns'][j],
                                 )
-                                    : DateBox(
-                                  selectedDate: Jalali.now(),
-                                  onDateChanged: (date) {
-                                    OrderItem.orderItemsList[key] ??= {};
-                                    OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = date;
-                                  },
-                                  column: getDataTable['columns'][j],
-                                )
+
                               ],
                             ),
                           ),
@@ -515,7 +510,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                   },
                                                   initalValue: data['initValue'],
                                                   column: getDataTable['columns'][j],
-                                                  isSelectedItem: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == '' ? false.obs : true.obs,
+                                                  isSelectedItem: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == '' || OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']] == null ? false.obs : true.obs,
                                                 ),
                                               ),
                                             ],
@@ -551,6 +546,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                             OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = selecetdFiles;
                                           },
                                           filesSelected: ViewCustomController.getselectedFilesMap(getDataTable['columns'][j]),
+                                          isSeletedFile:OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] == null ? false.obs : true.obs,
                                           selectedFilesTxt: OrderItem.orderItemsList[key]![getDataTable['columns'][j]['name']],
                                           column: getDataTable['columns'][j],
                                         ),

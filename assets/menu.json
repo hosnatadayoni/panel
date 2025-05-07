@@ -75,6 +75,51 @@
         "title": "time2",
         "type": "time",
         "format": 12
+      },
+      {
+        "name": "تاریخ",
+        "title": "تاریخ",
+        "type": "date",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "color",
+        "title": "color",
+        "type": "color",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "file",
+        "title": "file",
+        "type": "file",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "checkBox",
+        "title": "checkBox",
+        "type": "checkbox",
+        "default_value": false,
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
       }
     ]
   },
@@ -180,13 +225,7 @@
         "type": "select",
         "sourceItems": "table",
         "sourceTable": "customers",
-        "items":["شماره موبایل"],
-        "validators": [
-          {
-            "type": "required",
-            "message": "وارد کردن این فیلد الزامی است"
-          }
-        ]
+        "items":["شماره موبایل"]
       },
       {
         "name": "کد ورودی",
@@ -196,7 +235,14 @@
       {
         "name": "تاریخ",
         "title": "تاریخ",
-        "type": "date"
+        "type": "date",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+
       },
       {
         "name": "شماره نقشه",
@@ -231,7 +277,78 @@
         "name": "عکس",
         "title": "عکس",
         "type": "file",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+          ],
         "isPictureSelected": true
+      },
+      {
+        "name": "color",
+        "title": "color",
+        "type": "color",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "chekbox",
+        "title": "chekbox",
+        "type": "chekbox",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "radioButton",
+        "title": "radioButton",
+        "type": "radiobutton",
+        "items": [
+          {"title": "test 1","value": "1","is_selected": true},
+          {"title": "test 2","value": "2","is_selected": false},
+          {"title": "test 3","value": "3","is_selected": false},
+          {"title": "test 4","value": "4","is_selected": false}
+        ],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "time",
+        "title": "time",
+        "type": "time",
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "multiSelect",
+        "title": "multiSelect",
+        "type": "multiSelect",
+        "items": [
+          {"title": "انتخاب نشده" , "value": "-1"},
+          {"title": "test 1","value": "1"},
+          {"title": "test 2","value": "2"},
+          {"title": "test 3","value": "3"},
+          {"title": "test 4","value": "4"}
+        ],
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+        ]
       }
     ],
     "view": "custom"

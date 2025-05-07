@@ -9,10 +9,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class TimePickerBox extends StatefulWidget {
-  TimePickerBox({this.column, this.onTimeChanged, this.selectedTime});
+  TimePickerBox({this.column, this.onTimeChanged, this.selectedTime , this.isSeletedTime});
   var column;
   Function(String?)? onTimeChanged;
   TimeOfDay? selectedTime;
+  Rx<bool>? isSeletedTime = false.obs;
 
   @override
   _TimePickerBoxState createState() => _TimePickerBoxState();
@@ -20,7 +21,7 @@ class TimePickerBox extends StatefulWidget {
 
 class _TimePickerBoxState extends State<TimePickerBox> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Rx<bool>? isSeletedTime = false.obs;
+
 
   String _formatTime(TimeOfDay time) {
     final hour = time.hour.toString().padLeft(2, '0');
@@ -44,7 +45,7 @@ class _TimePickerBoxState extends State<TimePickerBox> {
         ? (widget.column['format'] == 24 ? DateFormat.Hm() : DateFormat.jm())
         : DateFormat.Hm();
     return Obx(() {
-      print('${this.isSeletedTime!.value}');
+      print('${widget.isSeletedTime!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -69,7 +70,7 @@ class _TimePickerBoxState extends State<TimePickerBox> {
               initialTime: widget.selectedTime ?? TimeOfDay.now(),
               onChanged: (value) {
                 if (value != null) {
-                  this.isSeletedTime!.value = true;
+                  widget.isSeletedTime!.value = true;
                   final newTime = TimeOfDay.fromDateTime(value);
                   String time = _formatTime(newTime);
                     widget.onTimeChanged!(time);
@@ -86,7 +87,7 @@ class _TimePickerBoxState extends State<TimePickerBox> {
           SizedBox(height: 5),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedBtn.value == true && this.isSeletedTime!.value == false || ViewController.isClickedEditBtn.value == true && this.isSeletedTime!.value == false
+              ViewController.isClickedBtn.value == true && widget.isSeletedTime!.value == false || ViewController.isClickedEditBtn.value == true && widget.isSeletedTime!.value == false
                   ? Txt(
                 '${errorMessage ?? ''}',
                 color: errorColor,

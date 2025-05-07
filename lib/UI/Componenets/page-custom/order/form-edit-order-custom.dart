@@ -192,6 +192,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
                             checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
                             defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
+                            isClickedBtn: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs:true.obs,
                             onChange: (text) {
                               ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
                             },
@@ -216,6 +217,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                      selectedColor: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] != null
                                          ? Color(int.parse('${ViewController.request['${MainController.tableInfo['columns'][j]['name']}']}'))
                                          : Colors.blue,
+                                     isSeletedColor: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                      onChanged: (color) {
                                        colorChanged = color;
                                        String hexColor =
@@ -243,19 +245,15 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                   SizedBox(height: 10,),
                                   Container(
                                     width: 120,
-                                    child:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] != null ?  DateBox(
-                                      selectedDate: ViewCustomController.parseDate(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']),
+                                    child:
+                                    DateBox(
+                                      selectedDate:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == ''?Jalali.now() : ViewCustomController.parseDate(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']),
+                                      isSeletedDate:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs : true.obs,
                                       onDateChanged: (date) {
                                         ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = date;
                                       },
                                       column: MainController.tableInfo['columns'][j],
-                                    ):DateBox(
-                                      selectedDate: Jalali.now(),
-                                      onDateChanged: (date) {
-                                        ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = date;
-                                      },
-                                      column: MainController.tableInfo['columns'][j],
-                                    ),
+                                    )
                                   )
                                 ],
                               ),
@@ -514,6 +512,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                         },
                                         filesSelected: ViewCustomController.getselectedFilesMap(MainController.tableInfo['columns'][j]),
                                         selectedFilesTxt: ViewController.request[MainController.tableInfo['columns'][j]['name']],
+                                        isSeletedFile: ViewController.request[MainController.tableInfo['columns'][j]['name']] == null || ViewController.request[MainController.tableInfo['columns'][j]['name']] == ''? false.obs : true.obs,
                                         column: MainController.tableInfo['columns'][j],
                                       ),
                                     ),

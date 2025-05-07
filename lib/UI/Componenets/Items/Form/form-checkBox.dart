@@ -13,14 +13,22 @@ class CheckBox extends StatefulWidget {
   Function? onChange;
   int? index;
   var column;
-  CheckBox({this.checkBoxName,this.checkBoxTitle , this.defaultValue , this.onChange , this.index , this.column});
+  Rx<bool>? isClickedBtn = false.obs;
+  CheckBox({this.checkBoxName,
+    this.checkBoxTitle ,
+    this.defaultValue ,
+    this.onChange ,
+    this.index ,
+    this.column,
+    this.isClickedBtn
+  });
 
   @override
   State<CheckBox> createState() => _CheckBoxState();
 }
 
 class _CheckBoxState extends State<CheckBox> {
-  Rx<bool>? isClickedBtn = false.obs;
+
   @override
   Widget build(BuildContext context) {
     var inputRequired;
@@ -51,7 +59,7 @@ class _CheckBoxState extends State<CheckBox> {
                 strokeAlign: 2.5
             ),
             onChanged: (text){
-              isClickedBtn!.value = true;
+              widget.isClickedBtn!.value = true;
               if(widget.onChange!=null)
                 this.widget.onChange!(text);
             },
@@ -60,7 +68,7 @@ class _CheckBoxState extends State<CheckBox> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedBtn.value == true && isClickedBtn!.value == false?
+              ViewController.isClickedBtn.value == true && widget.isClickedBtn?.value == false || ViewController.isClickedEditBtn.value == true && widget.isClickedBtn?.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );
