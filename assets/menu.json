@@ -395,11 +395,6 @@
         "type": "Number int"
       },
       {
-        "name": "تاریخ",
-        "title": "تاریخ",
-        "type": "date"
-      },
-      {
         "name": "شماره نقشه",
         "title": "شماره نقشه",
         "type": "Number int"
@@ -442,9 +437,7 @@
       {"column":"مشتری"},
       {"column": "کد ورودی","oprator": "<="},
       {"column": "checkBox"},
-      {"column": "محصولات"},
-      {"column": "تاریخ","oprator": "whereDate >="
-      }
+      {"column": "محصولات"}
     ]
   },
   {
