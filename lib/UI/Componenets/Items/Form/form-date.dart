@@ -7,19 +7,19 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 class DateBox extends StatefulWidget {
-   DateBox({this.onDateChanged , this.selectedDate , this.column});
+   DateBox({this.onDateChanged , this.selectedDate , this.column , this.isSeletedDate});
    // Function? onTap;
    Function(String?)? onDateChanged;
    // String? selectedDate;
    Jalali? selectedDate;
    var column;
+   Rx<bool>? isSeletedDate = false.obs;
   @override
   State<DateBox> createState() => _DateBoxState();
 }
 
 class _DateBoxState extends State<DateBox> {
   var dateSelected=null;
-  Rx<bool>? isSeletedDate = false.obs;
   @override
   Widget build(BuildContext context) {
     var inputRequired;
@@ -29,7 +29,7 @@ class _DateBoxState extends State<DateBox> {
       errorMessage = inputRequired['message'];
     }
     return Obx((){
-      print('${isSeletedDate!.value}');
+      print('${widget.isSeletedDate!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,7 +45,7 @@ class _DateBoxState extends State<DateBox> {
                     );
                     if(picked != null){
                       setState(() {
-                        isSeletedDate!.value = true;
+                        widget.isSeletedDate!.value = true;
                         widget.selectedDate = picked;
                         dateSelected = picked;
                       });
@@ -70,7 +70,7 @@ class _DateBoxState extends State<DateBox> {
           SizedBox(height: 5),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedBtn.value== true && this.isSeletedDate!.value == false?
+              ViewController.isClickedBtn.value== true && widget.isSeletedDate!.value == false || ViewController.isClickedEditBtn.value== true && widget.isSeletedDate!.value == false?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
 
         ],

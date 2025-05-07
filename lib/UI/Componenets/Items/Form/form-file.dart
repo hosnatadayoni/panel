@@ -14,9 +14,11 @@ class FormFile extends StatefulWidget {
   String? columnName;
   var selectedFilesTxt;
   var column;
+  Rx<bool>? isSeletedFile = false.obs;
 
 
-  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column});
+
+  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column , this.isSeletedFile});
 
   @override
   State<FormFile> createState() => _FormFileState();
@@ -25,7 +27,7 @@ class FormFile extends StatefulWidget {
 class _FormFileState extends State<FormFile> {
   var selectedFiles = null;
   String _errorMasege='';
-  Rx<bool>? isSeletedFile = false.obs;
+
   List<int> fileSizeList=[];
 
   @override
@@ -39,9 +41,9 @@ class _FormFileState extends State<FormFile> {
     }
 
     return Obx((){
-      if(ViewController.isClickedBtn.value == true){
+      if(ViewController.isClickedBtn.value == true || ViewController.isClickedEditBtn.value == true){
         if(inputRequired != null){
-          if(this.isSeletedFile!.value == false){
+          if(widget.isSeletedFile!.value == false){
             _errorMasege = inputRequired['message'];
           }
         }
@@ -63,7 +65,7 @@ class _FormFileState extends State<FormFile> {
                   );
                   if (picked != null) {
                     setState(() {
-                      this.isSeletedFile!.value = true;
+                      widget.isSeletedFile!.value = true;
                     });
                     var maxValidator;
                     var minValidator;
@@ -134,6 +136,7 @@ class _FormFileState extends State<FormFile> {
                         }
                       }
                       else{
+                        _errorMasege = '';
                         fileSizeList.add(file.size);
                         ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
 
@@ -199,7 +202,7 @@ class _FormFileState extends State<FormFile> {
                   );
                   if (picked != null) {
                     setState(() {
-                      this.isSeletedFile!.value = true;
+                      widget.isSeletedFile!.value = true;
                     });
                     var maxValidator;
                     var minValidator;
@@ -270,6 +273,7 @@ class _FormFileState extends State<FormFile> {
                         }
                       }
                       else{
+                        _errorMasege = '';
                         fileSizeList.add(file.size);
                         ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
 

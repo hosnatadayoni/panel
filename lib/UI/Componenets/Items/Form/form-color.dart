@@ -12,8 +12,9 @@ class ColorPickerBox extends StatefulWidget {
   Color selectedColor = Colors.blue;
   Function(Color)? onChanged;
   var column;
+  Rx<bool>? isSeletedColor = false.obs;
 
-  ColorPickerBox({this.onChanged , required this.selectedColor , this.column});
+  ColorPickerBox({this.onChanged , required this.selectedColor , this.column , this.isSeletedColor});
   @override
   _ColorPickerBoxState createState() => _ColorPickerBoxState();
 }
@@ -21,7 +22,7 @@ class ColorPickerBox extends StatefulWidget {
 class _ColorPickerBoxState extends State<ColorPickerBox> {
   // Color selectedColor = Colors.blue;
   var colorSelected = null;
-  Rx<bool>? isSeletedColor = false.obs;
+
 
   void openColorPicker(BuildContext context) {
     showDialog(
@@ -82,7 +83,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
                 onTap: (){
                   openColorPicker(context);
                   setState(() {
-                    this.isSeletedColor!.value = true;
+                    widget.isSeletedColor!.value = true;
                     errorMessage='';
                   });
 
@@ -99,7 +100,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
           SizedBox(height: 5,),
           if(inputRequired != null)
             if(inputRequired['type'] == 'required')
-              ViewController.isClickedBtn.value== true && this.isSeletedColor!.value == false?
+              ViewController.isClickedBtn.value== true && widget.isSeletedColor!.value == false ||ViewController.isClickedEditBtn.value== true && widget.isSeletedColor!.value == false ?
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );

@@ -11,6 +11,7 @@ import 'package:finance/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:finance/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -190,13 +191,13 @@ class ViewController extends GetxController {
           }
 
         } else if (type == 'color') {
-          colorBox = generateFormColorBox(column, Colors.blue);
+          colorBox = generateFormColorBox(column, Colors.blue , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          fileBox = generateFileBox('', column);
+          fileBox = generateFileBox('', column , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -219,6 +220,7 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+    var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
       print('ViewController.generateStoreFormView>>${columns}');
@@ -258,7 +260,7 @@ class ViewController extends GetxController {
           children.add(selectBox);
         }
         else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column);
+          checkBox = generateFormCheckBox(column , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -276,7 +278,7 @@ class ViewController extends GetxController {
           children.add(radioButtonBox);
         }
         else if (type == 'date') {
-          dateBox = generateFormDateBox(column, Jalali.now());
+          dateBox = generateFormDateBox(column, Jalali.now() , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -293,17 +295,24 @@ class ViewController extends GetxController {
           }
 
         } else if (type == 'color') {
-          colorBox = generateFormColorBox(column, Colors.blue);
+          colorBox = generateFormColorBox(column, Colors.blue , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          fileBox = generateFileBox('', column);
+          fileBox = generateFileBox('', column , false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(fileBox);
+        }
+        else if(type == 'time'){
+          timeBox = generateFormTimeBox(column , TimeOfDay.now() , false.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(timeBox);
         }
       }
     }
@@ -322,6 +331,7 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+    var timeBox;
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       if (MainController.tableInfo['columns'][j]['is-show-edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
@@ -375,7 +385,7 @@ class ViewController extends GetxController {
 
         }
         else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column, defultValue:dataModel['${name}']);
+          checkBox = generateFormCheckBox(column,dataModel[name] == ''  ||dataModel[name] == null ? false.obs : true.obs  ,defultValue:dataModel['${name}']);
           children.add(SizedBox(
             height: 20,
           ));
@@ -436,7 +446,7 @@ class ViewController extends GetxController {
             day = int.parse('${dateParts[2]}');
           }
           dateBox = generateFormDateBox(
-             column, Jalali(year, month, day));
+             column, Jalali(year, month, day) , dataModel['${name}'] == null || dataModel['${name}'] == '' ? false.obs : true.obs);
 
           children.add(SizedBox(
             height: 20,
@@ -466,7 +476,7 @@ class ViewController extends GetxController {
               column,
               dataModel[name] != null
                   ? Color(int.parse('${dataModel[name]}'))
-                  : Colors.blue);
+                  : Colors.blue,  dataModel[name] == '' || dataModel[name] == null ? false.obs : true.obs);
           // colorBox = new Container(
           //   child: ColorPickerBox(
           //     selectedColor: dataModel[name] != null ? Color(int.parse('${dataModel[name]}')):Colors.blue,
@@ -485,11 +495,31 @@ class ViewController extends GetxController {
         else if (type == 'file') {
           print('dataModel[name] file box>>>${dataModel[name]} ${dataModel[name].runtimeType}');
           fileBox = generateFileBox(
-              '${dataModel[name] != null ? dataModel[name] : []}', column);
+              '${dataModel[name] != null ? dataModel[name] : []}', column , dataModel[name] == null ? false.obs:true.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(fileBox);
+        }
+        else if (type == 'time') {
+          List<String>? TimeParts;
+          int hour = TimeOfDay.now().hour;
+          int minute = TimeOfDay.now().minute;
+          print('dataModel[name]>>>${dataModel['${name}']}');
+          if (dataModel['${name}'] != null) {
+            TimeParts = dataModel['${name}'].split(':');
+            print('TimeParts>>>${TimeParts}');
+            hour = int.parse('${TimeParts![0]}');
+            minute = int.parse('${TimeParts[1]}');
+            print('hour minute>>>${hour} ${minute}');
+          }
+          print('TimeOfDay(hour: hour , minute: minute)>>>${TimeOfDay(hour: hour , minute: minute)}');
+          timeBox = generateFormTimeBox(
+              column, TimeOfDay(hour: hour , minute: minute) , dataModel['${name}'] == null || dataModel['${name}'] == '' ? false.obs : true.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(timeBox);
         }
       }
     }
@@ -917,12 +947,13 @@ class ViewController extends GetxController {
 
 
 
-  static Widget generateFormCheckBox(var column,{var defultValue}) {
+  static Widget generateFormCheckBox(var column,Rx<bool>? isClickedBtn,{var defultValue}) {
     ViewController.request[column['name']]= defultValue??column['default_value'];
     print('ViewController.generateFormCheckBox>>>${ViewController.request[column['name']]}');
     return new CheckBox(
       checkBoxName: '${column['title']}',
       checkBoxTitle: '${column['title']}',
+      isClickedBtn: isClickedBtn,
       defaultValue: defultValue??column['default_value'],
       onChange: (text) {
         ViewController.request[column['name']] = text;
@@ -975,7 +1006,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFormDateBox(
-      var column, Jalali selectedDate) {
+      var column, Jalali selectedDate ,Rx<bool>? isSeletedDate) {
     // if (ViewController.request[column['name']] == null) {
     //   ViewController.request[column['name']] =
     //       '${selectedDate.year}${'/'}${selectedDate.month}${'/'}${selectedDate.day}';
@@ -989,6 +1020,7 @@ class ViewController extends GetxController {
         SizedBox(height: 10,),
         DateBox(
           selectedDate: selectedDate,
+          isSeletedDate: isSeletedDate,
           onDateChanged: (date) {
             // dataJson[columnName] =  date;
             ViewController.request[column['name']] = date;
@@ -1180,7 +1212,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFormColorBox(
-      var column, Color selectedColor) {
+      var column, Color selectedColor , Rx<bool>? isSeletedColor) {
     Color colorChanged;
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1192,6 +1224,7 @@ class ViewController extends GetxController {
         Container(
           child: ColorPickerBox(
             selectedColor: selectedColor,
+            isSeletedColor: isSeletedColor,
             onChanged: (color) {
               colorChanged = color;
               String hexColor =
@@ -1206,7 +1239,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFileBox( String selecetdFiles, var column) {
+  static Widget generateFileBox( String selecetdFiles, var column , Rx<bool>? isSeletedFile) {
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -1233,7 +1266,29 @@ class ViewController extends GetxController {
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt: selecetdFiles,
+          isSeletedFile: isSeletedFile,
           column: column,
+        ),
+      ],
+    );
+  }
+
+  static Widget generateFormTimeBox(var column , TimeOfDay selectedTime ,  Rx<bool>? isSeletedTime){
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+        }),
+        SizedBox(height: 10,),
+        TimePickerBox(
+          column: column ,
+          selectedTime: selectedTime,
+          isSeletedTime: isSeletedTime,
+          onTimeChanged: (time) {
+            print('timeeeeeee3>>>${time}');
+            ViewController.request[column['name']] = time;
+          },
         ),
       ],
     );

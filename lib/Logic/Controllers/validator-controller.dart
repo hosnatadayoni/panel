@@ -155,12 +155,14 @@ class ValidatorController extends GetxController {
       var number;
       if(dataJson[name] != null){
         print('dataJson[name] >>>${dataJson[name]} ${dataJson[name].runtimeType}');
-        if(dataJson[name].runtimeType == 'double'){
-          number = dataJson[name];
-        }
-        else if(dataJson[name].runtimeType == 'String'){
-          number = num.tryParse(dataJson[name]);
-        }
+        // if(dataJson[name].runtimeType == 'double'){
+        //   print('ffffffffff>>>${dataJson[name]} ${name}');
+        //   number = dataJson[name];
+        // }
+        // else if(dataJson[name].runtimeType == 'String'){
+        //   number = num.tryParse(dataJson[name]);
+        // }
+        number = dataJson[name];
         if(number != null){
           if(minValidator != null && maxValidator != null){
             if(number < minValidator['value'] || number > maxValidator['value']){

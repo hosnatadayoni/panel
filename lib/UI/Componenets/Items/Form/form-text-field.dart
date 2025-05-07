@@ -45,7 +45,7 @@ class _FormTextFieldState extends State<FormTextField> {
   String? _errorText;
   // var value;
   final TextEditingController _formConroller = TextEditingController();
-  Rx<String> text = ''.obs;
+  // Rx<dynamic> text = ''.obs;
 
 
   @override
@@ -60,25 +60,11 @@ class _FormTextFieldState extends State<FormTextField> {
   void _validateInput() {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
      if(widget.column != null){
-       if(ViewController.request[widget.column['name']] != null){
-         if(widget.column['type'] == 'Number double'){
-           ViewController.request[widget.column['name']] = double.parse('${text.value}');
-           // double.parse('${text.value}') =  ViewController.request[widget.column['name']];
-         }
-         else if(widget.column['type'] == 'Number int'){
-           ViewController.request[widget.column['name']] = int.parse('${text.value}');
-           // int.parse('${text.value}') =  ViewController.request[widget.column['name']];
-         }
-         else{
-           // text.value = ViewController.request[widget.column['name']];
-           ViewController.request[widget.column['name']] = text.value;
-         }
-
-       }
        if(widget.column['validators'] != null){
          var inputRequired;
-         String? errorMessage;
-         if(text.value == ''){
+         print('d345>>>${ViewController.request[widget.column['name']]}' '${widget.column['name']}');
+         if(ViewController.request[widget.column['name']] == '' || ViewController.request[widget.column['name']] == null){
+           print('emptyyyyyyyyyyyyyyyy');
            inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
            if(inputRequired != null){
              if(inputRequired['message'] != null){
@@ -100,7 +86,7 @@ class _FormTextFieldState extends State<FormTextField> {
            if(widget.isNumberInt == true || widget.isNumberDouble == true){
              var maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
              var minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-             var number = num.tryParse(text.value);
+             var number = ViewController.request[widget.column['name']];
              if(number != null){
                if(minValidator != null || maxValidator != null){
                  if(number < minValidator['value']){
@@ -140,9 +126,9 @@ class _FormTextFieldState extends State<FormTextField> {
              var emailValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'email', orElse: () => null);
              final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
              setState(() {
-               print('text.value>>>${text.value}');
-               print('emailRegex.hasMatch(text.value)>>>${emailRegex.hasMatch(text.value)}');
-               if (!emailRegex.hasMatch(text.value)) {
+               // print('text.value>>>${text.value}');
+               // print('emailRegex.hasMatch(text.value)>>>${emailRegex.hasMatch(text.value)}');
+               if (!emailRegex.hasMatch(ViewController.request[widget.column['name']])) {
                  _errorText =   emailValidator['message'];
                }
                else{
@@ -171,7 +157,7 @@ class _FormTextFieldState extends State<FormTextField> {
     return  Obx((){
       if(ViewController.isClickedBtn.value){
         if(widget.column  != null){
-          if (text.value == '')  {
+          if (ViewController.request[widget.column['name']] == '' ||ViewController.request[widget.column['name']] == null )  {
             var inputRequired;
 
             if(widget.column['validators'] != null){
@@ -181,7 +167,7 @@ class _FormTextFieldState extends State<FormTextField> {
               }
             }
           }
-          else if(text.value != ''){
+          else if(ViewController.request[widget.column['name']] != ''){
 
             if(widget.column['validators'] != null){
               if(widget.isNumberInt == true || widget.isNumberDouble == true){
@@ -189,7 +175,13 @@ class _FormTextFieldState extends State<FormTextField> {
                 var minValidator;
                 maxValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
                 minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-                var number = num.tryParse(text.value);
+                var number = ViewController.request[widget.column['name']];
+                // if(widget.isNumberInt == true){
+                //   number = int.parse('${text.value}');
+                // }
+                // else if(widget.isNumberDouble == true){
+                //   number = double.parse('${text.value}');
+                // }
                 if(number != null){
                   if(minValidator != null && maxValidator != null){
                     if(number < minValidator['value']){
@@ -220,7 +212,7 @@ class _FormTextFieldState extends State<FormTextField> {
                 var emailValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'email', orElse: () => null);
                   final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
-                    if (!emailRegex.hasMatch(text.value)) {
+                    if (!emailRegex.hasMatch(ViewController.request[widget.column['name']])) {
                       _errorText =   emailValidator['message'];
                     }
                     else{
@@ -274,8 +266,16 @@ class _FormTextFieldState extends State<FormTextField> {
               // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
               style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
               onChanged: (value){
-                text.value = value!;
-
+                // if(widget.isNumberInt == true){
+                //   text.value = int.parse('${value!}');
+                // }
+                // else if(widget.isNumberDouble == true){
+                //   text.value = double.parse('${value!}');
+                // }
+                // else {
+                //   text.value = value!;
+                // }
+                ViewController.request[widget.column['name']] = value;
                 if(widget.onChange!=null)
                   this.widget.onChange!(value);
               },
