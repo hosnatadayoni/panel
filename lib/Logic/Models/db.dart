@@ -279,15 +279,15 @@ class DB {
                             flag=false;
                         }
 
-
                       } else if (whereList[j]!.oprator == '>=') {
                         if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value&& flag==true ) {
                           flag=true;
                         }
                         else
                           flag=false;
+                      }
 
-                      } else if (whereList[j]!.oprator == '<=') {
+                      else if (whereList[j]!.oprator == '<=') {
                         if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value && flag==true ) {
                           flag=true;
                         }
@@ -316,6 +316,29 @@ class DB {
                           flag=false;
 
                       }
+                      else if (whereList[j]!.oprator == 'whereDate ==') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"==")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }   else if (whereList[j]!.oprator == 'whereDate <=') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"<=")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }   else if (whereList[j]!.oprator == 'whereDate >=') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,">=")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }
+
                     }
                     else
                       flag=false;

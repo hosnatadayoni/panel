@@ -167,6 +167,7 @@ class ViewController extends GetxController {
               SizedBox(height: 10,),
               DateBox(
                 selectedDate: Jalali.now(),
+                isSeletedDate: false.obs,
                 onDateChanged: (date) {
                   // dataJson[columnName] =  date;
                   ViewController.request[column['name']] = date;

@@ -443,7 +443,7 @@
       {"column": "کد ورودی","oprator": "<="},
       {"column": "checkBox"},
       {"column": "محصولات"},
-      {"column": "تاریخ","operator": "<=>"
+      {"column": "تاریخ","oprator": "whereDate >="
       }
     ]
   },

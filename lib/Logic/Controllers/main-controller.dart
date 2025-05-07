@@ -851,6 +851,15 @@ class MainController extends GetxController {
     }
     return null;
   }
+  static getTypeColumn(String title) {
+    for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      var column = MainController.tableInfo['columns'][j];
+      if (column['name'] == title) {
+        return column['type'];
+      }
+    }
+    return null;
+  }
 
   static getColumnPrime() {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
