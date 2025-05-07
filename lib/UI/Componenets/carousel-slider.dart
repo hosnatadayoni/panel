@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:finance/Public/styles.dart';
+import 'package:finance/UI/Componenets/General/img.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -427,20 +428,9 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
               decoration: BoxDecoration(
                 color: widget.colorBox,
               ),
-              child: Image.network(
+              child: Img(
+                width: size.width,
                 widget.items![_currentIndex].imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
               ),
             ),
           ):
@@ -448,7 +438,7 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
             ignoring:widget.hasTouchSwipping == false ?  true : false,
             child: CarouselSlider(
               carouselController: _carouselController,
-              items: widget.items!.map((url) {
+              items: widget.items!.map((item) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
@@ -458,21 +448,9 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
                         // color: widget.isDark ? color25 :color26,
                         color: widget.colorBox
                       ),
-                      child: Image.network(
-                        url.toString(),
-                        width: widget.hasControl ? double.infinity : size.width,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                      child: Img(
+                        width: size.width,
+                        item.imageUrl,
                       ),
                     );
                   },

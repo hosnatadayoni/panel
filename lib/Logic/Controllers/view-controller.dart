@@ -620,6 +620,7 @@ class ViewController extends GetxController {
     }
     return CheckBox(
       defaultValue: dataModel,
+      isClickedBtn:false.obs,
       checkBoxTitle: '',
       onChange: (text) async {
         dataModel = text;

@@ -377,41 +377,41 @@ class DashboardPage extends StatelessWidget {
                           //basic
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                             ),
                           ]),
                           SizedBox(height: 30),
                           //Indicators
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                             ),
                           ],showIndicators: true),
                           SizedBox(height: 30),
                           //Captions
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true),
@@ -419,15 +419,15 @@ class DashboardPage extends StatelessWidget {
                           //Autoplaying
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true , isAutoPlay: true),
@@ -435,15 +435,15 @@ class DashboardPage extends StatelessWidget {
                           //ride
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true ,ride: true),
@@ -451,17 +451,17 @@ class DashboardPage extends StatelessWidget {
                           //Individual .carousel-item interval
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                               autoPlayInterval: Duration(seconds: 10),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                               autoPlayInterval: Duration(seconds: 20),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                               autoPlayInterval: Duration(seconds: 40),
                             ),
@@ -470,17 +470,17 @@ class DashboardPage extends StatelessWidget {
                           //Autoplaying carousels without controls
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
 
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
 
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true , isAutoPlay: true , hasControl: true),
@@ -488,15 +488,15 @@ class DashboardPage extends StatelessWidget {
                           //Disable touch swiping
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true , isAutoPlay: true ,hasTouchSwipping: false),
@@ -504,15 +504,15 @@ class DashboardPage extends StatelessWidget {
                           //Dark variant
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true , colorBox: color25,colorIcon: color26,colorIndicator: color26,colorIndicatorActive: blackColor,colorTxt: blackColor, isAutoPlay: true),
@@ -520,15 +520,15 @@ class DashboardPage extends StatelessWidget {
                           //Crossfade
                           MyCarousel(items: [
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+                              imageUrl:  loginSvg,
                               caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e',
+                              imageUrl:  test,
                               caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
                             ),
                             CarouselItem(
-                              imageUrl:  'https://images.unsplash.com/photo-1433086966358-54859d0ed716',
+                              imageUrl:  loginSvg,
                               caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
                             ),
                           ],showIndicators: true , hasCaption: true , isAutoPlay: true  , isCrossFade: true),
