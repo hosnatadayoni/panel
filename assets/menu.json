@@ -274,6 +274,7 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
+          {"title": "test 0","value": "","is_selected": true},
           {"title": "test 1","value": "1","is_selected": true},
           {"title": "test 2","value": "2","is_selected": false},
           {"title": "test 3","value": "3","is_selected": false},
@@ -296,9 +297,9 @@
     "filters": [
       {"column": "مشتری"},
       {"column": "کد ورودی"},
-      {"column": "radiobutton"},
       {"column": "checkBox"},
-      {"column": "محصولات"}
+      {"column": "محصولات"},
+      {"column": "تاریخ"}
     ]
   },
   {

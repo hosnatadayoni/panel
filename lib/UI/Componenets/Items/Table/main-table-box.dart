@@ -28,7 +28,7 @@ late Future<Widget> _future;
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
-
+    print('MainController.tableData.value >>>${MainController.tableInfo['filters']}');
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -65,19 +65,22 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-                      List<dynamic> d=await DB('${MainController.tableInfo['table-name']}').getRecords();
-                      List<dynamic> d2=[];
+
                       print('request>>${ViewController.request}');
+                      if(ViewController.request.length!=0){
+                        var d;
+                        List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
+                        var a= DB('${MainController.tableInfo['table-name']}');
                       for(var filter in ViewController.request.keys){
-                        if(ViewController.request[filter]!=''){
-                          print('ViewController.request[filter]>>>${ViewController.request[filter].runtimeType}');
-                          d=await DB('${MainController.tableInfo['table-name']}').where('${filter}','==',ViewController.request[filter]).getRecords();
+                        if(ViewController.request[filter]!='' && ViewController.request[filter]!=null){
+                          d=a.where('${filter}','==',ViewController.request[filter]);
                         }
                       }
-                      MainController.tableData.value=d;
-                      print('filter btn >>>${d}>>${MainController.tableInfo['table-name']}');
-                      print('filter bttn >>>${d2}>>${MainController.tableInfo['table-name']}');
-                    },
+                      d2=await d.getRecords();
+                      MainController.tableData.value=d2;
+                      print('filter btn >>>}>>${MainController.tableInfo['table-name']}');
+                      print('filter bttn >>>${d2.length}>>${MainController.tableInfo['table-name']}');
+                    }},
                     child: Center(child: Txt('اعمال', textAlign: TextAlign.center)),
                   ),
                 ),

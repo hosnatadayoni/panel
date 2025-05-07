@@ -46,8 +46,6 @@ class ViewController extends GetxController {
     var children = <Widget>[];
     var textField;
     var selectBox;
-    var checkBox;
-    var radioButtonBox;
     var dateBox;
     var multiSelectBox;
     var colorBox;
@@ -59,8 +57,6 @@ class ViewController extends GetxController {
         var column = columns[j];
         print('column table>>>${column}');
         var type = column['type'];
-        String name = column['title'];
-        var defaultValue = column['default_value'];
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
         var maxValidator;
@@ -80,16 +76,15 @@ class ViewController extends GetxController {
           ));
           children.add(textField);
         }
+
         if (type == 'select') {
-          var initValue;
           List<dynamic> items = await itemsList(column);
           print('items 200>>>${items}');
           selectBox = await generateStoreFormSelectBox(column,items, '', '' , false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+          children.add(SizedBox(height: 20,));
           children.add(selectBox);
         }
+
         else if (type == 'checkbox') {
           children.add(
             Column(
@@ -101,6 +96,16 @@ class ViewController extends GetxController {
                   name: '${column['title']}',
                   column: column,
                   items: [
+                    DropdownMenuItem(
+                        child: Obx(() {
+                          return Txt(
+                            'انتخاب نشده',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : primaryDark,
+                          );
+                        }),
+                        value: '', ),
                     DropdownMenuItem(
                         child: Obx(() {
                           return Txt(
@@ -122,16 +127,10 @@ class ViewController extends GetxController {
                         }),
                         value: 'false'),
                   ],
-                  initalValue: 'false',
+                  initalValue: '',
                   onChanged: (value) async {
                     print('selected item ${value}');
-                    // for (var item in items) {
-                    //   if (item['title'] == value) {
-                    //     if (item['value'] == '-1') {
-                    //       value = null;
-                    //     }
-                    //   }
-                    // }
+
                     if(value != 'true'){
                       ViewController.request[column['name']] = false;
                     }
@@ -228,7 +227,7 @@ class ViewController extends GetxController {
         print('column table>>>${column}');
         var type = column['type'];
         String name = column['title'];
-        var defaultValue = column['default_value'];
+
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
         var maxValidator;
@@ -259,7 +258,7 @@ class ViewController extends GetxController {
           children.add(selectBox);
         }
         else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column, defaultValue);
+          checkBox = generateFormCheckBox(column);
           children.add(SizedBox(
             height: 20,
           ));
@@ -376,7 +375,7 @@ class ViewController extends GetxController {
 
         }
         else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column, dataModel['${name}']);
+          checkBox = generateFormCheckBox(column, defultValue:dataModel['${name}']);
           children.add(SizedBox(
             height: 20,
           ));
@@ -805,9 +804,10 @@ class ViewController extends GetxController {
     for (var item in items)
       print('generateFormSelectBox item2>>>${item}');
     if(column['sourceItems']!='custom'){
-      ViewController.request[column['name']]=items.first['id'];
+      // ViewController.request[column['name']]=items.first['id'];
+      ViewController.request[column['name']]=null;
     }else{
-      ViewController.request[column['name']]=items.first['value'];
+      ViewController.request[column['name']]=null;
     }
     return items.length != 0
         ? new Column(
@@ -831,7 +831,7 @@ class ViewController extends GetxController {
                              : primaryDark,
                        );
                      }),
-                     value: '-1'),
+                     value: ''),
                    // DropdownMenuItem(
                    //
                    //     child: Obx(() {
@@ -857,10 +857,10 @@ class ViewController extends GetxController {
                        value: item['id'].toString()),
 
                ],
-               initalValue:initailValue==''||initailValue==null? items.first['id']:initailValue,
+               initalValue:initailValue==''||initailValue==null? "":initailValue,
                onChanged: (value) async {
                  print('selected item ${value}');
-                 if(value != '-1'){
+                 if(value != ''){
                    // selectedValue=value!;
                    ViewController.request[column['name']] = value;
                  }
@@ -894,12 +894,12 @@ class ViewController extends GetxController {
                  print('selected item ${value}');
                  for (var item in items) {
                    if (item['title'] == value) {
-                     if (item['value'] == '-1') {
+                     if (item['value'] == '') {
                        value = null;
                      }
                    }
                  }
-                 if(value != '-1'){
+                 if(value != ''){
                    ViewController.request[column['name']] = value;
                  }
                  else{
@@ -917,12 +917,13 @@ class ViewController extends GetxController {
 
 
 
-  static Widget generateFormCheckBox(
-       var column, var defaultValue) {
+  static Widget generateFormCheckBox(var column,{var defultValue}) {
+    ViewController.request[column['name']]= defultValue??column['default_value'];
+    print('ViewController.generateFormCheckBox>>>${ViewController.request[column['name']]}');
     return new CheckBox(
       checkBoxName: '${column['title']}',
       checkBoxTitle: '${column['title']}',
-      defaultValue: defaultValue,
+      defaultValue: defultValue??column['default_value'],
       onChange: (text) {
         ViewController.request[column['name']] = text;
         // dataJson[columnName] = text;
@@ -1048,7 +1049,7 @@ class ViewController extends GetxController {
                                           var index=selectedItemsList.indexWhere((map) => mapEquals(map, item));
                                           selectedItemsList.removeAt(index);
                                         }
-                                        if(item['id'] == '-1'){
+                                        if(item['id'] == ''){
                                           selectedItemId.value.remove(item['id']);
                                         }
                                         if(selectedItemId.value.length == 0){
@@ -1134,7 +1135,7 @@ class ViewController extends GetxController {
                                           print('selectedItemsList >>${selectedItemsList}');
 
                                         }
-                                        if(item['id'] == '-1'){
+                                        if(item['id'] == ''){
                                         }
                                         if(selectedItemsList.value.length == 0){
                                           isSelectedItem.value = false;
