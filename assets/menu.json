@@ -52,23 +52,13 @@
       {
         "name": "کد مشتری",
         "title": "کد مشتری",
-        "type": "Number int",
-        "validators": [
-          {"type": "min","value": 430 , "message": "عدد وارد شده کمتر از 430 است"},
-          {"type": "max","value": 793 , "message": "عدد وارد شده بیشتر از 793 است"}
-        ]
+        "type": "Number int"
       },
       {
         "name": "time",
         "title": "time",
         "type": "time",
-        "format": 24,
-        "validators": [
-          {
-            "type": "required",
-            "message": "وارد کردن این فیلد الزامی است"
-          }
-        ]
+        "format": 24
       },
       {
         "name": "time2",
@@ -79,41 +69,50 @@
       {
         "name": "تاریخ",
         "title": "تاریخ",
-        "type": "date",
-        "validators": [
-          {
-            "type": "required",
-            "message": "وارد کردن این فیلد الزامی است"
-          }
-        ]
+        "type": "date"
       },
       {
         "name": "color",
         "title": "color",
-        "type": "color",
-        "validators": [
-          {
-            "type": "required",
-            "message": "وارد کردن این فیلد الزامی است"
-          }
-        ]
+        "type": "color"
       },
       {
         "name": "file",
         "title": "file",
-        "type": "file",
-        "validators": [
-          {
-            "type": "required",
-            "message": "وارد کردن این فیلد الزامی است"
-          }
-        ]
+        "type": "file"
       },
       {
         "name": "checkBox",
         "title": "checkBox",
         "type": "checkbox",
-        "default_value": false,
+        "default_value": false
+      },
+      {
+        "name": "radioButton2",
+        "title": "radioButton2",
+        "type": "radiobutton",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {"title": "test 1","value": "1","is_selected": true},
+          {"title": "test 2","value": "2","is_selected": false},
+          {"title": "test 3","value": "3","is_selected": false},
+          {"title": "test 4","value": "4","is_selected": false}
+        ],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "محصولات3",
+        "title": "محصولات3",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "products",
+        "items":["عنوان","قیمت"],
         "validators": [
           {
             "type": "required",

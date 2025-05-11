@@ -25,6 +25,10 @@ import 'package:finance/UI/Componenets/carousel-slider.dart';
 import 'package:finance/UI/Componenets/close-btn.dart';
 import 'package:finance/UI/Componenets/collapse.dart';
 import 'package:finance/UI/Componenets/drop-down.dart';
+import 'package:finance/UI/Componenets/modal.dart';
+import 'package:finance/UI/Componenets/placeholder-button.dart';
+import 'package:finance/UI/Componenets/placeholder-line.dart';
+import 'package:finance/UI/Componenets/placeholderWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1030,36 +1034,36 @@ class DashboardPage extends StatelessWidget {
                           SizedBox(height: 40,),
                           //Menu alignment
                           //left
-                         Container(
-                           width: size.width,
-                           color: Colors.red,
-                           child: Center(
-                             child: Row(
-                               mainAxisAlignment: MainAxisAlignment.center,
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               children: [
-                                 Dropdown(
-                                   itemsDropDown: [
-                                     DropdownItem(text: "Dropdown item text"),
-                                     DropdownItem(text: "Action", value: "action"),
-                                     DropdownItem(text: "Another action", value: "another_action"),
-                                     DropdownItem(text: "Something else here", value: "something_else"),
-                                   ], dropDownTitle: 'left align menu', direction: directions.left,
-                                 ),
-                                 SizedBox(height: 10,),
-                                 //right
-                                 Dropdown(
-                                   itemsDropDown: [
-                                     DropdownItem(text: "Dropdown item text"),
-                                     DropdownItem(text: "Action", value: "action"),
-                                     DropdownItem(text: "Another action", value: "another_action"),
-                                     DropdownItem(text: "Something else here", value: "something_else"),
-                                   ], dropDownTitle: 'right align menu', direction: directions.right,
-                                 ),
-                               ],
-                             ),
-                           ),
-                         ),
+                         // Container(
+                         //   width: size.width,
+                         //   color: Colors.red,
+                         //   child: Center(
+                         //     child: Row(
+                         //       mainAxisAlignment: MainAxisAlignment.center,
+                         //       crossAxisAlignment: CrossAxisAlignment.center,
+                         //       children: [
+                         //         Dropdown(
+                         //           itemsDropDown: [
+                         //             DropdownItem(text: "Dropdown item text"),
+                         //             DropdownItem(text: "Action", value: "action"),
+                         //             DropdownItem(text: "Another action", value: "another_action"),
+                         //             DropdownItem(text: "Something else here", value: "something_else"),
+                         //           ], dropDownTitle: 'left align menu', direction: directions.left,
+                         //         ),
+                         //         SizedBox(height: 10,),
+                         //         //right
+                         //         Dropdown(
+                         //           itemsDropDown: [
+                         //             DropdownItem(text: "Dropdown item text"),
+                         //             DropdownItem(text: "Action", value: "action"),
+                         //             DropdownItem(text: "Another action", value: "another_action"),
+                         //             DropdownItem(text: "Something else here", value: "something_else"),
+                         //           ], dropDownTitle: 'right align menu', direction: directions.right,
+                         //         ),
+                         //       ],
+                         //     ),
+                         //   ),
+                         // ),
                           SizedBox(height:40),
                           //header
                           Dropdown(
@@ -1076,6 +1080,154 @@ class DashboardPage extends StatelessWidget {
                             hasForm: true,
                             dropDownTitle: 'DropDown Form',
                           ),
+                          SizedBox(height:40),
+                          // data-bs-offset
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Dropdown(
+                                itemsDropDown: [
+                                  DropdownItem(text: "Dropdown item text"),
+                                  DropdownItem(text: "Action", value: "action"),
+                                  DropdownItem(text: "Another action", value: "another_action",),
+                                  DropdownItem(text: "Something else here", value: "something_else"),
+                                ], dropDownTitle: 'change offset', isChangeOffset: true, offsetX: -180, offsetY: 80,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height:100),
+
+
+                          //Modal
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch demo modal',),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch static backdrop modal',staticBackdrop: true),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+                              'the majority have suffered alteration in some form, by injected humour, or r'
+                              'andomised words which dont look even slightly believable. If you are going to'
+                              ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+                              'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+                              'end to repeat predefined chunks as necessary, making this the first true generator '
+                              'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+                              'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+                              'generated Lorem Ipsum is therefore always free from repetition, injected h'
+                              'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+                              'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+                              ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+                              'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+                              'ley of type and scrambled it to make a type specimen book. It has survived not'
+                              ' only five centuries, but also the leap into electronic typesetting, remaining '
+                              'essentially unchanged. It was popularised in the 1960s with the release of '
+                              ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+                              'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+                              'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+                              'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
+                              titleBox: 'Save Message', btnTxt: 'Scrolling long content'),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+                              'the majority have suffered alteration in some form, by injected humour, or r'
+                              'andomised words which dont look even slightly believable. If you are going to'
+                              ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+                              'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+                              'end to repeat predefined chunks as necessary, making this the first true generator '
+                              'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+                              'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+                              'generated Lorem Ipsum is therefore always free from repetition, injected h'
+                              'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+                              'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+                              ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+                              'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+                              'ley of type and scrambled it to make a type specimen book. It has survived not'
+                              ' only five centuries, but also the leap into electronic typesetting, remaining '
+                              'essentially unchanged. It was popularised in the 1960s with the release of '
+                              ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+                              'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+                              'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+                              'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered modal',isModalDialogCenter: true),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+                              'the majority have suffered alteration in some form, by injected humour, or r'
+                              'andomised words which dont look even slightly believable. If you are going to'
+                              ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+                              'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+                              'end to repeat predefined chunks as necessary, making this the first true generator '
+                              'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+                              'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+                              'generated Lorem Ipsum is therefore always free from repetition, injected h'
+                              'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+                              'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+                              ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+                              'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+                              'ley of type and scrambled it to make a type specimen book. It has survived not'
+                              ' only five centuries, but also the leap into electronic typesetting, remaining '
+                              'essentially unchanged. It was popularised in the 1960s with the release of '
+                              ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+                              'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+                              'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+                              'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered scrollable modal',isModalDialogCenter: true),
+                          SizedBox(height:40),
+                          //size.............
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Small Modal',modalSize: ModalSize.small),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Default Modal',),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Large Modal',modalSize: ModalSize.large),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Extra Large Modal', modalSize: ModalSize.xlarge),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full Screen', modalSize: ModalSize.fullScreen),
+                          SizedBox(height:40),
+                          //fullscrenn responsive
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below sm', modalFullscreenMode: ModalFullscreenMode.smDown),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below md', modalFullscreenMode: ModalFullscreenMode.mdDown),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below lg', modalFullscreenMode: ModalFullscreenMode.lgDown),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xl', modalFullscreenMode: ModalFullscreenMode.xlDown),
+                          SizedBox(height:40),
+                          CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xxl', modalFullscreenMode: ModalFullscreenMode.xxlDown),
+                          SizedBox(height:100),
+                          //placeholder
+                          // Container(
+                          //   height: 500,
+                          //     child: PlaceholderWidget(
+                          //       placeholderLineList: [
+                          //         PlaceholderLine(width: 200),
+                          //         PlaceholderLine(width: 150),
+                          //         PlaceholderLine(width: 180),
+                          //       ],
+                          //     )),
+                          // SizedBox(height:40),
+                          // Container(
+                          //     height: 500,
+                          //     child: PlaceholderWidget(
+                          //       placeholderLineList: [
+                          //         PlaceholderLine(width: 200 , animationType: PlaceholderAnimationType.wave),
+                          //         PlaceholderLine(width: 150 , animationType: PlaceholderAnimationType.glow),
+                          //         PlaceholderLine(width: 180),
+                          //       ],
+                          //     )),
+                          // SizedBox(height:40),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                             Wrap(
+                               spacing: 10,
+                               runSpacing: 10,
+                               children: [
+                                 PlaceholderLine(width: 200 , animationType: PlaceholderAnimationType.wave),
+                                 PlaceholderLine(width: 150 , animationType: PlaceholderAnimationType.glow),
+                                 PlaceholderLine(width: 180),
+                               ],
+                             ),
+                              SizedBox(height: 10,),
+                              PlaceholderButton(primaryColor: Colors.blue,)
+
+                            ],
+                          )
+
 
                         ],
                       ),]

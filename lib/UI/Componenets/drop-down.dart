@@ -34,6 +34,11 @@ class Dropdown extends StatefulWidget {
   directions? direction;
   Color? borderButtonColor;
   bool? hasForm;
+  Color? ColorHoverBox;
+  Color? ColorDisableTxt;
+  bool? isChangeOffset;
+  double? offsetX;
+  double? offsetY;
 
 
 
@@ -54,6 +59,11 @@ class Dropdown extends StatefulWidget {
     this.direction = directions.down,
     this.borderButtonColor = color5,
     this.hasForm = false,
+    this.ColorHoverBox = itemColor39,
+    this.ColorDisableTxt = color14,
+    this.isChangeOffset = false,
+    this.offsetX =0,
+    this.offsetY = 0
 
   });
 
@@ -116,33 +126,39 @@ class _DropdownState extends State<Dropdown> {
   }
 
   Offset getOffset() {
-    final renderBox = buttonKey.currentContext?.findRenderObject() as RenderBox?;
-    final popupState = popupMenuKey.currentState;
-
-
-
-    // if (popupState == null) return Offset.zero;
-
-    if (renderBox == null) return Offset.zero;
-
-
-    final size = renderBox.size;
-
-    switch (widget.direction) {
-      case directions.up:
-        return Offset(0, -size.height - 5);
-      case directions.down:
-        return Offset(0, size.height + 5);
-      case directions.start:
-        return Offset((-size.width) - 5, 0);
-      case directions.end:
-        return Offset((size.width)-5, 0);
-      case directions.right:
-        return Offset(0, size.height + 5);
-      case directions.left:
-        return Offset(size.width, size.height + 5);
-      default: return Offset(0, size.height + 5);
+    if(widget.isChangeOffset!){
+      return Offset(widget.offsetX!, widget.offsetY!);
     }
+    else{
+      final renderBox = buttonKey.currentContext?.findRenderObject() as RenderBox?;
+      final popupState = popupMenuKey.currentState;
+
+
+
+      // if (popupState == null) return Offset.zero;
+
+      if (renderBox == null) return Offset.zero;
+
+
+      final size = renderBox.size;
+
+      switch (widget.direction) {
+        case directions.up:
+          return Offset(0, -size.height - 5);
+        case directions.down:
+          return Offset(0, size.height + 5);
+        case directions.start:
+          return Offset((-size.width) - 5, 0);
+        case directions.end:
+          return Offset((size.width)-5, 0);
+        case directions.right:
+          return Offset(0, size.height + 5);
+        case directions.left:
+          return Offset(size.width, size.height + 5);
+        default: return Offset(0, size.height + 5);
+      }
+    }
+
   }
 
 
@@ -189,150 +205,6 @@ class _DropdownState extends State<Dropdown> {
                 child: Icon(getIconDirection(),
                     color: this.widget.iconColor, size:getIconSize()),
               ), buttonKey, popupMenuKey),
-        //       child: PopupMenuButton<String>(
-        //         shape: RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.circular(16),
-        //           side: BorderSide(
-        //             color: widget.borderButtonColor!,
-        //             width: 1,
-        //           ),
-        //         ),
-        //         offset: getOffset(),
-        //         onSelected: (value){
-        //           selectedItem.value = value;
-        //         },
-        //         onOpened: (){
-        //           selectedItem.value = '';
-        //         },
-        //         color: this.widget.ColorDropDownBox,
-        //         itemBuilder: (BuildContext context) =>
-        //         widget.hasForm == false ?
-        //         [
-        //           ...widget.itemsDropDown!.map((item) =>
-        //        item.isDisabled ? PopupMenuItem<String>(
-        //        padding: EdgeInsets.zero,
-        //        enabled: false,
-        //        child: Container(
-        //   width: size.width,
-        //   padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
-        //   child: Txt(
-        //     item.text,
-        //     color: Colors.grey.shade400,
-        //   ),
-        // ),
-        //       ):
-        //           item.isInteractive?
-        //               PopupMenuItem<String>(
-        //             padding: EdgeInsets.zero,
-        //             value: item.value,
-        //             child: Obx((){
-        //               final isActive = item.isActive ||
-        //                   selectedItem.value == item.text ||
-        //                   (selectedItem.value.isEmpty &&
-        //                       widget.itemsDropDown!.indexOf(item) == 0);
-        //               return Container(
-        //                   // color:hoveredIndex.value == item && widget.itemsDropDown.indexOf(item) != 0 ? Colors.grey[300] :  selectedItem.value == item ||
-        //                   //     (selectedItem.value.isEmpty && widget.itemsDropDown.indexOf(item) == 0)
-        //                   //     ? this.widget.ColorActiveBox
-        //                   //     : Colors.transparent,
-        //                   color: hoveredIndex.value == item.text
-        //                       ? Colors.grey[300]
-        //                       : isActive
-        //                       ? this.widget.ColorActiveBox
-        //                       : Colors.transparent,
-        //                   width: size.width,
-        //                   padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-        //                   child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,));
-        //             })
-        //           ):
-        //           PopupMenuItem<String>(
-        //               padding: EdgeInsets.zero,
-        //               enabled: false,
-        //               child: Obx((){
-        //                 return Container(
-        //                     color:hoveredIndex.value == item && widget.itemsDropDown!.indexOf(item) != 0 ? Colors.grey[300] :  selectedItem.value == item ||
-        //                         (selectedItem.value.isEmpty && widget.itemsDropDown!.indexOf(item) == 0)
-        //                         ? this.widget.ColorActiveBox
-        //                         : Colors.transparent,
-        //                     width: size.width,
-        //                     padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-        //                     child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,));
-        //               })
-        //           )).toList(),
-        //           if (this.widget.spreadLinkList != null)
-        //           const PopupMenuDivider(),
-        //           if (this.widget.spreadLinkList != null)
-        //             for(var item in this.widget.spreadLinkList!)
-        //               PopupMenuItem<String>(
-        //              padding: EdgeInsets.zero,
-        //               value: item,
-        //               child: MouseRegion(
-        //               onEnter: (_){
-        //                 hoveredIndex.value = item;
-        //               },
-        //               onExit: (_){
-        //                 hoveredIndex.value = '';
-        //               },
-        //               child: Obx((){
-        //                 return Container(
-        //                     color: hoveredIndex.value == item? Colors.grey[300]: selectedItem.value == item
-        //                         ? this.widget.ColorActiveBox
-        //                         : Colors.transparent,
-        //                     width: size.width,
-        //                     child: Container(
-        //                         padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-        //                         child: Txt(item, color: this.widget.ColorTitleDropDownBox,)));
-        //               })
-        //             ),
-        //           ),
-        //         ]:
-        //         [
-        //           PopupMenuItem<String>(
-        //             enabled: false,
-        //             child: FormWidget(),
-        //           ),
-        //           if (this.widget.spreadLinkList != null)
-        //             const PopupMenuDivider(),
-        //           if (this.widget.spreadLinkList != null)
-        //             for(var item in this.widget.spreadLinkList!)
-        //               PopupMenuItem<String>(
-        //                 padding: EdgeInsets.zero,
-        //                 value: item,
-        //                 child: MouseRegion(
-        //                     onEnter: (_){
-        //                       hoveredIndex.value = item;
-        //                     },
-        //                     onExit: (_){
-        //                       hoveredIndex.value = '';
-        //                     },
-        //                     child: Obx((){
-        //                       return Container(
-        //                           color: hoveredIndex.value == item? Colors.grey[300]: selectedItem.value == item
-        //                               ? this.widget.ColorActiveBox
-        //                               : Colors.transparent,
-        //                           width: size.width,
-        //                           child: Container(
-        //                               padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-        //                               child: Txt(item, color: this.widget.ColorTitleDropDownBox,)));
-        //                     })
-        //                 ),
-        //               ),
-        //         ],
-        //         child: Container(
-        //           padding: EdgeInsets.only(
-        //               left: 9, right: 9, top: 11, bottom: 11),
-        //           decoration: BoxDecoration(
-        //             color: isHoverSplit.value
-        //                 ? this.widget.colorHoverBox
-        //                 : this.widget.colorBox,
-        //             borderRadius: BorderRadius.only(
-        //                 topRight: Radius.circular(15),
-        //                 bottomRight: Radius.circular(15)),
-        //           ),
-        //           child: Icon(getIconDirection(),
-        //               color: this.widget.iconColor, size:getIconSize()),
-        //         ),
-        //       ),
             ),
             MouseRegion(
               onEnter: (_) {
@@ -399,214 +271,6 @@ class _DropdownState extends State<Dropdown> {
                 ),
               )
             ), buttonKey, popupMenuKey),
-            // child:  PopupMenuButton<String>(
-            //   key: popupMenuKey,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(16),
-            //     side: BorderSide(
-            //       color: widget.borderButtonColor!,
-            //       width: 1,
-            //     ),
-            //   ),
-            //   offset: getOffset(),
-            //   onSelected: (value){
-            //     selectedItem.value = value;
-            //   },
-            //   onOpened: (){
-            //     selectedItem.value = '';
-            //   },
-            //   color: this.widget.ColorDropDownBox,
-            //   itemBuilder: (BuildContext context) =>
-            //   widget.hasForm == false ?
-            //   [
-            //     ...widget.itemsDropDown!.map((item) =>
-            //     item.isHeader! ?  PopupMenuItem<String>(
-            //       padding: EdgeInsets.zero,
-            //       enabled: false,
-            //       child: Container(
-            //         width: size.width,
-            //         padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
-            //         child: Txt(
-            //           item.text,
-            //           color: Colors.grey.shade400,
-            //           fontSize: 14,
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       ),
-            //     ):
-            //     item.isDisabled ? PopupMenuItem<String>(
-            //       padding: EdgeInsets.zero,
-            //       enabled: false,
-            //       child: Container(
-            //         width: size.width,
-            //         padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
-            //         child: Txt(
-            //           item.text,
-            //           color: Colors.grey.shade400,
-            //         ),
-            //       ),
-            //     ):
-            //     item.isInteractive?
-            //     PopupMenuItem<String>(
-            //       padding: EdgeInsets.zero,
-            //       value: item.value,
-            //       child: MouseRegion(
-            //           onEnter: (_){
-            //             hoveredIndex.value = item.text;
-            //           },
-            //           onExit: (_){
-            //             hoveredIndex.value = '';
-            //           },
-            //           child: Obx((){
-            //             final isActive = item.isActive ||
-            //                 selectedItem.value == item.text ||
-            //                 (selectedItem.value.isEmpty &&
-            //                     widget.itemsDropDown!.indexOf(item) == 0);
-            //             return Container(
-            //               // color:hoveredIndex.value == item && widget.itemsDropDown.indexOf(item) != 0 ? Colors.grey[300]  :  selectedItem.value == item ||
-            //               //     (selectedItem.value.isEmpty && widget.itemsDropDown.indexOf(item) == 0)
-            //               //     ? this.widget.ColorActiveBox
-            //               //     : Colors.transparent,
-            //                 color: hoveredIndex.value == item.text
-            //                     ? Colors.grey[300]
-            //                     : isActive
-            //                     ? this.widget.ColorActiveBox
-            //                     : Colors.transparent,
-            //                 width: size.width,
-            //                 padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-            //
-            //                 child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,  ));
-            //           })
-            //       ),
-            //     ):
-            //     PopupMenuItem<String>(
-            //       padding: EdgeInsets.zero,
-            //       enabled: false,
-            //       child: MouseRegion(
-            //           onEnter: (_){
-            //             hoveredIndex.value = item.text;
-            //           },
-            //           onExit: (_){
-            //             hoveredIndex.value = '';
-            //           },
-            //           child: Obx((){
-            //             final isActive = item.isActive ||
-            //                 selectedItem.value == item.text ||
-            //                 (selectedItem.value.isEmpty &&
-            //                     widget.itemsDropDown!.indexOf(item) == 0);
-            //             return Container(
-            //                 color:hoveredIndex.value == item && widget.itemsDropDown!.indexOf(item) != 0 ? Colors.grey[300]  :  selectedItem.value == item ||
-            //                     (selectedItem.value.isEmpty && widget.itemsDropDown!.indexOf(item) == 0)
-            //                     ? this.widget.ColorActiveBox
-            //                     : Colors.transparent,
-            //                 width: size.width,
-            //                 padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-            //
-            //                 child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,  ));
-            //           })
-            //       ),
-            //     )).toList(),
-            //     if (this.widget.spreadLinkList != null)
-            //       const PopupMenuDivider(),
-            //     if (this.widget.spreadLinkList != null)
-            //       for(var item in this.widget.spreadLinkList!)
-            //           PopupMenuItem<String>(
-            //         padding: EdgeInsets.zero,
-            //         value: item,
-            //         child: Container(
-            //             color: selectedItem.value == item
-            //                 ? this.widget.ColorActiveBox : Colors.transparent,
-            //             width: size.width,
-            //             child: MouseRegion(
-            //               onEnter: (_){
-            //                 hoveredIndex.value = item;
-            //               },
-            //               onExit: (_){
-            //                 hoveredIndex.value = '';
-            //               },
-            //               child: Obx((){
-            //                 return Container(
-            //                     color: hoveredIndex.value == item ? Colors.grey[300]: selectedItem.value == item
-            //                         ? this.widget.ColorActiveBox
-            //                         : Colors.transparent,
-            //                     width: size.width,
-            //                     padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-            //                     child: Txt(item, color: this.widget.ColorTitleDropDownBox,));
-            //               }),
-            //             )),
-            //       ),
-            //   ] :
-            //   [
-            //     PopupMenuItem<String>(
-            //       enabled: false,
-            //       child: FormWidget(),
-            //     ),
-            //     if (this.widget.spreadLinkList != null)
-            //       const PopupMenuDivider(),
-            //     if (this.widget.spreadLinkList != null)
-            //       for(var item in this.widget.spreadLinkList!)
-            //         PopupMenuItem<String>(
-            //           padding: EdgeInsets.zero,
-            //           value: item,
-            //           child: MouseRegion(
-            //               onEnter: (_){
-            //                 hoveredIndex.value = item;
-            //               },
-            //               onExit: (_){
-            //                 hoveredIndex.value = '';
-            //               },
-            //               child: Obx((){
-            //                 return Container(
-            //                     color: hoveredIndex.value == item? Colors.grey[300]: selectedItem.value == item
-            //                         ? this.widget.ColorActiveBox
-            //                         : Colors.transparent,
-            //                     width: size.width,
-            //                     child: Container(
-            //                         padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-            //                         child: Txt(item, color: this.widget.ColorTitleDropDownBox,)));
-            //               })
-            //           ),
-            //         ),
-            //   ],
-            //   child: MouseRegion(
-            //     onEnter: (_) {
-            //       isHover.value = true;
-            //     },
-            //     onExit: (_) {
-            //       isHover.value = false;
-            //     },
-            //     child: Container(
-            //       padding:
-            //       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            //       decoration: BoxDecoration(
-            //         color:
-            //         isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
-            //         borderRadius: BorderRadius.circular(15),
-            //       ),
-            //       child: this.widget.direction == directions.start?Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         children: [
-            //           Txt(this.widget.dropDownTitle,
-            //               color: this.widget.dropDownTitelColor , fontSize: getFontSize()),
-            //           Icon(getIconDirection(),
-            //               color: this.widget.iconColor, size: getIconSize()),
-            //         ],
-            //       ) :Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Icon(getIconDirection(),
-            //               color: this.widget.iconColor, size: getIconSize()),
-            //           Txt(this.widget.dropDownTitle,
-            //               color: this.widget.dropDownTitelColor , fontSize: getFontSize()),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // )
           );
     });
   }
@@ -699,7 +363,7 @@ class _DropdownState extends State<Dropdown> {
       ),
     );
   }
-  Widget PopUpMenuButtonWidget(RxString selectedItem, var size , RxString hoveredIndex , Widget box , buttonKey,popupMenuKey){
+  Widget PopUpMenuButtonWidget(RxString selectedItem, var size, RxString hoveredIndex, Widget box, buttonKey, popupMenuKey) {
     return PopupMenuButton<String>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -709,173 +373,158 @@ class _DropdownState extends State<Dropdown> {
         ),
       ),
       offset: getOffset(),
-      onSelected: (value){
+      onSelected: (value) {
         selectedItem.value = value;
       },
-      onOpened: (){
+      onOpened: () {
         selectedItem.value = '';
       },
       color: this.widget.ColorDropDownBox,
-      itemBuilder: (BuildContext context) =>
-      widget.hasForm == false ?
-      [
-        ...widget.itemsDropDown!.map((item) =>
-        item.isHeader! ?  PopupMenuItem<String>(
-                padding: EdgeInsets.zero,
-                enabled: false,
-                child: Container(
-                  width: size.width,
-                  padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
-                  child: Txt(
-                    item.text,
-                    color: Colors.grey.shade400,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+      itemBuilder: (BuildContext context) => widget.hasForm == false
+          ? [
+        ...widget.itemsDropDown!.map((item) {
+          if (item.isHeader!) {
+            return PopupMenuItem<String>(
+              padding: EdgeInsets.zero,
+              enabled: false,
+              child: Container(
+                width: size.width,
+                padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                child: Txt(
+                  item.text,
+                  color: widget.ColorDisableTxt,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-              ):
-        item.isDisabled ? PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
-          enabled: false,
-          child: Container(
-            width: size.width,
-            padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
-            child: Txt(
-              item.text,
-              color: Colors.grey.shade400,
-            ),
-          ),
-        ):
-        item.isInteractive?
-        // PopupMenuItem<String>(
-        //     padding: EdgeInsets.zero,
-        //     value: item.value,
-        //     child: Obx((){
-        //       final isActive = item.isActive ||
-        //           selectedItem.value == item.text ||
-        //           (selectedItem.value.isEmpty &&
-        //               widget.itemsDropDown!.indexOf(item) == 0);
-        //         return Container(
-        //           // color:hoveredIndex.value == item && widget.itemsDropDown.indexOf(item) != 0 ? Colors.grey[300] :  selectedItem.value == item ||
-        //           //     (selectedItem.value.isEmpty && widget.itemsDropDown.indexOf(item) == 0)
-        //           //     ? this.widget.ColorActiveBox
-        //           //     : Colors.transparent,
-        //             color: hoveredIndex.value == item.text
-        //                 ? Colors.grey[300]
-        //                 : isActive
-        //                 ? this.widget.ColorActiveBox
-        //                 : Colors.transparent,
-        //             width: size.width,
-        //             padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-        //             child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,));
-        //
-        //     })
-        // ):
-        PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
-          value: item.value,
-          child: MouseRegion(
-            onEnter: (_) {
-              if (!item.isActive) {
-                hoveredIndex.value = item.text;
-              }
-            },
-            onExit: (_) {
-              hoveredIndex.value = '';
-            },
-            child: Obx(() {
-              final isFirstItemAndActiveFirst = (item.isActiveFirst ?? false) &&
-                  widget.itemsDropDown!.indexOf(item) == 0;
-
-              final isActive = item.isActive ||
-                  selectedItem.value == item.text ||
-                  (selectedItem.value.isEmpty && isFirstItemAndActiveFirst);
-              return Container(
-                color: hoveredIndex.value == item.text && !isActive
-                    ? Colors.grey[300]
-                    : isActive
-                    ? this.widget.ColorActiveBox
-                    : Colors.transparent,
+              ),
+            );
+          } else if (item.isDisabled) {
+            return PopupMenuItem<String>(
+              padding: EdgeInsets.zero,
+              enabled: false,
+              child: Container(
+                width: size.width,
+                padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                child: Txt(
+                  item.text,
+                  color: widget.ColorDisableTxt,
+                ),
+              ),
+            );
+          } else if (!item.isInteractive) {
+            // آیتم‌های غیرفعال (isInteractive = false)
+            return PopupMenuItem<String>(
+              padding: EdgeInsets.zero,
+              enabled: false,
+              child: Container(
                 width: size.width,
                 padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
                 child: Txt(
                   item.text,
                   color: this.widget.ColorTitleDropDownBox,
                 ),
-              );
-            }),
-          ),
-        ):
-        PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
-            enabled: false,
-            child: Obx((){
-              return Container(
-                  color:hoveredIndex.value == item && widget.itemsDropDown!.indexOf(item) != 0 ? Colors.grey[300] :  selectedItem.value == item ||
-                      (selectedItem.value.isEmpty && widget.itemsDropDown!.indexOf(item) == 0)
-                      ? this.widget.ColorActiveBox
-                      : Colors.transparent,
-                  width: size.width,
-                  padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-                  child: Txt(item.text , color: this.widget.ColorTitleDropDownBox,));
-            })
-        )).toList(),
+              ),
+            );
+          } else {
+            // آیتم‌های فعال (isInteractive = true)
+            return PopupMenuItem<String>(
+              padding: EdgeInsets.zero,
+              value: item.value,
+              child: MouseRegion(
+                onEnter: (_) {
+                  if (!item.isActive) {
+                    hoveredIndex.value = item.text;
+                  }
+                },
+                onExit: (_) {
+                  hoveredIndex.value = '';
+                },
+                child: Obx(() {
+                  final isFirstItemAndActiveFirst = (item.isActiveFirst ?? false) &&
+                      widget.itemsDropDown!.indexOf(item) == 0;
+                  final isActive = item.isActive ||
+                      selectedItem.value == item.text ||
+                      (selectedItem.value.isEmpty && isFirstItemAndActiveFirst);
+                  return Container(
+                    color: hoveredIndex.value == item.text && !isActive
+                        ? widget.ColorHoverBox
+                      : isActive
+                        ? this.widget.ColorActiveBox
+                        : Colors.transparent,
+                    width: size.width,
+                    padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                    child: Txt(
+                      item.text,
+                      color: this.widget.ColorTitleDropDownBox,
+                    ),
+                  );
+                }),
+              ),
+            );
+          }
+        }).toList(),
+        if (this.widget.spreadLinkList != null) const PopupMenuDivider(),
         if (this.widget.spreadLinkList != null)
-          const PopupMenuDivider(),
-        if (this.widget.spreadLinkList != null)
-          for(var item in this.widget.spreadLinkList!)
+          for (var item in this.widget.spreadLinkList!)
             PopupMenuItem<String>(
               padding: EdgeInsets.zero,
               value: item,
               child: MouseRegion(
-                  onEnter: (_){
-                    hoveredIndex.value = item;
-                  },
-                  onExit: (_){
-                    hoveredIndex.value = '';
-                  },
-                  child: Obx((){
-                    return Container(
-                        color: hoveredIndex.value == item? Colors.grey[300]: selectedItem.value == item
-                            ? this.widget.ColorActiveBox
-                            : Colors.transparent,
-                        width: size.width,
-                        child: Container(
-                            padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-                            child: Txt(item, color: this.widget.ColorTitleDropDownBox,)));
-                  })
+                onEnter: (_) {
+                  hoveredIndex.value = item;
+                },
+                onExit: (_) {
+                  hoveredIndex.value = '';
+                },
+                child: Obx(() {
+                  return Container(
+                    color: hoveredIndex.value == item
+                        ? widget.ColorHoverBox
+                        : selectedItem.value == item
+                        ? this.widget.ColorActiveBox
+                        : Colors.transparent,
+                    width: size.width,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                      child: Txt(item, color: this.widget.ColorTitleDropDownBox),
+                    ),
+                  );
+                }),
               ),
             ),
-      ]:
-      [
+      ]
+          : [
         PopupMenuItem<String>(
           enabled: false,
           child: FormWidget(),
         ),
+        if (this.widget.spreadLinkList != null) const PopupMenuDivider(),
         if (this.widget.spreadLinkList != null)
-          const PopupMenuDivider(),
-        if (this.widget.spreadLinkList != null)
-          for(var item in this.widget.spreadLinkList!)
+          for (var item in this.widget.spreadLinkList!)
             PopupMenuItem<String>(
               padding: EdgeInsets.zero,
               value: item,
               child: MouseRegion(
-                  onEnter: (_){
-                    hoveredIndex.value = item;
-                  },
-                  onExit: (_){
-                    hoveredIndex.value = '';
-                  },
-                  child: Obx((){
-                    return Container(
-                        color: hoveredIndex.value == item? Colors.grey[300]: selectedItem.value == item
-                            ? this.widget.ColorActiveBox
-                            : Colors.transparent,
-                        width: size.width,
-                        child: Container(
-                            padding: EdgeInsets.only(top: 4, bottom: 4,left: 16,right: 16),
-                            child: Txt(item, color: this.widget.ColorTitleDropDownBox,)));
-                  })
+                onEnter: (_) {
+                  hoveredIndex.value = item;
+                },
+                onExit: (_) {
+                  hoveredIndex.value = '';
+                },
+                child: Obx(() {
+                  return Container(
+                    color: hoveredIndex.value == item
+                        ? widget.ColorHoverBox
+                        : selectedItem.value == item
+                        ? this.widget.ColorActiveBox
+                        : Colors.transparent,
+                    width: size.width,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 4, bottom: 4, left: 16, right: 16),
+                      child: Txt(item, color: this.widget.ColorTitleDropDownBox),
+                    ),
+                  );
+                }),
               ),
             ),
       ],
@@ -905,330 +554,3 @@ class DropdownItem {
     this.isActiveFirst = false,
   });
 }
-
-// class _DropdownState extends State<Dropdown> {
-//   late final GlobalKey buttonKey = GlobalKey();
-//   final RxString selectedItem = RxString('');
-//   final RxString hoveredIndex = RxString('');
-//   final RxBool isHover = RxBool(false);
-//   final RxBool isHoverMain = RxBool(false);
-//   final RxBool isHoverSplit = RxBool(false);
-//   Offset? menuOffset;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-//   double getFontSize() {
-//     switch (this.widget.size) {
-//       case DropDownSize.small:
-//         return 14;
-//       case DropDownSize.large:
-//         return 20;
-//       case DropDownSize.medium:
-//         return 16;
-//       default:
-//         return 16;
-//     }
-//   }
-//
-//   double getIconSize(){
-//     switch (this.widget.size) {
-//       case DropDownSize.small:
-//         return 15;
-//       case DropDownSize.large:
-//         return 25;
-//       case DropDownSize.medium:
-//         return 15;
-//       default:
-//         return 15;
-//     }
-//   }
-//
-//   IconData getIconDirection(){
-//     switch (this.widget.direction) {
-//       case directions.down:
-//         return Icons.arrow_drop_down;
-//       case directions.up:
-//         return Icons.arrow_drop_up;
-//       case directions.start:
-//         return Icons.arrow_right;
-//       case directions.end:
-//         return Icons.arrow_left;
-//       default:
-//         return Icons.arrow_drop_down;
-//     }
-//
-//   }
-//
-//   Offset getOffset() {
-//     final renderBox = buttonKey.currentContext?.findRenderObject() as RenderBox?;
-//     if (renderBox == null) return Offset.zero;
-//
-//     final size = renderBox.size;
-//
-//     switch (widget.direction) {
-//       case directions.up:
-//         return Offset(0, -size.height - 190);
-//       case directions.down:
-//         return Offset(0, size.height + 5);
-//       case directions.start:
-//         return Offset((-size.width) - 5, 0);
-//       case directions.end:
-//         return Offset((size.width)-5, 0);
-//       default: return Offset(0, size.height + 5);
-//     }
-//   }
-//
-//
-//   // Widget _buildMenuItem(DropdownItem item, BuildContext context) {
-//   //   final size = MediaQuery.of(context).size;
-//   //   final isActive = item.isActive ||
-//   //       selectedItem.value == item.text ||
-//   //       (selectedItem.value.isEmpty && widget.itemsDropDown.indexOf(item) == 0);
-//   //
-//   //   if (item.isDisabled) {
-//   //     return PopupMenuItem<String>(
-//   //       padding: EdgeInsets.zero,
-//   //       enabled: false,
-//   //       child: Container(
-//   //         width: size.width,
-//   //         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//   //         child: Txt(
-//   //           item.text,
-//   //           color: Colors.grey.shade400,
-//   //         ),
-//   //       ),
-//   //     );
-//   //   }
-//   //
-//   //   if (!item.isInteractive) {
-//   //     return PopupMenuItem<String>(
-//   //       padding: EdgeInsets.zero,
-//   //       enabled: false,
-//   //       child: Container(
-//   //         width: size.width,
-//   //         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//   //         child: Txt(item.text, color: widget.ColorTitleDropDownBox),
-//   //       ),
-//   //     );
-//   //   }
-//   //
-//   //   return PopupMenuItem<String>(
-//   //     padding: EdgeInsets.zero,
-//   //     value: item.value ?? item.text,
-//   //     child: MouseRegion(
-//   //       onEnter: (_) => hoveredIndex.value = item.text,
-//   //       onExit: (_) => hoveredIndex.value = '',
-//   //       child: Obx(() => Container(
-//   //         color: hoveredIndex.value == item.text
-//   //             ? Colors.grey[300]
-//   //             : isActive
-//   //             ? widget.ColorActiveBox
-//   //             : Colors.transparent,
-//   //         width: size.width,
-//   //         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//   //         child: Txt(
-//   //           item.text,
-//   //           color: isActive ? Colors.white : widget.ColorTitleDropDownBox,
-//   //         ),
-//   //       )),
-//   //     ),
-//   //   );
-//   // }
-//   PopupMenuEntry<String> _buildMenuItem(DropdownItem item, BuildContext context) {
-//     final size = MediaQuery.of(context).size;
-//     final isActive = item.isActive ||
-//         selectedItem.value == item.text ||
-//         (selectedItem.value.isEmpty && widget.itemsDropDown.indexOf(item) == 0);
-//
-//     if (item.isDisabled) {
-//       return PopupMenuItem<String>(
-//         padding: EdgeInsets.zero,
-//         enabled: false,
-//         child: Container(
-//           width: size.width,
-//           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//           child: Txt(
-//             item.text,
-//             color: Colors.grey.shade400,
-//           ),
-//         ),
-//       );
-//     }
-//
-//     if (!item.isInteractive) {
-//       return PopupMenuItem<String>(
-//         padding: EdgeInsets.zero,
-//         enabled: false,
-//         child: Container(
-//           width: size.width,
-//           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//           child: Txt(item.text, color: widget.ColorTitleDropDownBox),
-//         ),
-//       );
-//     }
-//
-//     return PopupMenuItem<String>(
-//       padding: EdgeInsets.zero,
-//       value: item.value ?? item.text,
-//       child: MouseRegion(
-//         onEnter: (_) => hoveredIndex.value = item.text,
-//         onExit: (_) => hoveredIndex.value = '',
-//         child: Obx(() => Container(
-//           color: hoveredIndex.value == item.text
-//               ? Colors.grey[300]
-//               : isActive
-//               ? widget.ColorActiveBox
-//               : Colors.transparent,
-//           width: size.width,
-//           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-//           child: Txt(
-//             item.text,
-//             color: isActive ? Colors.white : widget.ColorTitleDropDownBox,
-//           ),
-//         )),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildButtonContent() {
-//     return Container(
-//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//       decoration: BoxDecoration(
-//         color: isHover.value ? widget.colorHoverBox : widget.colorBox,
-//         borderRadius: BorderRadius.circular(15),
-//       ),
-//       child: widget.direction == directions.start
-//           ? Row(
-//         mainAxisSize: MainAxisSize.min,
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Txt(widget.dropDownTitle,
-//               color: widget.dropDownTitelColor, fontSize: getFontSize()),
-//           Icon(getIconDirection(),
-//               color: widget.iconColor, size: getIconSize()),
-//         ],
-//       )
-//           : Row(
-//         mainAxisSize: MainAxisSize.min,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Icon(getIconDirection(),
-//               color: widget.iconColor, size: getIconSize()),
-//           Txt(widget.dropDownTitle,
-//               color: widget.dropDownTitelColor, fontSize: getFontSize()),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildSplitButton() {
-//     return Row(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         MouseRegion(
-//           onEnter: (_) => isHoverSplit.value = true,
-//           onExit: (_) => isHoverSplit.value = false,
-//           child: PopupMenuButton<String>(
-//             shape: RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(16),
-//               side: BorderSide(color: widget.borderButtonColor!, width: 1),
-//             ),
-//             offset: getOffset(),
-//             onSelected: (value) => selectedItem.value = value,
-//             onOpened: () => selectedItem.value = '',
-//             color: widget.ColorDropDownBox,
-//             itemBuilder: (context) => [
-//               ...widget.itemsDropDown.map((item) => _buildMenuItem(item, context)),
-//               if (widget.spreadLink != null) const PopupMenuDivider(),
-//               if (widget.spreadLink != null)
-//                 _buildMenuItem(
-//                   DropdownItem(
-//                     text: widget.spreadLink!,
-//                     value: widget.spreadLink,
-//                   ),
-//                   context,
-//                 ),
-//             ],
-//             child: Container(
-//               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 11),
-//               decoration: BoxDecoration(
-//                 color: isHoverSplit.value ? widget.colorHoverBox : widget.colorBox,
-//                 borderRadius: const BorderRadius.only(
-//                     topRight: Radius.circular(15),
-//                     bottomRight: Radius.circular(15)),
-//               ),
-//               child: Icon(getIconDirection(),
-//                   color: widget.iconColor, size: getIconSize()),
-//             ),
-//           ),
-//         ),
-//         MouseRegion(
-//           onEnter: (_) => isHoverMain.value = true,
-//           onExit: (_) => isHoverMain.value = false,
-//           child: Container(
-//             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//             decoration: BoxDecoration(
-//               borderRadius: const BorderRadius.only(
-//                   topLeft: Radius.circular(15),
-//                   bottomLeft: Radius.circular(15)),
-//               color: isHoverMain.value ? widget.colorHoverBox : widget.colorBox,
-//             ),
-//             child: Txt(
-//               widget.dropDownTitle,
-//               color: widget.dropDownTitelColor,
-//               fontSize: getFontSize(),
-//               fontWeight: FontWeight.w400,
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       if (mounted && buttonKey.currentContext != null) {
-//         setState(() => menuOffset = getOffset());
-//       }
-//     });
-//
-//     return Obx(() => widget.isSplitButton!
-//         ? _buildSplitButton()
-//         : Container(
-//       key: buttonKey,
-//       child: PopupMenuButton<String>(
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(16),
-//           side: BorderSide(color: widget.borderButtonColor!, width: 1),
-//         ),
-//         offset: getOffset(),
-//         onSelected: (value) => selectedItem.value = value,
-//         onOpened: () => selectedItem.value = '',
-//         color: widget.ColorDropDownBox,
-//         itemBuilder: (context) => [
-//           ...widget.itemsDropDown.map((item) => _buildMenuItem(item, context)),
-//           if (widget.spreadLink != null) const PopupMenuDivider(),
-//           if (widget.spreadLink != null)
-//             _buildMenuItem(
-//               DropdownItem(
-//                 text: widget.spreadLink!,
-//                 value: widget.spreadLink,
-//               ),
-//               context,
-//             ),
-//         ],
-//         child: MouseRegion(
-//           onEnter: (_) => isHover.value = true,
-//           onExit: (_) => isHover.value = false,
-//           child: _buildButtonContent(),
-//         ),
-//       ),
-//     ),
-//     );
-//   }
-// }
