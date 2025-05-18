@@ -31,16 +31,16 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
   static Map<String, dynamic> request = {};
-  static Map<String, dynamic> requestMultiSelect =<String, dynamic>{};
+  static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
 
-  static Future<Widget> generateFilterView(Map<String,dynamic> columnName)async{
+  static Future<Widget> generateFilterView(
+      Map<String, dynamic> columnName) async {
+    var columnInfo = MainController.getColumnInfo(columnName['column']);
 
-      var columnInfo=MainController.getColumnInfo(columnName['column']);
+    Widget child = (await generateFilterFormView([columnInfo]));
 
-      Widget child=(await generateFilterFormView([columnInfo]));
-
-      return child;
+    return child;
   }
 
   static Future<Widget> generateFilterFormView(var columns) async {
@@ -70,7 +70,12 @@ class ViewController extends GetxController {
               (validator) => validator['type'] == 'min',
               orElse: () => null);
         }
-        if (type == 'string' || type == 'int' || type == 'Number double' || type == 'Number int' || type == 'email' ||  type == 'mobile') {
+        if (type == 'string' ||
+            type == 'int' ||
+            type == 'Number double' ||
+            type == 'Number int' ||
+            type == 'email' ||
+            type == 'mobile') {
           textField = generateFormTextField(_fbKey, column, type, '');
           children.add(SizedBox(
             height: 20,
@@ -81,23 +86,29 @@ class ViewController extends GetxController {
         if (type == 'select') {
           List<dynamic> items = await itemsList(column);
           print('items 200>>>${items}');
-          selectBox = await generateStoreFormSelectBox(column,items, '', '' , false.obs);
-          children.add(SizedBox(height: 20,));
+          selectBox = await generateStoreFormSelectBox(
+              column, items, '', '', false.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
           children.add(selectBox);
-        }
-
-        else if (type == 'checkbox') {
+        } else if (type == 'checkbox') {
           children.add(
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,),
+                Txt(
+                  '${column['title']}',
+                  color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : color2,
+                ),
                 SelectBox(
-                  name: '${column['title']}',
-                  column: column,
-                  items: [
-                    DropdownMenuItem(
+                    name: '${column['title']}',
+                    column: column,
+                    items: [
+                      DropdownMenuItem(
                         child: Obx(() {
                           return Txt(
                             'انتخاب نشده',
@@ -106,8 +117,9 @@ class ViewController extends GetxController {
                                 : primaryDark,
                           );
                         }),
-                        value: '', ),
-                    DropdownMenuItem(
+                        value: '',
+                      ),
+                      DropdownMenuItem(
                         child: Obx(() {
                           return Txt(
                             'فعال',
@@ -116,64 +128,72 @@ class ViewController extends GetxController {
                                 : primaryDark,
                           );
                         }),
-                        value: 'true', ),
-                    DropdownMenuItem(
-                        child: Obx(() {
-                          return Txt(
-                            'غیر فعال',
-                            color: MainController.isLightMode.value == true
-                                ? whiteColor
-                                : primaryDark,
-                          );
-                        }),
-                        value: 'false'),
-                  ],
-                  initalValue: '',
-                  onChanged: (value) async {
-                    print('selected item ${value}');
+                        value: 'true',
+                      ),
+                      DropdownMenuItem(
+                          child: Obx(() {
+                            return Txt(
+                              'غیر فعال',
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : primaryDark,
+                            );
+                          }),
+                          value: 'false'),
+                    ],
+                    initalValue: '',
+                    onChanged: (value) async {
+                      print('selected item ${value}');
 
-                    if(value != 'true'){
-                      ViewController.request[column['name']] = false;
-                    }
-                    else{
-                      ViewController.request[column['name']] =true;
-                    }
-
-                  },
-                  hintText: '',
-                  isSeleted: false.obs ,
-                  selectedValue: ''),
+                      if (value != 'true') {
+                        ViewController.request[column['name']] = false;
+                      } else {
+                        ViewController.request[column['name']] = true;
+                      }
+                    },
+                    hintText: '',
+                    isSeleted: false.obs,
+                    selectedValue: ''),
               ],
-            ),);
-        }
-        else if (type == 'radiobutton') {
+            ),
+          );
+        } else if (type == 'radiobutton') {
           List<dynamic> items = await itemsList(column);
           print('items 200>>>${items}');
-          selectBox = await generateStoreFormSelectBox(column,items, '', '' , false.obs);
+          selectBox = await generateStoreFormSelectBox(
+              column, items, '', '', false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(selectBox);
-        }
-        else if (type == 'date') {
+        } else if (type == 'date') {
           dateBox = Row(
             children: [
-            Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() {
-                return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              }),
-              SizedBox(height: 10,),
-              DateBox(
-                selectedDate: Jalali.now(),
-                isSeletedDate: false.obs,
-                onDateChanged: (date) {
-                  // dataJson[columnName] =  date;
-                  ViewController.request[column['name']] = date;
-                },
-                column: column,
-              ),],)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(() {
+                    return Txt(
+                      '${column['title']}',
+                      color: MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
+                    );
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  DateBox(
+                    selectedDate: Jalali.now(),
+                    isSeletedDate: false.obs,
+                    onDateChanged: (date) {
+                      // dataJson[columnName] =  date;
+                      ViewController.request[column['name']] = date;
+                    },
+                    column: column,
+                  ),
+                ],
+              )
             ],
           );
           children.add(SizedBox(
@@ -183,22 +203,23 @@ class ViewController extends GetxController {
         } else if (type == 'multiSelect') {
           List<dynamic> items = await itemsList(column);
           print('items items>>${items}');
-          if(items.length != 0){
-            multiSelectBox =  await generateStoreFormSelectBox(column,items, '', '' , false.obs);;
+          if (items.length != 0) {
+            multiSelectBox = await generateStoreFormSelectBox(
+                column, items, '', '', false.obs);
+            ;
             children.add(SizedBox(
               height: 20,
             ));
             children.add(multiSelectBox);
           }
-
         } else if (type == 'color') {
-          colorBox = generateFormColorBox(column, Colors.blue , false.obs);
+          colorBox = generateFormColorBox(column, Colors.blue, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          fileBox = generateFileBox('', column , false.obs);
+          fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -207,8 +228,7 @@ class ViewController extends GetxController {
       }
     }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-        children: children);
+        crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 
   static Future<Widget> generateStoreFormView(var columns) async {
@@ -243,7 +263,12 @@ class ViewController extends GetxController {
               (validator) => validator['type'] == 'min',
               orElse: () => null);
         }
-        if (type == 'string' || type == 'int' || type == 'Number double' || type == 'Number int' || type == 'email' ||  type == 'mobile') {
+        if (type == 'string' ||
+            type == 'int' ||
+            type == 'Number double' ||
+            type == 'Number int' ||
+            type == 'email' ||
+            type == 'mobile') {
           textField = generateFormTextField(_fbKey, column, type, '');
           children.add(SizedBox(
             height: 20,
@@ -254,62 +279,58 @@ class ViewController extends GetxController {
           var initValue;
           List<dynamic> items = await itemsList(column);
           print('items 200>>>${items}');
-          selectBox = await generateStoreFormSelectBox(column,items, '', '' , false.obs);
+          selectBox = await generateStoreFormSelectBox(
+              column, items, '', '', false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(selectBox);
-        }
-        else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column , false.obs);
+        } else if (type == 'checkbox') {
+          checkBox = generateFormCheckBox(column, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(checkBox);
-        }
-        else if (type == 'radiobutton') {
+        } else if (type == 'radiobutton') {
           var initValue;
           List<dynamic> items = await itemsList(column);
           // initValue = await getInitValue(column,items);
-          radioButtonBox = generateFormRadioButton(
-               column,items, '' , false.obs);
+          radioButtonBox =
+              generateFormRadioButton(column, items, '', false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(radioButtonBox);
-        }
-        else if (type == 'date') {
-          dateBox = generateFormDateBox(column, Jalali.now() , false.obs);
+        } else if (type == 'date') {
+          dateBox = generateFormDateBox(column, Jalali.now(), false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(dateBox);
         } else if (type == 'multiSelect') {
-          List<dynamic> items = await itemsList(column);
-          print('items items>>${items}');
-          if(items.length != 0){
-            multiSelectBox = await genarateStoreFormMuiltiSelectBox(column, RxString(''),<dynamic>[].obs ,false.obs);
-            children.add(SizedBox(
-              height: 20,
-            ));
-            children.add(multiSelectBox);
-          }
-
+          // print('items items>>${items}');
+          // if(items.length != 0){
+          multiSelectBox = await genarateStoreFormMuiltiSelectBox(
+              column, RxString(''), <dynamic>[].obs, false.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(multiSelectBox);
+          // }
         } else if (type == 'color') {
-          colorBox = generateFormColorBox(column, Colors.blue , false.obs);
+          colorBox = generateFormColorBox(column, Colors.blue, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          fileBox = generateFileBox('', column , false.obs);
+          fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(fileBox);
-        }
-        else if(type == 'time'){
-          timeBox = generateFormTimeBox(column , TimeOfDay.now() , false.obs);
+        } else if (type == 'time') {
+          timeBox = generateFormTimeBox(column, TimeOfDay.now(), false.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -318,11 +339,11 @@ class ViewController extends GetxController {
       }
     }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-        children: children);
+        crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 
-  static Future<Widget> generateEditFormView(Map<String, dynamic> dataModel) async {
+  static Future<Widget> generateEditFormView(
+      Map<String, dynamic> dataModel) async {
     var children = <Widget>[];
     var textField;
     var selectBox;
@@ -342,100 +363,87 @@ class ViewController extends GetxController {
         var minValidator;
         List<dynamic> items = [];
         if (column['validators'] != null) {
-          maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-          minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);}
+          maxValidator = column['validators'].firstWhere(
+              (validator) => validator['type'] == 'max',
+              orElse: () => null);
+          minValidator = column['validators'].firstWhere(
+              (validator) => validator['type'] == 'min',
+              orElse: () => null);
+        }
         if (type == 'string' ||
             type == 'int' ||
-            type == 'Number double' || type == 'Number int' ||
-            type == 'email' || type == 'mobile') {
+            type == 'Number double' ||
+            type == 'Number int' ||
+            type == 'email' ||
+            type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-          textField = generateFormTextField(
-              _fbKey,
-              column,
-              type,
+          textField = generateFormTextField(_fbKey, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
             height: 20,
           ));
           children.add(textField);
-        }
-        else if (type == 'select') {
-          print('dataModel isss>>>${dataModel}');
-          var items = await ViewController.itemsList(column );
-          if(items.length != 0){
-            print('items select>>${items}');
-            Map<String, dynamic> selectedItem = items.firstWhere(
-                    (element) => element['id'] == dataModel[name],
-                orElse: () => items.first);
-            if(selectedItem['id'] != dataModel['id']){
-              dataModel[name] = '';
+        } else if (type == 'select') {
+          Map<String, dynamic> selectedItem = <String, dynamic>{};
+          var items = await ViewController.itemsList(column);
+          if (items.length != 0) {
+            if (column['sourceItems'] != 'custom') {
+              if (dataModel[name] != null)
+                selectedItem = items
+                    .firstWhere((element) => element['id'] == dataModel[name]);
+              selectBox = await generateStoreFormSelectBox(
+                  column,
+                  items,
+                  '${selectedItem.isNotEmpty ? selectedItem['id'] != null ? selectedItem['id'] : '' : ''}',
+                  '${selectedItem.isNotEmpty ? selectedItem['id'] != null ? selectedItem['id'] : '' : ''}',
+                  dataModel[name] == '' ? false.obs : true.obs);
+            } else {
+              if (dataModel[name] != null)
+                selectedItem = items.firstWhere(
+                    (element) => element['value'] == dataModel[name]);
+              selectBox = await generateStoreFormSelectBox(
+                  column,
+                  items,
+                  '${selectedItem.isNotEmpty ? selectedItem['value'] != null ? selectedItem['value'] : '' : ''}',
+                  '${selectedItem.isNotEmpty ? selectedItem['value'] != null ? selectedItem['value'] : '' : ''}',
+                  dataModel[name] == '' ? false.obs : true.obs);
             }
-            print('selectedItem id >>${selectedItem['id']}');
-            selectBox = await generateStoreFormSelectBox(
-                column,
-                items,
-                '${selectedItem['id'] != null ? selectedItem['id'] : ''}',
-                '${selectedItem['id'] != null ? selectedItem['id'] : ''}',
-                dataModel[name] == '' ? false.obs : true.obs
-            );
             children.add(SizedBox(
               height: 20,
             ));
             children.add(selectBox);
           }
-
-        }
-        else if (type == 'checkbox') {
-          checkBox = generateFormCheckBox(column,dataModel[name] == ''  ||dataModel[name] == null ? false.obs : true.obs  ,defultValue:dataModel['${name}']);
+        } else if (type == 'checkbox') {
+          checkBox = generateFormCheckBox(
+              column,
+              dataModel[name] == '' || dataModel[name] == null
+                  ? false.obs
+                  : true.obs,
+              defultValue: dataModel['${name}']);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(checkBox);
-        }
-        else if (type == 'radiobutton') {
+        } else if (type == 'radiobutton') {
           List<dynamic> items = await itemsList(column);
-
-         if(items.length != 0){
-           // if(dataModel['${name}'] == 'آیتم مربوطه یافت نشد'){
-           //   dataModel['${name}'] = '';
-           // }
-           Map<String, dynamic> selectedRadioButton = items.firstWhere(
-                   (element) => element['value'] == dataModel['${name}'],
-               orElse: () => items.first);
-           if(dataModel[name] != selectedRadioButton['value']){
-             dataModel[name] = '';
-           }
-           radioButtonBox =
-               generateFormRadioButton(column,items, selectedRadioButton['value'] , dataModel[name] == '' ? false.obs : true.obs);
-           children.add(SizedBox(
-             height: 20,
-           ));
-           children.add(radioButtonBox);
-         }
-
-          // var radioButtonItems = column['items'];
-          // var selectedItem = radioButtonItems.firstWhere(
-          //         (item) => item['title'] == dataModel[name],
-          //     orElse: () => radioButtonItems.firstWhere(
-          //           (item) => item['is_selected'] == true,
-          //       orElse: () => radioButtonItems.first,));
-          // radioButtonBox = new RadioButton(name: '',radioButtonItems: [
-          //   for (var radioButtonItem in radioButtonItems)
-          //     FormBuilderChipOption(
-          //       value: '${radioButtonItem['title']}',
-          //       child: Txt('${radioButtonItem['title']}' , color: MainController.isLightMode.value ? whiteColor : primaryDark,),
-          //     ),
-          // ],
-          //   onChanged: (text){
-          //     selectedRadioButton.value= text!;
-          //     ViewController. selectedRadioButton.value = text;
-          //     dataModel[name] = ViewController. selectedRadioButton.value;
-          //   },
-          //   initalValue:  dataModel[name],
-          // );
-
-        }
-        else if (type == 'date') {
+          if (items.length != 0) {
+            Map<String, dynamic> selectedRadioButton = items.firstWhere(
+                (element) => element['value'] == dataModel['${name}'],
+                orElse: () => items.first);
+            if (dataModel[name] != selectedRadioButton['value']) {
+              dataModel[name] = '';
+            }
+            radioButtonBox = generateFormRadioButton(
+                column,
+                items,
+                selectedRadioButton['value'],
+                dataModel[name] == '' ? false.obs : true.obs);
+            children.add(SizedBox(
+              height: 20,
+            ));
+            children.add(radioButtonBox);
+          }
+        } else if (type == 'date') {
           List<String>? dateParts;
           int year = Jalali.now().year;
           int month = Jalali.now().month;
@@ -447,37 +455,48 @@ class ViewController extends GetxController {
             day = int.parse('${dateParts[2]}');
           }
           dateBox = generateFormDateBox(
-             column, Jalali(year, month, day) , dataModel['${name}'] == null || dataModel['${name}'] == '' ? false.obs : true.obs);
+              column,
+              Jalali(year, month, day),
+              dataModel['${name}'] == null || dataModel['${name}'] == ''
+                  ? false.obs
+                  : true.obs);
 
           children.add(SizedBox(
             height: 20,
           ));
           children.add(dateBox);
-        }
-        else if (type == 'multiSelect') {
+        } else if (type == 'multiSelect') {
           print('dataModel multi is>>${dataModel}');
-          List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
+          List<dynamic> items =
+              await ViewController.itemsList(column, dataModel: dataModel);
           print('items id>>>#${items}');
-          if(items.length != 0){
+          if (items.length != 0) {
             List<dynamic> multiSelectedItemList = [];
-                for(var selectedItem in items){
-                  multiSelectedItemList.add(itemsShowSelectItem(selectedItem,column['items']));
-                }
+            for (var selectedItem in items) {
+              multiSelectedItemList
+                  .add(itemsShowSelectItem(selectedItem, column['items']));
+            }
             multiSelectBox = await genarateEditFormMuiltiSelectBox(
-                column,multiSelectedItemList.length != 0 ? RxString(multiSelectedItemList.join(',')):RxString('انتخاب'),
-                items.length!=0? RxList(items):<dynamic>[].obs,
+                column,
+                multiSelectedItemList.length != 0
+                    ? RxString(multiSelectedItemList.join(','))
+                    : RxString('انتخاب'),
+                items.length != 0 ? RxList(items) : <dynamic>[].obs,
                 false.obs);
-            children.add(SizedBox(height: 20,));
+            children.add(SizedBox(
+              height: 20,
+            ));
             children.add(multiSelectBox);
           }
-
-        }
-        else if (type == 'color') {
+        } else if (type == 'color') {
           colorBox = generateFormColorBox(
               column,
               dataModel[name] != null
                   ? Color(int.parse('${dataModel[name]}'))
-                  : Colors.blue,  dataModel[name] == '' || dataModel[name] == null ? false.obs : true.obs);
+                  : Colors.blue,
+              dataModel[name] == '' || dataModel[name] == null
+                  ? false.obs
+                  : true.obs);
           // colorBox = new Container(
           //   child: ColorPickerBox(
           //     selectedColor: dataModel[name] != null ? Color(int.parse('${dataModel[name]}')):Colors.blue,
@@ -492,17 +511,18 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        }
-        else if (type == 'file') {
-          print('dataModel[name] file box>>>${dataModel[name]} ${dataModel[name].runtimeType}');
+        } else if (type == 'file') {
+          print(
+              'dataModel[name] file box>>>${dataModel[name]} ${dataModel[name].runtimeType}');
           fileBox = generateFileBox(
-              '${dataModel[name] != null ? dataModel[name] : []}', column , dataModel[name] == null ? false.obs:true.obs);
+              '${dataModel[name] != null ? dataModel[name] : []}',
+              column,
+              dataModel[name] == null ? false.obs : true.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(fileBox);
-        }
-        else if (type == 'time') {
+        } else if (type == 'time') {
           List<String>? TimeParts;
           int hour = TimeOfDay.now().hour;
           int minute = TimeOfDay.now().minute;
@@ -514,9 +534,14 @@ class ViewController extends GetxController {
             minute = int.parse('${TimeParts[1]}');
             print('hour minute>>>${hour} ${minute}');
           }
-          print('TimeOfDay(hour: hour , minute: minute)>>>${TimeOfDay(hour: hour , minute: minute)}');
+          print(
+              'TimeOfDay(hour: hour , minute: minute)>>>${TimeOfDay(hour: hour, minute: minute)}');
           timeBox = generateFormTimeBox(
-              column, TimeOfDay(hour: hour , minute: minute) , dataModel['${name}'] == null || dataModel['${name}'] == '' ? false.obs : true.obs);
+              column,
+              TimeOfDay(hour: hour, minute: minute),
+              dataModel['${name}'] == null || dataModel['${name}'] == ''
+                  ? false.obs
+                  : true.obs);
           children.add(SizedBox(
             height: 20,
           ));
@@ -527,17 +552,17 @@ class ViewController extends GetxController {
     return Column(children: children);
   }
 
-  static Future<Widget> generateDataColumn(int indexColumn, int indexRow , {var table}) async {
+  static Future<Widget> generateDataColumn(int indexColumn, int indexRow,
+      {var table}) async {
     var size = MediaQuery.of(Get.context!).size;
-    String name='';
+    String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-    String type='';
-    if(table == null){
-       type = MainController.tableInfo['columns'][indexColumn]['type'];
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    String type = '';
+    if (table == null) {
+      type = MainController.tableInfo['columns'][indexColumn]['type'];
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
       type = table['columns'][indexColumn]['type'];
       name = table['columns'][indexColumn]['name'];
     }
@@ -549,44 +574,43 @@ class ViewController extends GetxController {
       print('index:${indexRow}');
       // print('data:${dataModel.data['${name}']}');
       print('-------------------');
-      child = generateCheckBox(indexColumn, indexRow , tableData: table);
+      child = generateCheckBox(indexColumn, indexRow, tableData: table);
     } else if (type == 'color') {
-      child = generateColor(indexColumn, indexRow , tableData: table);
+      child = generateColor(indexColumn, indexRow, tableData: table);
     } else if (type == 'select' || type == 'radiobutton') {
       child = FutureBuilder<Widget>(
-        future: generateSelectBox(indexColumn, indexRow , tableData: table),
+        future: generateSelectBox(indexColumn, indexRow, tableData: table),
         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+            return Txt(
+                '${AppController.of(context)!.value('error')}: ${snapshot.error}');
           } else {
             return snapshot.data ?? Container();
           }
         },
       );
       // child = await generateSelectBox(indexColumn , indexRow);
-    }
-    else if(type == 'multiSelect'){
+    } else if (type == 'multiSelect') {
       print('ViewController.generateDataColumn>>${table}');
       child = FutureBuilder<Widget>(
-        future: generateMultiSelectBox(indexColumn, indexRow , tableData: table),
+        future: generateMultiSelectBox(indexColumn, indexRow, tableData: table),
         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+            return Txt(
+                '${AppController.of(context)!.value('error')}: ${snapshot.error}');
           } else {
             return snapshot.data ?? Container();
           }
         },
       );
-    }
-    else if(type =='file'){
-      child = generateCellFileBox(indexColumn, indexRow , tableData: table);
-    }
-    else {
-      child = generateData(indexColumn, indexRow , tableData: table );
+    } else if (type == 'file') {
+      child = generateCellFileBox(indexColumn, indexRow, tableData: table);
+    } else {
+      child = generateData(indexColumn, indexRow, tableData: table);
     }
     return Obx(() {
       return Center(
@@ -603,13 +627,13 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateCheckBox(int indexColumn, int indexRow , {var tableData}) {
+  static Widget generateCheckBox(int indexColumn, int indexRow,
+      {var tableData}) {
     // DataModel dataModel = MainController.tableData.value[indexRow];
-    String name='';
-    if(tableData == null){
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    String name = '';
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
@@ -630,17 +654,18 @@ class ViewController extends GetxController {
         await box.putAt(indexRow, data);
       },
       index: indexRow,
-      column: tableData == null ? MainController.tableInfo['columns'][indexColumn]:tableData['columns'][indexColumn],
+      column: tableData == null
+          ? MainController.tableInfo['columns'][indexColumn]
+          : tableData['columns'][indexColumn],
     );
   }
 
-  static Widget generateColor(int indexColumn, int indexRow , {var tableData}) {
+  static Widget generateColor(int indexColumn, int indexRow, {var tableData}) {
     // DataModel dataModel = MainController.tableData.value[indexRow];
     String name;
-    if(tableData == null){
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
@@ -656,30 +681,29 @@ class ViewController extends GetxController {
     );
   }
 
-  static Future<Widget> generateSelectBox(int indexColumn, int indexRow , {var tableData}) async {
+  static Future<Widget> generateSelectBox(int indexColumn, int indexRow,
+      {var tableData}) async {
     // DataModel dataModel = MainController.tableData.value[indexRow];
     var column;
     String name;
-    if(tableData == null){
-       column = MainController.tableInfo['columns'][indexColumn];
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    if (tableData == null) {
+      column = MainController.tableInfo['columns'][indexColumn];
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
       column = tableData['columns'][indexColumn];
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
     String tableName = '';
-      if (column['sourceItems'] != 'custom') {
-          tableName = column['sourceTable'];
+    if (column['sourceItems'] != 'custom') {
+      tableName = column['sourceTable'];
+    }
 
-      }
-
-    String titleSelect='';
-    if(dataModel != null){
-      titleSelect = await getTitleSelectedItem('${tableName}',
-          dataModel , column);
+    String titleSelect = '';
+    if (dataModel != null) {
+      titleSelect =
+          await getTitleSelectedItem('${tableName}', dataModel, column);
     }
 
     return Txt(
@@ -691,28 +715,28 @@ class ViewController extends GetxController {
     );
   }
 
-  static Future<Widget> generateMultiSelectBox(int indexColumn, int indexRow ,{var tableData}) async {
+  static Future<Widget> generateMultiSelectBox(int indexColumn, int indexRow,
+      {var tableData}) async {
     var column;
     String name;
-    if(tableData == null){
+    if (tableData == null) {
       column = MainController.tableInfo['columns'][indexColumn];
       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    } else {
       column = tableData['columns'][indexColumn];
       name = tableData['columns'][indexColumn]['name'];
     }
 
     String tableName = '';
-    if (column['sourceItems'] != 'custom') {
-      tableName = column['sourceTable'];
-    }
-    List<dynamic> titleMultiSelectList=[];
-    if(MainController.tableData.value[indexRow]['${name}']!=null){
-      List<dynamic> dataModel=[];
-      dataModel= MainController.tableData.value[indexRow]['${name}'];
+    if (column['sourceItems'] != 'custom') tableName = column['sourceTable'];
+
+    List<dynamic> titleMultiSelectList = [];
+    if (MainController.tableData.value[indexRow]['${name}'] != null) {
+      List<dynamic> dataModel = [];
+      dataModel = MainController.tableData.value[indexRow]['${name}'];
       print('dataModel it is>>${dataModel}');
-      titleMultiSelectList = await getTitleMultiSelectedItem('${tableName}', dataModel , column);
+      titleMultiSelectList =
+          await getTitleMultiSelectedItem('${tableName}', dataModel, column);
     }
     print('titleMultiSelectList>>${titleMultiSelectList}');
     return Txt(
@@ -724,13 +748,13 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateCellFileBox(int indexColumn, int indexRow , {var tableData}){
+  static Widget generateCellFileBox(int indexColumn, int indexRow,
+      {var tableData}) {
     // DataModel dataModel = MainController.tableData.value[indexRow];
     String name;
-    if(tableData == null){
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
@@ -738,34 +762,7 @@ class ViewController extends GetxController {
     return Obx(() {
       return Center(
         child: Txt(
-          '${dataModel != null ? dataModel.length != 0 ? dataModel : '':''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
-        ),
-      );
-    });
-
-  }
-
-  static Widget generateData(int indexColumn, int indexRow , {var tableData}) {
-    // DataModel dataModel = MainController.tableData.value[indexRow];
-
-
-    String name;
-    if(tableData == null){
-       name = MainController.tableInfo['columns'][indexColumn]['name'];
-    }
-    else{
-      name = tableData['columns'][indexColumn]['name'];
-    }
-    var dataModel = MainController.tableData.value[indexRow]['${name}'];
-
-    return Obx(() {
-      return Center(
-        child: Txt(
-          '${dataModel != null ?  dataModel : ''}',
+          '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -775,18 +772,45 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(
-      GlobalKey<FormBuilderState> _fbKey,
-      var column,
-      var type,
-      String initValue) {
+  static Widget generateData(int indexColumn, int indexRow, {var tableData}) {
+    // DataModel dataModel = MainController.tableData.value[indexRow];
+
+    String name;
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
+      name = tableData['columns'][indexColumn]['name'];
+    }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
+
+    return Obx(() {
+      return Center(
+        child: Txt(
+          '${dataModel != null ? dataModel : ''}',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
+      );
+    });
+  }
+
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey,
+      var column, var type, String initValue) {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         FormTextField(
           name: '${column['title']}',
           fbKey: _fbKey,
@@ -799,163 +823,156 @@ class ViewController extends GetxController {
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
                 ViewController.request[column['name']] = int.parse('${text}');
-                print('request Number int>>>${ViewController
-                    .request }>>${ViewController.request[column['name']]
-                    .runtimeType }');
-              }
-              else if (column['type'] == 'Number double') {
+                print(
+                    'request Number int>>>${ViewController.request}>>${ViewController.request[column['name']].runtimeType}');
+              } else if (column['type'] == 'Number double') {
                 ViewController.request[column['name']] =
                     double.parse('${text}');
-              }
-              else {
+              } else {
                 ViewController.request[column['name']] = text;
               }
-            }
-            else{
-              ViewController.request[column['name']]='';
-              print('request Number int>>>>>${ViewController.request[column['name']]}');
+            } else {
+              ViewController.request[column['name']] = '';
+              print(
+                  'request Number int>>>>>${ViewController.request[column['name']]}');
             }
           },
           isMobile: type == 'mobile' ? true : false,
           isNumberInt: type == 'Number int' ? true : false,
-          isNumberDouble: type == 'Number double'? true : false,
+          isNumberDouble: type == 'Number double' ? true : false,
           isEmail: type == 'email' ? true : false,
-
         ),
       ],
     );
   }
 
-  static Widget generateStoreFormSelectBox(var column,List<dynamic> items,
-       String hintText, String initailValue , Rx<bool> isSeleted)  {
+  static Widget generateStoreFormSelectBox(var column, List<dynamic> items,
+      String hintText, String initailValue, Rx<bool> isSeleted) {
     print('generateFormSelectBox column>>>${column}');
     print('generateFormSelectBox item>>>${items}');
     print('generateFormSelectBox initailValue>>>${initailValue}');
     print('generateFormSelectBox item>>>${items}');
-    for (var item in items)
-      print('generateFormSelectBox item2>>>${item}');
-    if(column['sourceItems']!='custom'){
+
+    if (column['sourceItems'] != 'custom') {
       // ViewController.request[column['name']]=items.first['id'];
-      ViewController.request[column['name']]=null;
-    }else{
-      ViewController.request[column['name']]=null;
+      ViewController.request[column['name']] = null;
+    } else {
+      ViewController.request[column['name']] = null;
     }
     return items.length != 0
         ? new Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
-           Obx(() {
-             return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-           }),
-           SizedBox(height: 10,),
-           column['sourceItems']!='custom'?
-           SelectBox(
-               name: '${column['title']}',
-               column: column,
-               items: [
-                 DropdownMenuItem(
-                     child: Obx(() {
-                       return Txt(
-                         'انتخاب نشده',
-                         color: MainController.isLightMode.value == true
-                             ? whiteColor
-                             : primaryDark,
-                       );
-                     }),
-                     value: ''),
-                   // DropdownMenuItem(
-                   //
-                   //     child: Obx(() {
-                   //       return Txt(
-                   //         '${itemsShowSelectItem(item,column['items'])}',
-                   //         color: MainController.isLightMode.value == true
-                   //             ? whiteColor
-                   //             : primaryDark,
-                   //       );
-                   //     }),
-                   //     value: item['id'].toString()),
-                 for (var item in items)
-                 DropdownMenuItem(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                return Txt(
+                  '${column['title']}',
+                  color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : color2,
+                );
+              }),
+              SizedBox(
+                height: 10,
+              ),
+              column['sourceItems'] != 'custom'
+                  ? SelectBox(
+                      name: '${column['title']}',
+                      column: column,
+                      items: [
+                        DropdownMenuItem(
+                            child: Obx(() {
+                              return Txt(
+                                'انتخاب نشده',
+                                color: MainController.isLightMode.value == true
+                                    ? whiteColor
+                                    : primaryDark,
+                              );
+                            }),
+                            value: ''),
+                        for (var item in items)
+                          DropdownMenuItem(
+                              child: Obx(() {
+                                return Txt(
+                                  '${itemsShowSelectItem(item, column['items'])}',
+                                  color:
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
+                                );
+                              }),
+                              value: item['id'].toString()),
+                      ],
+                      initalValue: initailValue == '' || initailValue == null
+                          ? ""
+                          : initailValue,
+                      onChanged: (value) async {
+                        print('selected item ${value}');
+                        if (value != '') {
+                          // selectedValue=value!;
+                          ViewController.request[column['name']] = value;
+                        } else {
+                          ViewController.request[column['name']] = '';
+                        }
 
-                       child: Obx(() {
-                         return Txt(
-                           '${itemsShowSelectItem(item,column['items'])}',
-                           color: MainController.isLightMode.value == true
-                               ? whiteColor
-                               : primaryDark,
-                         );
-                       }),
-                       value: item['id'].toString()),
-
-               ],
-               initalValue:initailValue==''||initailValue==null? "":initailValue,
-               onChanged: (value) async {
-                 print('selected item ${value}');
-                 if(value != ''){
-                   // selectedValue=value!;
-                   ViewController.request[column['name']] = value;
-                 }
-                 else{
-                   ViewController.request[column['name']] = '';
-                 }
-
-                 print('request select>>${ViewController.request}');
+                        print('request select>>${ViewController.request}');
                       },
-               hintText: hintText,
-               isSeleted: isSeleted,
-               selectedValue: '') :
-           SelectBox(
-               name: '${column['title']}',
-               column: column,
-               items: [
-                 for (var item in items)
-                   DropdownMenuItem(
-                       child: Obx(() {
-                         return Txt(
-                           '${item['title']}',
-                           color: MainController.isLightMode.value == true
-                               ? whiteColor
-                               : primaryDark,
-                         );
-                       }),
-                       value: item['value']),
-               ],
-               initalValue: items.first['value'],
-               onChanged: (value) async {
-                 print('selected item ${value}');
-                 for (var item in items) {
-                   if (item['title'] == value) {
-                     if (item['value'] == '') {
-                       value = null;
-                     }
-                   }
-                 }
-                 if(value != ''){
-                   ViewController.request[column['name']] = value;
-                 }
-                 else{
-                   ViewController.request[column['name']] = '';
-                 }
-
-               },
-               hintText: hintText,
-               isSeleted: isSeleted,
-               selectedValue: ''),
-         ],
-    )
+                      hintText: hintText,
+                      isSeleted: isSeleted,
+                      selectedValue: '')
+                  : SelectBox(
+                      name: '${column['title']}',
+                      column: column,
+                      items: [
+                        for (var item in items)
+                          DropdownMenuItem(
+                              child: Obx(() {
+                                return Txt(
+                                  '${item['title']}',
+                                  color:
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
+                                );
+                              }),
+                              value: item['value']),
+                      ],
+                      initalValue: initailValue == '' || initailValue == null
+                          ? items.first['value']
+                          : initailValue,
+                      onChanged: (value) async {
+                        print('selected item ${value}');
+                        for (var item in items) {
+                          if (item['title'] == value) {
+                            if (item['value'] == '') {
+                              value = null;
+                            }
+                          }
+                        }
+                        if (value != '') {
+                          ViewController.request[column['name']] = value;
+                        } else {
+                          ViewController.request[column['name']] = '';
+                        }
+                      },
+                      hintText: hintText,
+                      isSeleted: isSeleted,
+                      selectedValue: ''),
+            ],
+          )
         : Container();
   }
 
-
-
-  static Widget generateFormCheckBox(var column,Rx<bool>? isClickedBtn,{var defultValue}) {
-    ViewController.request[column['name']]= defultValue??column['default_value'];
-    print('ViewController.generateFormCheckBox>>>${ViewController.request[column['name']]}');
+  static Widget generateFormCheckBox(var column, Rx<bool>? isClickedBtn,
+      {var defultValue}) {
+    ViewController.request[column['name']] =
+        defultValue ?? column['default_value'];
+    print(
+        'ViewController.generateFormCheckBox>>>${ViewController.request[column['name']]}');
     return new CheckBox(
       checkBoxName: '${column['title']}',
       checkBoxTitle: '${column['title']}',
       isClickedBtn: isClickedBtn,
-      defaultValue: defultValue??column['default_value'],
+      defaultValue: defultValue ?? column['default_value'],
       onChange: (text) {
         ViewController.request[column['name']] = text;
         // dataJson[columnName] = text;
@@ -964,8 +981,8 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFormRadioButton(
-      var column , List<dynamic> items,  String initalValue , Rx<bool> isSelectedItem) {
+  static Widget generateFormRadioButton(var column, List<dynamic> items,
+      String initalValue, Rx<bool> isSelectedItem) {
     // var radioButtonItems = column['items'];
     //
     // var selectedItem = radioButtonItems.firstWhere(
@@ -976,9 +993,15 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         RadioButton(
           name: '',
           radioButtonItems: [
@@ -1007,7 +1030,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFormDateBox(
-      var column, Jalali selectedDate ,Rx<bool>? isSeletedDate) {
+      var column, Jalali selectedDate, Rx<bool>? isSeletedDate) {
     // if (ViewController.request[column['name']] == null) {
     //   ViewController.request[column['name']] =
     //       '${selectedDate.year}${'/'}${selectedDate.month}${'/'}${selectedDate.day}';
@@ -1016,9 +1039,15 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         DateBox(
           selectedDate: selectedDate,
           isSeletedDate: isSeletedDate,
@@ -1033,195 +1062,361 @@ class ViewController extends GetxController {
   }
 
   static Future<Widget> genarateEditFormMuiltiSelectBox(
-      var column , Rx<String> hintTxt , RxList<dynamic> selectedItemsList , Rx<bool> isSelectedItem) async {
-    List<dynamic> items=await DB(column['sourceTable']).getRecords();
+      var column,
+      Rx<String> hintTxt,
+      RxList<dynamic> selectedItemsList,
+      Rx<bool> isSelectedItem) async {
+    List<dynamic> items = await DB(column['sourceTable']).getRecords();
     RxList<String> selectedItemId = <String>[].obs;
     print('items is ss>>${items}');
 
-    if(selectedItemsList.length!=0){
+    if (selectedItemsList.length != 0) {
       // items.add({'id':'',});
-      for(var selectedItem in selectedItemsList){
+      for (var selectedItem in selectedItemsList) {
         selectedItemId.add(selectedItem['id']);
       }
     }
     return items.length != 0
         ? new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Obx(() {
-            return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-          }),
-        Obx(() {
-          return
-            MultiSelectDropdown(
-            items: [
-              for (var item in items)
-                DropdownMenuItem(
-                    value: item['id'],
-                    child: Obx((){
-                      return Row(
-                        children: [
-                          Container(
-                            height: 100,
-                            child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child:Obx((){
-                                  return Checkbox(
-                                    activeColor: colorBtn,
-                                    value: selectedItemId.contains(item['id']),
-                                    onChanged: (isChecked) {
-                                      if (isChecked != null) {
-                                        hintTxt.value='';
-                                        if (!selectedItemsList.any((map) => mapEquals(map, item))) {
-                                          requestMultiSelect=item;
-                                          selectedItemsList.add(item);
-                                          selectedItemId.add(item['id']);
-                                        } else {
-                                          requestMultiSelect.removeWhere((key, value) => value==['id']);
-                                          var index=selectedItemsList.indexWhere((map) => mapEquals(map, item));
-                                          selectedItemsList.removeAt(index);
-                                        }
-                                        if(item['id'] == ''){
-                                          selectedItemId.value.remove(item['id']);
-                                        }
-                                        if(selectedItemId.value.length == 0){
-                                          isSelectedItem.value = false;
-                                        }
-                                        else{
-                                          isSelectedItem.value = true;
-                                        }
-                                        for(var r in selectedItemsList)
-                                        hintTxt.value =hintTxt.value+ itemsShowSelectItem(r,column['items']);
-                                        print('hintTxt.value>>>${hintTxt.value}');
-                                      }});
-                                })
-                            ),
-                          ),
-                          Txt(itemsShowSelectItem(item,column['items']), color: MainController.isLightMode.value ? whiteColor : primaryDark),
-                        ],
-                      );
-                    })
-                )
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Obx(() {
+                return Txt(
+                  '${column['title']}',
+                  color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : color2,
+                );
+              }),
+              Obx(() {
+                return MultiSelectDropdown(
+                  items: [
+                    for (var item in items)
+                      DropdownMenuItem(
+                          value: item['id'],
+                          child: Obx(() {
+                            return Row(
+                              children: [
+                                Container(
+                                  height: 100,
+                                  child: SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child: Obx(() {
+                                        return Checkbox(
+                                            activeColor: colorBtn,
+                                            value: selectedItemId
+                                                .contains(item['id']),
+                                            onChanged: (isChecked) {
+                                              if (isChecked != null) {
+                                                hintTxt.value = '';
+                                                if (!selectedItemsList.any(
+                                                    (map) =>
+                                                        mapEquals(map, item))) {
+                                                  requestMultiSelect = item;
+                                                  selectedItemsList.add(item);
+                                                  selectedItemId
+                                                      .add(item['id']);
+                                                } else {
+                                                  requestMultiSelect
+                                                      .removeWhere(
+                                                          (key, value) =>
+                                                              value == ['id']);
+                                                  var index = selectedItemsList
+                                                      .indexWhere((map) =>
+                                                          mapEquals(map, item));
+                                                  selectedItemsList
+                                                      .removeAt(index);
+                                                }
+                                                if (item['id'] == '') {
+                                                  selectedItemId.value
+                                                      .remove(item['id']);
+                                                }
+                                                if (selectedItemId
+                                                        .value.length ==
+                                                    0) {
+                                                  isSelectedItem.value = false;
+                                                } else {
+                                                  isSelectedItem.value = true;
+                                                }
+                                                for (var r in selectedItemsList)
+                                                  hintTxt.value = hintTxt
+                                                          .value +
+                                                      itemsShowSelectItem(
+                                                          r, column['items']);
+                                                print(
+                                                    'hintTxt.value>>>${hintTxt.value}');
+                                              }
+                                            });
+                                      })),
+                                ),
+                                Txt(itemsShowSelectItem(item, column['items']),
+                                    color: MainController.isLightMode.value
+                                        ? whiteColor
+                                        : primaryDark),
+                              ],
+                            );
+                          }))
+                  ],
+                  hintText: hintTxt.value != '' || hintTxt.value != null
+                      ? hintTxt.value
+                      : 'انتخاب',
+                  selectedItems: selectedItemsList,
+                  isSelectedItem: isSelectedItem,
+                  column: column,
+                );
+              }),
             ],
-            hintText: hintTxt.value != '' || hintTxt.value !=null? hintTxt.value:'انتخاب',
-            selectedItems: selectedItemsList,
-            isSelectedItem:isSelectedItem,
-            column: column,
-          );
-        }),
-      ],
-    ): Container();
+          )
+        : Container();
   }
 
   static Future<Widget> genarateStoreFormMuiltiSelectBox(
-      var column , Rx<String> hintTxt , RxList<dynamic> selectedItemsList , Rx<bool> isSelectedItem) async {
-    List<dynamic> items=await DB(column['sourceTable']).getRecords();
-    List<dynamic> selectedId=[];
-    print('items is ss>>${items}');
-    // if(items.length!=0){
-    //   items.add({'id':'',});
-    // }
+      var column,
+      Rx<String> hintTxt,
+      RxList<dynamic> selectedItemsList,
+      Rx<bool> isSelectedItem) async {
+    List<dynamic> items = [];
+    items = await itemsList(column);
+    List<dynamic> selectedId = [];
+
     return items.length != 0
-        ? new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Obx(() {
-            return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-          }),
-        Obx(() {
-          return
-            MultiSelectDropdown(
-            items: [
-              for (var item in items)
-                DropdownMenuItem(
-                    value: item['id'],
-                    child: Obx((){
-                      return Row(
-                        children: [
-                          Container(
-                            height: 100,
-                            child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child:Obx((){
-                                  return Checkbox(
-                                    activeColor: colorBtn,
-                                    value: selectedItemsList.any((map) => mapEquals(map, item)),
-                                    onChanged: (isChecked) {
-                                      if (isChecked != null) {
-                                        print('selectedItemsList 2>>${!selectedItemsList.any((map) => mapEquals(map, item))}');
+        ? column['sourceItems'] != 'custom'
+            ? new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(() {
+                    return Txt(
+                      '${column['title']}',
+                      color: MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
+                    );
+                  }),
+                  Obx(() {
+                    return MultiSelectDropdown(
+                      items: [
+                        for (var item in items)
+                          DropdownMenuItem(
+                              value: item['id'],
+                              child: Obx(() {
+                                return Row(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: Obx(() {
+                                            return Checkbox(
+                                                activeColor: colorBtn,
+                                                value: selectedItemsList.any(
+                                                    (map) =>
+                                                        mapEquals(map, item)),
+                                                onChanged: (isChecked) {
+                                                  if (isChecked != null) {
+                                                    print(
+                                                        'selectedItemsList 2>>${!selectedItemsList.any((map) => mapEquals(map, item))}');
 
-                                        hintTxt.value='';
-                                        if (!selectedItemsList.any((map) => mapEquals(map, item))) {
-                                          selectedId=[];
-                                          requestMultiSelect=item;
-                                          selectedItemsList.add(item);
-                                          print('selectedItemsList >>${selectedItemsList}');
+                                                    hintTxt.value = '';
+                                                    if (!selectedItemsList.any(
+                                                        (map) => mapEquals(
+                                                            map, item))) {
+                                                      selectedId = [];
+                                                      requestMultiSelect = item;
+                                                      selectedItemsList
+                                                          .add(item);
+                                                      print(
+                                                          'selectedItemsList >>${selectedItemsList}');
+                                                    } else {
+                                                      selectedId = [];
+                                                      requestMultiSelect
+                                                          .removeWhere((key,
+                                                                  value) =>
+                                                              value == ['id']);
+                                                      var index =
+                                                          selectedItemsList
+                                                              .indexWhere(
+                                                                  (map) =>
+                                                                      mapEquals(
+                                                                          map,
+                                                                          item));
+                                                      print(
+                                                          'selectedItemsList index>>${index}');
+                                                      selectedItemsList
+                                                          .removeAt(index);
+                                                      print(
+                                                          'selectedItemsList >>${selectedItemsList}');
+                                                    }
+                                                    if (item['id'] == '') {}
+                                                    if (selectedItemsList
+                                                            .value.length ==
+                                                        0) {
+                                                      isSelectedItem.value =
+                                                          false;
+                                                    } else {
+                                                      isSelectedItem.value =
+                                                          true;
+                                                    }
+                                                    for (var r
+                                                        in selectedItemsList)
+                                                      hintTxt.value = hintTxt
+                                                              .value +
+                                                          itemsShowSelectItem(r,
+                                                              column['items']);
 
-                                        } else {
-                                          selectedId=[];
-                                          requestMultiSelect.removeWhere((key, value) => value==['id']);
-                                          var index=selectedItemsList.indexWhere((map) => mapEquals(map, item));
-                                          print('selectedItemsList index>>${index}');
-                                          selectedItemsList.removeAt(index);
-                                          print('selectedItemsList >>${selectedItemsList}');
+                                                    for (var r
+                                                        in selectedItemsList)
+                                                      selectedId.add(r['id']);
 
-                                        }
-                                        if(item['id'] == ''){
-                                        }
-                                        if(selectedItemsList.value.length == 0){
-                                          isSelectedItem.value = false;
-                                        }
-                                        else{
-                                          isSelectedItem.value = true;
-                                        }
-                                        for(var r in selectedItemsList)
-                                        hintTxt.value =hintTxt.value+ itemsShowSelectItem(r,column['items']);
+                                                    print(
+                                                        'hintTxt.value>>>${hintTxt.value}');
 
-                                        for(var r in selectedItemsList)
-                                          selectedId.add(r['id']);
+                                                    ViewController.request[
+                                                            column['name']] =
+                                                        selectedId;
+                                                  }
+                                                });
+                                          })),
+                                    ),
+                                    Txt(
+                                        itemsShowSelectItem(
+                                            item, column['items']),
+                                        color: MainController.isLightMode.value
+                                            ? whiteColor
+                                            : primaryDark),
+                                  ],
+                                );
+                              }))
+                      ],
+                      hintText: hintTxt.value != '' && hintTxt.value != null
+                          ? hintTxt.value
+                          : 'انتخاب',
+                      selectedItems: selectedItemsList,
+                      isSelectedItem: isSelectedItem,
+                      // onChanged: (selectedList){
+                      //   print('selectedList>>${selectedList}');
+                      //       selectedItemsList.value = selectedList;
+                      //   hintTxt.value = hintTxt.value;
+                      //   print(' hintTxt.value >>>${ hintTxt.value }');
+                      //       ViewController.request= requestMultiSelect;
+                      // },
+                      column: column,
+                    );
+                  }),
+                ],
+              )
+            : new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(() {
+                    return Txt(
+                      '${column['title']}',
+                      color: MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
+                    );
+                  }),
+                  Obx(() {
+                    return MultiSelectDropdown(
+                      items: [
+                        for (var item in items)
+                          DropdownMenuItem(
+                              value: item['value'],
+                              child: Obx(() {
+                                return Row(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: Obx(() {
+                                            return Checkbox(
+                                                activeColor: colorBtn,
+                                                value: selectedItemsList.any((map) => mapEquals(map, item)),
+                                                onChanged: (isChecked) {
+                                                  if (isChecked != null) {
+                                                    print('selectedItemsList 2>>${!selectedItemsList.any((map) => mapEquals(map, item))}');
 
-                                        print('hintTxt.value>>>${hintTxt.value}');
+                                                    hintTxt.value = '';
+                                                    if (!selectedItemsList.any((map) => mapEquals(map, item))) {
+                                                      selectedId = [];
+                                                      requestMultiSelect = item;
+                                                      selectedItemsList.add(item);
+                                                      print('selectedItemsList >>${selectedItemsList}');
+                                                    } else {
+                                                      selectedId = [];
+                                                      requestMultiSelect.removeWhere((key, value) => value == ['value']);
+                                                      var index = selectedItemsList.indexWhere((map) => mapEquals(map, item));
+                                                      print(
+                                                          'selectedItemsList index>>${index}');
+                                                      selectedItemsList.removeAt(index);
+                                                      print('selectedItemsList >>${selectedItemsList}');
+                                                    }
 
-                                        ViewController.request[column['name']]= selectedId;
-                                      }});
-                                })
-                            ),
-                          ),
-                          Txt(itemsShowSelectItem(item,column['items']), color: MainController.isLightMode.value ? whiteColor : primaryDark),
-                        ],
-                      );
-                    })
-                )
-            ],
-            hintText: hintTxt.value != '' && hintTxt.value!=null? hintTxt.value:'انتخاب',
-            selectedItems: selectedItemsList,
-            isSelectedItem:isSelectedItem,
-            // onChanged: (selectedList){
-            //   print('selectedList>>${selectedList}');
-            //       selectedItemsList.value = selectedList;
-            //   hintTxt.value = hintTxt.value;
-            //   print(' hintTxt.value >>>${ hintTxt.value }');
-            //       ViewController.request= requestMultiSelect;
-            // },
-            column: column,
-          );
-        }),
-      ],
-    ): Container();
+                                                    if (selectedItemsList.value.length == 0) {
+                                                      isSelectedItem.value = false;
+                                                    } else {
+                                                      isSelectedItem.value = true;
+                                                    }
+                                                    for (var r in selectedItemsList)
+                                                      hintTxt.value = hintTxt.value + r['title'];
+
+                                                    for (var r in selectedItemsList)
+                                                      selectedId.add(r['value']);
+
+                                                    print('hintTxt.value>>>${selectedId}');
+
+                                                    ViewController.request[column['name']] = selectedId;
+                                                  }
+                                                });
+                                          })),
+                                    ),
+                                    Txt(item['title'],
+                                        color: MainController.isLightMode.value
+                                            ? whiteColor
+                                            : primaryDark),
+                                  ],
+                                );
+                              }))
+                      ],
+                      hintText: hintTxt.value != '' && hintTxt.value != null
+                          ? hintTxt.value
+                          : 'انتخاب',
+                      selectedItems: selectedItemsList,
+                      isSelectedItem: isSelectedItem,
+                      // onChanged: (selectedList){
+                      //   print('selectedList>>${selectedList}');
+                      //       selectedItemsList.value = selectedList;
+                      //   hintTxt.value = hintTxt.value;
+                      //   print(' hintTxt.value >>>${ hintTxt.value }');
+                      //       ViewController.request= requestMultiSelect;
+                      // },
+                      column: column,
+                    );
+                  }),
+                ],
+              )
+        : Container();
   }
 
   static Widget generateFormColorBox(
-      var column, Color selectedColor , Rx<bool>? isSeletedColor) {
+      var column, Color selectedColor, Rx<bool>? isSeletedColor) {
     Color colorChanged;
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         Container(
           child: ColorPickerBox(
             selectedColor: selectedColor,
@@ -1240,7 +1435,8 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFileBox( String selecetdFiles, var column , Rx<bool>? isSeletedFile) {
+  static Widget generateFileBox(
+      String selecetdFiles, var column, Rx<bool>? isSeletedFile) {
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -1256,9 +1452,15 @@ class ViewController extends GetxController {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         FormFile(
           columnName: column['title'],
           onChanged: (selecetdFiles) {
@@ -1274,16 +1476,23 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFormTimeBox(var column , TimeOfDay selectedTime ,  Rx<bool>? isSeletedTime){
+  static Widget generateFormTimeBox(
+      var column, TimeOfDay selectedTime, Rx<bool>? isSeletedTime) {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt('${column['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+          return Txt(
+            '${column['title']}',
+            color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+          );
         }),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         TimePickerBox(
-          column: column ,
+          column: column,
           selectedTime: selectedTime,
           isSeletedTime: isSeletedTime,
           onTimeChanged: (time) {
@@ -1295,7 +1504,6 @@ class ViewController extends GetxController {
     );
   }
 
-
   static Future<List<dynamic>> getRowTable(String tableName) async {
     List<DataModel> rowList = [];
     List<dynamic> tableData = [];
@@ -1304,72 +1512,70 @@ class ViewController extends GetxController {
     return tableData;
   }
 
-  static Future<String> getTitleSelectedItem(String tableName, String selectedId, var column) async {
+  static Future<String> getTitleSelectedItem(
+      String tableName, String selectedId, var column) async {
     String selectedTitle = '';
-    var sourceItem =column['sourceItems'];
+    var sourceItem = column['sourceItems'];
     if (sourceItem != 'custom') {
-
-      if(selectedId != ''){
-        List<dynamic> itemSelect=[];
-        var object = (await DB(tableName).where('id', '==', selectedId).getRecords());
-        if(object.length==0){
-          selectedTitle='نامشخص';
+      if (selectedId != '') {
+        List<dynamic> itemSelect = [];
+        var object =
+            (await DB(tableName).where('id', '==', selectedId).getRecords());
+        if (object.length == 0) {
+          selectedTitle = 'نامشخص';
+        } else {
+          var objectItem = object.first;
+          print('objectItem>>${objectItem}');
+          List<dynamic> items = column['items'];
+          for (var item in items) {
+            itemSelect.add(objectItem[item]);
+          }
+          selectedTitle = itemSelect.join('%');
         }
-        else{
-        var objectItem=object.first;
-        print('objectItem>>${objectItem}');
-        List<dynamic> items=column['items'];
-        for(var item in items ) {
-          itemSelect.add(objectItem[item]);
-        }
-        selectedTitle=itemSelect.join('%');
-      }
-      }
-      else{
+      } else {
         selectedTitle = '';
       }
-
     } else {
-      if(selectedId != ''){
+      if (selectedId != '') {
         Map<String, dynamic> selectedItem = column['items'].firstWhere(
-                (element) => element['value'] == selectedId,
+            (element) => element['value'] == selectedId,
             orElse: () => {'error': ''});
         if (selectedItem['title'] != null) {
           selectedTitle = selectedItem['title'];
         } else {
           selectedTitle = selectedItem['error'];
         }
-      }
-      else{
+      } else {
         selectedTitle = '';
       }
-
     }
     return selectedTitle;
   }
 
-  static Future<List<dynamic>> getTitleMultiSelectedItem(String tableName, List<dynamic> selectedId, var column) async {
+  static Future<List<dynamic>> getTitleMultiSelectedItem(
+      String tableName, List<dynamic> selectedId, var column) async {
     print('selectedId>>${selectedId}');
     List<dynamic> multiSelectedTitleList = [];
-    var sourceItem =column['sourceItems'];
+    var sourceItem = column['sourceItems'];
 
-    for(var i =0;i<selectedId.length;i++) {
+    for (var i = 0; i < selectedId.length; i++) {
       if (sourceItem != 'custom') {
-        var  object = (await DB(tableName).where('id', '==', selectedId[i]).getRecords());
-        if(object.length!=0){
-        var objectItem=object.first;
-        print('objectItem>>${objectItem}');
-        List<dynamic> items=column['items'];
-        for(var item in items ){
-          multiSelectedTitleList.add(objectItem['${item}']);
+        var object =
+            (await DB(tableName).where('id', '==', selectedId[i]).getRecords());
+        if (object.length != 0) {
+          var objectItem = object.first;
+          print('objectItem>>${objectItem}');
+          List<dynamic> items = column['items'];
+          for (var item in items) {
+            multiSelectedTitleList.add(objectItem['${item}']);
+          }
+        } else {
+          multiSelectedTitleList = [''];
         }
-      }
-        else{
-          multiSelectedTitleList=[''];
-        }
-      }
-      else {
-        Map<String, dynamic> selectedItem = column['items'].firstWhere((element) => element['value'] ==  [i], orElse: () => {'error': ''});
+      } else {
+        Map<String, dynamic> selectedItem = column['items'].firstWhere(
+            (element) => element['value'] == [i],
+            orElse: () => {'error': ''});
         if (selectedItem['title'] != null) {
           multiSelectedTitleList.add(selectedItem['title']);
         }
@@ -1378,61 +1584,54 @@ class ViewController extends GetxController {
     return multiSelectedTitleList;
   }
 
-  static String itemsShowSelectItem(var listItems,List<dynamic> items){
-      List<dynamic>a = [];
+  static String itemsShowSelectItem(var listItems, List<dynamic> items) {
+    List<dynamic> a = [];
 
-      if(listItems['id']==''){
-        return "انتخاب نشده";
-      }
-      for (var field in items) {
-        a.add(listItems[field]);
-      }
-      print('ViewController.itemsShowMultiSelect>>>${a}');
+    if (listItems['id'] == '') {
+      return "انتخاب نشده";
+    }
+    for (var field in items) {
+      a.add(listItems[field]);
+    }
+    print('ViewController.itemsShowMultiSelect>>>${a}');
     return a.join('%');
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
     List<dynamic> items = [];
-    var type=column['sourceItems'];
-    var tableName=column['sourceTable'];
+    var type = column['sourceItems'];
+    var tableName = column['sourceTable'];
     print('column itemsList>>>${column}');
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
-
-      if(dataModel!=null) {
+      if (dataModel != null) {
         for (var item in dataModel[column['name']])
-          dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+          dropDownListItems.add(
+              (await DB(tableName).where('id', '==', item).getRecords()).first);
         for (int i = 0; i < dropDownListItems.length; i++) {
-          List<dynamic>a = [];
+          List<dynamic> a = [];
           for (var field in column['items']) {
             a.add(dropDownListItems[i][field]);
           }
-          items.add({
-            'title': a.join('%'),
-            'value': dropDownListItems[i]['id']
-          });
+          items
+              .add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
         }
-
-      }
-      else{
+      } else {
         print('data>>model>>null');
-        List<dynamic>data=await DB(tableName).getRecords();
+        List<dynamic> data = await DB(tableName).getRecords();
         print('data is >>>${data}');
-        dropDownListItems=data;
+        dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
-          List<dynamic>a = [];
+          List<dynamic> a = [];
           for (var field in column['items']) {
             a.add(dropDownListItems[i][field]);
           }
-          items.add({
-            'title': a.join('%'),
-            'value': dropDownListItems[i]['id']
-          });
+          items
+              .add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
         }
         print('items isss>>>${dropDownListItems}');
       }
-    }
-    else {
+    } else {
       dropDownListItems = column['items'];
     }
     print('itemsss>>& aaa>>>>${dropDownListItems}');
@@ -1462,11 +1661,11 @@ class ViewController extends GetxController {
   //   return initValue;
   // }
 
-  static List<dynamic> getColumnList(String tableName){
-    List<dynamic> columns=[];
-    for(var table in MainController.SubMenuList){
-      if(table['table-name'] == tableName){
-        columns= table['columns'];
+  static List<dynamic> getColumnList(String tableName) {
+    List<dynamic> columns = [];
+    for (var table in MainController.SubMenuList) {
+      if (table['table-name'] == tableName) {
+        columns = table['columns'];
       }
     }
     return columns;
@@ -1475,15 +1674,12 @@ class ViewController extends GetxController {
   static String hintMultiSelectBox(List<dynamic> items, List<dynamic> ListsId) {
     List<String> titles = [];
     for (var id in ListsId) {
-      var selectedItem = items.firstWhere(
-            (element) => element['value'] == id,
-        orElse: () =>  null
-      );
+      var selectedItem = items.firstWhere((element) => element['value'] == id,
+          orElse: () => null);
       if (selectedItem != null) {
         titles.add(selectedItem['title']);
       }
     }
     return titles.join(',');
   }
-
 }

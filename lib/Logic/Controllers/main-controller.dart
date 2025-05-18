@@ -1253,9 +1253,7 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]
-            ['view'] ==
-        'custom') {
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
       await Get.to(() => TablePage());

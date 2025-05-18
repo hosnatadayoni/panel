@@ -470,7 +470,8 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-
+            await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
+            MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
 

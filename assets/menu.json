@@ -552,5 +552,31 @@
       }
     ],
     "view": "custom"
+  },
+  {
+    "title": "جزئیات",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "itemss",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "relations": [],
+    "columns": [
+      {
+        "name": "radiobutton",
+        "title": "radiobutton",
+        "type": "radiobutton",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {"title": "test 0","value": "","is_selected": true},
+          {"title": "test 1","value": "1","is_selected": true},
+          {"title": "test 2","value": "2","is_selected": false},
+          {"title": "test 3","value": "3","is_selected": false},
+          {"title": "test 4","value": "4","is_selected": false}
+        ]
+      }
+
+    ]
   }
 ]
