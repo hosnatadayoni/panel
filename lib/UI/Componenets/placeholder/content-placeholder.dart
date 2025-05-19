@@ -5,24 +5,28 @@ import 'package:shimmer/shimmer.dart';
 enum PlaceholderAnimationType {
   glow,
   wave,
-  none,
 }
-class PlaceholderLine extends StatelessWidget {
+class ContentPlaceholder extends StatelessWidget {
   double? width;
   double? height;
   Color? baseColor;
   Color? circleColor;
   Color? circleColorActive;
-  PlaceholderAnimationType animationType;
+  Color? highlightColor;
+  Color? boxColor;
+  PlaceholderAnimationType? animationType;
 
-  PlaceholderLine({
+  ContentPlaceholder({
     this.width,
     this.height,
-    this.baseColor = darkBackground,
+    this.baseColor,
     this.circleColor = colorBtn,
     this.circleColorActive = Colors.blue ,
-    this.animationType = PlaceholderAnimationType.glow,
+    this.highlightColor,
+    this.boxColor = whiteColor,
+    this.animationType,
   });
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +54,8 @@ class PlaceholderLine extends StatelessWidget {
                 width: this.width ??size.width,
                 height: this.height ?? 20,
                 animationType: this.animationType,
-                baseColor: this.baseColor!,
-                highlightColor:Colors.grey[100]!,
+                baseColor: this.baseColor != null ? this.baseColor! : Colors.grey[300]!,
+                highlightColor:this.highlightColor != null ? this.highlightColor! : Colors.grey[100]!,
               ),
               if (hoverPosition.value != null)
                 Positioned(
@@ -93,7 +97,7 @@ class PlaceholderLine extends StatelessWidget {
           child: Container(
             width: width,
             height: height,
-            color: Colors.white,
+            color: this.boxColor,
           ),
         );
       case PlaceholderAnimationType.wave:
@@ -110,10 +114,9 @@ class PlaceholderLine extends StatelessWidget {
           child: Container(
             width: width,
             height: height,
-            color: Colors.white,
+            color: this.boxColor,
           ),
         );
-      case PlaceholderAnimationType.none:
       default:
         return Container(
           width: width,

@@ -20,18 +20,25 @@ import 'package:finance/UI/Componenets/accordion.dart';
 import 'package:finance/UI/Componenets/alert.dart';
 import 'package:finance/UI/Componenets/badge.dart';
 import 'package:finance/UI/Componenets/breadCrumb.dart';
+import 'package:finance/UI/Componenets/btn-group.dart';
 import 'package:finance/UI/Componenets/card.dart';
 import 'package:finance/UI/Componenets/carousel-slider.dart';
 import 'package:finance/UI/Componenets/close-btn.dart';
 import 'package:finance/UI/Componenets/collapse.dart';
 import 'package:finance/UI/Componenets/drop-down.dart';
 import 'package:finance/UI/Componenets/modal.dart';
-import 'package:finance/UI/Componenets/placeholder/placeholder-button.dart';
-import 'package:finance/UI/Componenets/placeholder/placeholder-line.dart';
+import 'package:finance/UI/Componenets/placeholder/btn-placeholder.dart';
+import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
+import 'package:finance/UI/Componenets/placeholder/img-placeholder.dart';
+import 'package:finance/UI/Componenets/popOvers.dart';
+import 'package:finance/UI/Componenets/progress/progress-item.dart';
+import 'package:finance/UI/Componenets/progress/progress.dart';
+import 'package:finance/UI/Componenets/tooltip.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import '../Componenets/btn.dart';
 import '../Componenets/dissmisiable-alert.dart';
 
@@ -1189,26 +1196,6 @@ class DashboardPage extends StatelessWidget {
                           CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xxl', modalFullscreenMode: ModalFullscreenMode.xxlDown),
                           SizedBox(height:100),
                           //placeholder
-                          // Container(
-                          //   height: 500,
-                          //     child: PlaceholderWidget(
-                          //       placeholderLineList: [
-                          //         PlaceholderLine(width: 200),
-                          //         PlaceholderLine(width: 150),
-                          //         PlaceholderLine(width: 180),
-                          //       ],
-                          //     )),
-                          // SizedBox(height:40),
-                          // Container(
-                          //     height: 500,
-                          //     child: PlaceholderWidget(
-                          //       placeholderLineList: [
-                          //         PlaceholderLine(width: 200 , animationType: PlaceholderAnimationType.wave),
-                          //         PlaceholderLine(width: 150 , animationType: PlaceholderAnimationType.glow),
-                          //         PlaceholderLine(width: 180),
-                          //       ],
-                          //     )),
-                          // SizedBox(height:40),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -1216,18 +1203,75 @@ class DashboardPage extends StatelessWidget {
                                spacing: 10,
                                runSpacing: 10,
                                children: [
-                                 PlaceholderLine(width: 200 , animationType: PlaceholderAnimationType.wave),
-                                 PlaceholderLine(width: 150 , animationType: PlaceholderAnimationType.glow),
-                                 PlaceholderLine(width: 180),
+                                 ImgPlaceholder(animationType: PlaceholderAnimationType.glow , width: 50,),
+                                 Wrap(
+                                   spacing: 10,
+                                   runSpacing: 10,
+                                   children: [
+                                     ContentPlaceholder(width: 200 , animationType: PlaceholderAnimationType.wave,),
+                                     ContentPlaceholder(width: 150 , animationType: PlaceholderAnimationType.glow),
+                                     ContentPlaceholder(width: 180),
+                                   ],
+                                 ),
                                ],
                              ),
                               SizedBox(height: 10,),
-                              PlaceholderButton(primaryColor: Colors.blue,)
+                              ButtonPlaceholder(width: 200,)
 
                             ],
+                          ),
+                          SizedBox(height:40),
+                          //popOvers
+                          Container(
+                            width:size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  PopOverWidget(btnTxt: 'Click to toggle popover', btnColor: Colors.pinkAccent, btnHoverColor: Colors.pink, popOverBody: 'And here’s some amazing content. It’s very engaging. Right?',direction: d.bottom , disabled: true),
+                                ],
+                              )),
+                          SizedBox(height:40),
+                          //progressbar
+                          MultiColorProgressBar(items: [
+                            ProgressItem(
+                              value: 114,
+                              progressBarolor: Colors.blue,
+                              hasStriped: true,
+                            ),
+                            ProgressItem(
+                              value: 226,
+                              progressBarolor: Colors.green,
+                            ),
+                            ProgressItem(
+                              value: 150,
+                              progressBarolor: Colors.teal,
+                            ),
+                            ProgressItem(
+                              value: 850,
+                              progressBarolor: Colors.blueGrey,
+                            ),
+                            ProgressItem(
+                              value: 120,
+                              progressBarolor: Colors.cyanAccent,
+                            ),
+                          ],),
+                          SizedBox(height:40),
+                          //button group
+                          ButtonGroup(
+                            buttons: [
+                              ButtonItem(contetnBtn: Txt('left', color: whiteColor, fontSize:16, fontWeight: FontWeight.w400,textAlign: TextAlign.center,),),
+                              ButtonItem(contetnBtn: Txt('middel', color: whiteColor, fontSize:16, fontWeight: FontWeight.w400,textAlign: TextAlign.center,) , isChechked: true , ),
+                              ButtonItem(contentBtnDropDown: 'drop down' ,isDropdown: true , itemsDropDown: [
+                                DropdownItem(text: "Dropdown item text", isHeader: true ),
+                                DropdownItem(text: "Action", value: "action"),
+                                DropdownItem(text: "Another action", value: "another_action"),
+                                DropdownItem(text: "Something else here", value: "something_else"),
+                              ]  , ),
+                              ButtonItem(contetnBtn: Txt('right', color: whiteColor, fontSize:16, fontWeight: FontWeight.w400,textAlign: TextAlign.center,)  , ),
+                            ],
+                            spacing: 0,
+                            borderRadius: 4.0,
                           )
-
-
                         ],
                       ),]
                     ),

@@ -39,6 +39,9 @@ class Dropdown extends StatefulWidget {
   bool? isChangeOffset;
   double? offsetX;
   double? offsetY;
+  BorderRadius? borderRadius;
+  EdgeInsets? padding;
+  Color? borderColor;
 
 
 
@@ -63,7 +66,10 @@ class Dropdown extends StatefulWidget {
     this.ColorDisableTxt = color14,
     this.isChangeOffset = false,
     this.offsetX =0,
-    this.offsetY = 0
+    this.offsetY = 0,
+    this.borderRadius = const BorderRadius.all(Radius.circular(15)),
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.borderColor = color31,
 
   });
 
@@ -198,9 +204,7 @@ class _DropdownState extends State<Dropdown> {
                   color: isHoverSplit.value
                       ? this.widget.colorHoverBox
                       : this.widget.colorBox,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      bottomRight: Radius.circular(15)),
+                  borderRadius: widget.borderRadius,
                 ),
                 child: Icon(getIconDirection(),
                     color: this.widget.iconColor, size:getIconSize()),
@@ -242,11 +246,12 @@ class _DropdownState extends State<Dropdown> {
               },
               child:Container(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                widget.padding,
                 decoration: BoxDecoration(
                   color:
                   isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: widget.borderRadius,
+                  border: Border.all(width: 1, color: widget.borderColor!)
                 ),
                 child: this.widget.direction == directions.start?Row(
                   mainAxisSize: MainAxisSize.min,

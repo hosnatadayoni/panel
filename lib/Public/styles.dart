@@ -74,6 +74,7 @@ const Color color34 = Color(0xff343a40);
 const Color color35 = Color(0xff7e7e7e);
 const Color color36 = Color(0xff3f3f3f);
 const Color color37 = Color(0xff61a0fd);
+const Color color38 = Color(0xffe9ecef);
 const Color linkColor = Color(0xff247cfd);
 const Color linkHoverColor = Color.fromRGBO(10, 88, 202, 1.0);
 const Color lightPurple = Color(0xffeae0ef);
