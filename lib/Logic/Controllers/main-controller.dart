@@ -851,6 +851,15 @@ class MainController extends GetxController {
     }
     return null;
   }
+  static getTypeColumn(String title) {
+    for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      var column = MainController.tableInfo['columns'][j];
+      if (column['name'] == title) {
+        return column['type'];
+      }
+    }
+    return null;
+  }
 
   static getColumnPrime() {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
@@ -1244,9 +1253,7 @@ class MainController extends GetxController {
   }
 
   static goToTablePage() async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]
-            ['view'] ==
-        'custom') {
+    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
       await Get.to(() => TablePage());

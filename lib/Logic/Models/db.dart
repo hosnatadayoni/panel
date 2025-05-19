@@ -254,95 +254,106 @@ class DB {
           }
       }
       else{
-     if(this.whereList.length != 0) {
-      bool check=true;
-      List<dynamic>dataNew=[];
-      dataItems=searchList(data,this.whereList);
-      print('dataItems searchList>>>${dataItems}');
-          // for (int j = 1; j <= whereList.length; j++) {
-      //   for (var d in data)
-      //     if (d['${whereList[j]!.fieldName}'] != null) {
-      //       if( whereList[j]!.value!=''){
-      //         if (whereList[j]!.oprator == '==') {
-      //           if(d['${whereList[j]!.fieldName}'].runtimeType==List){
-      //             if(d['${whereList[j]!.fieldName}'].contains(whereList[j]!.value)){
-      //               dataNew.add(d);
-      //               //   check=true;
-      //               // }else{
-      //               //   check=false;
-      //             }
-      //           }
-      //           if (d['${whereList[j]!.fieldName}'] == whereList[j]!.value) {
-      //             //   check=true;
-      //             // }else{
-      //             //   check=false;
-      //           }
-      //         }
-      //         else if (whereList[j]!.oprator == '>=') {
-      //           if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value) {
-      //             //   check=true;
-      //             //   print('dataItems 3 >>>${check}');
-      //             // }else{
-      //             //   check=false;
-      //           }
-      //           // break;
-      //         }
-      //         else if (whereList[j]!.oprator == '<=') {
-      //           if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value) {
-      //             //   check=true;
-      //             //   print('dataItems 4 >>>${check}');
-      //             // }else{
-      //             //   check=false;
-      //           }
-      //           // break;
-      //         }
-      //         else if (whereList[j]!.oprator == '!=') {
-      //           if (d['${whereList[j]!.fieldName}'] != whereList[j]!.value) {
-      //             //   check=true;
-      //             //   print('dataItems 5 >>>${check}');
-      //             // }else{
-      //             //   check=false;
-      //           }
-      //           // break;
-      //         }
-      //         else if (whereList[j]!.oprator == '<') {
-      //           if (d['${whereList[j]!.fieldName}'] < whereList[j]!.value) {
-      //             //   check=true;
-      //             //   print('dataItems 5 >>>${check}');
-      //             // }else{
-      //             check=false;
-      //           }
-      //           // break;
-      //         }
-      //         else if (whereList[j]!.oprator == '>') {
-      //           if (d['${whereList[j]!.fieldName}'] > whereList[j]!.value) {
-      //             //   check=true;
-      //             //   print('dataItems 5 >>>${check}');
-      //             // }else{
-      //             //   check=false;
-      //           }
-      //           // break;
-      //         }
-      //         // else if (whereList[j]!.oprator == null) {
-      //         //   check=true;
-      //         //   print('dataItems 6 >>>${check}');
-      //         //
-      //         //   // break;
-      //         // }
-      //         print('check issss>>${check}');
-      //         if(check==true){
-      //           dataItems.add(d);
-      //           print('dataItems 01 >>>${dataItems}');
-      //         }
-      //       }
-      //       // else{
-      //       //   dataItems.add(d);
-      //       //   print('dataItems 01 >>>${dataItems}');
-      //       // }
-      //     }
-      //
-      // }
-    }
+        if (this.whereList.length != 0){
+          if (data.length != 0)
+            for (var d in data) {
+              bool flag=true;
+                for (int j = 1; j <= whereList.length; j++) {
+                  if (d['${whereList[j]!.fieldName}'] != null) {
+                    if( whereList[j]!.value!=''){
+                      if (whereList[j]!.oprator == '==' || whereList[j]!.oprator == null) {
+                        if(d['${whereList[j]!.fieldName}'] is List){
+                          if (d['${whereList[j]!.fieldName}'].contains(whereList[j]!.value) && flag==true ) {
+                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
+                            flag=true;
+                          }
+                          else
+                            flag=false;
+                        }
+                        else{
+                          if (d['${whereList[j]!.fieldName}'] == whereList[j]!.value && flag==true ) {
+                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
+                            flag=true;
+                          }
+                          else
+                            flag=false;
+                        }
+
+                      } else if (whereList[j]!.oprator == '>=') {
+                        if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+                      }
+
+                      else if (whereList[j]!.oprator == '<=') {
+                        if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value && flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '!=') {
+                        if (d['${whereList[j]!.fieldName}'] != whereList[j]!.value && flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '<') {
+                        if (d['${whereList[j]!.fieldName}'] < whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      } else if (whereList[j]!.oprator == '>') {
+                        if (d['${whereList[j]!.fieldName}'] > whereList[j]!.value&& flag==true ) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }
+                      else if (whereList[j]!.oprator == 'whereDate ==') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"==")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }   else if (whereList[j]!.oprator == 'whereDate <=') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"<=")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }   else if (whereList[j]!.oprator == 'whereDate >=') {
+                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,">=")==true && flag==true) {
+                          flag=true;
+                        }
+                        else
+                          flag=false;
+
+                      }
+
+                    }
+                    else
+                      flag=false;
+
+                  }
+                  else
+                    flag=false;
+                }
+                if(flag==true){
+                dataItems.add(d);
+                print('flag is true>>>${flag}>>>${dataItems.length}');
+                }
+
+              }
+            }
      else{
        dataItems=data;
      }
@@ -459,7 +470,8 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-
+            await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
+            MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
 

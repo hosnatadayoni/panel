@@ -3,6 +3,7 @@ import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/UI/Componenets/page-custom/orderItem/order-item-create.dart';
 import 'package:finance/UI/Views/edit.dart';
 import 'package:get/get.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Componenets/page-custom/order/order-create.dart';
 import '../../UI/Componenets/page-custom/order/order-edit.dart';
 import '../../UI/Componenets/page-custom/orderItem/order-item-edit.dart';
@@ -95,4 +96,48 @@ class HelperController extends GetxController {
     }
   }
 
+   static filterDate(String dataDate,String searchDate,String opration) {
+
+    // Jalali baseDate = Jalali.fromDateTime(
+    //   DateTime.parse(
+    //     searchDate.split('/').join('-'), // تبدیل به فرمت قابل قبول
+    //   ),
+    // );
+      Jalali baseDate = convertJalaliStringToDate(searchDate);
+      Jalali date = convertJalaliStringToDate(dataDate);
+      if(opration=='>='){
+        if(date.isAfter(baseDate))
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="<="){
+        if(date.isBefore(baseDate))
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="=="){
+        if(date==baseDate)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+
+  }
+
+// تابع کمکی: تبدیل رشته تاریخ جلالی به Jalali
+  static Jalali convertJalaliStringToDate(String jalaliStr) {
+    List<String> parts = jalaliStr.split('/');
+    int year = int.parse(parts[0]);
+    int month = int.parse(parts[1]);
+    int day = int.parse(parts[2]);
+    return Jalali(year, month, day);
+  }
 }

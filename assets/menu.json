@@ -383,11 +383,6 @@
         "type": "Number int"
       },
       {
-        "name": "تاریخ",
-        "title": "تاریخ",
-        "type": "date"
-      },
-      {
         "name": "شماره نقشه",
         "title": "شماره نقشه",
         "type": "Number int"
@@ -425,12 +420,12 @@
         "isPictureSelected": true
       }
     ],
-    "filters": [
-      {"column": "مشتری"},
-      {"column": "کد ورودی"},
+    "filters":
+    [
+      {"column":"مشتری"},
+      {"column": "کد ورودی","oprator": "<="},
       {"column": "checkBox"},
-      {"column": "محصولات"},
-      {"column": "تاریخ"}
+      {"column": "محصولات"}
     ]
   },
   {
@@ -641,5 +636,31 @@
       }
     ],
     "view": "custom"
+  },
+  {
+    "title": "جزئیات",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "itemss",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "relations": [],
+    "columns": [
+      {
+        "name": "radiobutton",
+        "title": "radiobutton",
+        "type": "radiobutton",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {"title": "test 0","value": "","is_selected": true},
+          {"title": "test 1","value": "1","is_selected": true},
+          {"title": "test 2","value": "2","is_selected": false},
+          {"title": "test 3","value": "3","is_selected": false},
+          {"title": "test 4","value": "4","is_selected": false}
+        ]
+      }
+
+    ]
   }
 ]
