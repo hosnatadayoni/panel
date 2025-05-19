@@ -20,12 +20,14 @@ import 'package:finance/UI/Componenets/accordion.dart';
 import 'package:finance/UI/Componenets/alert.dart';
 import 'package:finance/UI/Componenets/badge.dart';
 import 'package:finance/UI/Componenets/breadCrumb.dart';
-import 'package:finance/UI/Componenets/btn-group.dart';
+import 'package:finance/UI/Componenets/btn-group/btn-group-item.dart';
+import 'package:finance/UI/Componenets/btn-group/btn-group.dart';
 import 'package:finance/UI/Componenets/card.dart';
 import 'package:finance/UI/Componenets/carousel-slider.dart';
 import 'package:finance/UI/Componenets/close-btn.dart';
 import 'package:finance/UI/Componenets/collapse.dart';
-import 'package:finance/UI/Componenets/drop-down.dart';
+import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
+import 'package:finance/UI/Componenets/dropDown/drop-down.dart';
 import 'package:finance/UI/Componenets/modal.dart';
 import 'package:finance/UI/Componenets/placeholder/btn-placeholder.dart';
 import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
@@ -33,6 +35,7 @@ import 'package:finance/UI/Componenets/placeholder/img-placeholder.dart';
 import 'package:finance/UI/Componenets/popOvers.dart';
 import 'package:finance/UI/Componenets/progress/progress-item.dart';
 import 'package:finance/UI/Componenets/progress/progress.dart';
+import 'package:finance/UI/Componenets/spinner.dart';
 import 'package:finance/UI/Componenets/tooltip.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -320,39 +323,19 @@ class DashboardPage extends StatelessWidget {
                           ),
 
                           //btn
-                          Btn(btnType.custom,color: Colors.blue , text: 'primary', hoverColor: Colors.blueAccent, isBlock: true),
+                          Btn(btnType.custom,color: Colors.blue , content: Txt('primary'), hoverColor: Colors.blueAccent, isBlock: true),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'primary2', hoverColor: Colors.greenAccent, ),
-                          // LayoutBuilder(
-                          //   builder: (context, constraints) {
-                          //     final bool isVertical = constraints.maxWidth < 768;
-                          //     return isVertical
-                          //         ? Column(
-                          //       children: [
-                          //         Btn(btnType.primary, text: "دکمه ۱", color: Colors.blue ,),
-                          //         SizedBox(height: 8),
-                          //         Btn(btnType.primary, text: "دکمه ۲", color: Colors.blue ,),
-                          //       ],
-                          //     )
-                          //         : Row(
-                          //       children: [
-                          //         Btn(btnType.primary, text: "دکمه ۱", color: Colors.blue ,),
-                          //         SizedBox(width: 8),
-                          //         Btn(btnType.primary, text: "دکمه ۲", color: Colors.blue ,),
-                          //       ],
-                          //     );
-                          //   },
-                          // )
+                          Btn(btnType.primary,color: Colors.green , content: Txt('primary2') , hoverColor: Colors.greenAccent,size: ButtonSize.large, ),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'primary3', hoverColor: Colors.greenAccent,isToggle: true),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('primary3'), hoverColor: Colors.greenAccent,isToggle: true),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'primary4', hoverColor: Colors.greenAccent,isToggle: true , isLink: true),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('primary4'), hoverColor: Colors.greenAccent,isToggle: true , isLink: true),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'primary5', hoverColor: Colors.greenAccent,size: ButtonSize.small,),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('primary5'), hoverColor: Colors.greenAccent,size: ButtonSize.small,),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'd-md-block', hoverColor: Colors.greenAccent,responsive: true,),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('d-md-block'), hoverColor: Colors.greenAccent,responsive: true,),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , text: 'col-6 mx-auto', hoverColor: Colors.greenAccent, responsive: true,gridColumns: 6, centerHorizontal: true, ),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('col-6 mx-auto'), hoverColor: Colors.greenAccent, responsive: true,gridColumns: 6, centerHorizontal: true, ),
 
 
                           SizedBox(height: 30),
@@ -553,7 +536,7 @@ class DashboardPage extends StatelessWidget {
                             titleColor: blackColor,
                             desriptionColor: Colors.red,
                             imageTop: Img(loginSvg),
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd') , ),
                           ),
                           SizedBox(height: 30),
                           //Titles, text, and links
@@ -640,7 +623,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                           ),
                           SizedBox(height: 30),
                           //center
@@ -652,7 +635,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                             cardFooter:'2 days ago',
                             isCenter: true,
                           ),
@@ -672,7 +655,7 @@ class DashboardPage extends StatelessWidget {
                                   description: 'With supporting text below as a natural lead-in to additional content.',
                                   titleColor: darkBackground,
                                   desriptionColor: darkBackground,
-                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                                   width: (size.width / 2) - 32,
                                   margin: EdgeInsets.only(bottom: 16),
                                   isChangedWidthResponsive: true,
@@ -683,7 +666,7 @@ class DashboardPage extends StatelessWidget {
                                   description: 'With supporting text below as a natural lead-in to additional content.',
                                   titleColor: darkBackground,
                                   desriptionColor: darkBackground,
-                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                                   width:(size.width / 2 )- 32,
                                   isChangedWidthResponsive: true,
                                 ),
@@ -705,7 +688,7 @@ class DashboardPage extends StatelessWidget {
                                   description: 'With supporting text below as a natural lead-in to additional content.',
                                   titleColor: darkBackground,
                                   desriptionColor: darkBackground,
-                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                                   width: (size.width * 0.75) - 32,
                                   margin: EdgeInsets.only(bottom: 16),
                                 ),
@@ -715,7 +698,7 @@ class DashboardPage extends StatelessWidget {
                                   description: 'With supporting text below as a natural lead-in to additional content.',
                                   titleColor: darkBackground,
                                   desriptionColor: darkBackground,
-                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                                  btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                                   width:(size.width * 0.25 )- 32,
                                 ),
                               ],
@@ -728,7 +711,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                             width: 300,
                           ),
                           SizedBox(height: 30),
@@ -759,7 +742,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                             width: 500,
                           ),
                           SizedBox(height: 30),
@@ -769,7 +752,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd') ),
                             width: 500,
                             isCenter: true,
                           ),
@@ -780,7 +763,7 @@ class DashboardPage extends StatelessWidget {
                             description: 'With supporting text below as a natural lead-in to additional content.',
                             titleColor: darkBackground,
                             desriptionColor: darkBackground,
-                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, text: 'dddddddddddddd', ),
+                            btn: Btn(btnType.custom , color:Colors.blueAccent , hoverColor: Colors.blue, content: Txt('dddddddddddddd'), ),
                             width: 500,
                             isEnd: true,
                           ),
@@ -1271,7 +1254,19 @@ class DashboardPage extends StatelessWidget {
                             ],
                             spacing: 0,
                             borderRadius: 4.0,
-                          )
+                          ),
+                          SizedBox(height:40),
+                          //spinners
+                          Spinner(color: redColor,alignment: SpinnerAlignment.end),
+                          SizedBox(height:40),
+                          Spinner(color: redColor,type: SpinnerType.grow ,size: 48),
+                          SizedBox(height:40),
+                          Btn(btnType.custom , color: Colors.blue, disabled: true,content: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Spinner(color: whiteColor , type: SpinnerType.grow, size: 15,),
+                            ],
+                          ),)
                         ],
                       ),]
                     ),

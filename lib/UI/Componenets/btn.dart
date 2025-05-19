@@ -270,39 +270,31 @@ enum ButtonSize {
 }
 
 class Btn extends StatefulWidget {
-  final Function? onClick;
-  final btnType type;
-  final String? loadingTag;
-  final String? text;
-  final Widget? child;
-  final double? width;
-  final double? height;
-  final fontTypes fontType;
-  final Color? color;
-  Color? hoverColor;
-  // Color? hoverPrimaryTypeColor;
-  final bool isLink;
-  final ButtonSize size;
-  final bool disabled;
-  final bool isBlock;
-  final bool responsive;
-  final double? responsiveBreakpoint;
-  final bool isToggle;
-  final int? gridColumns;
-  final bool centerHorizontal;
+   Function? onClick;
+   btnType type;
+   Widget? content;
+   double? width;
+   double? height;
+   Color? color;
+   Color? hoverColor;
+   bool isLink;
+   ButtonSize size;
+   bool disabled;
+   bool isBlock;
+   bool responsive;
+   double? responsiveBreakpoint;
+   bool isToggle;
+   int? gridColumns;
+   bool centerHorizontal;
 
   Btn(
       this.type, {
-        this.text,
+        this.content,
         this.onClick,
         this.width,
         this.height,
-        this.fontType = fontTypes.heading4,
-        this.loadingTag,
-        this.child,
         this.color,
-        this.hoverColor,
-        // this.hoverPrimaryTypeColor,
+        this.hoverColor = Colors.blueAccent,
         this.isLink = false,
         this.size = ButtonSize.medium,
         this.disabled = false,
@@ -325,12 +317,13 @@ class _BtnState extends State<Btn> {
   EdgeInsets getButtonPadding() {
     switch (widget.size) {
       case ButtonSize.small:
-        return EdgeInsets.symmetric(vertical: 12, horizontal: 16);
+        return EdgeInsets.only(top: 4 , bottom: 4, right: 8 , left: 8);
       case ButtonSize.large:
-        return EdgeInsets.symmetric(vertical: 24, horizontal: 32);
+        return EdgeInsets.only(top: 8 , bottom: 8, right: 16 , left: 16);
       case ButtonSize.medium:
+        return EdgeInsets.only(top: 6 , bottom: 6, right: 12 , left: 12);
       default:
-        return EdgeInsets.symmetric(vertical: 20, horizontal: 24);
+        return EdgeInsets.only(top: 6 , bottom: 6, right: 12 , left: 12);
     }
   }
 
@@ -387,16 +380,6 @@ class _BtnState extends State<Btn> {
         }
       }
     }
-    // if (widget.isToggle) {
-    //   widget.hoverPrimaryTypeColor = widget.color;
-    // }
-
-    // if (widget.type == btnType.primary) {
-    //   if (_isHovered) {
-    //     return widget.hoverPrimaryTypeColor ?? widget.color ?? defaultColor;
-    //   }
-    //   return widget.color ?? defaultColor;
-    // }
 
     return widget.type == btnType.custom
         ? whiteColor
@@ -407,11 +390,6 @@ class _BtnState extends State<Btn> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     double? calculatedWidth;
-    // if (widget.gridColumns != null && widget.gridColumns! > 0 &&  widget.gridColumns! <= 12) {
-    //   final screenWidth = size.width;
-    //   final columnWidth = screenWidth / 12 * widget.gridColumns!;
-    //   calculatedWidth = columnWidth;
-    // }
     bool isValidGridColumns = widget.gridColumns != null && widget.gridColumns! > 0 && widget.gridColumns! <= 12;
 
     if (isValidGridColumns) {
@@ -420,84 +398,34 @@ class _BtnState extends State<Btn> {
       calculatedWidth = columnWidth;
     }
 
-    final buttonWidget = Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: _isToggle ? Colors.transparent : (getBorderColor() ?? Colors.transparent),
-          width: borderSize,
-        ),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: ElevatedButton(
-        onPressed: widget.disabled
-            ? null
-            : () async {
-          if (widget.isToggle) {
-            setState(() {
-              _isToggle = !_isToggle;
-            });
-          }
-          if (widget.onClick != null) {
-            widget.onClick!();
-          }
-        },
-        focusNode: widget.disabled ? FocusNode(skipTraversal: true) : null,
-        child: Obx(() {
-          return (AppController.loadingList.value.contains(widget.loadingTag) && widget.loadingTag != null)
-              ? Container(
-            width: 25,
-            height: 25,
-            child: CircularProgressIndicator(
-              color: whiteColor,
-              strokeWidth: 2,
-            ),
-          )
-              : widget.child == null
-              ? Txt(
-            widget.text ?? '',
-            fontSize: getFontSize(),
-            fontWeight: FontWeight.w500,
-            color: getTextColor(),
-            textDecoration: widget.isToggle && widget.isLink
-                ? TextDecoration.none
-                : (widget.disabled == false && widget.isLink)
-                ? TextDecoration.underline
-                : TextDecoration.none,
-          )
-              : widget.child!;
-        }),
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-          backgroundColor: MaterialStateProperty.all(getBackgroundColor()),
-          elevation: MaterialStateProperty.all(0),
-          padding: MaterialStateProperty.all(
-              EdgeInsets.only(top: 20, bottom: 20, left: 12, right: 12)),
-          overlayColor: MaterialStateProperty.all(Colors.transparent),
-          mouseCursor: MaterialStateProperty.all(
-              widget.disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
-        ),
-      ),
-    );
-
     return MouseRegion(
       onEnter: (_) => setState(() => widget.disabled == false ? _isHovered = true : _isHovered = false),
       onExit: (_) => setState(() => _isHovered = false),
       child: IgnorePointer(
         ignoring: widget.disabled,
-        child: Focus(
-          canRequestFocus: !widget.disabled,
+        child: InkWell(
+          onTap: widget.disabled
+              ? null
+              : () async {
+            if (widget.isToggle) {
+              setState(() {
+                _isToggle = !_isToggle;
+              });
+            }
+            if (widget.onClick != null) {
+              widget.onClick!();
+            }
+          },
           child: Container(
-            // width: widget.isBlock
-            //     ? size.width
-            //     : !isValidGridColumns
-            //     ? widget.width
-            //     : (widget.responsive && size.width < widget.responsiveBreakpoint!)
-            //     ? size.width
-            //     : calculatedWidth,
+            decoration: BoxDecoration(
+              color: getBackgroundColor(),
+              border: Border.all(
+                color: _isToggle ? Colors.transparent : (getBorderColor() ?? Colors.transparent),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            padding: getButtonPadding(),
             width: widget.isBlock
                 ? size.width
                 : widget.responsive && size.width <= widget.responsiveBreakpoint!
@@ -508,7 +436,7 @@ class _BtnState extends State<Btn> {
             margin: widget.centerHorizontal
                 ? EdgeInsets.symmetric(horizontal: (size.width - (calculatedWidth ?? widget.width ?? size.width)) / 2)
                 : null,
-            child: buttonWidget,
+            child:widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint! || widget.centerHorizontal ?  Center(child: widget.content!,):widget.content!,
           ),
         ),
       ),

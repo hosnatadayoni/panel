@@ -1,5 +1,6 @@
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -67,7 +68,7 @@ class Dropdown extends StatefulWidget {
     this.isChangeOffset = false,
     this.offsetX =0,
     this.offsetY = 0,
-    this.borderRadius = const BorderRadius.all(Radius.circular(15)),
+    this.borderRadius,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.borderColor = color31,
 
@@ -204,7 +205,10 @@ class _DropdownState extends State<Dropdown> {
                   color: isHoverSplit.value
                       ? this.widget.colorHoverBox
                       : this.widget.colorBox,
-                  borderRadius: widget.borderRadius,
+                  borderRadius:widget.borderRadius != null ? widget.borderRadius :  BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      bottomRight: Radius.circular(15)
+                  ),
                 ),
                 child: Icon(getIconDirection(),
                     color: this.widget.iconColor, size:getIconSize()),
@@ -250,7 +254,7 @@ class _DropdownState extends State<Dropdown> {
                 decoration: BoxDecoration(
                   color:
                   isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
-                  borderRadius: widget.borderRadius,
+                  borderRadius:widget.borderRadius != null ?  widget.borderRadius: BorderRadius.all(Radius.circular(15)),
                   border: Border.all(width: 1, color: widget.borderColor!)
                 ),
                 child: this.widget.direction == directions.start?Row(
@@ -536,26 +540,4 @@ class _DropdownState extends State<Dropdown> {
       child: box,
     );
   }
-}
-
-class DropdownItem {
-   String text;
-   bool isInteractive;
-   String? value;
-   bool isActive;
-   bool isDisabled;
-   bool? isHeader;
-   bool? isActiveFirst;
-
-
-
-  DropdownItem({
-    required this.text,
-    this.isInteractive = true,
-    this.value,
-    this.isActive = false,
-    this.isDisabled = false,
-    this.isHeader = false,
-    this.isActiveFirst = false,
-  });
 }
