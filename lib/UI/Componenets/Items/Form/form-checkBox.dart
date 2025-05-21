@@ -59,7 +59,7 @@ class _CheckBoxState extends State<CheckBox> {
                 strokeAlign: 2.5
             ),
             onChanged: (text){
-              widget.isClickedBtn!.value = true;
+              widget.isClickedBtn?.value = true;
               if(widget.onChange!=null)
                 this.widget.onChange!(text);
             },

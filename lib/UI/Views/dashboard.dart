@@ -28,6 +28,8 @@ import 'package:finance/UI/Componenets/close-btn.dart';
 import 'package:finance/UI/Componenets/collapse.dart';
 import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
 import 'package:finance/UI/Componenets/dropDown/drop-down.dart';
+import 'package:finance/UI/Componenets/form.dart';
+import 'package:finance/UI/Componenets/form/input-form.dart';
 import 'package:finance/UI/Componenets/modal.dart';
 import 'package:finance/UI/Componenets/placeholder/btn-placeholder.dart';
 import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
@@ -1266,7 +1268,9 @@ class DashboardPage extends StatelessWidget {
                             children: [
                               Spinner(color: whiteColor , type: SpinnerType.grow, size: 15,),
                             ],
-                          ),)
+                          ),),
+                          SizedBox(height:40),
+                          MyFormPage(),
                         ],
                       ),]
                     ),

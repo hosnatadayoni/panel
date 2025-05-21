@@ -58,6 +58,7 @@ dependencies:
   shimmer: ^3.0.0
   popover: ^0.2.8+2
   super_tooltip: ^2.0.9
+  flutter_typeahead: ^4.8.0
 
 
 

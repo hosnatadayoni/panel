@@ -119,6 +119,25 @@
             "message": "وارد کردن این فیلد الزامی است"
           }
         ]
+      },
+      {
+        "name": "نوع2",
+        "title": "نوع2",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "معمولی",
+            "value": "1",
+            "is_selected": true
+          },
+          {
+            "title": "ویژه",
+            "value": "2",
+            "is_selected": false
+          }
+        ]
       }
     ]
   },

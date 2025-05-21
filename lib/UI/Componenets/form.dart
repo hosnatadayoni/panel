@@ -1,0 +1,104 @@
+import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/btn.dart';
+import 'package:finance/UI/Componenets/form/checkbox-form.dart';
+import 'package:finance/UI/Componenets/form/dataList-form.dart';
+import 'package:finance/UI/Componenets/form/file-form.dart';
+import 'package:finance/UI/Componenets/form/input-form.dart';
+import 'package:finance/UI/Componenets/form/select-form.dart';
+import 'package:finance/UI/Componenets/form/switch-form.dart';
+import 'package:flutter/material.dart';
+
+import 'form/color-form.dart';
+import 'form/radioButton-form.dart';
+
+
+class MyFormPage extends StatefulWidget {
+  const MyFormPage({super.key});
+
+  @override
+  State<MyFormPage> createState() => _MyFormPageState();
+}
+
+class _MyFormPageState extends State<MyFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputForm(lableText: 'Email Address', keyBoardType: keyboardType.email , disabled: true),
+          const SizedBox(height: 15),
+          InputForm(lableText: 'Password', keyBoardType: keyboardType.password , formText: 'Must be 8-20 characters long.'),
+          const SizedBox(height: 15),
+          CheckBoxForm(text: 'Check me out' , disabled: true),
+          const SizedBox(height: 15),
+          InputForm(lableText: 'Example textarea', rows: 3 , fieldType: FieldType.textarea),
+          // دکمه Submit
+          Btn(btnType.custom , content: Txt('submit'),onClick: (){
+            if (_formKey.currentState!.validate()) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Processing Data')),
+              );
+              // در اینجا می‌توانید منطق ارسال فرم را پیاده‌سازی کنید
+              print('Email: ${_emailController.text}');
+              print('Password: ${_passwordController.text}');
+            }
+          } ,),
+          const SizedBox(height: 40),
+          InputForm(lableText: 'Password',hintText: 'aaaaaaaaa', keyBoardType: keyboardType.password , ),
+          const SizedBox(height: 15),
+          InputForm(formText: 'Must be 8-20 characters long.', keyBoardType: keyboardType.password  , layoutDirection: direction.horizontal),
+          const SizedBox(height: 15),
+          FileForm(),
+          const SizedBox(height: 15),
+          ColorPickerBox(selectedColor: Colors.blue),
+          const SizedBox(height: 15),
+          DataListInput(options: ['aaaaaa' , 'vvvvv' , 'kkkk'] , label: 'xxxx' , ),
+          const SizedBox(height: 15),
+          CustomSelect(
+
+            hintText: 'Open this select menu',
+            items: const [
+              DropdownMenuItem(value: '1', child: Text('One')),
+              DropdownMenuItem(value: '2', child: Text('Two')),
+              DropdownMenuItem(value: '3', child: Text('Three')),
+            ],
+            onChanged: (value) {
+              setState(() {
+
+              });
+            },
+            size: InputSize.large,
+
+          ),
+          const SizedBox(height: 15),
+          CheckBoxForm(text: 'Check me out' , checked: true , disabled: true,),
+          const SizedBox(height: 15),
+          CustomSwitch(disabled: true,checked: true,label: 'disable checekd',),
+          const SizedBox(height: 15),
+          CustomSwitch(checked: true,label: 'checked'),
+          const SizedBox(height: 15),
+          CustomSwitch(disabled: true,label: 'disable',),
+          const SizedBox(height: 15),
+          CustomSwitch(label: 'default',),
+          const SizedBox(height: 30),
+          RadioButton(items: [RadioItem(text: 'item 1'  , checked: true) , RadioItem(text: 'item 2' , disabled: true)],)
+
+        ],
+      ),
+    );
+  }
+}

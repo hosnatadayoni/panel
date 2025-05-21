@@ -293,7 +293,7 @@ class Btn extends StatefulWidget {
         this.onClick,
         this.width,
         this.height,
-        this.color,
+        this.color = Colors.blue,
         this.hoverColor = Colors.blueAccent,
         this.isLink = false,
         this.size = ButtonSize.medium,
