@@ -562,21 +562,24 @@
     "countShowRow": 10,
     "relations": [],
     "columns": [
+
       {
-        "name": "radiobutton",
-        "title": "radiobutton",
-        "type": "radiobutton",
+        "name": "multiSelect",
+        "title": "multiSelect",
+        "type": "multiSelect",
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
-          {"title": "test 0","value": "","is_selected": true},
-          {"title": "test 1","value": "1","is_selected": true},
-          {"title": "test 2","value": "2","is_selected": false},
-          {"title": "test 3","value": "3","is_selected": false},
-          {"title": "test 4","value": "4","is_selected": false}
+          {"title": "انتخاب نشده" , "value": "-1"},
+          {"title": "test 1","value": "1"},
+          {"title": "test 2","value": "2"},
+          {"title": "test 3","value": "3"},
+          {"title": "test 4","value": "4"}
+        ],
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
         ]
       }
-
     ]
   }
 ]
