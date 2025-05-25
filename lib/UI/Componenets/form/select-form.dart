@@ -13,6 +13,7 @@ class CustomSelect extends StatelessWidget {
    Color? colorDropDownItem;
    bool? disabled;
    Color? disabledBoxColor;
+   BorderRadius? borderRadius;
 
    CustomSelect({
     required this.items,
@@ -24,6 +25,7 @@ class CustomSelect extends StatelessWidget {
      this.colorDropDownItem = darkBackground,
      this.disabled = false,
      this.disabledBoxColor = color38,
+     this.borderRadius,
   });
 
   @override
@@ -43,7 +45,9 @@ class CustomSelect extends StatelessWidget {
       value: selectedValue,
       decoration: InputDecoration(
       contentPadding: padding,
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+            borderRadius: this.borderRadius != null ?this.borderRadius! :BorderRadius.circular(0)
+    ),
        fillColor: this.disabledBoxColor,
        filled:this.disabled! ?  true : false,
       ),

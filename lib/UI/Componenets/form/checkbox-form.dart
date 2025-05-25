@@ -9,6 +9,9 @@ class CheckBoxForm extends StatefulWidget {
    Color? activeColor;
    bool? checked;
    bool disabled;
+   double? width;
+   double? height;
+   ValueChanged<bool?>? onChanged;
 
   CheckBoxForm({
     this.text,
@@ -16,6 +19,9 @@ class CheckBoxForm extends StatefulWidget {
     this.activeColor = Colors.blue,
     this.checked = false,
     this.disabled = false,
+    this.width = 16,
+    this.height = 16,
+    this.onChanged,
   });
 
   @override
@@ -48,17 +54,25 @@ class _CheckBoxFormState extends State<CheckBoxForm> {
               }),
             ),
           ),
-          child: Checkbox(
-            value: widget.checked,
-            onChanged: widget.disabled
-                ? null
-                : (value) {
-              setState(() {
-                widget.checked = value!;
-              });
-            },
+          child: Container(
+            width: widget.width,
+            height: widget.height,
+            child: Checkbox(
+              value: widget.checked,
+              onChanged: widget.disabled
+                  ? null
+                  : (value) {
+                setState(() {
+                  widget.checked = value!;
+                  if(widget.onChanged != null){
+                    this.widget.onChanged!(value);
+                  }
+                });
+              },
+            ),
           ),
         ),
+        if(widget.text != null)SizedBox(width: 10,),
         Txt(
           widget.text != null ? widget.text! : '',
           color: widget.disabled

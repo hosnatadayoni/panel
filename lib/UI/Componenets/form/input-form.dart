@@ -38,6 +38,8 @@ class InputForm extends StatefulWidget {
   bool? isPlainTxt;
   direction layoutDirection;
   double? inputWidth;
+  Color? borderColor;
+  BorderRadius? borderRadius;
 
   InputForm({this.lableText ,
     this.hintText ,
@@ -53,7 +55,9 @@ class InputForm extends StatefulWidget {
     this.readOnly = false,
     this.isPlainTxt = false,
     this.layoutDirection = direction.vertical,
-    double? inputWidth,
+    this.inputWidth,
+    this.borderColor = color5,
+    this.borderRadius,
 
   });
   @override
@@ -78,11 +82,15 @@ class _InputFormState extends State<InputForm> {
     return widget.layoutDirection == direction.vertical ? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Txt(widget.lableText != null ? widget.lableText! : ''),
-        SizedBox(height: 10,),
+        if(widget.lableText != null)
+           Txt(widget.lableText!),
+        if(widget.lableText != null)
+           SizedBox(height: 10,),
         FormBox(),
-       SizedBox(height: 5,),
-       Txt(widget.formText != null ? widget.formText!:'' , fontSize: 14, fontWeight: FontWeight.w400,color: widget.formTextColor),
+       if(widget.formText != null)
+          SizedBox(height: 5,),
+       if(widget.formText != null)
+          Txt(widget.formText!, fontSize: 14, fontWeight: FontWeight.w400,color: widget.formTextColor),
       ],
     ) : Row(
       children: [
@@ -115,7 +123,32 @@ class _InputFormState extends State<InputForm> {
         decoration:  InputDecoration(
           labelText: widget.lableText!= null ? widget.lableText : '',
           hintText: widget.hintText != null ? widget.hintText : '',
-          border: widget.isPlainTxt! ? InputBorder.none : OutlineInputBorder(),
+          enabledBorder: widget.isPlainTxt! ? InputBorder.none : OutlineInputBorder(
+          borderRadius: widget.borderRadius!= null ? widget.borderRadius! : BorderRadius.zero,
+          // borderRadius: BorderRadius.only(
+          // topLeft: Radius.circular(widget.hasEndBox ?0:5),
+          // topRight: Radius.circular(widget.hasStartBox ?0:5),
+          // bottomLeft: Radius.circular(widget.hasEndBox ?0:5),
+          // bottomRight: Radius.circular(widget.hasStartBox ?0:5),
+          // ),
+          borderSide: BorderSide(
+         color: widget.borderColor!,
+         width: 1.0,
+         ),
+         ),
+          border: widget.isPlainTxt! ? InputBorder.none : OutlineInputBorder(
+          borderSide: BorderSide(
+          color: widget.borderColor!,
+          width: 1.0,
+          ),
+    borderRadius: widget.borderRadius!= null ? widget.borderRadius! : BorderRadius.zero,
+    //       borderRadius: BorderRadius.only(
+    //       topLeft: Radius.circular(widget.hasEndBox ?0:5),
+    //       topRight: Radius.circular(widget.hasStartBox ?0:5),
+    //       bottomLeft: Radius.circular(widget.hasEndBox ?0:5),
+    //       bottomRight: Radius.circular(widget.hasStartBox ?0:5),
+    // ),
+    ),
           contentPadding:widget.isPlainTxt! ? EdgeInsets.zero : padding,
           // helperText:widget.formText != null ? widget.formText :'',
           filled: widget.disabled,

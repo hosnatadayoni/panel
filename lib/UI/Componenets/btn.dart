@@ -286,6 +286,7 @@ class Btn extends StatefulWidget {
    bool isToggle;
    int? gridColumns;
    bool centerHorizontal;
+   BorderRadius? borderRadius;
 
   Btn(
       this.type, {
@@ -304,6 +305,7 @@ class Btn extends StatefulWidget {
         this.isToggle = false,
         this.gridColumns,
         this.centerHorizontal = false,
+        this.borderRadius
       });
 
   @override
@@ -423,7 +425,7 @@ class _BtnState extends State<Btn> {
                 color: _isToggle ? Colors.transparent : (getBorderColor() ?? Colors.transparent),
                 width: 1,
               ),
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.circular(5),
             ),
             padding: getButtonPadding(),
             width: widget.isBlock

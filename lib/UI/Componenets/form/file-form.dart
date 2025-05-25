@@ -1,24 +1,30 @@
+import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/form/input-form.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:get/get.dart';
 class FileForm extends StatefulWidget {
   bool? disabled;
   String? fileTxt;
   Color? fileTxtColor;
   Color? fileTxtBoxColor;
+  Color? fileTxtBoxHoverColor;
   Color? borderColor;
   bool? isMultipleFiles;
   InputSize? size;
+  BorderRadius? borderRadius;
     FileForm({
       this.disabled = false,
       this.fileTxt = 'Choose File',
       this.fileTxtColor = darkBackground,
       this.fileTxtBoxColor = color38,
+      this.fileTxtBoxHoverColor = color40,
       this.borderColor = color5,
       this.isMultipleFiles = false,
       this.size = InputSize.medium,
+      this.borderRadius,
 });
 
   @override
@@ -28,6 +34,7 @@ class FileForm extends StatefulWidget {
 class _FileFormState extends State<FileForm> {
   PlatformFile? _pickedFile;
   List<PlatformFile>? _pickedFiles;
+  Rx<bool> isHover = false.obs;
 
 
 
@@ -35,10 +42,10 @@ class _FileFormState extends State<FileForm> {
     if (widget.isMultipleFiles!) {
       return _pickedFiles?.isNotEmpty == true
           ? _pickedFiles!.map((file) => file.name).join(', ')
-          : 'فایلی انتخاب نشده';
+          : '${AppController.of(context)!.value('No file selected')}';
 
     } else {
-      return _pickedFile?.name ?? 'فایلی انتخاب نشده';
+      return _pickedFile?.name ?? '${AppController.of(context)!.value('No file selected')}';
     }
 
   }
@@ -65,10 +72,13 @@ class _FileFormState extends State<FileForm> {
         }
       });
     }
-    for(var file in _pickedFiles!){
-      print('mmmmmmmm>>>>${file.name}');
+    if(_pickedFiles != null){
+      for(var file in _pickedFiles!){
+        print('mmmmmmmm>>>>${file.name}');
+      }
+      print('_pickedFiles>>>${_pickedFiles}');
     }
-    print('_pickedFiles>>>${_pickedFiles}');
+
   }
   @override
   Widget build(BuildContext context) {
@@ -86,20 +96,33 @@ class _FileFormState extends State<FileForm> {
     return InkWell(
       onTap: widget.disabled! ? null : _pickFile,
       child: Container(
+     height: 48,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.all(Radius.circular(5)),
           border: Border.all(width: 1, color: widget.borderColor!),
         ),
         child: Row(
           children: [
-            Container(
-              padding: padding,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
+            MouseRegion(
+            onEnter: (_){
+             isHover.value = true;
+            },
+            onExit: (_){
+             isHover.value = false;
+            },
+              child: Obx((){
+                return Container(
+                padding: padding,
+                height: 48,
+                decoration: BoxDecoration(
+                borderRadius: widget.borderRadius != null ? widget.borderRadius! : BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
+                // borderRadius: BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
                 border: Border.all(width: 1, color: widget.borderColor!),
-                color: widget.fileTxtBoxColor,
-              ),
-              child: Txt(widget.fileTxt! , fontSize:textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,),
+                color: isHover.value ? widget.fileTxtBoxHoverColor:widget.fileTxtBoxColor,
+                ),
+                child: Center(child: Txt(widget.fileTxt! , fontSize:textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,)),
+                );
+              })
             ),
             Expanded(
               child: Container(

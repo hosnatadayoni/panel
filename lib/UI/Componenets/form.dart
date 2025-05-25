@@ -1,13 +1,17 @@
+import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/btn.dart';
+import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
+import 'package:finance/UI/Componenets/dropDown/drop-down.dart';
 import 'package:finance/UI/Componenets/form/checkbox-form.dart';
 import 'package:finance/UI/Componenets/form/dataList-form.dart';
 import 'package:finance/UI/Componenets/form/file-form.dart';
 import 'package:finance/UI/Componenets/form/input-form.dart';
+import 'package:finance/UI/Componenets/form/input-group-form.dart';
+import 'package:finance/UI/Componenets/form/range-form.dart';
 import 'package:finance/UI/Componenets/form/select-form.dart';
 import 'package:finance/UI/Componenets/form/switch-form.dart';
 import 'package:flutter/material.dart';
-
 import 'form/color-form.dart';
 import 'form/radioButton-form.dart';
 
@@ -95,8 +99,85 @@ class _MyFormPageState extends State<MyFormPage> {
           const SizedBox(height: 15),
           CustomSwitch(label: 'default',),
           const SizedBox(height: 30),
-          RadioButton(items: [RadioItem(text: 'item 1'  , checked: true) , RadioItem(text: 'item 2' , disabled: true)],)
+          RadioButton(items: [RadioItem(text: 'item 1'  , ) , RadioItem(text: 'item 2' , disabled: true)],onChanged: (d){}),
+          const SizedBox(height: 30),
+          CustomRangeSlider(
+            label: "Example range",
+            min: 0,
+            max: 100,
+            step: 5,
+            onChanged: (value) {
+              print("Selected value: $value");
+            },
+          ),
+          const SizedBox(height: 30),
 
+
+
+
+          //input group
+          InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',),],icons: [Txt('@' , fontSize:14 ,)],isShowStart: true,),
+          const SizedBox(height: 30),
+          InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Txt('@' , fontSize:14 ,)], size: InputSize.small),
+          const SizedBox(height: 30),
+          InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),], icons: [ Txt('@' , fontSize:14 ,)] ,size: InputSize.large),
+          const SizedBox(height: 30),
+          InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Center(
+              child: RadioButton(items: [RadioItem(text: '')],))]),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true ,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [CheckBoxForm()]),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',), InputForm(hintText: 'نام خانوادگی',), InputForm(hintText: 'سن',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [ Txt('@' , fontSize:14 ,)]),
+          const SizedBox(height: 30),
+          InputGroup(isShowEnd: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)))],icons: [Txt('@' , fontSize:14 ,) , Txt('0.00' , fontSize:14 ,)]),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(btnType.primary , content: Center(child: Txt('button')),color: itemColor39,borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(dropDownTitle: 'DropDown',itemsDropDown: [
+                DropdownItem(text: "Action"),
+                DropdownItem(text: "Another action"),
+                DropdownItem(text: "Something else here"),
+              ],spreadLinkList:['spread link'], colorBox: Colors.transparent,dropDownTitelColor: Colors.grey,iconColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
+            DropdownItem(text: "Action"),
+            DropdownItem(text: "Another action"),
+            DropdownItem(text: "Something else here"),
+          ],spreadLinkList:['spread link'], colorBox: Colors.transparent,dropDownTitelColor: Colors.grey,iconColor: Colors.grey , ),],),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true , isSelectBox: true, selectList: [
+            CustomSelect(hintText: 'choose...',
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
+              onChanged: (value) {
+                setState(() {
+
+                });
+              },
+              items: const [
+            DropdownMenuItem(value: '1', child: Text('One')),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three')),
+
+          ],)],icons: [Btn(btnType.primary , content: Center(child: Txt('button')),color: itemColor39,borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          const SizedBox(height: 30),
+          InputGroup(isShowStart: true,isFileBox: true,fileList: [FileForm(borderRadius: BorderRadius.all(Radius.circular(0)),)],icons: [Txt('Upload' , fontSize:14 ,)],),
+          const SizedBox(height: 30),
+          InputGroup(
+            inputs: [
+              InputForm(
+                hintText: 'Username',
+                borderColor: Colors.grey,
+                borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight:Radius.circular(5) , ),
+              ),
+              Txt('@', fontSize: 16),
+              InputForm(
+                hintText: 'Server',
+                borderColor: Colors.grey,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(5),bottomLeft:Radius.circular(5) , ),
+              ),
+            ],
+          )
+          //end input group
         ],
       ),
     );

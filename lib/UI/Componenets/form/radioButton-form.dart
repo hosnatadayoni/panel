@@ -9,8 +9,13 @@ class RadioButton extends StatefulWidget {
    List<RadioItem>? items;
    Color? activeColor;
    directionRadioButton? layoutDirection;
+   Function(String?)? onChanged;
 
-  RadioButton({this.items, this.activeColor = Colors.blue ,this.layoutDirection = directionRadioButton.vertical });
+  RadioButton({this.items,
+    this.activeColor = Colors.blue ,
+    this.layoutDirection = directionRadioButton.vertical ,
+    this.onChanged,
+  });
 
   @override
   _RadioButtonState createState() => _RadioButtonState();
@@ -42,7 +47,7 @@ class _RadioButtonState extends State<RadioButton> {
       children: [
         for (var item in widget.items!) ...[
           radioBox(item),
-          SizedBox(width: 10),
+          // SizedBox(width: 10),
         ],
       ],
     );
@@ -51,29 +56,38 @@ class _RadioButtonState extends State<RadioButton> {
     return  Opacity(
       opacity: item.disabled! ? 0.5 : 1.0,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Radio<String>(
-            value: item.text!,
-            groupValue: selectedValue,
-            onChanged: item.disabled!
-                ? null
-                : (value) {
-              print('Selected value: $value');
-              setState(() {
-                selectedValue = value;
-              });
-            },
-            fillColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.selected)) {
-                  return widget.activeColor!;
-                }
-                return Colors.grey;
+          Container(
+            width: item.width,
+            height: item.height,
+            child: Radio<String>(
+              value: item.text!= null ? item.text!:'',
+              groupValue: selectedValue,
+              onChanged: item.disabled!
+                  ? null
+                  : (value) {
+                print('Selected value: $value');
+                setState(() {
+                  selectedValue = value;
+                  if(widget.onChanged != null){
+                    this.widget.onChanged!(value);
+                  }
+                });
               },
+              fillColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.selected)) {
+                    return widget.activeColor!;
+                  }
+                  return Colors.grey;
+                },
+              ),
             ),
           ),
-          SizedBox(width: 5),
-          Txt(item.text! , color: item.lableColor, fontSize: 16, fontWeight: FontWeight.w400,),
+          if(item.text != '')SizedBox(width: 10),
+          if(item.text != '')
+             Txt(item.text! , color: item.lableColor, fontSize: 16, fontWeight: FontWeight.w400,),
         ],
       ),
     );
@@ -86,11 +100,15 @@ class RadioItem {
    bool? disabled;
    bool? checked;
    Color? lableColor;
+   double? width;
+   double? height;
 
   RadioItem({
-    required this.text,
+    this.text,
     this.disabled = false,
     this.checked = false,
-    this.lableColor = blackColor
+    this.lableColor = blackColor,
+    this.width = 16,
+    this.height = 16,
   });
 }

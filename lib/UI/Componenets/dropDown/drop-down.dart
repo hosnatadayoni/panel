@@ -22,6 +22,7 @@ class Dropdown extends StatefulWidget {
   List<DropdownItem>? itemsDropDown;
   String dropDownTitle;
   Color? dropDownTitelColor;
+  Color? dropDownTitelHoverColor;
   Color? colorBox;
   Color? colorHoverBox;
   Color? iconColor;
@@ -50,6 +51,7 @@ class Dropdown extends StatefulWidget {
      this.itemsDropDown,
     required this.dropDownTitle,
     this.dropDownTitelColor = whiteColor,
+    this.dropDownTitelHoverColor = blackColor,
     this.colorBox = color31,
     this.colorHoverBox = color33,
     this.iconColor = whiteColor,
@@ -186,59 +188,69 @@ class _DropdownState extends State<Dropdown> {
 
     return Obx(() {
       return this.widget.isSplitButton!
-          ? Container(
-        decoration: BoxDecoration(),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MouseRegion(
-              onEnter: (_) {
-                isHoverSplit.value = true;
-              },
-              onExit: (_) {
-                isHoverSplit.value = false;
-              },
-              child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Container(
-                padding: EdgeInsets.only(
-                    left: 9, right: 9, top: 11, bottom: 11),
-                decoration: BoxDecoration(
-                  color: isHoverSplit.value
-                      ? this.widget.colorHoverBox
-                      : this.widget.colorBox,
-                  borderRadius:widget.borderRadius != null ? widget.borderRadius :  BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      bottomRight: Radius.circular(15)
+          ? Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MouseRegion(
+                onEnter: (_) {
+                  isHoverSplit.value = true;
+                },
+                onExit: (_) {
+                  isHoverSplit.value = false;
+                },
+                child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Center(
+                  child: Container(
+                    height: 48,
+                    padding: EdgeInsets.only(
+                        left: 9, right: 9, top: 11, bottom: 11),
+                    decoration: BoxDecoration(
+                      color: isHoverSplit.value
+                          ? this.widget.colorHoverBox
+                          : this.widget.colorBox,
+                      borderRadius:widget.borderRadius != null ? widget.borderRadius :  BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomRight: Radius.circular(5)
+                      ),
+                        border: Border.all(width: 1, color: widget.borderColor!)
+                    ),
+                    child: Icon(getIconDirection(),
+                        color: this.widget.iconColor, size:getIconSize()),
+                  ),
+                ), buttonKey, popupMenuKey),
+              ),
+              MouseRegion(
+                onEnter: (_) {
+                  isHoverMain.value = true;
+                },
+                onExit: (_) {
+                  isHoverMain.value = false;
+                },
+                child: Center(
+                  child: Container(
+                    height: 48,
+                    padding: EdgeInsets.only(
+                        left: 12, right: 12, top: 6, bottom: 6),
+                    decoration: BoxDecoration(
+                      // borderRadius: BorderRadius.only(
+                      //     topLeft: Radius.circular(15),
+                      //     bottomLeft: Radius.circular(15)),
+                      borderRadius:widget.borderRadius != null ?  widget.borderRadius:
+                      BorderRadius.all(Radius.circular(0)),
+                      border: Border.all(width: 1, color: widget.borderColor!),
+                      color: isHoverMain.value
+                          ? this.widget.colorHoverBox
+                          : this.widget.colorBox,
+                    ),
+                    child: Center(
+                      child: Txt(this.widget.dropDownTitle,
+                          color: this.widget.dropDownTitelColor , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                    ),
                   ),
                 ),
-                child: Icon(getIconDirection(),
-                    color: this.widget.iconColor, size:getIconSize()),
-              ), buttonKey, popupMenuKey),
-            ),
-            MouseRegion(
-              onEnter: (_) {
-                isHoverMain.value = true;
-              },
-              onExit: (_) {
-                isHoverMain.value = false;
-              },
-              child: Container(
-                padding: EdgeInsets.only(
-                    left: 12, right: 12, top: 6, bottom: 6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      bottomLeft: Radius.circular(15)),
-                  color: isHoverMain.value
-                      ? this.widget.colorHoverBox
-                      : this.widget.colorBox,
-                ),
-                child: Txt(this.widget.dropDownTitle,
-                    color: this.widget.dropDownTitelColor , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
               ),
-            ),
-          ],
-        ),
-      )
+            ],
+          )
           : Container(
             key: buttonKey,
             child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex,  MouseRegion(
@@ -254,7 +266,8 @@ class _DropdownState extends State<Dropdown> {
                 decoration: BoxDecoration(
                   color:
                   isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
-                  borderRadius:widget.borderRadius != null ?  widget.borderRadius: BorderRadius.all(Radius.circular(15)),
+                  borderRadius:widget.borderRadius != null ?  widget.borderRadius:
+                  BorderRadius.all(Radius.circular(5)),
                   border: Border.all(width: 1, color: widget.borderColor!)
                 ),
                 child: this.widget.direction == directions.start?Row(
@@ -274,8 +287,10 @@ class _DropdownState extends State<Dropdown> {
                   children: [
                     Icon(getIconDirection(),
                         color: this.widget.iconColor, size: getIconSize()),
-                    Txt(this.widget.dropDownTitle,
-                        color: this.widget.dropDownTitelColor , fontSize: getFontSize()),
+                    Obx((){
+                      return Txt(this.widget.dropDownTitle,
+                          color:isHover.value ?widget.dropDownTitelHoverColor :this.widget.dropDownTitelColor  , fontSize: getFontSize());
+                    })
                   ],
                 ),
               )
@@ -391,9 +406,10 @@ class _DropdownState extends State<Dropdown> {
       color: this.widget.ColorDropDownBox,
       itemBuilder: (BuildContext context) => widget.hasForm == false
           ? [
-        ...widget.itemsDropDown!.map((item) {
-          if (item.isHeader!) {
-            return PopupMenuItem<String>(
+        if(widget.itemsDropDown != null)
+          ...widget.itemsDropDown!.map((item) {
+            if (item.isHeader!) {
+              return PopupMenuItem<String>(
               padding: EdgeInsets.zero,
               enabled: false,
               child: Container(
