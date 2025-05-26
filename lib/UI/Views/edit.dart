@@ -63,7 +63,7 @@ class _EditPageState extends State<EditPage> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();
                           } else if (snapshot.hasError) {
-                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}sssssssssss');
                           } else {
                             return snapshot.data ?? Container();
                           }
@@ -114,7 +114,8 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
+                                print('_EditPageState.build>>>>${ViewController.request}');
+                                      DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
                                 if (ViewController.isClickedBtn.value == false) {
                                   MainController.goToTablePage();
                                 }

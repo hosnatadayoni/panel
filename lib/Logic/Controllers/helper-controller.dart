@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/UI/Componenets/page-custom/orderItem/order-item-create.dart';
@@ -91,7 +92,8 @@ class HelperController extends GetxController {
       await Get.to(() => OrderEdit(data: data));
     }
     else{
-
+      print('HelperController.editPageFunction>>${data}');
+      ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }
   }
