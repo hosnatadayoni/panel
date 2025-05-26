@@ -337,7 +337,7 @@ class DashboardPage extends StatelessWidget {
                           SizedBox(height: 30),
                           Btn(btnType.primary,color: Colors.green , content: Txt('d-md-block'), hoverColor: Colors.greenAccent,responsive: true,),
                           SizedBox(height: 30),
-                          Btn(btnType.primary,color: Colors.green , content: Txt('col-6 mx-auto'), hoverColor: Colors.greenAccent, responsive: true,gridColumns: 6, centerHorizontal: true, ),
+                          Btn(btnType.primary,color: Colors.green , content: Txt('col-6 mx-auto'), hoverColor: Colors.greenAccent, responsive: true,isCenter: true,),
 
 
                           SizedBox(height: 30),

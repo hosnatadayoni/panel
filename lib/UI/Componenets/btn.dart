@@ -284,8 +284,7 @@ class Btn extends StatefulWidget {
    bool responsive;
    double? responsiveBreakpoint;
    bool isToggle;
-   int? gridColumns;
-   bool centerHorizontal;
+   bool isCenter;
    BorderRadius? borderRadius;
 
   Btn(
@@ -303,8 +302,7 @@ class Btn extends StatefulWidget {
         this.responsive = false,
         this.responsiveBreakpoint = 768,
         this.isToggle = false,
-        this.gridColumns,
-        this.centerHorizontal = false,
+        this.isCenter = false,
         this.borderRadius
       });
 
@@ -392,14 +390,18 @@ class _BtnState extends State<Btn> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     double? calculatedWidth;
-    bool isValidGridColumns = widget.gridColumns != null && widget.gridColumns! > 0 && widget.gridColumns! <= 12;
+    // bool isValidGridColumns = widget.gridColumns != null && widget.gridColumns! > 0 && widget.gridColumns! <= 12;
+    //
+    // if (isValidGridColumns) {
+    //   final screenWidth = size.width;
+    //   final columnWidth = screenWidth / 12 * widget.gridColumns!;
+    //   calculatedWidth = columnWidth;
+    // }
 
-    if (isValidGridColumns) {
-      final screenWidth = size.width;
-      final columnWidth = screenWidth / 12 * widget.gridColumns!;
-      calculatedWidth = columnWidth;
-    }
-
+    return widget.isCenter ? Center(child: btnWidget(),):btnWidget();
+  }
+  Widget btnWidget(){
+    var size = MediaQuery.of(context).size;
     return MouseRegion(
       onEnter: (_) => setState(() => widget.disabled == false ? _isHovered = true : _isHovered = false),
       onExit: (_) => setState(() => _isHovered = false),
@@ -428,17 +430,11 @@ class _BtnState extends State<Btn> {
               borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.circular(5),
             ),
             padding: getButtonPadding(),
-            width: widget.isBlock
-                ? size.width
-                : widget.responsive && size.width <= widget.responsiveBreakpoint!
-                ? size.width
-                : !isValidGridColumns
-                ? widget.width
-                : calculatedWidth,
-            margin: widget.centerHorizontal
-                ? EdgeInsets.symmetric(horizontal: (size.width - (calculatedWidth ?? widget.width ?? size.width)) / 2)
-                : null,
-            child:widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint! || widget.centerHorizontal ?  Center(child: widget.content!,):widget.content!,
+            width: widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint!
+                ? size.width : widget.isCenter ? size.width * 0.5
+                : widget.width,
+            child:widget.isCenter || widget.responsive && size.width <= widget.responsiveBreakpoint! || widget.isBlock
+            ?Center(child: widget.content!,) : widget.content!,
           ),
         ),
       ),

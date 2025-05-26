@@ -56,7 +56,6 @@ class _MyFormPageState extends State<MyFormPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Processing Data')),
               );
-              // در اینجا می‌توانید منطق ارسال فرم را پیاده‌سازی کنید
               print('Email: ${_emailController.text}');
               print('Password: ${_passwordController.text}');
             }
