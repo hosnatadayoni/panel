@@ -595,7 +595,7 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Column(children: children);
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children: children);
   }
 
   static Future<Widget> generateDataColumn(int indexColumn, int indexRow,
