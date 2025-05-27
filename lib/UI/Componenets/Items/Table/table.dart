@@ -82,7 +82,7 @@ class _TableBoxState extends State<TableBox> {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return CircularProgressIndicator();
                                   } else if (snapshot.hasError) {
-                                    return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                                    return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                                   } else {
                                     return snapshot.data ?? Container();
                                   }

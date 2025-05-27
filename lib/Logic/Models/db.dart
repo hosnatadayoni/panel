@@ -55,19 +55,19 @@ class DB {
     var type;
     Map<String, dynamic> newData = <String, dynamic>{};
 
-      print('data that is>>>${d}');
+    print('data that is>>>${d}');
 
-      Map<String, dynamic> e = <String, dynamic>{};
-      for (var key in d.keys) {
-        type = MainController.getTypeOfField(this.tableName!, key);
-        print('d.data[key]>>${d[key]}>>>${type}');
-        if (type != null) {
-          e['id'] = d['id'];
-          e[key] = General.withFormat(type, d[key]);
-        }
+    Map<String, dynamic> e = <String, dynamic>{};
+    for (var key in d.keys) {
+      type = MainController.getTypeOfField(this.tableName!, key);
+      print('d.data[key]>>${d[key]}>>>${type}');
+      if (type != null) {
+        e['id'] = d['id'];
+        e[key] = General.withFormat(type, d[key]);
       }
-      newData=(e);
-      print('new>>>${newData}');
+    }
+    newData = (e);
+    print('new>>>${newData}');
 
     return newData;
   }
@@ -77,11 +77,12 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.whereList[counter] = l;
-    print('w length>>${counter}>>>>>${w.length}>>>list>>>${this.whereList[counter]!.value}');
+    print(
+        'w length>>${counter}>>>>>${w.length}>>>list>>>${this.whereList[counter]!.value}');
 
     return this;
   }
-  
+
   orWhere(String? fieldName, String? oprator, var value) {
     counter++;
     Where l = Where(fieldName, oprator, value);
@@ -107,7 +108,7 @@ class DB {
     return this;
   }
 
-   getRandomItems(List list, int count) {
+  getRandomItems(List list, int count) {
     if (count <= 0 || list.isEmpty) return [];
     if (count >= list.length) return List.from(list)..shuffle();
     final shuffled = List.from(list)..shuffle();
@@ -115,9 +116,9 @@ class DB {
   }
 
   List<Map<String, dynamic>> searchList(
-      List<Map<String, dynamic>> mainList,
-      Map<int, Where> searchPattern,
-      ) {
+    List<Map<String, dynamic>> mainList,
+    Map<int, Where> searchPattern,
+  ) {
     print('DB.searchList mainList>>${mainList}');
     // print('DB.searchList searchPattern>>${searchPattern}');
     return mainList.where((item) {
@@ -125,17 +126,21 @@ class DB {
       return searchPattern.entries.every((entry) {
         final key = entry.value.fieldName;
         final value = entry.value.value;
-        print('DB.searchList searchPattern>>${key}>>>${value}>>item.key>>>${item[key]}');
+        print(
+            'DB.searchList searchPattern>>${key}>>>${value}>>item.key>>>${item[key]}');
         // if(item[key])
-        return item.containsKey(key) &&( item[key] is List?item[key].contains(value): item[key] == value) ;
+        return item.containsKey(key) &&
+            (item[key] is List
+                ? item[key].contains(value)
+                : item[key] == value);
       });
     }).toList();
   }
 
   Future<List<Map<String, dynamic>>> filterInBackground(
-      List<dynamic> mainList,
-      List<dynamic> searchPattern,
-      ) async {
+    List<dynamic> mainList,
+    List<dynamic> searchPattern,
+  ) async {
     return await compute(_filterListIsolate, {
       'mainList': mainList,
       'searchPattern': searchPattern,
@@ -158,205 +163,217 @@ class DB {
   }
 
   getRecords() async {
-    List<Map<String,dynamic>> dataItems = [];
+    List<Map<String, dynamic>> dataItems = [];
     Box box;
     int index = MainController.SubMenuList.indexWhere(
         (element) => element['table-name'] == '${this.tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-      for(var i in box.values.toList())
-      print('data box is>>${this.tableName}>>>${i.data}');
-      List<Map<String,dynamic>> data = getTypeOfField(box.values.toList());
+      for (var i in box.values.toList())
+        print('data box is>>${this.tableName}>>>${i.data}');
+      List<Map<String, dynamic>> data = getTypeOfField(box.values.toList());
       print('data get record<>>>>${tableInfo['table-name']}>>${tableInfo}');
       print('this.list.length>>>>${this.orWhereList}');
       // if(tableInfo['type']=='multiSelect'){
       //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
       //
       //   }
-        // dataItems.add(value)
+      // dataItems.add(value)
       // }
       if (this.parentItem.length != 0) {
-        data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
+        data = data
+            .where((element) =>
+                element['parent_id'] == this.parentItem['parent_id'])
+            .toList();
       }
 
-      if (this.orWhereList.length != 0){
+      if (this.orWhereList.length != 0) {
         if (data.length != 0)
           for (var d in data) {
             if (this.orWhereList.length != 0) {
               for (int j = 1; j <= orWhereList.length; j++) {
-                print('this.list is>>>${orWhereList[j]!.value}>>>${d['${orWhereList[j]!.fieldName}']}');
+                print(
+                    'this.list is>>>${orWhereList[j]!.value}>>>${d['${orWhereList[j]!.fieldName}']}');
                 if (d['${orWhereList[j]!.fieldName}'] != null) {
-                  print('list my is>>>${d['${orWhereList[j]!.fieldName}'].runtimeType}>>>${orWhereList[j]!.value.runtimeType}>>>>>${orWhereList[j]!.value}>>>>${orWhereList[j]!.value!=null}>>>${orWhereList[j]!.value!=''}');
-                  if( orWhereList[j]!.value!=''){
+                  print(
+                      'list my is>>>${d['${orWhereList[j]!.fieldName}'].runtimeType}>>>${orWhereList[j]!.value.runtimeType}>>>>>${orWhereList[j]!.value}>>>>${orWhereList[j]!.value != null}>>>${orWhereList[j]!.value != ''}');
+                  if (orWhereList[j]!.value != '') {
                     if (orWhereList[j]!.oprator == '==') {
-                      if(d['${orWhereList[j]!.fieldName}'] is List<dynamic>){
-                        if(d['${orWhereList[j]!.fieldName}'].contains(orWhereList[j]!.value)){
+                      if (d['${orWhereList[j]!.fieldName}'] is List<dynamic>) {
+                        if (d['${orWhereList[j]!.fieldName}']
+                            .contains(orWhereList[j]!.value)) {
                           print('contains');
                           dataItems.add(d);
                           break;
                         }
                       }
-                      if (d['${orWhereList[j]!.fieldName}'] == orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] ==
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 1 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '>=') {
-                      if (d['${orWhereList[j]!.fieldName}'] >= orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] >=
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 3 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '<=') {
-                      if (d['${orWhereList[j]!.fieldName}'] <= orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] <=
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 4 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '!=') {
-                      if (d['${orWhereList[j]!.fieldName}'] != orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] !=
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 5 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '<') {
-                      if (d['${orWhereList[j]!.fieldName}'] < orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] <
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 5 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '>') {
-                      if (d['${orWhereList[j]!.fieldName}'] > orWhereList[j]!.value) {
+                      if (d['${orWhereList[j]!.fieldName}'] >
+                          orWhereList[j]!.value) {
                         dataItems.add(d);
                         print('dataItems 5 >>>${dataItems}');
                       }
                       break;
-                    }
-                    else if (orWhereList[j]!.oprator == null) {
+                    } else if (orWhereList[j]!.oprator == null) {
                       dataItems.add(d);
                       print('dataItems 6 >>>${dataItems}');
 
                       break;
                     }
-                  }
-                  else{
+                  } else {
                     dataItems.add(d);
                     print('dataItems 01 >>>${dataItems}');
                   }
                 }
               }
-            }
-            else {
+            } else {
               dataItems.add(d);
               print('dataItems 6 >>>${dataItems}');
             }
           }
-      }
-      else{
-        if (this.whereList.length != 0){
+      } else {
+        if (this.whereList.length != 0) {
           if (data.length != 0)
             for (var d in data) {
-              bool flag=true;
-                for (int j = 1; j <= whereList.length; j++) {
-                  if (d['${whereList[j]!.fieldName}'] != null) {
-                    if( whereList[j]!.value!=''){
-                      if (whereList[j]!.oprator == '==' || whereList[j]!.oprator == null) {
-                        if(d['${whereList[j]!.fieldName}'] is List){
-                          if (d['${whereList[j]!.fieldName}'].contains(whereList[j]!.value) && flag==true ) {
-                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
-                            flag=true;
-                          }
-                          else
-                            flag=false;
-                        }
-                        else{
-                          if (d['${whereList[j]!.fieldName}'] == whereList[j]!.value && flag==true ) {
-                            print('equal is>>${d['${whereList[j]!.fieldName}']}>>>${ whereList[j]!.value}');
-                            flag=true;
-                          }
-                          else
-                            flag=false;
-                        }
-
-                      } else if (whereList[j]!.oprator == '>=') {
-                        if (d['${whereList[j]!.fieldName}'] >= whereList[j]!.value&& flag==true ) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
+              bool flag = true;
+              for (int j = 1; j <= whereList.length; j++) {
+                if (d['${whereList[j]!.fieldName}'] != null) {
+                  if (whereList[j]!.value != '') {
+                    if (whereList[j]!.oprator == '==' ||
+                        whereList[j]!.oprator == null) {
+                      if (d['${whereList[j]!.fieldName}'] is List) {
+                        if (d['${whereList[j]!.fieldName}']
+                                .contains(whereList[j]!.value) &&
+                            flag == true) {
+                          print(
+                              'equal is>>${d['${whereList[j]!.fieldName}']}>>>${whereList[j]!.value}');
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (d['${whereList[j]!.fieldName}'] ==
+                                whereList[j]!.value &&
+                            flag == true) {
+                          print(
+                              'equal is>>${d['${whereList[j]!.fieldName}']}>>>${whereList[j]!.value}');
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-
-                      else if (whereList[j]!.oprator == '<=') {
-                        if (d['${whereList[j]!.fieldName}'] <= whereList[j]!.value && flag==true ) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      } else if (whereList[j]!.oprator == '!=') {
-                        if (d['${whereList[j]!.fieldName}'] != whereList[j]!.value && flag==true ) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      } else if (whereList[j]!.oprator == '<') {
-                        if (d['${whereList[j]!.fieldName}'] < whereList[j]!.value&& flag==true ) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      } else if (whereList[j]!.oprator == '>') {
-                        if (d['${whereList[j]!.fieldName}'] > whereList[j]!.value&& flag==true ) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      }
-                      else if (whereList[j]!.oprator == 'whereDate ==') {
-                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"==")==true && flag==true) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      }   else if (whereList[j]!.oprator == 'whereDate <=') {
-                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,"<=")==true && flag==true) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      }   else if (whereList[j]!.oprator == 'whereDate >=') {
-                        if (HelperController.filterDate(d['${whereList[j]!.fieldName}'],whereList[j]!.value,">=")==true && flag==true) {
-                          flag=true;
-                        }
-                        else
-                          flag=false;
-
-                      }
-
+                    } else if (whereList[j]!.oprator == '>=') {
+                      if (d['${whereList[j]!.fieldName}'] >=
+                              whereList[j]!.value &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == '<=') {
+                      if (d['${whereList[j]!.fieldName}'] <=
+                              whereList[j]!.value &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == '!=') {
+                      if (d['${whereList[j]!.fieldName}'] !=
+                              whereList[j]!.value &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == '<') {
+                      if (d['${whereList[j]!.fieldName}'] <
+                              whereList[j]!.value &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == '>') {
+                      if (d['${whereList[j]!.fieldName}'] >
+                              whereList[j]!.value &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == 'whereDate ==') {
+                      if (HelperController.filterDate(
+                                  d['${whereList[j]!.fieldName}'],
+                                  whereList[j]!.value,
+                                  "==") ==
+                              true &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == 'whereDate <=') {
+                      if (HelperController.filterDate(
+                                  d['${whereList[j]!.fieldName}'],
+                                  whereList[j]!.value,
+                                  "<=") ==
+                              true &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    } else if (whereList[j]!.oprator == 'whereDate >=') {
+                      if (HelperController.filterDate(
+                                  d['${whereList[j]!.fieldName}'],
+                                  whereList[j]!.value,
+                                  ">=") ==
+                              true &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
                     }
-                    else
-                      flag=false;
-
-                  }
-                  else
-                    flag=false;
-                }
-                if(flag==true){
+                  } else
+                    flag = false;
+                } else
+                  flag = false;
+              }
+              if (flag == true) {
                 dataItems.add(d);
                 print('flag is true>>>${flag}>>>${dataItems.length}');
-                }
-
               }
             }
-     else{
-       dataItems=data;
-     }
+        } else {
+          dataItems = data;
+        }
       }
 
       data = dataItems;
@@ -400,20 +417,24 @@ class DB {
     if (beforValidate['status'] == false) {
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
-      if (await RecordController.validate(this.tableName!, newData, ViewCustomController.getDataTable(this.tableName!)) ==
+      if (await RecordController.validate(this.tableName!, newData,
+              ViewCustomController.getDataTable(this.tableName!)) ==
           false) {
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          DataModel customData = await HelperController.beforeStore(newData)['data'];
+          DataModel customData =
+              await HelperController.beforeStore(newData)['data'];
           await box.add(customData);
-          var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
+          var afterData = await HelperController.afterStore(
+              this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
           // await MainController.multiSelectStore(this.tableName!, Id);
-          await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
+          await MainController.loadData(
+              tableData: ViewCustomController.getDataTable(this.tableName!));
           MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
           request = {};
@@ -428,22 +449,28 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
-    print('list is>>>${records.first['id']}');
+
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     print('box Data>>>${box.values.toList()}');
+    print('records Data>>>${records}');
+    print('request Data>>>${request.runtimeType}');
     allData = box.values.toList();
-    // for (DataModel da in dataController.allData.value)
-    //   print('all Data>>>${da.data}');
+
+    Map<String,dynamic>a={};
     for (var data in records) {
-      data.forEach((key, value) {
-        if (!request.containsKey(key)) {
-          request[key] = value;
+      a=data;
+      print('dataaaaaaaaaaaaaaa>>${a}');
+      print('dataaaaaaaaaaaaaaa>>${data}>>>${request.keys}');
+      a.forEach((key, value) {
+        if (request.containsKey(key)) {
+          a[key] = request[key];
         }
       });
+
       final record = DataModel(
         id: data['id'],
-        data: request,
+        data: a,
       );
       var beforeValidate =
           await HelperController.beforeUpdateValidation(record);
@@ -470,7 +497,8 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-            await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
+            await MainController.loadData(
+                tableData: ViewCustomController.getDataTable(this.tableName!));
             MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
@@ -492,7 +520,8 @@ class DB {
     print('DB.deleteRecord>>>${relations['relations']}');
 
     for (var data in records) {
-      var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['id']);
+      var tableDataIndex =
+          box.values.toList().indexWhere((element) => element.id == data['id']);
       DataModel item = box.values.toList()[tableDataIndex];
       var index =
           box.values.toList().indexWhere((element) => element.id == data['id']);
@@ -500,9 +529,11 @@ class DB {
       if (before['status'] == false) {
         showSnackbar(snackTypes.error, before['message']);
       } else {
-        if(relations['relations'].length!=0){
-          for(var relation in relations['relations']){
-            DB(relation['table-name']).where('parent_id', '==', data['id']).deleteRecord();
+        if (relations['relations'].length != 0) {
+          for (var relation in relations['relations']) {
+            DB(relation['table-name'])
+                .where('parent_id', '==', data['id'])
+                .deleteRecord();
           }
         }
         box.deleteAt(index);

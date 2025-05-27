@@ -1099,12 +1099,12 @@ class MainController extends GetxController {
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
-        box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+
         MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
         print('table data>>${MainController.tableData.value}');
       } else {
         tableInfo = tableData;
-        box = await Hive.openBox<DataModel>('${tableData['table-name']}');
+
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else
@@ -1114,7 +1114,7 @@ class MainController extends GetxController {
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
-        box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+
       }
     }
     if (tableData == null) {

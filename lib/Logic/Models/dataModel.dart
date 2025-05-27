@@ -45,7 +45,7 @@ class DataModel {
   String? id;
 
   @HiveField(1)
-  Map<String , dynamic> data;
+  Map<dynamic , dynamic> data;
 
 
   DataModel({this.id , required this.data});

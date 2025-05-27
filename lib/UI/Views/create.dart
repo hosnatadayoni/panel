@@ -207,7 +207,7 @@ class _CreatePageState extends State<CreatePage> {
                                   return CircularProgressIndicator();
                                 } else if (snapshot.hasError) {
                                   return Txt(
-                                      '${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                                      '${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                                 } else {
                                   return snapshot.data ?? Container();
                                 }

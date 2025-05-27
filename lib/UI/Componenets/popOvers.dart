@@ -227,12 +227,7 @@ class _PopOverWidgetState extends State<PopOverWidget> {
     else{
       button = box(isBtnHover);
     }
-    if (widget.disabled) {
-        return TooltipWidget(btn: box(isBtnHover),
-          content:Content() ,
-          direction: _convertDirection(_getPopoverDirection()),
-        );
-    }
+
     return InkWell(
       onTap: () => _showPopover(context),
       child: MouseRegion(
