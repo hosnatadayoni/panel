@@ -53,4 +53,20 @@ class RecordController extends GetxController {
     await MainController.loadData();
     MainController.renderPagination();
   }
+  static syncFunction(var status){
+    Map<String,dynamic>d={};
+    if(status==true)
+      d={
+      "sync":'true',
+        "server error":"",
+      };
+    else{
+      d={
+        "sync":'false',
+        "server error":"Dont sync this record!",
+      };
+
+    }
+    return d;
+  }
 }

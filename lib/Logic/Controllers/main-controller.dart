@@ -939,12 +939,36 @@ class MainController extends GetxController {
     //   jsonFileString = await File(jsonFile).readAsString();
     // }
     SubMenuList = json.decode(jsonFileString);
+
     // await createMultiSelectTable(String tableData);
     for (var name in tableNames()) {
+      addsyncField('${name}');
       createMultiSelectTable('${name}');
       addParentForRelations('${name}');
     }
 
+  }
+
+  static addsyncField(String tableName){
+    var index = SubMenuList.indexWhere((element) => element['table-name'] == tableName);
+    var items = SubMenuList[index];
+    items['columns'].add({
+      'name': 'sync',
+      'title': 'sync',
+      'type': 'string',
+      'is-show-table': true,
+      'is-show-edit': false,
+      'is-show-store': false,
+    });
+    items['columns'].add({
+      'name': 'server error',
+      'title': 'server error',
+      'type': 'string',
+      'is-show-table': true,
+      'is-show-edit': false,
+      'is-show-store': false,
+    });
+    print('MainController.addsyncField>>>${items}');
   }
 
   static List<dynamic> tableNames() {

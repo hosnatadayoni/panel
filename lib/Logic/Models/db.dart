@@ -389,8 +389,9 @@ class DB {
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
         } else {
-          DataModel customData =
-              await HelperController.beforeStore(newData)['data'];
+          DataModel customData = await HelperController.beforeStore(newData)['data'];
+          print('customData>>>${customData.data}');
+          customData.data.addAll(RecordController.syncFunction(false));
           await box.add(customData);
           var afterData = await HelperController.afterStore(
               this.tableName!, newRequest, customData);
@@ -398,8 +399,7 @@ class DB {
             showSnackbar(snackTypes.error, afterData['message']);
           }
           // await MainController.multiSelectStore(this.tableName!, Id);
-          await MainController.loadData(
-              tableData: ViewCustomController.getDataTable(this.tableName!));
+          await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
           request = {};
@@ -449,6 +449,7 @@ class DB {
             var allDataIndex =
                 allData.indexWhere((element) => element.id == data['id']);
             allData[allDataIndex] = customUpdate;
+            customUpdate.data.addAll(RecordController.syncFunction(true));
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterUpdate(
