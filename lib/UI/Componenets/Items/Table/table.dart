@@ -99,7 +99,7 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i]};
-                                      HelperController.editPageFunction(MainController.tableData.value[i]);
+                                        HelperController.editPageFunction(MainController.tableData.value[i]);
 
                                       // Get.to(() =>
                                       //     EditPage(data: MainController.tableData.value[i], index: i,));
@@ -178,9 +178,7 @@ class _TableBoxState extends State<TableBox> {
                                       InkWell(
                                         onTap: () async {
                                           var orders=await DB('category_product_products').getRecords();
-                                          print('orders take>>>${MainController.tableData.value[i]['id'] }');
                                           var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
-                                          print('items take>>>${items}');
                                           print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
                                           MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );

@@ -88,7 +88,6 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               ViewController.isClickedEditBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
-                              print('page>>>${MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']}');
                               ViewController.request={};
                               if(MainController.SubMenuList[MainController.selectedSubItem.value]['view']=='custom'){
                                 HelperController.createPageFunction();

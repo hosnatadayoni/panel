@@ -16,7 +16,6 @@ import 'main-controller.dart';
 class HelperController extends GetxController {
   //store
   static beforeStore(DataModel newData) {
-    print('new data5>>${newData.data}');
     return AppController.responceHelper(newData, true);
   }
 
@@ -26,16 +25,11 @@ class HelperController extends GetxController {
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
     if (tableName == 'order') {
-      print(' OrderItem.orderItemsList>>>${OrderItem.orderItemsList.length}');
-      print(' customData.id>>>${customData.id}');
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
         //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
         // }
         for (var list in OrderItem.orderItemsList.values) {
-          print('list.values>>>${list.values}');
-          print('list.values1>>>${list}');
-          print('list.values2>>>${list.values.first}');
           await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
         }
       }
@@ -92,7 +86,6 @@ class HelperController extends GetxController {
       await Get.to(() => OrderEdit(data: data));
     }
     else{
-      print('HelperController.editPageFunction>>${data}');
       ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }

@@ -28,7 +28,6 @@ late Future<Widget> _future;
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
-    print('MainController.tableData.value >>>${MainController.tableInfo['filters']}');
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -66,7 +65,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
 
-                      print('request>>${ViewController.request}');
                       List<dynamic>w=MainController.tableInfo['filters'];
                       String opration='==';
                       if(ViewController.request.length!=0){
@@ -75,7 +73,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                         var a= DB('${MainController.tableInfo['table-name']}');
                       for(var filter in ViewController.request.keys){
                         var indexFilter=w.indexWhere((element) => element['column']==filter);
-                        print('opration >>${w[indexFilter]}');
                         if(w[indexFilter]['oprator']!=null){
 
                             opration=w[indexFilter]['oprator'];
@@ -90,8 +87,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                       }
                       MainController.tableData.value=d2;
 
-                      print('filter btn >>>}>>${MainController.tableInfo['table-name']}');
-                      print('filter bttn >>>${d2.length}>>${MainController.tableInfo['table-name']}');
                     }},
                     child: Center(child: Txt('اعمال', textAlign: TextAlign.center)),
                   ),

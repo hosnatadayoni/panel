@@ -29,7 +29,6 @@ class _DateBoxState extends State<DateBox> {
       errorMessage = inputRequired['message'];
     }
     return Obx((){
-      print('${widget.isSeletedDate!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

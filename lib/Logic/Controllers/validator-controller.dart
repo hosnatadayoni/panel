@@ -22,7 +22,6 @@ class ValidatorController extends GetxController {
     if(column['is-show-store'] == true){
       if(column['type']=='multiSelect'){
         if(dataJson[name] != null){
-          print('dataJson[name] multi select 123>>>${dataJson[name]}');
           // List<dynamic> items = await ViewController.itemsList(column);
           // if(items.length != 0) {
           //   if (dataJson[name] != null) {
@@ -65,8 +64,6 @@ class ValidatorController extends GetxController {
 
       }
       if(dataJson[name] == '' || dataJson[name] == null){
-        print('data json is empty');
-        print('name data is empty>>>${name}');
         return checkInputRequiredValidator(indexColumn , dataJson , tableData: tableData);
       }
       else{
@@ -154,7 +151,6 @@ class ValidatorController extends GetxController {
     if(column['type'] == 'Number double' || column['type'] == 'Number int'){
       var number;
       if(dataJson[name] != null){
-        print('dataJson[name] >>>${dataJson[name]} ${dataJson[name].runtimeType}');
         // if(dataJson[name].runtimeType == 'double'){
         //   print('ffffffffff>>>${dataJson[name]} ${name}');
         //   number = dataJson[name];

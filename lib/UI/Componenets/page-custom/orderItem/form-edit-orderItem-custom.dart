@@ -87,7 +87,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
 
   void _removeContainer(String key) {
     setState(() {
-      print('index delete>>>>>>${key}');
       if(OrderItem.orderItemsList.containsKey(key)){
         OrderItem.orderItemsList.remove(key);
       }
@@ -98,9 +97,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
 
   @override
   Widget build(BuildContext context) {
-    print('getDataTable>>>${getDataTable['columns'].length}');
     for(int i=0;i<getDataTable['columns'].length;i++){
-      print('getDataTable 2>>>${getDataTable['columns'][i]['type'] == 'select'}');
     }
     var size = MediaQuery.of(context).size;
     return Column(
@@ -320,7 +317,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                               }).toList(),
                                                               initalValue: data['initValue'],
                                                               onChanged: (value) async {
-                                                                print('selected item ${value}');
                                                                 // OrderItem.orderItemsList[item['id']] ??= {};
                                                                 for (var item in data['items']) {
                                                                   if (item['title'] == value) {
@@ -630,7 +626,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                 // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
                                 OrderItem.orderItemsList2[key] ??= {};
                                 OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}'] = text;
-                                print('OrderItem.orderItemsList[key]>>${ OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}']}>>${ OrderItem.orderItemsList2[key]!['${getDataTable['columns'][j]['name']}']}');
                               },
                               column: getDataTable['columns'][j],
                             )
@@ -782,7 +777,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                               }).toList(),
                                               initalValue: data['initValue'],
                                               onChanged: (value) async {
-                                                print('selected item ${value}');
                                                 OrderItem.orderItemsList2[key] ??= {};
                                                 for (var item in data['items']) {
                                                   if (item['title'] == value) {
@@ -1026,7 +1020,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                 SizedBox(height: 20,),
                 InkWell(
                   onTap: (){
-                    print('key delete>>>${key}');
                     _removeContainer(key);
                   },
                   child: Container(

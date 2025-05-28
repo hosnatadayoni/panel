@@ -881,17 +881,14 @@ class DashboardPage extends StatelessWidget {
                           //Close button
                           //basic
                           CloseBtn(onClose: (){
-                            print('click close btn');
                           }),
                           SizedBox(height: 10),
                           //Disabled state
                           CloseBtn(onClose: (){
-                            print('click close btn');
                           } , isDisabled: true),
                           SizedBox(height: 10),
                           //Dark variant
                           CloseBtn(onClose: (){
-                            print('click close btn');
                           } , isDark: true,),
 
 

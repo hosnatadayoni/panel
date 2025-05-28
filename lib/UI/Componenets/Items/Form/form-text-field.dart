@@ -62,9 +62,7 @@ class _FormTextFieldState extends State<FormTextField> {
      if(widget.column != null){
        if(widget.column['validators'] != null){
          var inputRequired;
-         print('d345>>>${ViewController.request[widget.column['name']]}' '${widget.column['name']}');
          if(ViewController.request[widget.column['name']] == '' || ViewController.request[widget.column['name']] == null){
-           print('emptyyyyyyyyyyyyyyyy');
            inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
            if(inputRequired != null){
              if(inputRequired['message'] != null){
@@ -90,7 +88,6 @@ class _FormTextFieldState extends State<FormTextField> {
              if(number != null){
                if(minValidator != null || maxValidator != null){
                  if(number < minValidator['value']){
-                   print('value is < minvalidation');
                    setState(() {
                      _errorText = minValidator['message'];
                    });
@@ -117,7 +114,6 @@ class _FormTextFieldState extends State<FormTextField> {
                  //     _errorText = null;
                  //   });
                  // }
-                 print('_errorText number>>>${_errorText}');
                }
 
              }

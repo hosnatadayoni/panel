@@ -26,6 +26,7 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
+    print('_EditPageState.initState>>>${widget.data}');
     _future = ViewController.generateEditFormView(widget.data);
   }
 
@@ -115,7 +116,6 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                print('_EditPageState.build>>>>${ViewController.request}');
                                 DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
                                 if (ViewController.isClickedBtn.value == false) {
                                   MainController.goToTablePage();

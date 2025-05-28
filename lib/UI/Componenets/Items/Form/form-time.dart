@@ -45,7 +45,6 @@ class _TimePickerBoxState extends State<TimePickerBox> {
         ? (widget.column['format'] == 24 ? DateFormat.Hm() : DateFormat.jm())
         : DateFormat.Hm();
     return Obx(() {
-      print('${widget.isSeletedTime!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

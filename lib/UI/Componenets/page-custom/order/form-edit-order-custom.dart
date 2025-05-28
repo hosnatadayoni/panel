@@ -79,7 +79,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     },
                     child: InkWell(
                       onTap: (){
-                        print('widget.data!.data>>>${widget.data}');
                         MainController.isClickedItem.value = true;
                         Get.to(() => TablePage());
                       },
@@ -313,7 +312,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                                 }).toList(),
                                                 initalValue: data['initValue'],
                                                 onChanged: (value) async {
-                                                  print('selected item ${value}');
                                                   for (var item in data['items']) {
                                                     if (item['title'] == value) {
                                                       if (item['value'] == '-1') {

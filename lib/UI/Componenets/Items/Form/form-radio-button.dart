@@ -19,7 +19,6 @@ class RadioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('radioButtonItems>>>${radioButtonItems}');
     var inputRequired;
     String? errorMessage;
 
@@ -28,7 +27,6 @@ class RadioButton extends StatelessWidget {
       errorMessage = inputRequired['message'];
     }
     return Obx((){
-      print('${isSelectedItem!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

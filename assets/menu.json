@@ -665,7 +665,38 @@
     "countShowRow": 10,
     "relations": [],
     "columns": [
-
+      {
+        "name": "الگو بری",
+        "title": "الگو بری",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "0",
+            "value": "1",
+            "is_selected": true
+          },
+          {
+            "title": "10",
+            "value": "2",
+            "is_selected": false
+          },
+          {
+            "title": "20",
+            "value": "3",
+            "is_selected": false
+          }
+        ]
+      },
+      {
+        "name": "محصولات",
+        "title": "محصولات",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "products",
+        "items":["عنوان","قیمت"]
+      },
       {
         "name": "multiSelect",
         "title": "multiSelect",
@@ -678,11 +709,23 @@
           {"title": "test 2","value": "2"},
           {"title": "test 3","value": "3"},
           {"title": "test 4","value": "4"}
-        ],
-        "validators": [
-          {"type": "required" , "message": "وارد کردن این فیلد الزامی است"}
+        ]
+
+      } ,     {
+        "name": "multiSelect2",
+        "title": "multiSelect2",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {"title": "انتخاب نشده" , "value": "-1"},
+          {"title": "test 1","value": "1"},
+          {"title": "test 2","value": "2"},
+          {"title": "test 3","value": "3"},
+          {"title": "test 4","value": "4"}
         ]
       }
+
     ]
   }
 ]

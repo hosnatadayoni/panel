@@ -578,8 +578,6 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
                         // onTap: () => _carouselController.animateToPage(entry.key),
                         onTap: (){
                           _handleUserInteraction();
-                          print('_hasUserInteracted>>>${_hasUserInteracted}');
-                          print('_shouldAutoPlay>>>${_shouldAutoPlay}');
                           if (widget.isCrossFade) {
                             setState(() {
                               _currentIndex = entry.key % widget.items!.length;

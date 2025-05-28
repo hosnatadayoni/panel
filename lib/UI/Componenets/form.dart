@@ -56,8 +56,6 @@ class _MyFormPageState extends State<MyFormPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Processing Data')),
               );
-              print('Email: ${_emailController.text}');
-              print('Password: ${_passwordController.text}');
             }
           } ,),
           const SizedBox(height: 40),
@@ -106,7 +104,6 @@ class _MyFormPageState extends State<MyFormPage> {
             max: 100,
             step: 5,
             onChanged: (value) {
-              print("Selected value: $value");
             },
           ),
           const SizedBox(height: 30),

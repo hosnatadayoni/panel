@@ -34,19 +34,16 @@ class DB {
     var type;
     List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
     for (var d in data) {
-      print('data that is>>>${d.data}');
 
       Map<String, dynamic> e = <String, dynamic>{};
       for (var key in d.data.keys) {
         type = MainController.getTypeOfField(this.tableName!, key);
-        print('d.data[key]>>${d.data[key]}>>>${type}');
         if (type != null) {
           e['id'] = d.id;
           e[key] = General.withFormat(type, d.data[key]);
         }
       }
       newData.add(e);
-      print('new>>>${newData}');
     }
     return newData;
   }
@@ -55,19 +52,16 @@ class DB {
     var type;
     Map<String, dynamic> newData = <String, dynamic>{};
 
-    print('data that is>>>${d}');
 
     Map<String, dynamic> e = <String, dynamic>{};
     for (var key in d.keys) {
       type = MainController.getTypeOfField(this.tableName!, key);
-      print('d.data[key]>>${d[key]}>>>${type}');
       if (type != null) {
         e['id'] = d['id'];
         e[key] = General.withFormat(type, d[key]);
       }
     }
     newData = (e);
-    print('new>>>${newData}');
 
     return newData;
   }
@@ -77,8 +71,6 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.whereList[counter] = l;
-    print(
-        'w length>>${counter}>>>>>${w.length}>>>list>>>${this.whereList[counter]!.value}');
 
     return this;
   }
@@ -88,7 +80,6 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.orWhereList[counter] = l;
-    print('w length>>${counter}>>>>>${w.length}>>>list>>>${this.orWhereList}');
 
     return this;
   }
@@ -119,15 +110,11 @@ class DB {
     List<Map<String, dynamic>> mainList,
     Map<int, Where> searchPattern,
   ) {
-    print('DB.searchList mainList>>${mainList}');
-    // print('DB.searchList searchPattern>>${searchPattern}');
     return mainList.where((item) {
       // بررسی می‌کنیم که آیا تمام کلید-مقدارهای الگو در آیتم وجود دارد
       return searchPattern.entries.every((entry) {
         final key = entry.value.fieldName;
         final value = entry.value.value;
-        print(
-            'DB.searchList searchPattern>>${key}>>>${value}>>item.key>>>${item[key]}');
         // if(item[key])
         return item.containsKey(key) &&
             (item[key] is List
@@ -165,16 +152,13 @@ class DB {
   getRecords() async {
     List<Map<String, dynamic>> dataItems = [];
     Box box;
-    int index = MainController.SubMenuList.indexWhere(
-        (element) => element['table-name'] == '${this.tableName}');
+    List<Map<String, dynamic>> data=[];
+    int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       for (var i in box.values.toList())
-        print('data box is>>${this.tableName}>>>${i.data}');
-      List<Map<String, dynamic>> data = getTypeOfField(box.values.toList());
-      print('data get record<>>>>${tableInfo['table-name']}>>${tableInfo}');
-      print('this.list.length>>>>${this.orWhereList}');
+      data = getTypeOfField(box.values.toList());
       // if(tableInfo['type']=='multiSelect'){
       //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
       //
@@ -189,21 +173,17 @@ class DB {
       }
 
       if (this.orWhereList.length != 0) {
+
         if (data.length != 0)
           for (var d in data) {
             if (this.orWhereList.length != 0) {
               for (int j = 1; j <= orWhereList.length; j++) {
-                print(
-                    'this.list is>>>${orWhereList[j]!.value}>>>${d['${orWhereList[j]!.fieldName}']}');
                 if (d['${orWhereList[j]!.fieldName}'] != null) {
-                  print(
-                      'list my is>>>${d['${orWhereList[j]!.fieldName}'].runtimeType}>>>${orWhereList[j]!.value.runtimeType}>>>>>${orWhereList[j]!.value}>>>>${orWhereList[j]!.value != null}>>>${orWhereList[j]!.value != ''}');
-                  if (orWhereList[j]!.value != '') {
+                if (orWhereList[j]!.value != '') {
                     if (orWhereList[j]!.oprator == '==') {
                       if (d['${orWhereList[j]!.fieldName}'] is List<dynamic>) {
                         if (d['${orWhereList[j]!.fieldName}']
                             .contains(orWhereList[j]!.value)) {
-                          print('contains');
                           dataItems.add(d);
                           break;
                         }
@@ -211,59 +191,50 @@ class DB {
                       if (d['${orWhereList[j]!.fieldName}'] ==
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 1 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '>=') {
                       if (d['${orWhereList[j]!.fieldName}'] >=
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 3 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '<=') {
                       if (d['${orWhereList[j]!.fieldName}'] <=
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 4 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '!=') {
                       if (d['${orWhereList[j]!.fieldName}'] !=
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 5 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '<') {
                       if (d['${orWhereList[j]!.fieldName}'] <
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 5 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == '>') {
                       if (d['${orWhereList[j]!.fieldName}'] >
                           orWhereList[j]!.value) {
                         dataItems.add(d);
-                        print('dataItems 5 >>>${dataItems}');
                       }
                       break;
                     } else if (orWhereList[j]!.oprator == null) {
                       dataItems.add(d);
-                      print('dataItems 6 >>>${dataItems}');
 
                       break;
                     }
                   } else {
                     dataItems.add(d);
-                    print('dataItems 01 >>>${dataItems}');
                   }
                 }
               }
             } else {
               dataItems.add(d);
-              print('dataItems 6 >>>${dataItems}');
             }
           }
       } else {
@@ -280,8 +251,6 @@ class DB {
                         if (d['${whereList[j]!.fieldName}']
                                 .contains(whereList[j]!.value) &&
                             flag == true) {
-                          print(
-                              'equal is>>${d['${whereList[j]!.fieldName}']}>>>${whereList[j]!.value}');
                           flag = true;
                         } else
                           flag = false;
@@ -289,8 +258,7 @@ class DB {
                         if (d['${whereList[j]!.fieldName}'] ==
                                 whereList[j]!.value &&
                             flag == true) {
-                          print(
-                              'equal is>>${d['${whereList[j]!.fieldName}']}>>>${whereList[j]!.value}');
+
                           flag = true;
                         } else
                           flag = false;
@@ -368,7 +336,6 @@ class DB {
               }
               if (flag == true) {
                 dataItems.add(d);
-                print('flag is true>>>${flag}>>>${dataItems.length}');
               }
             }
         } else {
@@ -386,7 +353,6 @@ class DB {
       if (this.randomCount != null) {
         data = getRandomItems(data, this.randomCount!);
       }
-      print('data length sec>>>${data}');
       return data;
     }
   }
@@ -399,7 +365,6 @@ class DB {
     } else
       parentItem = <String, dynamic>{};
 
-    print('DB.parent>>>${parentItem}');
     return this;
   }
 
@@ -452,16 +417,11 @@ class DB {
 
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    print('box Data>>>${box.values.toList()}');
-    print('records Data>>>${records}');
-    print('request Data>>>${request.runtimeType}');
     allData = box.values.toList();
 
     Map<String,dynamic>a={};
     for (var data in records) {
       a=data;
-      print('dataaaaaaaaaaaaaaa>>${a}');
-      print('dataaaaaaaaaaaaaaa>>${data}>>>${request.keys}');
       a.forEach((key, value) {
         if (request.containsKey(key)) {
           a[key] = request[key];
@@ -488,7 +448,6 @@ class DB {
                 await HelperController.beforeUpdate(record)['data'];
             var allDataIndex =
                 allData.indexWhere((element) => element.id == data['id']);
-            print('allDataIndex>>>${allDataIndex}');
             allData[allDataIndex] = customUpdate;
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
@@ -501,8 +460,6 @@ class DB {
                 tableData: ViewCustomController.getDataTable(this.tableName!));
             MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
-            // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
-
             // Get.to(() => TablePage());
           }
         } else {
@@ -517,7 +474,6 @@ class DB {
     List<dynamic> records = await getRecords();
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     var relations = ViewCustomController.getDataTable(this.tableName!);
-    print('DB.deleteRecord>>>${relations['relations']}');
 
     for (var data in records) {
       var tableDataIndex =

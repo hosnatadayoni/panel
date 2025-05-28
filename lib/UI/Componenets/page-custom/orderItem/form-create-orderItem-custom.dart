@@ -251,7 +251,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Obx(() {
-                                  print('whdkd>>>>${OrderItem.orderItemsList[key]?['${getDataTable['columns'][j]['name']}']}');
                                   return Txt(
                                     '${getDataTable['columns'][j]['title']}',
                                     color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -342,7 +341,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                 ],
                                                 initalValue:  data['items'].first['id'],
                                                 onChanged: (value) async {
-                                                  print('selected item ${value}');
                                                   if(value != '-1'){
                                                     // selectedValue=value!;
                                                     OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = value;
@@ -351,7 +349,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                     OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}'] = '';
                                                   }
 
-                                                  print('request select>>${ OrderItem.orderItemsList[key]!['${getDataTable['columns'][j]['name']}']}');
                                                 },
                                                 hintText: '',
                                                 isSeleted: false.obs,
@@ -374,7 +371,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                                 ],
                                                 initalValue: data['items'].first['value'],
                                                 onChanged: (value) async {
-                                                  print('selected item ${value}');
                                                   for (var item in data['items']) {
                                                     if (item['title'] == value) {
                                                       if (item['value'] == '-1') {
@@ -633,7 +629,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                 SizedBox(height: 20,),
                 InkWell(
                   onTap: (){
-                    print('key delete>>>${key}');
                     _removeContainer(key);
                   },
                   child: Container(

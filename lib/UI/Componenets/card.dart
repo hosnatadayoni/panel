@@ -529,7 +529,6 @@ class _CustomCardState extends State<CustomCard> {
                     onEnter: (_){
                       setState(() {
                         isHovered = true;
-                        print('isHovered>>>${isHovered}');
                       });
                     },
                     onExit: (_){

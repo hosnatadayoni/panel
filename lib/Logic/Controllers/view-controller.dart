@@ -53,10 +53,8 @@ class ViewController extends GetxController {
     var fileBox;
 
     for (var j = 0; j < columns.length; j++) {
-      print('ViewController.generateStoreFormView>>${columns}');
       if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
-        print('column table>>>${column}');
         var type = column['type'];
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
@@ -85,7 +83,6 @@ class ViewController extends GetxController {
 
         if (type == 'select') {
           List<dynamic> items = await itemsList(column);
-          print('items 200>>>${items}');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
           children.add(SizedBox(
@@ -143,7 +140,6 @@ class ViewController extends GetxController {
                     ],
                     initalValue: '',
                     onChanged: (value) async {
-                      print('selected item ${value}');
 
                       if (value != 'true') {
                         ViewController.request[column['name']] = false;
@@ -159,7 +155,6 @@ class ViewController extends GetxController {
           );
         } else if (type == 'radiobutton') {
           List<dynamic> items = await itemsList(column);
-          print('items 200>>>${items}');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
           children.add(SizedBox(
@@ -202,7 +197,6 @@ class ViewController extends GetxController {
           children.add(dateBox);
         } else if (type == 'multiSelect') {
           List<dynamic> items = await itemsList(column);
-          print('items items>>${items}');
           if (items.length != 0) {
             multiSelectBox = await generateStoreFormSelectBox(
                 column, items, '', '', false.obs);
@@ -244,10 +238,8 @@ class ViewController extends GetxController {
     var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
-      print('ViewController.generateStoreFormView>>${columns}');
       if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
-        print('column table>>>${column}');
         var type = column['type'];
         String name = column['title'];
 
@@ -278,7 +270,6 @@ class ViewController extends GetxController {
         if (type == 'select') {
           var initValue;
           List<dynamic> items = await itemsList(column);
-          print('items 200>>>${items}');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
           children.add(SizedBox(
@@ -295,11 +286,8 @@ class ViewController extends GetxController {
           var initValue;
           List<dynamic> items = await itemsList(column);
           // initValue = await getInitValue(column,items);
-          radioButtonBox =
-              generateFormRadioButton(column, items, '', false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+          radioButtonBox = generateFormRadioButton(column, items, '', false.obs);
+          children.add(SizedBox(height: 20,));
           children.add(radioButtonBox);
         } else if (type == 'date') {
           dateBox = generateFormDateBox(column, Jalali.now(), false.obs);
@@ -308,7 +296,6 @@ class ViewController extends GetxController {
           ));
           children.add(dateBox);
         } else if (type == 'multiSelect') {
-          // print('items items>>${items}');
           // if(items.length != 0){
           multiSelectBox = await genarateStoreFormMuiltiSelectBox(
               column, RxString(''), <dynamic>[].obs, false.obs);
@@ -437,23 +424,23 @@ class ViewController extends GetxController {
         }
         else if (type == 'radiobutton') {
           List<dynamic> items = await itemsList(column);
-          if (items.length != 0) {
-            Map<String, dynamic> selectedRadioButton = items.firstWhere(
+          Map<String, dynamic> selectedRadioButton={};
+          if (items.length != 0 && dataModel.length!=0) {
+            selectedRadioButton = items.firstWhere(
                     (element) => element['value'] == dataModel['${name}'],
                 orElse: () => items.first);
             if (dataModel[name] != selectedRadioButton['value']) {
               dataModel[name] = '';
             }
-            radioButtonBox = generateFormRadioButton(
-                column,
-                items,
-                selectedRadioButton['value'],
-                dataModel[name] == '' ? false.obs : true.obs);
-            children.add(SizedBox(
-              height: 20,
-            ));
-            children.add(radioButtonBox);
+            radioButtonBox = generateFormRadioButton(column, items, selectedRadioButton.length!=0?selectedRadioButton['value']:"", dataModel[name] == '' ? false.obs : true.obs);
           }
+          else{
+            radioButtonBox = generateFormRadioButton(column, items, '', false.obs);
+          }
+            children.add(SizedBox(height: 20,));
+
+            children.add(radioButtonBox);
+
         }
         else if (type == 'date') {
           List<String>? dateParts;
@@ -485,36 +472,22 @@ class ViewController extends GetxController {
           children.add(dateBox);
         }
         else if (type == 'multiSelect') {
-          print('dataModel multi is>>${dataModel}');
-          List<dynamic> items =
-          await ViewController.itemsList(column, dataModel: dataModel);
-          print('items id>>>#${items}');
+          List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
+          // print('ViewController.generateEditFormView>>>${items}');
+          List<dynamic> multiSelectedItemList = [];
           if (items.length != 0) {
-            List<dynamic> multiSelectedItemList = [];
+
             if (column['sourceTable'] != null) {
               for (var selectedItem in items) {
-                print(
-                    'ViewController.generateEditFormView>>>${itemsShowSelectItem(
-                        selectedItem, column['items'])}');
-                multiSelectedItemList.add(
-                    itemsShowSelectItem(selectedItem, column['items']));
+                multiSelectedItemList.add(itemsShowSelectItem(selectedItem, column['items']));
               }
             } else {
               for (var selectedItem in items) {
                 multiSelectedItemList.add(selectedItem['title']);
               }
 
-              print(
-                  'ViewController.generateEditFormView2222>>>${multiSelectedItemList}');
             }
-
-            print(
-                'ViewController.generateEditFormView##>>${column}>>>${ multiSelectedItemList
-                    .length != 0
-                    ? RxString(multiSelectedItemList.join(','))
-                    : RxString('انتخاب')}>>>${items.length != 0
-                    ? RxList(items)
-                    : <dynamic>[].obs}>>>${false.obs} ');
+          }
             if(dataModel.isNotEmpty){
               multiSelectBox = await genarateEditFormMuiltiSelectBox(
                   column,
@@ -534,7 +507,7 @@ class ViewController extends GetxController {
               height: 20,
             ));
             children.add(multiSelectBox);
-          }
+
         } else if (type == 'color') {
           colorBox = generateFormColorBox(
               column,
@@ -559,9 +532,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          print(
-              'dataModel[name] file box>>>${dataModel[name]} ${dataModel[name]
-                  .runtimeType}');
+
           fileBox = generateFileBox(
               '${dataModel[name] != null ? dataModel[name] : []}',
               column,
@@ -578,17 +549,12 @@ class ViewController extends GetxController {
           int minute = TimeOfDay
               .now()
               .minute;
-          print('dataModel[name]>>>${dataModel['${name}']}');
           if (dataModel['${name}'] != null) {
             TimeParts = dataModel['${name}'].split(':');
-            print('TimeParts>>>${TimeParts}');
             hour = int.parse('${TimeParts![0]}');
             minute = int.parse('${TimeParts[1]}');
-            print('hour minute>>>${hour} ${minute}');
           }
-          print(
-              'TimeOfDay(hour: hour , minute: minute)>>>${TimeOfDay(
-                  hour: hour, minute: minute)}');
+
           timeBox = generateFormTimeBox(
               column,
               TimeOfDay(hour: hour, minute: minute),
@@ -624,11 +590,6 @@ class ViewController extends GetxController {
 
     var child;
     if (type == 'checkbox') {
-      print('type:${type}');
-      print('name:${name}');
-      print('index:${indexRow}');
-      // print('data:${dataModel.data['${name}']}');
-      print('-------------------');
       child = generateCheckBox(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'color') {
@@ -652,7 +613,6 @@ class ViewController extends GetxController {
       // child = await generateSelectBox(indexColumn , indexRow);
     }
     else if (type == 'multiSelect') {
-      print('ViewController.generateDataColumn>>${table}');
       child = FutureBuilder<Widget>(
         future: generateMultiSelectBox(indexColumn, indexRow, tableData: table),
         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
@@ -707,7 +667,6 @@ class ViewController extends GetxController {
       checkBoxTitle: '',
       onChange: (text) async {
 
-        print('ViewController.generateCheckBox ${text}>${MainController.tableInfo['table-name']}>>${MainController.tableData.value[indexRow]}>>>>${MainController.tableData.value[indexRow]['id']}>>>>>{${name}:${text}}');
         DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[indexRow]['id']}').updateRecord({'${name}':'${text}'});
         // dataModel = text;
         // final data = DataModel(
@@ -798,11 +757,9 @@ class ViewController extends GetxController {
     if (MainController.tableData.value[indexRow]['${name}'] != null) {
       List<dynamic> dataModel = [];
       dataModel = MainController.tableData.value[indexRow]['${name}'];
-      print('dataModel it is>>${dataModel}');
       titleMultiSelectList =
       await getTitleMultiSelectedItem('${tableName}', dataModel, column);
     }
-    print('titleMultiSelectList>>${titleMultiSelectList}');
     return Txt(
       '${titleMultiSelectList.join(',')}',
       fontSize: 14,
@@ -887,10 +844,7 @@ class ViewController extends GetxController {
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
                 ViewController.request[column['name']] = int.parse('${text}');
-                print(
-                    'request Number int>>>${ViewController
-                        .request}>>${ViewController.request[column['name']]
-                        .runtimeType}');
+
               } else if (column['type'] == 'Number double') {
                 ViewController.request[column['name']] =
                     double.parse('${text}');
@@ -899,9 +853,7 @@ class ViewController extends GetxController {
               }
             } else {
               ViewController.request[column['name']] = '';
-              print(
-                  'request Number int>>>>>${ViewController
-                      .request[column['name']]}');
+
             }
           },
           isMobile: type == 'mobile' ? true : false,
@@ -915,10 +867,6 @@ class ViewController extends GetxController {
 
   static Widget generateStoreFormSelectBox(var column, List<dynamic> items,
       String hintText, String initailValue, Rx<bool> isSeleted) {
-    print('generateFormSelectBox column>>>${column}');
-    print('generateFormSelectBox item>>>${items}');
-    print('generateFormSelectBox initailValue>>>${initailValue}');
-    print('generateFormSelectBox item>>>${items}');
 
     // if (column['sourceItems'] != 'custom') {
     // ViewController.request[column['name']]=items.first['id'];
@@ -979,7 +927,6 @@ class ViewController extends GetxController {
                 ? ""
                 : initailValue,
             onChanged: (value) async {
-              print('selected item ${value}');
               if (value != '') {
                 // selectedValue=value!;
                 ViewController.request[column['name']] = value;
@@ -987,7 +934,6 @@ class ViewController extends GetxController {
                 ViewController.request[column['name']] = '';
               }
 
-              print('request select>>${ViewController.request}');
             },
             hintText: hintText,
             isSeleted: isSeleted,
@@ -1013,7 +959,6 @@ class ViewController extends GetxController {
                 ? items.first['value']
                 : initailValue,
             onChanged: (value) async {
-              print('selected item ${value}');
               for (var item in items) {
                 if (item['title'] == value) {
                   if (item['value'] == '') {
@@ -1039,9 +984,7 @@ class ViewController extends GetxController {
       {var defultValue}) {
     ViewController.request[column['name']] =
         defultValue ?? column['default_value'];
-    print(
-        'ViewController.generateFormCheckBox>>>${ViewController
-            .request[column['name']]}');
+
     return new CheckBox(
       checkBoxName: '${column['title']}',
       checkBoxTitle: '${column['title']}',
@@ -1145,7 +1088,6 @@ class ViewController extends GetxController {
     if (column['sourceItems'] != 'custom') {
       items = await DB(column['sourceTable']).getRecords();
 
-      print('items is ss>>${items}');
 
       if (selectedItemsList.length != 0) {
         // items.add({'id':'',});
@@ -1223,9 +1165,7 @@ class ViewController extends GetxController {
                                               hintTxt.value = hintTxt
                                                   .value +
                                                   itemsShowSelectItem(r, column['items']);
-                                            print(
-                                                'hintTxt.value>>>${hintTxt
-                                                    .value}');
+
                                             ViewController.request[
                                             column['name']] = selectedItemId;
 
@@ -1254,12 +1194,10 @@ class ViewController extends GetxController {
           : Container();
     }
     else {
-      print('selectedItemsList>>${selectedItemsList}');
       if (selectedItemsList.length != 0) {
       for (var selectedItem in selectedItemsList) {
         selectedItemId.add(selectedItem['value']);
       }
-      print('selectedItemId>>${selectedItemId}');
       }
       items = column['items'];
 
@@ -1295,10 +1233,7 @@ class ViewController extends GetxController {
                                             mapEquals(map, item)),
                                         onChanged: (isChecked) {
                                           if (isChecked != null) {
-                                            print(
-                                                'selectedItemsList 2>>${!selectedItemsList
-                                                    .any((map) =>
-                                                    mapEquals(map, item))}');
+
 
                                             hintTxt.value = '';
                                             if (!selectedItemsList.any((map) =>
@@ -1306,8 +1241,7 @@ class ViewController extends GetxController {
                                               selectedId = [];
                                               requestMultiSelect = item;
                                               selectedItemsList.add(item);
-                                              print(
-                                                  'selectedItemsList >>${selectedItemsList}');
+
                                             } else {
                                               selectedId = [];
                                               requestMultiSelect.removeWhere((key,
@@ -1315,11 +1249,9 @@ class ViewController extends GetxController {
                                               var index = selectedItemsList
                                                   .indexWhere((map) =>
                                                   mapEquals(map, item));
-                                              print(
-                                                  'selectedItemsList index>>${index}');
+
                                               selectedItemsList.removeAt(index);
-                                              print(
-                                                  'selectedItemsList >>${selectedItemsList}');
+
                                             }
 
                                             if (selectedItemsList.value.length ==
@@ -1334,8 +1266,6 @@ class ViewController extends GetxController {
                                             for (var r in selectedItemsList)
                                               selectedId.add(r['value']);
 
-                                            print(
-                                                'hintTxt.value>>>${selectedId}');
 
                                             ViewController
                                                 .request[column['name']] =
@@ -1358,10 +1288,10 @@ class ViewController extends GetxController {
               selectedItems: selectedItemsList,
               isSelectedItem: isSelectedItem,
               // onChanged: (selectedList){
-              //   print('selectedList>>${selectedList}');
+
               //       selectedItemsList.value = selectedList;
               //   hintTxt.value = hintTxt.value;
-              //   print(' hintTxt.value >>>${ hintTxt.value }');
+
               //       ViewController.request= requestMultiSelect;
               // },
               column: column,
@@ -1415,10 +1345,7 @@ class ViewController extends GetxController {
                                               mapEquals(map, item)),
                                       onChanged: (isChecked) {
                                         if (isChecked != null) {
-                                          print(
-                                              'selectedItemsList 2>>${!selectedItemsList
-                                                  .any((map) =>
-                                                  mapEquals(map, item))}');
+
 
                                           hintTxt.value = '';
                                           if (!selectedItemsList.any(
@@ -1429,8 +1356,7 @@ class ViewController extends GetxController {
                                             requestMultiSelect = item;
                                             selectedItemsList
                                                 .add(item);
-                                            print(
-                                                'selectedItemsList >>${selectedItemsList}');
+
                                           } else {
                                             selectedId = [];
                                             requestMultiSelect
@@ -1444,12 +1370,10 @@ class ViewController extends GetxController {
                                                     mapEquals(
                                                         map,
                                                         item));
-                                            print(
-                                                'selectedItemsList index>>${index}');
+
                                             selectedItemsList
                                                 .removeAt(index);
-                                            print(
-                                                'selectedItemsList >>${selectedItemsList}');
+
                                           }
                                           if (item['id'] == '') {}
                                           if (selectedItemsList
@@ -1471,10 +1395,6 @@ class ViewController extends GetxController {
                                           for (var r
                                           in selectedItemsList)
                                             selectedId.add(r['id']);
-
-                                          print(
-                                              'hintTxt.value>>>${hintTxt
-                                                  .value}');
 
                                           ViewController.request[
                                           column['name']] =
@@ -1499,10 +1419,8 @@ class ViewController extends GetxController {
             selectedItems: selectedItemsList,
             isSelectedItem: isSelectedItem,
             // onChanged: (selectedList){
-            //   print('selectedList>>${selectedList}');
             //       selectedItemsList.value = selectedList;
             //   hintTxt.value = hintTxt.value;
-            //   print(' hintTxt.value >>>${ hintTxt.value }');
             //       ViewController.request= requestMultiSelect;
             // },
             column: column,
@@ -1542,10 +1460,7 @@ class ViewController extends GetxController {
                                           mapEquals(map, item)),
                                       onChanged: (isChecked) {
                                         if (isChecked != null) {
-                                          print(
-                                              'selectedItemsList 2>>${!selectedItemsList
-                                                  .any((map) =>
-                                                  mapEquals(map, item))}');
+
 
                                           hintTxt.value = '';
                                           if (!selectedItemsList.any((map) =>
@@ -1553,8 +1468,7 @@ class ViewController extends GetxController {
                                             selectedId = [];
                                             requestMultiSelect = item;
                                             selectedItemsList.add(item);
-                                            print(
-                                                'selectedItemsList >>${selectedItemsList}');
+
                                           } else {
                                             selectedId = [];
                                             requestMultiSelect.removeWhere((key,
@@ -1562,11 +1476,9 @@ class ViewController extends GetxController {
                                             var index = selectedItemsList
                                                 .indexWhere((map) =>
                                                 mapEquals(map, item));
-                                            print(
-                                                'selectedItemsList index>>${index}');
+
                                             selectedItemsList.removeAt(index);
-                                            print(
-                                                'selectedItemsList >>${selectedItemsList}');
+
                                           }
 
                                           if (selectedItemsList.value.length ==
@@ -1581,8 +1493,6 @@ class ViewController extends GetxController {
                                           for (var r in selectedItemsList)
                                             selectedId.add(r['value']);
 
-                                          print(
-                                              'hintTxt.value>>>${selectedId}');
 
                                           ViewController
                                               .request[column['name']] =
@@ -1605,10 +1515,8 @@ class ViewController extends GetxController {
             selectedItems: selectedItemsList,
             isSelectedItem: isSelectedItem,
             // onChanged: (selectedList){
-            //   print('selectedList>>${selectedList}');
             //       selectedItemsList.value = selectedList;
             //   hintTxt.value = hintTxt.value;
-            //   print(' hintTxt.value >>>${ hintTxt.value }');
             //       ViewController.request= requestMultiSelect;
             // },
             column: column,
@@ -1742,7 +1650,6 @@ class ViewController extends GetxController {
           selectedTitle = 'نامشخص';
         } else {
           var objectItem = object.first;
-          print('objectItem>>${objectItem}');
           List<dynamic> items = column['items'];
           for (var item in items) {
             itemSelect.add(objectItem[item]);
@@ -1771,8 +1678,6 @@ class ViewController extends GetxController {
 
   static Future<List<dynamic>> getTitleMultiSelectedItem(String tableName,
       List<dynamic> selectedId, var column) async {
-    print(
-        'selectedId>>${selectedId}>>tableName${tableName}>>>column${column['items']}');
     List<dynamic> multiSelectedTitleList = [];
 
     var sourceItem = column['sourceItems'];
@@ -1782,7 +1687,6 @@ class ViewController extends GetxController {
         (await DB(tableName).where('id', '==', selectedId[i]).getRecords());
         if (object.length != 0) {
           var objectItem = object.first;
-          print('objectItem>>${objectItem}');
           List<dynamic> items = column['items'];
           for (var item in items) {
             multiSelectedTitleList.add(objectItem['${item}']);
@@ -1794,7 +1698,6 @@ class ViewController extends GetxController {
         Map<String, dynamic> selectedItem = column['items'].firstWhere(
                 (element) => element['value'] == selectedId[i],
             orElse: () => {'error': ''});
-        print('selectedItem>>>${selectedItem}');
         if (selectedItem['title'] != null) {
           multiSelectedTitleList.add(selectedItem['title']);
         }
@@ -1804,18 +1707,15 @@ class ViewController extends GetxController {
   }
 
   static String itemsShowSelectItem(var listItems, List<dynamic> items) {
-    print('ViewController.itemsShowSelectItem>>${listItems}>>>${items}');
     List<dynamic> a = [];
 
     if (listItems['id'] == '') {
       return "انتخاب نشده";
     }
     for (var field in items) {
-      print('itemsShowMultiSelect>>>${field}>>>${listItems[field]}');
 
       a.add(listItems[field]);
     }
-    print('ViewController.itemsShowMultiSelect>>>${a}');
     return a.join('%');
   }
 
@@ -1823,53 +1723,129 @@ class ViewController extends GetxController {
     List<dynamic> items = [];
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
-    print('column itemsList>>>${column}');
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
-      if (dataModel==null || dataModel=={} ||dataModel.length==0) {
-        for (var item in dataModel[column['name']])
-          dropDownListItems.add(
-              (await DB(tableName).where('id', '==', item).getRecords()).first);
-        for (int i = 0; i < dropDownListItems.length; i++) {
-          List<dynamic> a = [];
-          for (var field in column['items']) {
-            a.add(dropDownListItems[i][field]);
-          }
-          items
-              .add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
-        }
-      } else {
-        print('data>>model>>null');
+      if (dataModel==null || dataModel.isEmpty ) {
         List<dynamic> data = await DB(tableName).getRecords();
-        print('data is >>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
           for (var field in column['items']) {
             a.add(dropDownListItems[i][field]);
           }
+          items.add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
+        }
+      }
+      else {
+        if(dataModel[column['name']]==null){
+          dropDownListItems=[];
+          // List<dynamic> data = await DB(tableName).getRecords();
+          // dropDownListItems = data;
+          // for (int i = 0; i < dropDownListItems.length; i++) {
+          //   List<dynamic> a = [];
+          //   for (var field in column['items']) {
+          //     a.add(dropDownListItems[i][field]);
+          //   }
+          //   items.add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
+          // }
+        }
+        else{
+        for (var item in dataModel[column['name']])
+          dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+
+        for (int i = 0; i < dropDownListItems.length; i++) {
+          List<dynamic> a = [];
+          for (var field in column['items']) {
+            a.add(dropDownListItems[i][field]);
+          }
           items
               .add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
         }
-        print('items isss>>>${dropDownListItems}');
-      }
-    } else {
-      List<dynamic> itemss = [];
-      // print('data model is>>>${dataModel}>>>${dataModel==null}>>${dataModel.length==0}');
-      if (dataModel==null || dataModel=={} ||dataModel.length==0 ) {
-        itemss = column['items'];
+      }}
+    }
 
+    else {
+      List<dynamic> itemss = [];
+
+      if (dataModel==null || dataModel.isEmpty ) {
+        itemss = column['items'];
         // dropDownListItems.add(item);
       }
       else {
+        if(dataModel[column['name']]==null){
+          itemss = [];
+        }else
         for (var item in dataModel[column['name']])
-
-          itemss.add(column['items'].firstWhere((element) => element['value'] ==
-              item));
+          itemss.add(column['items'].firstWhere((element) => element['value'] == item));
       }
       dropDownListItems = itemss;
     }
-    print('itemsss>>& aaa>>>>${dropDownListItems}');
+
+
+    return dropDownListItems;
+  }
+
+  static Future<List> itemsSelect(var column, {var dataModel}) async {
+    List<dynamic> items = [];
+    var type = column['sourceItems'];
+    var tableName = column['sourceTable'];
+    List<dynamic> dropDownListItems = [];
+    if (type != 'custom') {
+      if (dataModel==null || dataModel.isEmpty ) {
+        List<dynamic> data = await DB(tableName).getRecords();
+        dropDownListItems = data;
+        for (int i = 0; i < dropDownListItems.length; i++) {
+          List<dynamic> a = [];
+          for (var field in column['items']) {
+            a.add(dropDownListItems[i][field]);
+          }
+          items.add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
+        }
+      }
+      else {
+        if(dataModel[column['name']]==null){
+          List<dynamic> data = await DB(tableName).getRecords();
+          dropDownListItems = data;
+          for (int i = 0; i < dropDownListItems.length; i++) {
+            List<dynamic> a = [];
+            for (var field in column['items']) {
+              a.add(dropDownListItems[i][field]);
+            }
+            items.add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
+          }
+        }
+        else{
+          for (var item in dataModel[column['name']])
+            dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+
+          for (int i = 0; i < dropDownListItems.length; i++) {
+            List<dynamic> a = [];
+            for (var field in column['items']) {
+              a.add(dropDownListItems[i][field]);
+            }
+            items
+                .add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
+          }
+        }}
+    }
+
+    else {
+      List<dynamic> itemss = [];
+
+      if (dataModel==null || dataModel.isEmpty ) {
+        itemss = column['items'];
+        // dropDownListItems.add(item);
+      }
+      else {
+        if(dataModel[column['name']]==null){
+          itemss = column['items'];
+        }else
+          for (var item in dataModel[column['name']])
+            itemss.add(column['items'].firstWhere((element) => element['value'] == item));
+      }
+      dropDownListItems = itemss;
+    }
+
 
     return dropDownListItems;
   }
@@ -1879,8 +1855,7 @@ class ViewController extends GetxController {
   //     String initValue = '';
   //     var type=column['sourceItems'];
   //     var selectedItem;
-  //     print('getInitValue column>>${column}');
-  //     print('getInitValue items>>${items}');
+
   //
   //   // List<dynamic> items = await itemsList(column, type, tableName);
   //   // for (var subMenu in MainController.SubMenuList) {

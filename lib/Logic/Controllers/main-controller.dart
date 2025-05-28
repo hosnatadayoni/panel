@@ -118,7 +118,6 @@ class MainController extends GetxController {
     for (var data in MainController.tableData.value) {
       List<exl.CellValue> rowData = [];
       rowData.add(exl.TextCellValue(data.id));
-      print('data.id>>>>${data.id}');
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
           var column = MainController.tableInfo['columns'][j];
@@ -158,7 +157,6 @@ class MainController extends GetxController {
 
             rowData.add(exl.TextCellValue(listTitle.join(',')));
           } else if (column['type'] == 'checkbox') {
-            print('value checkbox>>>${value}');
             rowData.add(exl.BoolCellValue(value));
           } else if (column['type'] == 'file') {
             if (value != '') {
@@ -235,7 +233,6 @@ class MainController extends GetxController {
         }
       }
       for (var i = 0; i < rowData.length; i++) {
-        print('rowData>>>${rowData[i].runtimeType}');
       }
 
       sheet.appendRow(rowData);
@@ -250,11 +247,9 @@ class MainController extends GetxController {
     } else {
       fileExelPath = await FilePicker.platform.getDirectoryPath();
     }
-    print('path>>>>${fileExelPath}');
     String? filePath;
     if (fileExelPath != null) {
       filePath = '${fileExelPath}\\${tableInfo['table-name']}.xlsx';
-      print('filePath>>>${filePath}');
 
       if (kIsWeb) {
         String tableName = tableInfo['table-name'];
@@ -273,7 +268,6 @@ class MainController extends GetxController {
           ..createSync(recursive: true)
           ..writeAsBytesSync(excel.save()!);
       }
-      print('Excel file created at $filePath');
       showSnackbar(snackTypes.success,
           '${AppController.of(Get.context!)!.value('the desired file')}  ${fileExelPath} ${AppController.of(Get.context!)!.value('saved')}');
     }
@@ -289,7 +283,6 @@ class MainController extends GetxController {
       //   type: FileType.custom,
       //   allowedExtensions: ['xlsx'],
       // );
-      // print('result>>>${result!.names}');
       // if(result != null){
       //   var bytes = File(filePath!).readAsBytesSync();
       //   excel = exl.Excel.decodeBytes(bytes);
@@ -307,7 +300,6 @@ class MainController extends GetxController {
       //   reader.readAsArrayBuffer(files[0]);
       //   reader.onLoadEnd.listen((e) async {
       //     var bytes = reader.result as Uint8List;
-      //     print('bytes>>>${bytes}');
       //     excel = exl.Excel.decodeBytes(bytes);
       //   });
       // });
@@ -325,7 +317,7 @@ class MainController extends GetxController {
         return result?.files.single.path;
       });
       if (filePath != null) {
-        var bytes = File(filePath!).readAsBytesSync();
+        var bytes = File(filePath).readAsBytesSync();
         excel = exl.Excel.decodeBytes(bytes);
       }
     }
@@ -391,8 +383,6 @@ class MainController extends GetxController {
                     }
                     break;
                   case 'mobile':
-                    print(
-                        'cell value before mobile>>>${cellValue} ${cellValue.runtimeType}');
                     if (cellValue != null) {
                       if (cellValue is exl.DoubleCellValue) {
                         double doubleValue =
@@ -402,12 +392,9 @@ class MainController extends GetxController {
                         cellValue = int.tryParse(cellValue.toString());
                       }
 
-                      print('cellValue after mobile>>>${cellValue}');
                     } else {
                       cellValue = 0;
                     }
-                    print(
-                        'cell value mobile type>>>${cellValue} ${cellValue.runtimeType}');
                     break;
                   default:
                     if (cellValue != null) {
@@ -421,23 +408,11 @@ class MainController extends GetxController {
                 cell.value = exl.IntCellValue(doubleValue.toInt());
               }
               if (columnType == 'select') {
-                print(
-                    'columnType selct type>>>${cellValue.runtimeType}  ${cellValue}');
               } else if (columnType == 'radiobutton') {
-                print(
-                    'columnType radiobutton type>>>${cellValue.runtimeType}  ${cellValue}');
               } else if (columnType == 'multiSelect') {
-                print(
-                    'columnType multiSelect type>>>${cellValue.runtimeType}  ${cellValue}');
               } else if (columnType == 'checkbox') {
-                print(
-                    'columnType checkbox type>>>${cellValue.runtimeType}  ${cellValue}');
               } else if (columnType == 'file') {
-                print(
-                    'columnType file type>>>${cellValue.runtimeType} ${cellValue}');
               } else if (columnType == 'mobile') {
-                print(
-                    'columnType mobile type>>>${cellValue.runtimeType} ${cellValue}');
               }
               rowData.add(cellValue);
               rowDataTest[excelColumns[counterColumn]] = cellValue;
@@ -445,25 +420,21 @@ class MainController extends GetxController {
               // rowDataTest[excelColumns[counterColumn]] = cell?.value;
               counterColumn++;
             }
-            print('rowData>>>${rowData}');
             currentIds.add('${rowDataTest[excelColumns[0]]}');
             if (rowData.any((element) => element != null)) {
               rowdetail.add(rowDataTest);
             }
-            print('rowdetail.length>>>${rowdetail.length}');
           }
           counter++;
         }
       }
     }
 
-    print('all data is:${rowdetail}');
 
     var columnPrime = getColumnPrime();
 
     for (var data in rowdetail) {
       var findIndexRecord = findByColumn(data, columnPrime);
-      print('findIndexRecord>>>${findIndexRecord}');
 
       //create data json
       //function generate json record with columns name and data excel
@@ -478,8 +449,6 @@ class MainController extends GetxController {
         isValidatorList.add(isValidator);
       }
       bool isExsistsValidation = isValidatorList.contains(false);
-      print('isValidatorList>>>${isValidatorList}');
-      print('findIndexRecord excel>>>${findIndexRecord}');
 
       if (findIndexRecord != -1) {
         // updateRecord(excelJson, findIndexRecord, columnPrime);
@@ -554,7 +523,6 @@ class MainController extends GetxController {
       String Id = dataRow['id'].toString();
       var existingDataIndex =
           MainController.tableData.value.indexWhere((data) => data.id == Id);
-      print('existingDataIndex>>>${existingDataIndex}');
       return existingDataIndex;
     }
     //search by prime
@@ -563,10 +531,8 @@ class MainController extends GetxController {
 
       // String dataToUpdate = dataRow[primeColumnName].toString();
       var dataToUpdate = dataRow[primeColumnName];
-      print('dataToUpdate>>>${dataToUpdate.runtimeType}  ${dataToUpdate}');
       var existingPrimeIndex = MainController.tableData.value
           .indexWhere((d) => d.data[primeColumnName] == dataToUpdate);
-      print('existingPrimeIndex>>>${existingPrimeIndex}');
       return existingPrimeIndex;
     }
   }
@@ -581,15 +547,12 @@ class MainController extends GetxController {
 
   static createRecord(var excelJson) async {
     var id = Uuid().v4();
-    print('create record:${excelJson}');
     excelJson.remove('id');
-    print('create record:${excelJson}');
     DataModel newData = DataModel(
       id: '${id}',
       data: excelJson,
     );
     await box.add(newData);
-    print('newData>>>${newData}');
     // dataController.allData.value.add(newData);
     MainController.tableData.add(newData);
     await MainController.loadData();
@@ -629,7 +592,6 @@ class MainController extends GetxController {
               // } else {
               //   dataExlJson[name] = '';
               // }
-              print('itemSelected d>>>${itemSelected} ${column['name']}');
 
               if (itemSelected != null) {
                 dataExlJson[name] = itemSelected['value'];
@@ -681,11 +643,9 @@ class MainController extends GetxController {
                   //   // Map<String,List<dynamic>> fileInfolist={};
                   //
                   //   for (var data in MainController.tableData.value) {
-                  //     print('zasdf>>>${data.data[name]}');
                   //   }
                   //
                   //   // int indexRow = MainController.tableData.value.indexWhere((element) => element.id == dataRowExcel.id);
-                  //   // print('indexRow>>>${indexRow}');
                   //
                   //
                   //   // dataExlJson[name] = fileInfolist;
@@ -838,7 +798,6 @@ class MainController extends GetxController {
         }
       }
     }
-    print('dataExlJson>>>${dataExlJson}');
     return dataExlJson;
   }
 
@@ -923,11 +882,8 @@ class MainController extends GetxController {
     if (MainController.endIndex.value > tableData.value.length) {
       MainController.endIndex.value = tableData.value.length;
     } else {
-      print('not exsits');
     }
-    print(
-        'MainController.startIndex.value>>>${MainController.startIndex.value}');
-    print('MainController.endIndex.value>>>${MainController.endIndex.value}');
+
   }
 
   static getTypeOfField(
@@ -938,7 +894,6 @@ class MainController extends GetxController {
     var column = getColumnInfoTable(tableName);
     for (var item in column) {
       if (item['name'] == name) {
-        print('name iss>>${item['name']}');
         type = item['type'];
         return type;
       }
@@ -988,10 +943,8 @@ class MainController extends GetxController {
     for (var name in tableNames()) {
       createMultiSelectTable('${name}');
       addParentForRelations('${name}');
-      print('name menu list>>>${name}');
     }
 
-    print('sub menu length1>>>${SubMenuList.length}');
   }
 
   static List<dynamic> tableNames() {
@@ -999,7 +952,6 @@ class MainController extends GetxController {
     for (var table in SubMenuList) {
       list.add(table['table-name']);
     }
-    print('SubMenuList table name>>>${list}');
     return list;
   }
 
@@ -1008,7 +960,6 @@ class MainController extends GetxController {
     List<dynamic> columnList = ViewController.getColumnList(tableName);
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
-        print('multiSelect>>${column['sourceTable']}');
         String tableNameNew =
             '${tableName}_${column['title']}_${column['sourceTable']}';
         if (!tableNames().contains('${tableNameNew}')) {
@@ -1044,20 +995,13 @@ class MainController extends GetxController {
         }
       }
     }
-    print('sub menu list>>>${SubMenuList}');
-    print('sub menu length2>>>${SubMenuList.length}');
   }
 
   static multiSelectStore(String tableName, var id) async {
     var getDataTable = ViewCustomController.getDataTable(tableName);
-    print('getDataTable >#${getDataTable}');
     for (var item in getDataTable['columns']) {
       if (item['type'] == 'multiSelect') {
-        print(
-            'check multi >>${item['sourceItems'] != 'custom'}>>>>${item['sourceTable'] != null}');
         if (item['sourceItems'] != 'custom' && item['sourceTable'] != null) {
-          print(
-              'MainController.multiSelectStore>>>${ViewController.requestMultiSelect}>>>>${item['sourceTable']}');
           if (ViewController.requestMultiSelect.length != 0) if (ViewController.requestMultiSelect.containsKey(item['sourceTable']))
             for (var data in ViewController.requestMultiSelect[item['sourceTable']]) {
              await DB(tableName + "_" + item['title'] + "_" + item['sourceTable']).storeRecord({'${tableName}_id': id, '${item['sourceTable']}_id': data});
@@ -1074,7 +1018,6 @@ class MainController extends GetxController {
         var index = SubMenuList.indexWhere(
             (element) => element['table-name'] == relate['table-name']);
         var items = SubMenuList[index];
-        print('MainController.addParentForRelations>>${items['columns']}');
         items['columns'].add({
           'name': 'parent_table',
           'title': 'parent_table',
@@ -1090,7 +1033,6 @@ class MainController extends GetxController {
           'is-show-edit': false,
           'is-show-store': false,
         });
-        print('items>>${items['columns']}');
       }
     }
   }
@@ -1101,7 +1043,6 @@ class MainController extends GetxController {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
 
         MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
-        print('table data>>${MainController.tableData.value}');
       } else {
         tableInfo = tableData;
 
@@ -1133,7 +1074,6 @@ class MainController extends GetxController {
         }
       }
     } else {
-      print('tableData 12>>>${tableData}');
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
           tableData['columns'][j]['is-show-store'] = true;
@@ -1153,7 +1093,6 @@ class MainController extends GetxController {
 
   static String getNameFile(List<dynamic> filesList) {
     List<String> fileNameList = [];
-    print('filesList>>>${filesList}');
     for (var file in filesList) {
       fileNameList.add('${file['name']}');
     }
@@ -1165,13 +1104,9 @@ class MainController extends GetxController {
 
     if (column['validators'] != null) {
       // check null cell
-      print(
-          'cellExcel 56>>>${cellExcel} ${cellExcel.runtimeType} ${column['name']}');
-
       if (cellExcel == null ||
           cellExcel == '' ||
           cellExcel is List && cellExcel.isEmpty) {
-        print('column name is null>>>${column['name']}');
         var inputRequired = column['validators'].firstWhere(
             (validator) => validator['type'] == 'required',
             orElse: () => null);
@@ -1206,7 +1141,6 @@ class MainController extends GetxController {
               (validator) => validator['type'] == 'max',
               orElse: () => null);
           // int numberExcel = int.parse('${cellExcel}');
-          print('cellExcel number>>>${cellExcel}');
           num? intValue;
           if(column['type'] == 'Number int'){
             intValue = int.tryParse(cellExcel);
@@ -1225,8 +1159,6 @@ class MainController extends GetxController {
               return true;
             }
           }
-
-          // print('numberExcel>>>>${intValue} ${numberExcel.runtimeType}');
         } else if (column['type'] == 'email') {
           final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
           if (!emailRegex.hasMatch(cellExcel)) {
@@ -1235,10 +1167,6 @@ class MainController extends GetxController {
             return true;
           }
         } else if (column['type'] == 'mobile') {
-          print(
-              'cellExcel mobile type>>>${cellExcel} ${cellExcel.runtimeType}');
-          print('cellExcel.startsWith(9)>>>${cellExcel.startsWith('9')}');
-          print('cellExcel.length>>>${cellExcel.length}');
           if (cellExcel.length > 13) {
             return false;
           } else if (!cellExcel.startsWith('9')) {

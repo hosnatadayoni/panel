@@ -93,9 +93,7 @@ class _OrderEditState extends State<OrderEdit> {
 Future<Widget> getOrderItems(var data) async {
   List<dynamic>items=await DB('order-itemss').parent(parentId:  "${data['id']}",parentTable: 'order').getRecords();
   for(var item in items){
-    print('getOrderItems>>>${item}');
     OrderItem.orderItemsList[item['id']]=item;
-    print('getOrderItems length>>>${OrderItem.orderItemsList[item['id']]}');
 
   }
   return Column(

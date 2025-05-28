@@ -45,8 +45,6 @@ class _SelectBoxState extends State<SelectBox> {
     }
     return widget.items!.isNotEmpty? FormBuilder(
       child: Obx((){
-        print('xsder>>>${widget.isSeleted!.value}');
-        print('xsder>>>${widget.items}');
         return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
