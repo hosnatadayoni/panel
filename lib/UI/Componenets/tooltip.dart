@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 class TooltipWidget extends StatefulWidget {
-  final Widget content;
-  final Widget btn;
-  final TooltipDirection direction;
+   Widget? content;
+   Widget? btn;
+  TooltipDirection? direction;
 
-  const TooltipWidget({
-    required this.content,
-    required this.btn,
-    required this.direction,
+  TooltipWidget({
+    this.content,
+    this.btn,
+    this.direction,
   });
 
   @override
@@ -21,78 +21,117 @@ class _TooltipWidgetState extends State<TooltipWidget> {
   final _controller = SuperTooltipController();
   final _btnKey = GlobalKey();
   Size? _btnSize;
+  TooltipDirection? _adjustedDirection;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final renderBox = _btnKey.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox != null) {
-        setState(() {
-          _btnSize = renderBox.size;
-        });
-      }
+      _calculateAdjustedDirection();
     });
+  }
+
+  void _calculateAdjustedDirection() {
+    final renderBox = _btnKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final buttonPosition = renderBox.localToGlobal(Offset.zero);
+    final screenSize = MediaQuery.of(context).size;
+    final buttonSize = renderBox.size;
+
+    setState(() {
+      _btnSize = buttonSize;
+      _adjustedDirection = _getOppositeDirectionIfNeeded(
+        buttonPosition,
+        buttonSize,
+        screenSize,
+        widget.direction ?? TooltipDirection.down,
+      );
+    });
+  }
+
+  TooltipDirection _getOppositeDirectionIfNeeded(
+      Offset buttonPosition,
+      Size buttonSize,
+      Size screenSize,
+      TooltipDirection preferredDirection,
+      ) {
+
+    const minRequiredSpace = 100.0;
+
+    double availableSpace;
+    switch (preferredDirection) {
+      case TooltipDirection.up:
+        availableSpace = buttonPosition.dy;
+        break;
+      case TooltipDirection.down:
+        availableSpace = screenSize.height - buttonPosition.dy - buttonSize.height;
+        break;
+      case TooltipDirection.left:
+        availableSpace = buttonPosition.dx;
+        break;
+      case TooltipDirection.right:
+        availableSpace = screenSize.width - buttonPosition.dx - buttonSize.width;
+        break;
+    }
+
+    if (availableSpace >= minRequiredSpace) {
+      return preferredDirection;
+    }
+
+    switch (preferredDirection) {
+      case TooltipDirection.up:
+        return TooltipDirection.down;
+      case TooltipDirection.down:
+        return TooltipDirection.up;
+      case TooltipDirection.left:
+        return TooltipDirection.right;
+      case TooltipDirection.right:
+        return TooltipDirection.left;
+    }
   }
 
   double _calculateArrowOffset() {
     if (_btnSize == null) return 30;
 
-    switch(widget.direction) {
+    switch (_adjustedDirection ?? widget.direction!) {
       case TooltipDirection.up:
       case TooltipDirection.down:
-        return _btnSize!.height/2;
+        return _btnSize!.height / 2;
       case TooltipDirection.left:
       case TooltipDirection.right:
-        return _btnSize!.width/2;
+        return _btnSize!.width / 2;
     }
-  }
-
-  TooltipDirection _getAdjustedDirection(BuildContext context) {
-    final renderBox = _btnKey.currentContext?.findRenderObject() as RenderBox?;
-    if (renderBox == null) return widget.direction;
-
-    final position = renderBox.localToGlobal(Offset.zero);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    final contentWidth = widget.content is SizedBox
-        ? (widget.content as SizedBox).width ?? 200
-        : 200;
-    final contentHeight = widget.content is SizedBox
-        ? (widget.content as SizedBox).height ?? 100
-        : 100;
-    if (widget.direction == TooltipDirection.right &&
-        position.dx + renderBox.size.width + contentWidth > screenWidth) {
-      return TooltipDirection.left;
-    }
-    else if (widget.direction == TooltipDirection.left &&
-        position.dx - renderBox.size.width - contentWidth < 0) {
-      return TooltipDirection.right;
-    }
-    return widget.direction;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onExit: (_) async => await _controller.hideTooltip(),
-      onEnter: (_) async => await _controller.showTooltip(),
-      child: SuperTooltip(
-        showBarrier: false,
-        controller: _controller,
-        popupDirection: _getAdjustedDirection(context),
-        borderColor: Colors.transparent,
-        hasShadow: false,
-        arrowTipDistance: _calculateArrowOffset(),
-        elevation: 0,
-        arrowLength: 10,
-        content: IntrinsicWidth(child: widget.content),
-        child: KeyedSubtree(
-          key: _btnKey,
-          child: widget.btn,
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _calculateAdjustedDirection();
+        });
+
+        return MouseRegion(
+          onExit: (_) async => await _controller.hideTooltip(),
+          onEnter: (_) async => await _controller.showTooltip(),
+          child: SuperTooltip(
+            showBarrier: false,
+            controller: _controller,
+            popupDirection: _adjustedDirection ?? widget.direction!,
+            borderColor: Colors.transparent,
+            hasShadow: false,
+            elevation: 0,
+            arrowLength: 10,
+            arrowTipDistance: _calculateArrowOffset(),
+            content: IntrinsicWidth(child: widget.content),
+            child: KeyedSubtree(
+              key: _btnKey,
+              child: widget.btn!,
+            ),
+          ),
+        );
+      },
     );
   }
 }

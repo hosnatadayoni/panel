@@ -92,7 +92,9 @@ class _InputFormState extends State<InputForm> {
        if(widget.formText != null)
           Txt(widget.formText!, fontSize: 14, fontWeight: FontWeight.w400,color: widget.formTextColor),
       ],
-    ) : Row(
+    ) : Wrap(
+      runSpacing: 10,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Txt(widget.lableText != null ? widget.lableText! : ''),
         SizedBox(width: widget.lableText != null ? 15 : 0,),
@@ -114,6 +116,11 @@ class _InputFormState extends State<InputForm> {
     InputSize.medium => TextStyle(fontSize: 16),
     InputSize.small => TextStyle(fontSize: 14),
     };
+
+    final textAreaPadding = widget.fieldType == FieldType.textarea
+    ? EdgeInsets.symmetric(vertical: 12, horizontal: 12)
+        : padding;
+
     return  Container(
       width:  widget.layoutDirection == direction.horizontal
           ? widget.inputWidth ?? 200
@@ -149,7 +156,9 @@ class _InputFormState extends State<InputForm> {
     //       bottomRight: Radius.circular(widget.hasStartBox ?0:5),
     // ),
     ),
-          contentPadding:widget.isPlainTxt! ? EdgeInsets.zero : padding,
+          contentPadding:widget.isPlainTxt!
+    ? (widget.fieldType == FieldType.textarea
+    ? textAreaPadding: EdgeInsets.zero): (widget.fieldType == FieldType.textarea? textAreaPadding: padding),
           // helperText:widget.formText != null ? widget.formText :'',
           filled: widget.disabled,
           fillColor: widget.disabled!

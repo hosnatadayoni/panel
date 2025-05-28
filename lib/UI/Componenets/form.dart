@@ -51,7 +51,7 @@ class _MyFormPageState extends State<MyFormPage> {
           const SizedBox(height: 15),
           InputForm(lableText: 'Example textarea', rows: 3 , fieldType: FieldType.textarea),
           // دکمه Submit
-          Btn(btnType.custom , content: Txt('submit'),onClick: (){
+          Btn(type: btnType.primary,content: Txt('submit'),onClick: (){
             if (_formKey.currentState!.validate()) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Processing Data')),
@@ -130,7 +130,7 @@ class _MyFormPageState extends State<MyFormPage> {
           const SizedBox(height: 30),
           InputGroup(isShowEnd: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)))],icons: [Txt('@' , fontSize:14 ,) , Txt('0.00' , fontSize:14 ,)]),
           const SizedBox(height: 30),
-          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(btnType.primary , content: Center(child: Txt('button')),color: itemColor39,borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
           const SizedBox(height: 30),
           InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(dropDownTitle: 'DropDown',itemsDropDown: [
                 DropdownItem(text: "Action"),
@@ -157,7 +157,7 @@ class _MyFormPageState extends State<MyFormPage> {
             DropdownMenuItem(value: '2', child: Text('Two')),
             DropdownMenuItem(value: '3', child: Text('Three')),
 
-          ],)],icons: [Btn(btnType.primary , content: Center(child: Txt('button')),color: itemColor39,borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          ],)],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
           const SizedBox(height: 30),
           InputGroup(isShowStart: true,isFileBox: true,fileList: [FileForm(borderRadius: BorderRadius.all(Radius.circular(0)),)],icons: [Txt('Upload' , fontSize:14 ,)],),
           const SizedBox(height: 30),
