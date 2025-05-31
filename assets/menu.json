@@ -360,6 +360,7 @@
     ],
     "view": "custom"
   },
+
   {
     "title": "سفارشات2",
     "tooltip": "",
@@ -433,10 +434,19 @@
         "default_value": false
       },
       {
+        "name": "time2",
+        "title": "time2",
+        "type": "time"
+      },
+      {
         "name": "عکس",
         "title": "عکس",
         "type": "file",
         "isPictureSelected": true
+      },      {
+        "name": "date",
+        "title": "date",
+        "type": "date"
       }
     ],
     "filters":
@@ -444,9 +454,13 @@
       {"column":"مشتری"},
       {"column": "کد ورودی","oprator": "<="},
       {"column": "checkBox"},
-      {"column": "محصولات"}
+      {"column": "محصولات"},
+      {"column": "محصولات"},
+      {"column": "time2","oprator": "whereTime <="},
+      {"column": "date","oprator": "whereDate <="}
     ]
   },
+
   {
     "title": "جزئیات سفارش",
     "tooltip": "",
@@ -656,6 +670,7 @@
     ],
     "view": "custom"
   },
+
   {
     "title": "جزئیات",
     "tooltip": "",

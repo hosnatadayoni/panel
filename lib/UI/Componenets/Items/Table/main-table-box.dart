@@ -50,7 +50,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                      return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                     } else {
                       return snapshot.data ?? Container();
                     }
@@ -72,7 +72,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                         List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
                         var a= DB('${MainController.tableInfo['table-name']}');
                       for(var filter in ViewController.request.keys){
-                        var indexFilter=w.indexWhere((element) => element['column']==filter);
+                        print('_MainTableBoxState.build>>>${filter}');
+                          var indexFilter=w.indexWhere((element) => element['column']==filter);
                         if(w[indexFilter]['oprator']!=null){
 
                             opration=w[indexFilter]['oprator'];

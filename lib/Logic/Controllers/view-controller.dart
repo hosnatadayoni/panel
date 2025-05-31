@@ -51,8 +51,10 @@ class ViewController extends GetxController {
     var multiSelectBox;
     var colorBox;
     var fileBox;
+    var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
+      print('ViewController.generateFilterFormView>>>${columns[j]}');
       if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
         var type = column['type'];
@@ -89,7 +91,9 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(selectBox);
-        } else if (type == 'checkbox') {
+        }
+
+        else if (type == 'checkbox') {
           children.add(
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -153,7 +157,9 @@ class ViewController extends GetxController {
               ],
             ),
           );
-        } else if (type == 'radiobutton') {
+        }
+
+        else if (type == 'radiobutton') {
           List<dynamic> items = await itemsList(column);
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
@@ -161,7 +167,9 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(selectBox);
-        } else if (type == 'date') {
+        }
+
+        else if (type == 'date') {
           dateBox = Row(
             children: [
               Column(
@@ -195,7 +203,17 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(dateBox);
-        } else if (type == 'multiSelect') {
+        }
+
+        else if (type == 'time') {
+          timeBox = generateFormTimeBox(column, TimeOfDay.now(), false.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(timeBox);
+        }
+
+        else if (type == 'multiSelect') {
           List<dynamic> items = await itemsList(column);
           if (items.length != 0) {
             multiSelectBox = await generateStoreFormSelectBox(
@@ -206,13 +224,17 @@ class ViewController extends GetxController {
             ));
             children.add(multiSelectBox);
           }
-        } else if (type == 'color') {
+        }
+
+        else if (type == 'color') {
           colorBox = generateFormColorBox(column, Colors.blue, false.obs);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file') {
+        }
+
+        else if (type == 'file') {
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,

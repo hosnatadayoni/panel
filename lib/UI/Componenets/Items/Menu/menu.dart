@@ -1,5 +1,4 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Views/dashboard.dart';
@@ -10,7 +9,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-import '../../../../Logic/Models/db.dart';
 
 class MenuBox extends StatefulWidget {
    MenuBox({Key? key}) : super(key: key);

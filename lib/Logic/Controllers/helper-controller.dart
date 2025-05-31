@@ -3,6 +3,7 @@ import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/UI/Componenets/page-custom/orderItem/order-item-create.dart';
 import 'package:finance/UI/Views/edit.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Componenets/page-custom/order/order-create.dart';
@@ -92,14 +93,9 @@ class HelperController extends GetxController {
   }
 
    static filterDate(String dataDate,String searchDate,String opration) {
-
-    // Jalali baseDate = Jalali.fromDateTime(
-    //   DateTime.parse(
-    //     searchDate.split('/').join('-'), // تبدیل به فرمت قابل قبول
-    //   ),
-    // );
       Jalali baseDate = convertJalaliStringToDate(searchDate);
       Jalali date = convertJalaliStringToDate(dataDate);
+      print('date>>>${date} isBefore>>>${baseDate}>>>${opration}');
       if(opration=='>='){
         if(date.isAfter(baseDate))
         {
@@ -109,7 +105,8 @@ class HelperController extends GetxController {
         }
       }
       else if(opration=="<="){
-        if(date.isBefore(baseDate))
+        print('date>>>${date} isBefore>>>${baseDate}');
+      if(date.isBefore(baseDate))
         {
           return true;
         }else{
@@ -124,7 +121,44 @@ class HelperController extends GetxController {
           return false;
         }
       }
+  }
 
+   static filterTime(String dataTime,String searchTime,String opration) {
+     final timeSearchParts = searchTime.split(':');
+     final itemSearchTime = TimeOfDay(
+       hour: int.parse(timeSearchParts[0]),
+       minute: int.parse(timeSearchParts[1]),
+     );
+     final timeDataParts = dataTime.split(':');
+     final itemDataTime = TimeOfDay(
+       hour: int.parse(timeDataParts[0]),
+       minute: int.parse(timeDataParts[1]),
+     );
+
+      if(opration=='>='){
+        if(itemDataTime.hour>=itemSearchTime.hour && itemDataTime.minute>=itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="<="){
+      if(itemDataTime.hour<=itemSearchTime.hour && itemDataTime.minute<=itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="=="){
+        if(itemDataTime.hour == itemSearchTime.hour && itemDataTime.minute == itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
   }
 
 // تابع کمکی: تبدیل رشته تاریخ جلالی به Jalali

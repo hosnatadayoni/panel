@@ -26,8 +26,10 @@ class RadioButton extends StatelessWidget {
       inputRequired = this.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }
-    return Obx((){
-      return Column(
+    return
+      // Obx((){
+      // return
+        Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilderRadioGroup(
@@ -49,6 +51,6 @@ class RadioButton extends StatelessWidget {
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );
-    });
+    // });
   }
 }

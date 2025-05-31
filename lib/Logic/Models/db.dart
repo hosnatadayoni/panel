@@ -11,7 +11,6 @@ import '../Controllers/view-custom-controller.dart';
 import 'dataModel.dart';
 import 'general.dart';
 import 'package:get/get.dart';
-import 'dart:math';
 
 class DB {
   String? tableName;
@@ -106,10 +105,8 @@ class DB {
     return shuffled.take(count).toList();
   }
 
-  List<Map<String, dynamic>> searchList(
-    List<Map<String, dynamic>> mainList,
-    Map<int, Where> searchPattern,
-  ) {
+  List<Map<String, dynamic>> searchList(List<Map<String, dynamic>> mainList, Map<int, Where> searchPattern)
+  {
     return mainList.where((item) {
       // بررسی می‌کنیم که آیا تمام کلید-مقدارهای الگو در آیتم وجود دارد
       return searchPattern.entries.every((entry) {
@@ -124,10 +121,8 @@ class DB {
     }).toList();
   }
 
-  Future<List<Map<String, dynamic>>> filterInBackground(
-    List<dynamic> mainList,
-    List<dynamic> searchPattern,
-  ) async {
+  Future<List<Map<String, dynamic>>> filterInBackground(List<dynamic> mainList, List<dynamic> searchPattern)
+  async {
     return await compute(_filterListIsolate, {
       'mainList': mainList,
       'searchPattern': searchPattern,
@@ -157,23 +152,13 @@ class DB {
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-      for (var i in box.values.toList())
+      // for (var i in box.values.toList())
       data = getTypeOfField(box.values.toList());
-      // if(tableInfo['type']=='multiSelect'){
-      //   if(tableInfo['sourceItems']!='custom'&& tableInfo['sourceTable']!=null){
-      //
-      //   }
-      // dataItems.add(value)
-      // }
       if (this.parentItem.length != 0) {
-        data = data
-            .where((element) =>
-                element['parent_id'] == this.parentItem['parent_id'])
-            .toList();
+        data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
       }
 
       if (this.orWhereList.length != 0) {
-
         if (data.length != 0)
           for (var d in data) {
             if (this.orWhereList.length != 0) {
@@ -237,7 +222,8 @@ class DB {
               dataItems.add(d);
             }
           }
-      } else {
+      }
+      else {
         if (this.whereList.length != 0) {
           if (data.length != 0)
             for (var d in data) {
@@ -298,7 +284,8 @@ class DB {
                         flag = true;
                       } else
                         flag = false;
-                    } else if (whereList[j]!.oprator == 'whereDate ==') {
+                    }
+                    else if (whereList[j]!.oprator == 'whereDate ==') {
                       if (HelperController.filterDate(
                                   d['${whereList[j]!.fieldName}'],
                                   whereList[j]!.value,
@@ -308,18 +295,43 @@ class DB {
                         flag = true;
                       } else
                         flag = false;
-                    } else if (whereList[j]!.oprator == 'whereDate <=') {
+                    }
+                    else if (whereList[j]!.oprator == 'whereDate <=') {
+                      if (HelperController.filterDate(d['${whereList[j]!.fieldName}'], whereList[j]!.value, "<=") == true && flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    }
+                    else if (whereList[j]!.oprator == 'whereDate >=') {
                       if (HelperController.filterDate(
                                   d['${whereList[j]!.fieldName}'],
                                   whereList[j]!.value,
-                                  "<=") ==
+                                  ">=") ==
                               true &&
                           flag == true) {
                         flag = true;
                       } else
                         flag = false;
-                    } else if (whereList[j]!.oprator == 'whereDate >=') {
-                      if (HelperController.filterDate(
+                    }
+                    else if (whereList[j]!.oprator == 'whereTime ==') {
+                      if (HelperController.filterTime(
+                                  d['${whereList[j]!.fieldName}'],
+                                  whereList[j]!.value,
+                                  "==") ==
+                              true &&
+                          flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    }
+                    else if (whereList[j]!.oprator == 'whereTime <=') {
+                      if (HelperController.filterTime(d['${whereList[j]!.fieldName}'], whereList[j]!.value, "<=") == true && flag == true) {
+                        flag = true;
+                      } else
+                        flag = false;
+                    }
+                    else if (whereList[j]!.oprator == 'whereTime >=') {
+                      if (HelperController.filterTime(
                                   d['${whereList[j]!.fieldName}'],
                                   whereList[j]!.value,
                                   ">=") ==
