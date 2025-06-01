@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
+import '../Controllers/connect-server-controller.dart';
 import '../Controllers/helper-controller.dart';
 import '../Controllers/main-controller.dart';
 import '../Controllers/record-controller.dart';
@@ -383,11 +384,17 @@ class DB {
   Future<void> storeRecord(Map<String, dynamic> request) async {
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     ViewController.isClickedBtn.value = true;
+    print('DB.storeRecord>>>${request}');
     var Id = Uuid().v4();
     Map<String, dynamic> newRequest = Map.from(request); // ایجاد یک کپی جدید
+
     if (parentItem != {}) {
       newRequest.addAll(parentItem);
     }
+    newRequest.addAll({
+      "sync2":"false",
+      "server error2":"Dont sync this record!",
+    });
 
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
     var beforValidate = HelperController.beforeStoreValidation(newData);
@@ -395,18 +402,18 @@ class DB {
       showSnackbar(snackTypes.error, beforValidate['message']);
     } else {
       if (await RecordController.validate(this.tableName!, newData,
-              ViewCustomController.getDataTable(this.tableName!)) ==
-          false) {
+              ViewCustomController.getDataTable(this.tableName!)) == false) {
         var before = await HelperController.beforeStore(newData);
         if (before['status'] == false) {
           showSnackbar(snackTypes.error, before['message']);
-        } else {
+        }
+        else {
           DataModel customData = await HelperController.beforeStore(newData)['data'];
-          print('customData>>>${customData.data}');
-          customData.data.addAll(RecordController.syncFunction(false));
+
+          await ConncetServerController.setDatabaseme(customData.data);
           await box.add(customData);
-          var afterData = await HelperController.afterStore(
-              this.tableName!, newRequest, customData);
+          print('customData>>>${customData.data}');
+          var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
@@ -456,12 +463,10 @@ class DB {
           if (before['status'] == false) {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
-            var customUpdate =
-                await HelperController.beforeUpdate(record)['data'];
-            var allDataIndex =
-                allData.indexWhere((element) => element.id == data['id']);
+            var customUpdate = await HelperController.beforeUpdate(record)['data'];
+            var allDataIndex = allData.indexWhere((element) => element.id == data['id']);
             allData[allDataIndex] = customUpdate;
-            customUpdate.data.addAll(RecordController.syncFunction(true));
+            await ConncetServerController.setDatabaseme(customUpdate.data);
             await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterUpdate(

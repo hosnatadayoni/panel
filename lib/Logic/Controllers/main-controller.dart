@@ -931,16 +931,7 @@ class MainController extends GetxController {
   static Future<void> loadJson() async {
     String jsonFileString;
     jsonFileString = await rootBundle.loadString('assets/menu.json');
-    // if(kIsWeb){
-    //   jsonFileString = await rootBundle.loadString('assets/menu.json');
-    // }
-    // else{
-    //   String jsonFile = 'C:\\menu.json';
-    //   jsonFileString = await File(jsonFile).readAsString();
-    // }
     SubMenuList = json.decode(jsonFileString);
-
-    // await createMultiSelectTable(String tableData);
     for (var name in tableNames()) {
       addsyncField('${name}');
       createMultiSelectTable('${name}');
@@ -968,7 +959,6 @@ class MainController extends GetxController {
       'is-show-edit': false,
       'is-show-store': false,
     });
-    print('MainController.addsyncField>>>${items}');
   }
 
   static List<dynamic> tableNames() {
@@ -1069,7 +1059,6 @@ class MainController extends GetxController {
         MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
         tableInfo = tableData;
-
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else
@@ -1079,7 +1068,6 @@ class MainController extends GetxController {
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
-
       }
     }
     if (tableData == null) {
@@ -1211,4 +1199,5 @@ class MainController extends GetxController {
       await Get.to(() => TablePage());
     }
   }
+
 }

@@ -162,6 +162,7 @@ class _CreatePageState extends State<CreatePage> {
                                               onExit: (_) {},
                                               child: InkWell(
                                                 onTap: () async {
+                                                  print('_CreatePageState.build>>>${ViewController.request}');
                                                   await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
                                                   if (ViewController.isClickedBtn.value == false) {
                                                     MainController.goToTablePage();

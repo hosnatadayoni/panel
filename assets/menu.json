@@ -742,5 +742,46 @@
       }
 
     ]
+  },
+
+  {
+    "title": "دیتابیس تستی",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "databse",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "relations": [],
+    "columns": [
+      {
+        "name": "select2",
+        "title": "select2",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "0",
+            "value": "1",
+            "is_selected": true
+          },
+          {
+            "title": "10",
+            "value": "2",
+            "is_selected": false
+          },
+          {
+            "title": "20",
+            "value": "3",
+            "is_selected": false
+          }
+        ]
+      },
+      {
+        "name": "code",
+        "title": "code",
+        "type": "string"
+      }
+    ]
   }
 ]

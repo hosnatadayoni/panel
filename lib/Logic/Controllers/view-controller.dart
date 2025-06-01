@@ -191,7 +191,7 @@ class ViewController extends GetxController {
                     isSeletedDate: false.obs,
                     onDateChanged: (date) {
                       // dataJson[columnName] =  date;
-                      ViewController.request[column['name']] = date;
+                      ViewController.request[column['name']]= date;
                     },
                     column: column,
                   ),
@@ -865,16 +865,15 @@ class ViewController extends GetxController {
             // dataJson[columnName] = text;
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
-                ViewController.request[column['name']] = int.parse('${text}');
+                ViewController.request[column['name']]= int.parse('${text}');
 
               } else if (column['type'] == 'Number double') {
-                ViewController.request[column['name']] =
-                    double.parse('${text}');
+                ViewController.request[column['name']]= double.parse('${text}');
               } else {
-                ViewController.request[column['name']] = text;
+                ViewController.request[column['name']]= text;
               }
             } else {
-              ViewController.request[column['name']] = '';
+              ViewController.request[column['name']]= '';
 
             }
           },
@@ -1188,8 +1187,7 @@ class ViewController extends GetxController {
                                                   .value +
                                                   itemsShowSelectItem(r, column['items']);
 
-                                            ViewController.request[
-                                            column['name']] = selectedItemId;
+                                            ViewController.request[column['name']]= selectedItemId;
 
                                           }
                                         });
@@ -1418,9 +1416,7 @@ class ViewController extends GetxController {
                                           in selectedItemsList)
                                             selectedId.add(r['id']);
 
-                                          ViewController.request[
-                                          column['name']] =
-                                              selectedId;
+                                          ViewController.request[column['name']]= selectedId;
                                         }
                                       });
                                 })),
