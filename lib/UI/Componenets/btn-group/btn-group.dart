@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 enum ButtonGroupSize { large, medium, small }
 enum ButtonGroupAxis { horizontal, vertical }
+
 class ButtonGroup extends StatefulWidget {
    List<ButtonItem> buttons;
    double spacing;
@@ -26,10 +27,19 @@ class ButtonGroup extends StatefulWidget {
 }
 class _ButtonGroupState extends State<ButtonGroup> {
   RxList<bool> checkboxStates = <bool>[].obs;
+  int radioIndex = -1;
+  Rx<int> selectedIndex = (-1).obs;
   @override
   void initState() {
     super.initState();
-    checkboxStates = widget.buttons.map((button) =>  false).toList().obs;
+    checkboxStates = widget.buttons
+        .map((button) => button.isChechked ?? false)
+        .toList()
+        .obs;
+    radioIndex = widget.buttons.indexWhere((button) => button.isRadio == true && (button.isChechked ?? false));
+    if(radioIndex != -1){
+      selectedIndex.value = radioIndex;
+    }
 
   }
   EdgeInsets _getPadding() {
@@ -68,7 +78,7 @@ class _ButtonGroupState extends State<ButtonGroup> {
   @override
   Widget build(BuildContext context) {
     Rx<int> isHoverBtn = (-1).obs;
-    Rx<int> selectedIndex = (-1).obs;
+
 
     return widget.axis == ButtonGroupAxis.horizontal ?  IntrinsicHeight(
       child: Row(
@@ -132,30 +142,81 @@ class _ButtonGroupState extends State<ButtonGroup> {
         //     ? Colors.transparent
         //     : button.buttonColor;
         Color? getBackgroundColor() {
+
           if (isCheckBox) {
-            return checkboxStates[index] ? button.buttonColor : Colors.transparent;
+            // if(isOutline){
+            //   return checkboxStates[index] ? button.backgroundColor() : Colors.transparent;
+            // }
+            // else{
+            //   if(checkboxStates[index]){
+            //     return  button.backgroundColor();
+            //   }
+            // }
+            if(checkboxStates[index]){
+              return  button.backgroundColor();
+            }
           }
-          if(isRadio){
-            return (selectedIndex.value == index || (button.isChechked!))
-                ? button.buttonColor
-                : Colors.transparent;
+          if(isRadio) {
+            // if (isOutline) {
+            //   return selectedIndex.value == index
+            //       ? button.backgroundColor()
+            //       : Colors.transparent;
+            // }
+            // else {
+            //   if (selectedIndex.value == index) {
+            //     return button.backgroundColor();
+            //   }
+            // }
+            if(selectedIndex.value == index){
+              return button.backgroundColor();
+            }
+
           }
-          return isCheckBox || isRadio
-              ? Colors.transparent
-              : button.isActive!
-              ? button.activeColor
-              : isHover
-              ? button.hoverBtnColor
-              : isOutline
-              ? Colors.transparent
-              : button.buttonColor;
+
+          return button.isActive!
+              ? button.HoverbackgroundColor():
+            isOutline
+              ? Colors.transparent :
+               isHover
+              ? button.HoverbackgroundColor()
+              : button.backgroundColor();
+        }
+        Color txtStyle(){
+          if(isHover || button.isActive!){
+            return widget.buttons[index].contentColor();
+          }
+
+          else if(widget.buttons[index].isCheckBox!){
+            if(checkboxStates[index] == true){
+              return widget.buttons[index].contentColor();
+            }
+            else{
+              if(widget.buttons[index].isOutline!){
+                return widget.buttons[index].backgroundColor();
+              }
+            }
+          }
+          else if(widget.buttons[index].isRadio!) {
+            if(selectedIndex.value == index){
+              return widget.buttons[index].contentColor();
+            }
+            else{
+              if (widget.buttons[index].isOutline!) {
+                return widget.buttons[index].backgroundColor();
+              }
+            }
+          }
+          else if (widget.buttons[index].isOutline!) {
+            return widget.buttons[index].backgroundColor();
+          }
+          return widget.buttons[index].contentColor();
         }
         return SizedBox(
           height: _getButtonHeight(),
           child: MouseRegion(
-            onEnter:
+            onEnter: button.isCheckBox! || button.isRadio! ? null :
                 (_) => isHoverBtn.value = index,
-            onExit: button.isCheckBox!
+            onExit: button.isCheckBox! || button.isRadio!
                 ? null
                 : (_) => isHoverBtn.value = -1,
             child: InkWell(
@@ -173,25 +234,43 @@ class _ButtonGroupState extends State<ButtonGroup> {
               },
               child:widget.buttons[index].isDropdown! ?
               Dropdown(dropDownTitle: button.contentBtnDropDown!,
+                dropDownTitelColor:  txtStyle(),
+                dropDownTitelHoverColor: widget.buttons[index].contentColor(),
                 colorBox:getBackgroundColor() ,
-                colorHoverBox:getBackgroundColor() ,
+                iconColor: txtStyle(),
+                ColorActiveBox: widget.buttons[index].HoverbackgroundColor(),
+                colorHoverBox:widget.buttons[index].HoverbackgroundColor() ,
                 borderRadius:widget.axis == ButtonGroupAxis.horizontal ?  leftBorderRadius + rightBorderRadius : topBorderRadius + bottomBorderRadius ,
                 itemsDropDown: button.itemsDropDown,padding:_getPadding() , borderColor: (isRadio || button.isCheckBox!)
-                    ? widget.buttons[index].buttonColor!
+                    ? widget.buttons[index].backgroundColor()
                     : isHover || widget.buttons[index].isActive!
-                    ? widget.buttons[index].hoverBtnColor!
-                    : widget.buttons[index].buttonColor!,) : Container(
+                    ? widget.buttons[index].HoverbackgroundColor()
+                    : widget.buttons[index].backgroundColor(),) : Container(
                 padding: _getPadding(),
                 decoration: BoxDecoration(
-                    color:getBackgroundColor(),
+                    color:widget.buttons[index].isActive! || isHover ?
+                    widget.buttons[index].HoverbackgroundColor() : getBackgroundColor(),
                     borderRadius:widget.axis == ButtonGroupAxis.horizontal ?  leftBorderRadius + rightBorderRadius : topBorderRadius + bottomBorderRadius,
                     border: Border.all(width: 1 , color: (isRadio || button.isCheckBox!)
-                        ? widget.buttons[index].buttonColor!
+                        ? widget.buttons[index].backgroundColor()!
                         : isHover || widget.buttons[index].isActive!
-                        ? widget.buttons[index].hoverBtnColor!
-                        : widget.buttons[index].buttonColor!,)
+                        ? widget.buttons[index].HoverbackgroundColor()!
+                        : widget.buttons[index].backgroundColor()!,)
                 ),
-                child:widget.buttons[index].contetnBtn!
+                child:Center(child: DefaultTextStyle.merge(
+                    // style: TextStyle(
+                    //   color:isHover ?widget.buttons[index].contentColor():
+                    //   widget.buttons[index].isOutline! ? widget.buttons[index].backgroundColor():
+                    //   widget.buttons[index].isCheckBox! ?
+                    //   checkboxStates[index] ? widget.buttons[index].contentColor() :
+                    //   widget.buttons[index].contentColor() :
+                    //   widget.buttons[index].contentColor(),
+                    // ),
+                  style: TextStyle(
+                    color: txtStyle()
+                  ),
+                    child: widget.buttons[index].contetnBtn!),
+                )
                 // child: Txt(widget.buttons[index].contetnBtn! , color:widget.buttons[index].contentBtnColor, fontSize: _getFontSize(), fontWeight: FontWeight.w400,textAlign: TextAlign.center,),
               ),
             ),),

@@ -414,6 +414,37 @@ class _BtnState extends State<Btn> {
       return widget.isActive! ? dark:Colors.transparent;
     }
 
+    Color textColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return widget.isActive! ? dark:Colors.transparent;
+    }
+
     Color HoverbackgroundColor(){
       if(widget.type == btnType.primary){
         return primaryHover;
@@ -505,7 +536,7 @@ class _BtnState extends State<Btn> {
               decoration: BoxDecoration(
                 color:widget.isActive! ?HoverbackgroundColor() :colorBox(),
                 border: Border.all(
-                  color:widget.disabled ?backgroundColor().withOpacity(0.6) :  _isHovered ? HoverbackgroundColor() : backgroundColor(),
+                  color:widget.disabled ? widget.isOutline! ?backgroundColor().withOpacity(0.6) : backgroundColor().withOpacity(0.1) :  _isHovered ? HoverbackgroundColor() : backgroundColor(),
                   // color: widget.disabled ?backgroundColor().withOpacity(0.6) :  _isToggle ? Colors.transparent : _isHovered ? widget.hoverBtnColor! :widget.colorBtn!,
                   width: 1,
                 ),
@@ -519,7 +550,8 @@ class _BtnState extends State<Btn> {
               Center(
                 child: DefaultTextStyle.merge(
                   style: TextStyle(
-                    color:_isHovered ?contentColor(): widget.isOutline! ?backgroundColor(): contentColor(),
+                    color:_isHovered ?contentColor(): widget.isOutline! ? textColor(): contentColor(),
+                    decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
                   ),
                   child: widget.content!,
                 ),

@@ -265,7 +265,7 @@ class _DropdownState extends State<Dropdown> {
                 widget.padding,
                 decoration: BoxDecoration(
                   color:
-                  isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
+                  isHover.value ? this.widget.colorHoverBox :  this.widget.colorBox,
                   borderRadius:widget.borderRadius != null ?  widget.borderRadius:
                   BorderRadius.all(Radius.circular(5)),
                   border: Border.all(width: 1, color: widget.borderColor!)

@@ -120,6 +120,16 @@ const alertContentInfo = Color(0xff055160);
 const alertContentLight = Color(0xff495057);
 const alertContentDark = Color(0xff495057);
 
+//border color
+const alertBorderPrimary = Color(0xff9ec5fe);
+const alertBorderSecondry = Color(0xffc4c8cb);
+const alertBorderSuccess = Color(0xffa3cfbb);
+const alertBorderDanger = Color(0xfff1aeb5);
+const alertBorderWarning = Color(0xffffe69c);
+const alertBorderInfo = Color(0xff9eeaf9);
+const alertBorderLight = Color(0xffe9ecef);
+const alertBorderDark = Color(0xffadb5bd);
+
 
 
 

@@ -152,6 +152,33 @@ class _AlertState extends State<Alert> with SingleTickerProviderStateMixin {
       }
       return Colors.transparent;
     }
+    Color borderColor(){
+      if(widget.type == alertType.primary){
+        return alertBorderPrimary;
+      }
+      else if(widget.type == alertType.secondary){
+        return alertBorderSecondry;
+      }
+      else if(widget.type == alertType.success){
+        return alertBorderSuccess;
+      }
+      else if(widget.type == alertType.danger){
+        return alertBorderDanger;
+      }
+      else if(widget.type == alertType.warning){
+        return alertBorderWarning;
+      }
+      else if(widget.type == alertType.info){
+        return alertBorderInfo;
+      }
+      else if(widget.type == alertType.light){
+        return alertBorderLight;
+      }
+      else if(widget.type == alertType.dark){
+        return alertBorderDark;
+      }
+      return Colors.transparent;
+    }
     return Column(
       crossAxisAlignment: widget.direction == AlertDirection.left ?
       CrossAxisAlignment.end : widget.direction == AlertDirection.center ? CrossAxisAlignment.center :
@@ -162,15 +189,13 @@ class _AlertState extends State<Alert> with SingleTickerProviderStateMixin {
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            // border: Border.all(width: 1, color: widget.borderColor!),
+            border: Border.all(width: 1 , color: borderColor()),
             color: backgroundColor(),
           ),
           child:widget.dismissible ?  Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                color: ContentColor(),
-                  child: widget.content!),
+              DefaultTextStyle(style: TextStyle(color: ContentColor()), child:widget.content! ),
               MouseRegion(
                 onEnter: (_){
                   isHover.value = true;
@@ -188,7 +213,7 @@ class _AlertState extends State<Alert> with SingleTickerProviderStateMixin {
                 }),
               ),
             ],
-          ):widget.content,
+          ):DefaultTextStyle(style: TextStyle(color: ContentColor()), child:widget.content! ),
         ),
       ],
     );

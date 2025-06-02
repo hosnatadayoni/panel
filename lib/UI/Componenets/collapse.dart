@@ -1,9 +1,10 @@
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
+import 'btn.dart';
 
 class Collapse extends StatefulWidget {
-  String? btnTxt;
+  Widget? btnContent;
   Color? btnTxtColor;
   Color? colorBox;
   Color? borderColor;
@@ -14,10 +15,12 @@ class Collapse extends StatefulWidget {
   List<String>? targetIds;
   Color? colorBtn;
   Color? colorBtnHover;
+  btnType? type;
+  bool? isOutlineBtn;
 
 
   Collapse({
-    this.btnTxt,
+    this.btnContent,
     this.btnTxtColor = whiteColor,
     this.colorBox,
     this.borderColor,
@@ -28,6 +31,8 @@ class Collapse extends StatefulWidget {
     this.targetIds,
     this.colorBtn =  Colors.blue,
     this.colorBtnHover = colorHoverBtn,
+    required this.type,
+    this.isOutlineBtn =  false,
     Key? key,
   }) : super(key: key);
 
@@ -44,38 +49,16 @@ class _CollapseState extends State<Collapse> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.btnTxt != null)
-          InkWell(
-            onTap: (){
-              setState(() {
-                _isShow = !_isShow;
-              });
-            },
-            child: MouseRegion(
-              onEnter: (_){
-                setState(() {
-                  isHover = true;
-                });
-              },
-              onExit: (_){
-               setState(() {
-                 isHover = false;
-               });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: isHover ? widget.colorBtnHover :widget.colorBtn,
-                ),
-                padding: EdgeInsets.only(top: 6 , bottom: 6 , left: 12 , right: 12),
-                child: Txt(
-                  widget.btnTxt!,
-                  color: widget.btnTxtColor,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
+        if (widget.btnContent != null)
+          Btn(
+            type: widget.type,
+              isOutline: widget.isOutlineBtn,
+              content: widget.btnContent,
+              onClick: (){
+            setState(() {
+              _isShow = !_isShow;
+            });
+          }),
         if (widget.content != null && widget.targetId == null) ...[
           const SizedBox(height: 10),
           widget.isHorizontal
@@ -185,6 +168,18 @@ class _MultiCollapseState extends State<MultiCollapse> {
             final button = entry.value;
 
             if (button is Collapse) {
+              return Btn(
+                    type: button.type,
+                    isOutline: button.isOutlineBtn,
+                    content: button.btnContent,
+                    onClick: (){
+                      if (button.targetId != null) {
+                        _toggleCollapse(button.targetId!);
+                      } else if (button.targetIds != null) {
+                        _toggleAll(button.targetIds!);
+                      }
+                    },
+                );
               return InkWell(
                 onTap: () {
                   if (button.targetId != null) {
@@ -204,13 +199,19 @@ class _MultiCollapseState extends State<MultiCollapse> {
                           : button.colorBtn,
                     ),
                     padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
-                    child: Txt(
-                      button.btnTxt ?? '',
-                      color: button.btnTxtColor,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    // child: Txt(
+                    //   button.btnTxt ?? '',
+                    //   color: button.btnTxtColor,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
+                    child: button.btnContent,
                   ),
                 ),
+                // child: Btn(
+                //     type: button.type,
+                //     isOutline: button.isOutlineBtn,
+                //     content: button.btnContent,
+                // ),
               );
             }
             return button;
@@ -224,7 +225,7 @@ class _MultiCollapseState extends State<MultiCollapse> {
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                height: _expandedStates[collapsible.targetId!] ?? false ? 100 : 0,
+                height: _expandedStates[collapsible.targetId!] ?? false ? 0 : 100,
                 margin: EdgeInsets.only(left: 10),
                 child: SingleChildScrollView(
                   child: Container(

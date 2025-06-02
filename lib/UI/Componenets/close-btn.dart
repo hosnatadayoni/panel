@@ -8,7 +8,7 @@ class CloseBtn extends StatelessWidget {
    double? size;
    String? closeButtonTooltip;
    bool? isDisabled;
-   bool? isDark;
+   // bool? isDark;
 
    CloseBtn({required this.onClose ,
      this.iconColor ,
@@ -16,7 +16,7 @@ class CloseBtn extends StatelessWidget {
      this.closeButtonTooltip ,
      this.iconHoverColor ,
      this.isDisabled = false,
-     this.isDark = false,
+     // this.isDark = false,
    });
 
   @override
@@ -25,30 +25,27 @@ class CloseBtn extends StatelessWidget {
     double opacity = this.isDisabled! ? 0.5 : 1.0;
     Color _getIconColor() {
       if (isHover.value) {
-        return iconHoverColor ?? (isDark! ? color32 : blackColor);
+        // return iconHoverColor ?? (isDark! ? color32 : blackColor);
+        return iconHoverColor ?? blackColor;
       }
       return iconColor ?? color31;
     }
     return Obx((){
-      return Container(
-        padding: EdgeInsets.all(24),
-        color: this.isDark! ?darkBackground : Colors.transparent,
-        child: IgnorePointer(
-          ignoring: this.isDisabled!,
-          child: Opacity(
-            opacity: opacity,
-            child: MouseRegion(
-              onEnter: this.isDisabled! ? null : (_){
-                isHover.value = true;
-              },
-              onExit:this.isDisabled! ? null : (_){
-                isHover.value = false;
-              },
-              child: IconButton(
-                onPressed: onClose,
-                icon: Icon(Icons.close, color: _getIconColor()),
-                tooltip: closeButtonTooltip,
-              ),
+      return IgnorePointer(
+        ignoring: this.isDisabled!,
+        child: Opacity(
+          opacity: opacity,
+          child: MouseRegion(
+            onEnter: this.isDisabled! ? null : (_){
+              isHover.value = true;
+            },
+            onExit:this.isDisabled! ? null : (_){
+              isHover.value = false;
+            },
+            child: IconButton(
+              onPressed: onClose,
+              icon: Icon(Icons.close, color: _getIconColor()),
+              tooltip: closeButtonTooltip,
             ),
           ),
         ),

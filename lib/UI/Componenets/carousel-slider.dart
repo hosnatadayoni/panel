@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/img.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
@@ -316,7 +315,7 @@ class MyCarousel extends StatefulWidget {
     this.hasCaption = false,
     this.ride = false,
      this.hasControl = false,
-     this.hasTouchSwipping = true,
+     this.hasTouchSwipping = false,
      // this.isDark = false,
      this.colorBox = color26,
      this.colorIcon  = whiteColor,
@@ -335,7 +334,8 @@ class MyCarousel extends StatefulWidget {
 class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
   final CarouselController _carouselController = CarouselController();
   Duration _currentInterval = Duration(seconds: 5);
-  int _currentIndex = 0;
+  Duration _transitionDuration = Duration(milliseconds: 500);
+  int _currentIndex=0;
   bool _isAutoPlayPaused = false;
   bool pauseOnHover = true;
   bool pauseOnVisibilityChange = true;
@@ -346,6 +346,9 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.items!.indexWhere((item) => item.isActive!);
+    if (_currentIndex == -1) _currentIndex = 0;
+    print('_currentIndex>>>${_currentIndex}');
     WidgetsBinding.instance.addObserver(this);
     _startAutoPlay();
   }
@@ -385,26 +388,75 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
     if (!_hasUserInteracted) {
      setState(() {
        _hasUserInteracted = true;
-       widget.isAutoPlay = true;
+       if(widget.ride){
+         widget.isAutoPlay = true;
+       }
+
      });
     }
   }
 
+  // void _startAutoPlay() {
+  //   // if (!widget.isAutoPlay || !widget.isCrossFade) return;
+  //
+  //   // _stopAutoPlay();
+  //   _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(milliseconds: 5);
+  //   _autoPlayTimer = Timer.periodic(_currentInterval, (timer) {
+  //     if (_shouldAutoPlay) {
+  //       setState(() {
+  //         _currentIndex = (_currentIndex + 1) % widget.items!.length;
+  //         // _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(seconds: 5);
+  //       });
+  //     }
+  //   });
+  // }
+  // void _startAutoPlay() {
+  //   _stopAutoPlay();
+  //   if (!widget.isAutoPlay) return;
+  //
+  //
+  //   _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(seconds: 5);
+  //
+  //   _autoPlayTimer = Timer.periodic(_currentInterval, (timer) {
+  //     if (_shouldAutoPlay) {
+  //       if(!widget.isCrossFade){
+  //         _carouselController.nextPage(
+  //           duration: _transitionDuration,
+  //           curve: Curves.easeInOut,
+  //         );
+  //       }
+  //     }
+  //   });
+  // }
   void _startAutoPlay() {
-    if (!widget.isAutoPlay || !widget.isCrossFade) return;
-
     _stopAutoPlay();
+    if (!widget.isAutoPlay || !mounted) return;
+
+    _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(seconds: 5);
 
     _autoPlayTimer = Timer.periodic(_currentInterval, (timer) {
-      if (_shouldAutoPlay) {
-        setState(() {
-          _currentIndex = (_currentIndex + 1) % widget.items!.length;
-          _currentInterval = widget.items?[_currentIndex].autoPlayInterval ?? Duration(seconds: 5);
-        });
+      if (_shouldAutoPlay && mounted) {
+        if (widget.isCrossFade) {
+          setState(() {
+            _currentIndex = (_currentIndex + 1) % widget.items!.length;
+          });
+        } else {
+          _carouselController.nextPage(
+            duration: _transitionDuration,
+            curve: Curves.easeInOut,
+          );
+        }
       }
     });
   }
-
+  void _onPageChanged(int index, CarouselPageChangedReason reason) {
+    setState(() {
+      _currentIndex = index;
+    });
+    if (widget.isAutoPlay) {
+      _startAutoPlay();
+    }
+  }
   void _stopAutoPlay() {
     _autoPlayTimer?.cancel();
     _autoPlayTimer = null;
@@ -420,7 +472,8 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
         alignment: Alignment.center,
         children: [
           widget.isCrossFade?AnimatedSwitcher(
-            duration: Duration(milliseconds: (_duration * 1000).toInt()),
+            // duration: Duration(milliseconds: (_duration * 1000).toInt()),
+            duration:_currentInterval ,
             child: Container(
               key: ValueKey<String>(widget.items![_currentIndex].imageUrl),
               width: double.infinity,
@@ -460,24 +513,25 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
                 height: 400,
                 aspectRatio: 16/9,
                 viewportFraction: 1.0,
-                initialPage: 0,
+                initialPage: _currentIndex,
                 enableInfiniteScroll: true,
                 reverse: false,
                 autoPlay: _shouldAutoPlay,
                 pauseAutoPlayOnTouch: true,
                 autoPlayInterval: _currentInterval,
-                autoPlayAnimationDuration: _currentInterval,
+                autoPlayAnimationDuration: _transitionDuration,
+                onPageChanged: _onPageChanged,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enlargeCenterPage: false,
                 scrollDirection: Axis.horizontal,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    // print('current index>>>${index}');
-                    _currentIndex = index;
-                    _currentInterval = widget.items?[index].autoPlayInterval ?? Duration(seconds: 5);
-                    // print('_currentInterval>>>${_currentInterval}');
-                  });
-                },
+                // onPageChanged: (index, reason) {
+                //   setState(() {
+                //     // print('current index>>>${index}');
+                //     _currentIndex = index;
+                //     _currentInterval = widget.items?[index].autoPlayInterval ?? Duration(seconds: 5);
+                //     // print('_currentInterval>>>${_currentInterval}');
+                //   });
+                // },
               ),
             ),
           ),
@@ -501,7 +555,8 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
                 else{
                   _carouselController.nextPage(
                     // duration: Duration(milliseconds: 300),
-                    duration: _currentInterval,
+                    // duration: _currentInterval,
+                    duration: _transitionDuration,
                     curve: Curves.easeInOut,
                   );
                 }
@@ -529,7 +584,8 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
                 else{
                   _carouselController.previousPage(
                     // duration: Duration(milliseconds: 300),
-                    duration: _currentInterval,
+                    // duration: _currentInterval,
+                    duration: _transitionDuration,
                     curve: Curves.easeInOut,
                   );
                 }
@@ -546,7 +602,8 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.hasCaption)
-                  Container(
+                  if(widget.items![_currentIndex].caption != null)
+                     Container(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Column(
                       children: [
@@ -634,11 +691,13 @@ class CarouselItem {
    String imageUrl;
    Duration? autoPlayInterval;
    Caption? caption;
+   bool? isActive;
 
   CarouselItem({
     required this.imageUrl,
     this.autoPlayInterval,
     this.caption,
+    this.isActive = false,
   });
 }
 
