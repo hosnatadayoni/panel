@@ -233,13 +233,12 @@ class _ButtonGroupState extends State<ButtonGroup> {
                 widget.buttons[index].onPressed?.call(index);
               },
               child:widget.buttons[index].isDropdown! ?
-              Dropdown(dropDownTitle: button.contentBtnDropDown!,
+              Dropdown(
+                type: widget.buttons[index].type!,
+                dropDownTitle: button.contentBtnDropDown!,
                 dropDownTitelColor:  txtStyle(),
                 dropDownTitelHoverColor: widget.buttons[index].contentColor(),
-                colorBox:getBackgroundColor() ,
-                iconColor: txtStyle(),
                 ColorActiveBox: widget.buttons[index].HoverbackgroundColor(),
-                colorHoverBox:widget.buttons[index].HoverbackgroundColor() ,
                 borderRadius:widget.axis == ButtonGroupAxis.horizontal ?  leftBorderRadius + rightBorderRadius : topBorderRadius + bottomBorderRadius ,
                 itemsDropDown: button.itemsDropDown,padding:_getPadding() , borderColor: (isRadio || button.isCheckBox!)
                     ? widget.buttons[index].backgroundColor()

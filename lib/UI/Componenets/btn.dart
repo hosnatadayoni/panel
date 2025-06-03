@@ -294,7 +294,7 @@ class Btn extends StatefulWidget {
 
   Btn(
        {
-         this.type,
+         required this.type,
         this.content,
         this.onClick,
         this.width,
@@ -546,6 +546,7 @@ class _BtnState extends State<Btn> {
               width: widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint!
                   ? size.width : widget.isCenter ? size.width * 0.5
                   : widget.width,
+              height: widget.height != null ? widget.height : null,
               child:
               Center(
                 child: DefaultTextStyle.merge(

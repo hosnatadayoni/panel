@@ -136,13 +136,13 @@ class _MyFormPageState extends State<MyFormPage> {
                 DropdownItem(text: "Action"),
                 DropdownItem(text: "Another action"),
                 DropdownItem(text: "Something else here"),
-              ],spreadLinkList:['spread link'], colorBox: Colors.transparent,dropDownTitelColor: Colors.grey,iconColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
+              ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
           const SizedBox(height: 30),
           InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
             DropdownItem(text: "Action"),
             DropdownItem(text: "Another action"),
             DropdownItem(text: "Something else here"),
-          ],spreadLinkList:['spread link'], colorBox: Colors.transparent,dropDownTitelColor: Colors.grey,iconColor: Colors.grey , ),],),
+          ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey, ),],),
           const SizedBox(height: 30),
           InputGroup(isShowStart: true , isSelectBox: true, selectList: [
             CustomSelect(hintText: 'choose...',

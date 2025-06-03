@@ -3,19 +3,24 @@ import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../btn.dart';
+
 class ButtonPlaceholder extends StatelessWidget {
    double? width;
    double? height;
-   Color? baseColor;
+   // Color? baseColor;
    Color? highlightColor;
    PlaceholderAnimationType? animationType;
+   btnType type;
+
 
 
    ButtonPlaceholder({
     this.width,
-    this.baseColor,
+    // this.baseColor,
      this.height,
      this.animationType,
+     required this.type,
   });
 
   @override
@@ -27,7 +32,7 @@ class ButtonPlaceholder extends StatelessWidget {
         width: this.width ??size.width,
         height: this.height ?? 40,
         animationType: this.animationType,
-        baseColor: this.baseColor != null ? this.baseColor : color37,
+        // baseColor: this.baseColor != null ? this.baseColor : color37,
         highlightColor:this.highlightColor != null ? this.highlightColor! : Colors.grey[100]!,
       ),
     );
@@ -45,7 +50,7 @@ class ButtonPlaceholder extends StatelessWidget {
            baseColor: baseColor!,
            highlightColor: highlightColor!,
            period: const Duration(milliseconds: 1500),
-           child: box(width! , height! , baseColor),
+           child: box(width! , height!),
          );
        case PlaceholderAnimationType.wave:
          return Shimmer(
@@ -58,20 +63,21 @@ class ButtonPlaceholder extends StatelessWidget {
              stops: const [0.1, 0.5, 0.9],
            ),
            period: const Duration(milliseconds: 2000),
-           child: box(width! , height! , baseColor),
+           child: box(width! , height!),
          );
        default:
-         return box(width! , height! , baseColor!);
+         return box(width! , height!);
      }
    }
-   Widget box(double width , double height , Color baseColor){
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: baseColor,
-      ),
-      width: width,
-      height: height,
-    );
+   Widget box(double width , double height){
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     borderRadius: BorderRadius.circular(10),
+    //     color: baseColor,
+    //   ),
+    //   width: width,
+    //   height: height,
+    // );
+     return Btn(type: this.type,width: width,height: height,disabled: true,content: Container(),);
    }
 }

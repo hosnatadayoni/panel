@@ -1,5 +1,6 @@
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/btn.dart';
 import 'package:finance/UI/Componenets/progress/progress-item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,7 +76,48 @@ class _MultiColorProgressBarState extends State<MultiColorProgressBar>with Singl
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    Color? backgroundColor(btnType segment){
+      if(segment == btnType.primary){
+        return colorBtn;
+      }
+      else if(segment == btnType.secondary){
+        return secondry;
+      }
+      else if(segment == btnType.success){
+        return success;
+      }
+      else if(segment == btnType.danger){
+        return danger;
+      }
+      else if(segment == btnType.warning){
+        return warning;
+      }
+      else if(segment == btnType.info){
+        return info;
+      }
+      else if(segment == btnType.light){
+        return light;
+      }
+      else if(segment == btnType.dark){
+        return dark;
+      }
+      else if(segment == btnType.link){
+        return Colors.transparent;
+      }
+    }
+    Color contentColor(btnType segment){
+      if(segment == btnType.primary || segment == btnType.secondary ||
+          segment == btnType.success || segment == btnType.danger || segment == btnType.dark){
+        return whiteColor;
+      }
+      else if(segment == btnType.warning || segment == btnType.info || segment == btnType.light){
+        return blackColor;
+      }
+      else if(segment == btnType.link){
+        return colorBtn;
+      }
+      return dark;
+    }
     BorderRadius _getBorderRadius(ProgressItem segment, List<ProgressItem> allSegments , int i , double totalWidth) {
       double accumulatedWidth = 0;
       for (int j = 0; j <= i; j++) {
@@ -108,13 +150,15 @@ class _MultiColorProgressBarState extends State<MultiColorProgressBar>with Singl
                 child: ClipRRect(
                   borderRadius: _getBorderRadius(widget.items[i] , widget.items , i , totalWidth),
                   child: Container(
-                    color: widget.items[i].progressBarolor,
+                    // color: widget.items[i].progressBarolor,
+                    color: backgroundColor(widget.items[i].type),
                     child: Semantics(
                       value: '${widget.items[i].value}%',
                       child:widget.items[i].showLabel ? Center(
                         child: Txt(
                           '${widget.items[i].value}%',
-                          color: widget.items[i].labelColor,
+                          // color: widget.items[i].labelColor,
+                          color: contentColor(widget.items[i].type),
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),

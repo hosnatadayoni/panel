@@ -6,7 +6,7 @@ class Breadcrumb extends StatefulWidget {
    List<BreadcrumbItem> items;
    Color? separatorColor;
    double separatorSize;
-   Axis direction;
+   // Axis direction;
    MainAxisAlignment alignment;
    String? separator;
    bool showSeparator;
@@ -19,7 +19,7 @@ class Breadcrumb extends StatefulWidget {
     required this.items,
     this.separatorColor,
     this.separatorSize = 16.0,
-    this.direction = Axis.horizontal,
+    // this.direction = Axis.horizontal,
     this.alignment = MainAxisAlignment.start,
     this.separator = '>',
     this.showSeparator = true,
@@ -49,8 +49,8 @@ class _BreadcrumbState extends State<Breadcrumb> {
 
     return Container(
       width: size.width,
-      child: Flex(
-        direction: widget.direction,
+      child: Row(
+        // direction: widget.direction,
         mainAxisAlignment: widget.alignment,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(widget.items.length * 2 - 1, (index) {

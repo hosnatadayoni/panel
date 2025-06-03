@@ -1,5 +1,7 @@
 import 'package:finance/Public/images.dart';
 import 'package:finance/Public/styles.dart';
+import 'package:finance/UI/Componenets/General/img.dart';
+import 'package:finance/UI/Componenets/General/myDivider.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/accordion.dart';
 import 'package:finance/UI/Componenets/alert.dart';
@@ -28,6 +30,9 @@ import 'package:finance/UI/Componenets/progress/progress.dart';
 import 'package:finance/UI/Componenets/spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:super_tooltip/super_tooltip.dart';
+
+import '../Componenets/tooltip.dart';
 
 class TestComponent extends StatelessWidget {
   const TestComponent({Key? key}) : super(key: key);
@@ -91,9 +96,7 @@ class TestComponent extends StatelessWidget {
         Breadcrumb(
           itemClickedColor: Colors.blue,
           itemColor: Colors.red,
-
           alignment: MainAxisAlignment.end,
-          direction: Axis.vertical,
           items: [
             BreadcrumbItem(
                 label: 'خانه',
@@ -206,7 +209,7 @@ class TestComponent extends StatelessWidget {
         //toggle
         Btn(type: btnType.primary,content: Txt('primary'),isToggle: true , isActive: true,),
         Btn(type: btnType.primary,content: Txt('primary')),
-        Btn(content: Txt('primary'),isToggle: true , isActive: true,),
+        Btn(type: btnType.primary,content: Txt('primary'),isToggle: true , isActive: true,),
         // //btn
         // Btn(colorBtn: Colors.blue , content: Txt('primary'), hoverBtnColor: Colors.blueAccent, isBlock: true),
         // SizedBox(height: 30),
@@ -305,11 +308,6 @@ class TestComponent extends StatelessWidget {
           ButtonItem(type: btnType.danger , contetnBtn: Txt('radio3', fontSize:16, fontWeight: FontWeight.w400,) ,  isRadio: true  , isOutline: true),
         ],),
         //end btn group
-
-
-        //card
-
-        //end card
 
         SizedBox(height: 30),
         //carousel slider
@@ -592,14 +590,195 @@ class TestComponent extends StatelessWidget {
           ],
         ),
         //end collapse
+
+
         SizedBox(height: 60),
-        DataListInput(options: ['aaaaaa' , 'vvvvv' , 'kkkk'] , label: 'xxxx' , ),
+
+        //card
+        //body
+        CustomCard(
+          body: Txt('This is some text within a card body.', fontSize: 16, fontWeight: FontWeight.w400,),
+        ),
         SizedBox(height: 30),
-
-
-
-
-
+        //Titles, text, and links
+        CustomCard(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Txt('card title' , fontSize: 20, fontWeight: FontWeight.w500,color: dark,),
+              SizedBox(height: 5,),
+              Txt('card subtitle' , fontSize: 16, fontWeight: FontWeight.w500,color: secondry,),
+              SizedBox(height: 10,),
+              Txt('This is some text within a card body.' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,),
+              SizedBox(height: 20,),
+              Wrap(
+                spacing: 10,
+                runSpacing: 5,
+                children: [
+                  InkWell(
+                      onTap: () {
+                      },
+                      child: Txt('Card Link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                  InkWell(
+                      onTap: () {
+                      },
+                      child: Txt('Another link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                ],
+              )
+            ],
+          )
+        ),
+        SizedBox(height: 30),
+        //images
+        CustomCard(
+          padding: 0,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0),
+                    ),
+                    child: Img(imgeTest,width: size.width ,height: 180,)),
+                SizedBox(height: 10,),
+                Container(
+                  padding: EdgeInsets.all(16),
+                    child: Txt('Some quick example text to build on the card title and make up the bulk of the card’s content.' , fontSize: 16, fontWeight: FontWeight.w400,)),
+              ],
+            )
+        ),
+        SizedBox(height: 30),
+        //list groups
+        CustomCard(
+          padding: 0,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Container(
+                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                     child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                 MyDivider(),
+                 Container(
+                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                     child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                 MyDivider(),
+                 Container(
+                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                     child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              ],
+            )
+        ),
+        SizedBox(height: 30),
+        //list group and header
+        CustomCard(
+            padding: 0,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                MyDivider(),
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                MyDivider(),
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              ],
+            ),
+           cardHeader: 'Feature',
+        ),
+        SizedBox(height: 30),
+        //list group and footer
+        CustomCard(
+          padding: 0,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              MyDivider(),
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              MyDivider(),
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+            ],
+          ),
+         cardFooter: 'Card Footer',
+        ),
+        SizedBox(height: 30),
+        //Kitchen sink
+        CustomCard(
+          padding: 0,
+            width: 400,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0),
+                    ),
+                    child: Img(imgeTest,width: size.width ,height: 180,)),
+                SizedBox(height: 10,),
+                Container(
+                  padding: EdgeInsets.only(right: 16),
+                    child: Txt('card title' , fontSize: 20, fontWeight: FontWeight.w500,color: dark,)),
+                SizedBox(height: 5,),
+                Container(
+                  padding: EdgeInsets.only(right: 16),
+                  child: Txt('card subtitle' , fontSize: 16, fontWeight: FontWeight.w500,color: secondry,),),
+                SizedBox(height: 10,),
+                Container(
+                    padding: EdgeInsets.only(right: 16),
+                    child: Txt('This is some text within a card body.' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                SizedBox(height: 20,),
+                MyDivider(),
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                MyDivider(),
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                MyDivider(),
+                Container(
+                    padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                    child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+                MyDivider(),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 5,
+                    children: [
+                      InkWell(
+                          onTap: () {
+                          },
+                          child: Txt('Card Link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                      InkWell(
+                          onTap: () {
+                          },
+                          child: Txt('Another link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                    ],
+                  ),
+                )
+              ],
+            )
+        ),
+        SizedBox(height: 30),
+        //Image overlays
         CustomCard(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -613,16 +792,280 @@ class TestComponent extends StatelessWidget {
               Txt('Card Link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,),
             ],
           ),
-          // imageTop: Img(loginSvg),
-          // imageBottom: Img(loginSvg),
-          // cardFooter: 'Featured',
-          // cardHeader: 'Featured',
-          // horizental: true,
           imageOverlay: true,
           imgUrl: test,
           hieght: 250,
           width: 200,
         ),
+        //end card
+
+        SizedBox(height: 60),
+
+        //dropDown
+        //basic
+        Dropdown(type: btnType.warning,dropDownTitle: 'DropDown', itemsDropDown: [DropdownItem(text: "Action"),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),],
+            spreadLinkList:['spread link']
+        ),
+        SizedBox(height: 30),
+        //Split button
+        Dropdown(type: btnType.warning,dropDownTitle: 'DropDown', itemsDropDown: [DropdownItem(text: "Action"),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),],
+          spreadLinkList:['spread link'],
+          isSplitButton: true,
+        ),
+        SizedBox(height: 30),
+        //sizing
+        Dropdown(type: btnType.warning,dropDownTitle: 'DropDown', itemsDropDown: [DropdownItem(text: "Action"),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),],
+          spreadLinkList:['spread link'],
+          isSplitButton: true,
+          size: DropDownSize.small,
+        ),
+        SizedBox(height: 5),
+        Dropdown(type: btnType.warning,dropDownTitle: 'DropDown', itemsDropDown: [DropdownItem(text: "Action"),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),],
+          spreadLinkList:['spread link'],
+          isSplitButton: true,
+          size: DropDownSize.large,
+        ),
+        SizedBox(height: 5),
+        Dropdown(type: btnType.warning,dropDownTitle: 'DropDown', itemsDropDown: [DropdownItem(text: "Action"),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),],
+          spreadLinkList:['spread link'],
+          isSplitButton: true,
+          size: DropDownSize.medium,
+        ),
+        SizedBox(height: 30),
+        //dark dropdown
+        Dropdown(type: btnType.secondary,dropDownTitle: 'dark button' , itemsDropDown: [
+          DropdownItem(text: "Action", isActive: true),
+          DropdownItem(text: "Another action"),
+          DropdownItem(text: "Something else here"),
+        ],spreadLinkList:['spread link'] , ColorDropDownBox: color34 , ColorTitleDropDownBox: color5,ColorHoverBox: color41),
+        SizedBox(height: 30),
+        //dropdown-item-text
+        Dropdown(
+          itemsDropDown: [
+            DropdownItem(text: "Dropdown item text", isInteractive: false),
+            DropdownItem(text: "Action", value: "action"),
+            DropdownItem(text: "Another action", value: "another_action"),
+            DropdownItem(text: "Something else here", value: "something_else"),
+          ], dropDownTitle: 'dropDownItemText',type: btnType.primary
+        ),
+        SizedBox(height: 30),
+        //active
+        Dropdown(
+          type: btnType.primary,
+          itemsDropDown: [
+            DropdownItem(text: "Dropdown item text"),
+            DropdownItem(text: "Action", value: "action"),
+            DropdownItem(text: "Another action", value: "another_action" , isActive: true),
+            DropdownItem(text: "Something else here", value: "something_else"),
+          ], dropDownTitle: 'active item',
+        ),
+        SizedBox(height: 30),
+        //Disabled
+        Dropdown(
+          type: btnType.primary,
+          itemsDropDown: [
+            DropdownItem(text: "Dropdown item text"),
+            DropdownItem(text: "Action", value: "action"),
+            DropdownItem(text: "Another action", value: "another_action" ,isDisabled: true),
+            DropdownItem(text: "Something else here", value: "something_else"),
+          ], dropDownTitle: 'disabled item',
+        ),
+        SizedBox(height: 30),
+        //headers
+        Dropdown(
+          type: btnType.primary,
+          itemsDropDown: [
+            DropdownItem(text: "Dropdown item text", isHeader: true ),
+            DropdownItem(text: "Action", value: "action"),
+            DropdownItem(text: "Another action", value: "another_action"),
+            DropdownItem(text: "Something else here", value: "something_else"),
+          ], dropDownTitle: 'Headers item',
+        ),
+        //end dropDown
+
+        SizedBox(height: 60),
+
+        //modal
+        //basic
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch demo modal',),
+        SizedBox(height: 30),
+        //Static backdrop
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch static backdrop modal',staticBackdrop: true),
+        SizedBox(height: 30),
+        //Scrolling long content
+        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+            'the majority have suffered alteration in some form, by injected humour, or r'
+            'andomised words which dont look even slightly believable. If you are going to'
+            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+            'end to repeat predefined chunks as necessary, making this the first true generator '
+            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+            'generated Lorem Ipsum is therefore always free from repetition, injected h'
+            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+            'ley of type and scrambled it to make a type specimen book. It has survived not'
+            ' only five centuries, but also the leap into electronic typesetting, remaining '
+            'essentially unchanged. It was popularised in the 1960s with the release of '
+            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
+            titleBox: 'Save Message', btnTxt: 'Scrolling long content'),
+        SizedBox(height: 30),
+        //vertically center
+        CustomModal(title: 'ssss',body: Txt('jjjjjjjjjjjjjjjj'
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered modal',isModalDialogCenter: true),
+        SizedBox(height:30),
+        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+            'the majority have suffered alteration in some form, by injected humour, or r'
+            'andomised words which dont look even slightly believable. If you are going to'
+            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+            'end to repeat predefined chunks as necessary, making this the first true generator '
+            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+            'generated Lorem Ipsum is therefore always free from repetition, injected h'
+            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+            'ley of type and scrambled it to make a type specimen book. It has survived not'
+            ' only five centuries, but also the leap into electronic typesetting, remaining '
+            'essentially unchanged. It was popularised in the 1960s with the release of '
+            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered scrollable modal',isModalDialogCenter: true),
+        SizedBox(height:30),
+        //sizes
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Small Modal',modalSize: ModalSize.small),
+        SizedBox(height:30),
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Default Modal',),
+        SizedBox(height:30),
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Large Modal',modalSize: ModalSize.large),
+        SizedBox(height:30),
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Extra Large Modal', modalSize: ModalSize.xlarge),
+        SizedBox(height:30),
+        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full Screen', modalSize: ModalSize.fullScreen),
+        //end modal
+
+        SizedBox(height: 60),
+
+        //placeholder
+        //basic
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                ImgPlaceholder(animationType: PlaceholderAnimationType.glow , width: 50,),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    ContentPlaceholder(width: 200 , animationType: PlaceholderAnimationType.wave,),
+                    ContentPlaceholder(width: 150 , animationType: PlaceholderAnimationType.glow),
+                    ContentPlaceholder(width: 180,),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 10,),
+            ButtonPlaceholder(type: btnType.success,width: 200,height: 40,)
+
+          ],
+        ),
+        SizedBox(height: 30),
+        //end placeholder
+
+        SizedBox(height: 60),
+
+        //popOvers
+        //basic and direction
+        PopOverWidget(type: btnType.danger,content: Txt('Click to toggle popover'), popOverBody: 'And here’s some amazing content. It’s very engaging. Right?',direction: d.top, size: ButtonSize.medium, ),
+        PopOverWidget(type: btnType.danger,content: Txt('Click to toggle popover'), popOverBody: 'And here’s some amazing content. It’s very engaging. Right?',direction: d.top, size: ButtonSize.large, ),
+        SizedBox(height: 30),
+        //disable
+        PopOverWidget(type: btnType.danger,content: Txt('Click to disable toggle popover'), popOverBody: 'And here’s some amazing content. It’s very engaging. Right?',direction: d.top, size: ButtonSize.large,disabled: true, ),
+        //end popOvers
+
+        SizedBox(height: 60),
+
+        //progress
+        MultiColorProgressBar(items: [
+          ProgressItem(
+            value: 25,
+            // hasStriped: true,
+            showLabel: true,
+            type: btnType.primary
+          ),
+          ProgressItem(
+            value: 50,
+            showLabel: true,
+            type: btnType.success
+          ),
+          ProgressItem(
+            value: 10,
+            showLabel: true,
+            type: btnType.info
+          ),
+          ProgressItem(
+              value: 15,
+              showLabel: true,
+              type: btnType.warning
+          ),
+        ],),
+        //end progress
+
+        SizedBox(height: 60),
+
+        //spinners
+        Spinner(typeSpinner: btnType.info,alignment: SpinnerAlignment.end),
+        SizedBox(height: 30),
+        //growing spinner
+        Spinner(typeSpinner: btnType.info,type: SpinnerType.grow, alignment: SpinnerAlignment.center),
+        SizedBox(height: 30),
+        //buttons
+        Btn(type:btnType.primary , disabled: true,content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Spinner(typeSpinner: btnType.info,  type: SpinnerType.grow, size: 15,),
+          ],
+        ),),
+        //end spinners
+
+
+        SizedBox(height: 60),
+
+        //tooltip
+        TooltipWidget(btn: Btn(type: btnType.primary,content: Txt('button')) , content: Txt('This top tooltip is themed via CSS variables.'), direction: TooltipDirection.up),
+        //end tooltip
+
+        SizedBox(height: 60),
+
+        DataListInput(options: ['aaaaaa' , 'vvvvv' , 'kkkk'] , label: 'xxxx' , ),
+        SizedBox(height: 30),
+
+
+
+
+
+
         SizedBox(height:40),
       ],
     );

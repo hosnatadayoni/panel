@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 class TooltipWidget extends StatefulWidget {
-   Widget? content;
-   Widget? btn;
+   Widget content;
+   Widget btn;
   TooltipDirection? direction;
 
   TooltipWidget({
-    this.content,
-    this.btn,
-    this.direction,
+    required this.content,
+    required this.btn,
+    this.direction = TooltipDirection.right,
   });
 
   @override

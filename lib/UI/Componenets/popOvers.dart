@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:popover/popover.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+
+import 'btn.dart';
 enum d {
   top,
   right,
@@ -14,10 +16,9 @@ enum d {
 }
 
 class PopOverWidget extends StatefulWidget {
-   Color? btnColor;
-   Color? btnHoverColor;
-   String btnTxt;
-   Color? btnTxtColor;
+  btnType type;
+  ButtonSize size;
+  Widget? content;
    Color? popOverColorBox;
    Color? popOverHeaderColorBox;
    String? popOverHeader;
@@ -28,10 +29,9 @@ class PopOverWidget extends StatefulWidget {
    bool disabled;
 
   PopOverWidget({
-    this.btnColor,
-    this.btnHoverColor,
-    this.btnTxt = '',
-    this.btnTxtColor = whiteColor,
+    required this.type,
+    this.size = ButtonSize.medium,
+    this.content,
     this.popOverColorBox = whiteColor,
     this.popOverHeaderColorBox = darkBackground,
     this.popOverHeader,
@@ -81,11 +81,7 @@ class _PopOverWidgetState extends State<PopOverWidget> {
   void _showPopover(BuildContext context) {
     showPopover(
       context: context,
-      bodyBuilder: (context) => IntrinsicWidth(
-        child: IntrinsicHeight(
-          child: Content(),
-        ),
-      ),
+      bodyBuilder: (context) => IntrinsicWidth(child: IntrinsicHeight(child: Content()),),
       onPop: () => print('Popover was popped!'),
       direction: _getPopoverDirection(),
       height: null,
@@ -100,17 +96,102 @@ class _PopOverWidgetState extends State<PopOverWidget> {
   Widget build(BuildContext context) {
     Rx<bool> isBtnHover = false.obs;
     var size = MediaQuery.of(context).size;
+    Color backgroundColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
+    Color HoverbackgroundColor(){
+      if(widget.type == btnType.primary){
+        return primaryHover;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondryHover;
+      }
+      else if(widget.type == btnType.success){
+        return successHover;
+      }
+      else if(widget.type == btnType.danger){
+        return dangerHover;
+      }
+      else if(widget.type == btnType.warning){
+        return warningHover;
+      }
+      else if(widget.type == btnType.info){
+        return infoHover;
+      }
+      else if(widget.type == btnType.light){
+        return lightHover;
+      }
+      else if(widget.type == btnType.dark){
+        return darkHover;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
+    Color contentColor(){
+      if(widget.type == btnType.primary || widget.type == btnType.secondary ||
+          widget.type == btnType.success || widget.type == btnType.danger || widget.type == btnType.dark){
+        return whiteColor;
+      }
+      else if(widget.type == btnType.warning || widget.type == btnType.info || widget.type == btnType.light){
+        return blackColor;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return dark;
+    }
+    EdgeInsets getButtonPadding() {
+      switch (widget.size) {
+        case ButtonSize.small:
+          return EdgeInsets.only(top: 4 , bottom: 4, right: 8 , left: 8);
+        case ButtonSize.large:
+          return EdgeInsets.only(top: 8 , bottom: 8, right: 16 , left: 16);
+        case ButtonSize.medium:
+          return EdgeInsets.only(top: 6 , bottom: 6, right: 12 , left: 12);
+        default:
+          return EdgeInsets.only(top: 6 , bottom: 6, right: 12 , left: 12);
+      }
+    }
     final button;
     if(!widget.disabled){
       button =Obx(() {
-        return box(isBtnHover);
+        return box(isBtnHover , backgroundColor() , HoverbackgroundColor() , contentColor() , getButtonPadding());
       });
     }
     else{
-      button = box(isBtnHover);
+      button = box(isBtnHover , backgroundColor() , HoverbackgroundColor() , contentColor() , getButtonPadding());
     }
     if (widget.disabled) {
-        return TooltipWidget(btn: box(isBtnHover),
+        return TooltipWidget(btn: box(isBtnHover , backgroundColor() , HoverbackgroundColor() , contentColor() , getButtonPadding()),
           content:Content() ,
           direction: _convertDirection(_getPopoverDirection()),
         );
@@ -128,18 +209,20 @@ class _PopOverWidgetState extends State<PopOverWidget> {
       ),
     );
   }
-  Widget box(isBtnHover){
+  Widget box(isBtnHover ,backgroundColor , HoverbackgroundColor , contentColor , getButtonPadding ){
     return Container(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+      // padding: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+      padding:getButtonPadding ,
       decoration: BoxDecoration(
-        color:!widget.disabled ? isBtnHover.value ? this.widget.btnHoverColor : this.widget.btnColor : this.widget.btnColor!.withOpacity(0.6),
+        color:!widget.disabled ? isBtnHover.value ? HoverbackgroundColor : backgroundColor : backgroundColor.withOpacity(0.6),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Txt(
-        this.widget.btnTxt,
-        fontSize: 20,
-        fontWeight: FontWeight.w400,
-        color:this.widget.btnTxtColor,
+      child:  DefaultTextStyle.merge(
+        style: TextStyle(
+          color:contentColor,
+          decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
+        ),
+        child: widget.content!,
       ),
     );
   }

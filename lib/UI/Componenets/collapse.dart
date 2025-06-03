@@ -218,8 +218,8 @@ class _MultiCollapseState extends State<MultiCollapse> {
           }).toList(),
         ),
         SizedBox(height: 10,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Wrap(
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: widget.collapsibles.map((collapsible) {
             if (collapsible is Collapse && collapsible.targetId != null) {
               return AnimatedContainer(

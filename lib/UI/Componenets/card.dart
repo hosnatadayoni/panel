@@ -26,6 +26,7 @@ class CustomCard extends StatelessWidget {
   // int? flexRight;
   // int? flexLeft;
   double? hieght;
+  double? padding;
 
   CustomCard({
     this.colorBox ,
@@ -38,7 +39,7 @@ class CustomCard extends StatelessWidget {
     this.width,
     this.headerOrFooterBackgroundColor =color38,
     this.cardHeaderOrFooterColor,
-    this.cardHeaderOrFooterBorderColor,
+    this.cardHeaderOrFooterBorderColor = itemColor25,
     this.d = directionCard.right,
     this.imageOverlay = false,
     this.imgUrl,
@@ -46,6 +47,7 @@ class CustomCard extends StatelessWidget {
     // this.flexRight =  4,
     // this.flexLeft =  6,
     this.hieght,
+    this.padding=  16,
   });
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class CustomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color:this.colorBox,
         border: Border.all(color: this.borderColorBox! , width: 1),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Stack(
         children:[
@@ -67,8 +69,8 @@ class CustomCard extends StatelessWidget {
             left: 0,
             child:  ClipRRect(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
+                topLeft: Radius.circular(5),
+                topRight: Radius.circular(5),
                 bottomLeft: Radius.circular(0),
                 bottomRight: Radius.circular(0),
               ),
@@ -101,15 +103,15 @@ class CustomCard extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(0),
                   topRight: Radius.circular(0),
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
                 ),
                 child: Container(
                   width:this.width != null ? this.width : size.width,
                   padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(
+                      top: BorderSide(
                         color: this.cardHeaderOrFooterBorderColor != null ?this.cardHeaderOrFooterBorderColor!: Colors.transparent,
                         width: 1,
                       ),
@@ -128,10 +130,11 @@ class CustomCard extends StatelessWidget {
             children: [
               Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(width: 1 , color: this.borderColorBox!)
                   ),
                   width: this.width,
-                  child: Img(this.imgUrl!,width: this.width != null ? this.width : size.width, height: this.hieght != null ? this.hieght : 300 ,radius: 16,)),
+                  child: Img(this.imgUrl!,width: this.width != null ? this.width : size.width, height: this.hieght != null ? this.hieght : 300 ,radius: 5,)),
               Box(context),
             ],
           ) : Box(context),
@@ -144,7 +147,7 @@ class CustomCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: this.cardHeader != null ? 40 : 0, bottom: this.cardFooter != null ? 40 : 0),
       width: this.width != null ? this.width : size.width,
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(this.padding!),
       child: this.d == directionCard.center ? Center(child: this.body!,) : this.body!,
     );
   }

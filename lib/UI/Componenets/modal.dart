@@ -173,7 +173,7 @@ class CustomModal extends StatelessWidget {
 
      switch(modalSize) {
        case ModalSize.small:
-         return min(300, screenWidth * 0.9);
+         return screenWidth < 575 ? screenWidth : 300;
        case ModalSize.medium:
          return min(500, screenWidth * 0.9);
        case ModalSize.large:
