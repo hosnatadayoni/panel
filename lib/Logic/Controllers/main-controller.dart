@@ -31,6 +31,7 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../UI/Views/table-page.dart';
+import 'connect-server-controller.dart';
 import 'helper-controller.dart';
 import 'package:intl/intl.dart';
 // import 'dart:html' as html;
@@ -932,6 +933,10 @@ class MainController extends GetxController {
     String jsonFileString;
     jsonFileString = await rootBundle.loadString('assets/menu.json');
     SubMenuList = json.decode(jsonFileString);
+    // await createJsonSchemaApi();
+    // await ConncetServerController.deleteSchema({'table_name':'details'});
+    ConncetServerController.listSchema();
+
     for (var name in tableNames()) {
       addsyncField('${name}');
       createMultiSelectTable('${name}');
@@ -967,6 +972,30 @@ class MainController extends GetxController {
       list.add(table['table-name']);
     }
     return list;
+  }
+  static List<dynamic> createJsonSchemaApi() {
+
+    List<dynamic>l=[];
+    List<dynamic>c=[];
+    for (var table in SubMenuList) {
+      Map<String,dynamic> list ={};
+      list.addAll({
+        'table_name':table['table-name'],
+      });
+      for(var column in table['columns']){
+        c.add('${column['name']}:{${'type:${column['type_filed']}'}}');
+      }
+      list.addAll({
+        'columns':c.toString(),
+      });
+      print('MainController.createJsonSchemaApi>>>>${list}');
+
+      ConncetServerController.createSchema(list);
+      l.add(list);
+    };
+    // ConncetServerController.createSchema(list);
+    // return list;
+    return l;
   }
 
   static createMultiSelectTable(String tableName) {

@@ -153,11 +153,14 @@ class RestApi {
 
       var mytoken = null;
       if (useToken) {
-        mytoken = await Token.getToken();
+
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
       dio.options.headers["Access-Control-Allow-Origin"]=true;
       dio.options.contentType="multipart/form-data";
+      body.addAll({
+        'api_key': await Token.getToken()
+      });
       print('**apiUrl**>>>>${url}');
       print('**token**>>>>${mytoken}');
       print('**body**>>>>${body}');

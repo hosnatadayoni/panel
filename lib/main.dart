@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Helpers/token-methods.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
@@ -13,6 +14,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'Logic/Controllers/app_localization_delegate.dart';
+import 'Logic/Controllers/connect-server-controller.dart';
 import 'UI/Views/table-page.dart';
 
 void main()async {
@@ -24,7 +26,8 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-
+  // await Token.setToken('d882aee6-1cfd-4993-9356-fde8667064a7');
+  // ConncetServerController.createProject();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
