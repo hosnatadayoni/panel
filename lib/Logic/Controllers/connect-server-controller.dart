@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/record-controller.dart';
 import 'package:finance/Logic/Helpers/token-methods.dart';
 import 'package:finance/Logic/Models/ServerModel/project.dart';
@@ -5,9 +7,12 @@ import 'package:finance/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
 
-
 class ConncetServerController extends GetxController {
 
+  static Map<String, dynamic>storeRecordRes={};
+  static Map<String, dynamic>updateRecordRes={};
+  static bool deleteRecordRes=false;
+  static List<dynamic>getRecordRes=[];
   static createProject() async {
     var response = await RestApi.post(createProjectUrl, body: {'name':'panel'});
     RestApi.responseHandler(
@@ -25,6 +30,7 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
         },printResponse: true);
   }
+
   static deleteSchema(Map<String,dynamic> json) async {
     var response = await RestApi.post(deleteSchemaUrl, body:json);
     RestApi.responseHandler(
@@ -32,6 +38,7 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
         },printResponse: true);
   }
+
   static listSchema() async {
     var s=await Token.getToken();
     var response = await RestApi.post(listSchemaUrl, body:{'api_key':s});
@@ -40,13 +47,51 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
         },printResponse: true);
   }
-  // static createSchema(Map<dynamic,dynamic> json) async {
-  //   var response = await RestApi.post(createSchemaUrl, body: {'title':'category title'});
-  //   RestApi.responseHandler(
-  //       response: response,
-  //       successCallback: () async {
-  //       },printResponse: true);
-  // }
+
+  static storeRecordGeneral(var json) async {
+    var response = await RestApi.post(storeRecordUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          storeRecordRes={};
+          storeRecordRes=response!.data['data'];
+        },printResponse: true);
+  }
+
+  static getRecordGeneral(String? tableName) async {
+    var response = await RestApi.post(getRecordsUrl, body: {'table_name':tableName});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getRecordRes=[];
+          getRecordRes=response!.data['data'];
+          MainController.tableData.value=response!.data['data'];
+          print('ConncetServerController.getRecordGeneral>>>${MainController.tableData.value}');
+          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
+          // MainController.tableInfo=
+        },printResponse: true);
+  }
+  static updateRecordGeneral(var json) async {
+    var response = await RestApi.post(updateRecordUrl, body: json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          updateRecordRes={};
+          updateRecordRes=response!.data['data'];
+          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
+          // MainController.tableInfo=
+        },printResponse: true);
+  }
+  static deleteRecordGeneral(var json) async {
+    var response = await RestApi.post(deleteRecordUrl, body: json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          deleteRecordRes=true;
+          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
+          // MainController.tableInfo=
+        },printResponse: true,errorCallback:()=> deleteRecordRes=false);
+  }
 
   static addSyncField(Map<dynamic,dynamic> json,bool status){
     return json.addAll(RecordController.syncFunction(status));

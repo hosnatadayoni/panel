@@ -385,6 +385,7 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
+          print('ViewController.generateEditFormView>>${dataModel}>>>${name}>>>${dataModel['${name}']}');
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
           textField = generateFormTextField(_fbKey, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
@@ -595,9 +596,7 @@ class ViewController extends GetxController {
 
   static Future<Widget> generateDataColumn(int indexColumn, int indexRow,
       {var table}) async {
-    var size = MediaQuery
-        .of(Get.context!)
-        .size;
+    var size = MediaQuery.of(Get.context!).size;
     String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
@@ -609,7 +608,6 @@ class ViewController extends GetxController {
       type = table['columns'][indexColumn]['type'];
       name = table['columns'][indexColumn]['name'];
     }
-
     var child;
     if (type == 'checkbox') {
       child = generateCheckBox(indexColumn, indexRow, tableData: table);
@@ -649,7 +647,8 @@ class ViewController extends GetxController {
           }
         },
       );
-    } else if (type == 'file') {
+    }
+    else if (type == 'file') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else {
@@ -825,7 +824,6 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-
     return Obx(() {
       return Center(
         child: Txt(

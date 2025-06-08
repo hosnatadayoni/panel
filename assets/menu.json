@@ -10,7 +10,7 @@
     "columns": [
       {
         "name": "title",
-        "title": "عنوان",
+        "title": "title",
         "type": "string",
         "type_filed": "string",
         "validators": [
@@ -22,13 +22,13 @@
       },
       {
         "name": "description",
-        "title": "توضیحات",
+        "title": "description",
         "type": "string",
         "type_filed": "string"
       },
       {
         "name": "price",
-        "title": "قیمت",
+        "title": "price",
         "type": "Number double",
         "type_filed": "double",
         "validators": [
@@ -52,19 +52,19 @@
 
       {
         "name": "title",
-        "title": "عنوان",
+        "title": "description",
         "type": "string",
         "type_filed": "string"
       },
       {
         "name": "description",
-        "title": "توضیحات",
+        "title": "description",
         "type": "string",
         "type_filed": "string"
       },
       {
         "name": "product",
-        "title": "محصولات",
+        "title": "description",
         "type": "multiSelect",
         "type_filed": "array",
         "sourceItems": "table",

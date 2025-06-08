@@ -63,7 +63,7 @@ class _TableBoxState extends State<TableBox> {
               children: [
                 TableRow(children: [
                   for(var i =0 ; i<MainController.tableInfo['columns'].length;i++)
-                    if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
+                    // if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
                       Center(child: Container(
                           padding: EdgeInsets.all(10),
                           child: Txt('${MainController.tableInfo['columns'][i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
@@ -159,9 +159,7 @@ class _TableBoxState extends State<TableBox> {
                                                             InkWell(
                                                               onTap: ()async{
                                                                 setState(() {
-                                                                  DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i]['id']}').deleteRecord();
-
-
+                                                                  DB('${MainController.tableInfo['table-name']}').where('_id', '==', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                                 });
                                                                 Navigator.pop(context);
                                                               },

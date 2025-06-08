@@ -933,7 +933,7 @@ class MainController extends GetxController {
     String jsonFileString;
     jsonFileString = await rootBundle.loadString('assets/menu.json');
     SubMenuList = json.decode(jsonFileString);
-    // await createJsonSchemaApi();
+    await createJsonSchemaApi();
     // await ConncetServerController.deleteSchema({'table_name':'details'});
     ConncetServerController.listSchema();
 
@@ -974,23 +974,22 @@ class MainController extends GetxController {
     return list;
   }
   static List<dynamic> createJsonSchemaApi() {
-
     List<dynamic>l=[];
-    List<dynamic>c=[];
+    Map<String,dynamic> c={};
     for (var table in SubMenuList) {
       Map<String,dynamic> list ={};
       list.addAll({
         'table_name':table['table-name'],
       });
       for(var column in table['columns']){
-        c.add('${column['name']}:{${'type:${column['type_filed']}'}}');
+        c.addAll({'${column['name']}': {"type": "${column['type_filed']}"}
+        });
       }
       list.addAll({
-        'columns':c.toString(),
+        'columns':(json.encode(c)).toString(),
       });
       print('MainController.createJsonSchemaApi>>>>${list}');
-
-      ConncetServerController.createSchema(list);
+      // ConncetServerController.createSchema(list);
       l.add(list);
     };
     // ConncetServerController.createSchema(list);
@@ -1081,18 +1080,22 @@ class MainController extends GetxController {
   }
 
   static Future<void> loadData({var tableData, var tableDataItems}) async {
+    print('MainController.loadData>>>${tableData==null}>>>${tableDataItems}');
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
+        print('MainController.loadData tableInfo>>>${tableInfo}');
 
-        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+        // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
         tableInfo = tableData;
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else
-          MainController.tableData.value =
-              await DB('${tableInfo['table-name']}').getRecords();
+          await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+
+        // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       }
     } else {
       if (SubMenuList.length > 0) {

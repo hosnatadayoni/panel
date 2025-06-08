@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:finance/Logic/Helpers/token-methods.dart';
 import 'package:flutter/material.dart';
@@ -157,10 +159,12 @@ class RestApi {
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
       dio.options.headers["Access-Control-Allow-Origin"]=true;
-      dio.options.contentType="multipart/form-data";
+      // dio.options.contentType="multipart/form-data";
+      dio.options.contentType="application/json";
       body.addAll({
         'api_key': await Token.getToken()
       });
+      // body=json.encode(body).toString();
       print('**apiUrl**>>>>${url}');
       print('**token**>>>>${mytoken}');
       print('**body**>>>>${body}');
@@ -178,7 +182,7 @@ class RestApi {
         isConnected=false;
         return null;
       } else {
-        print('apiError>>>${e.toString()}');
+        print('apiError>>>${e}');
         return null;
       }
     }
