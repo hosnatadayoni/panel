@@ -536,7 +536,7 @@ class _BtnState extends State<Btn> {
               decoration: BoxDecoration(
                 color:widget.isActive! ?HoverbackgroundColor() :colorBox(),
                 border: Border.all(
-                  color:widget.disabled ? widget.isOutline! ?backgroundColor().withOpacity(0.6) : backgroundColor().withOpacity(0.1) :  _isHovered ? HoverbackgroundColor() : backgroundColor(),
+                  color:widget.disabled ? widget.isOutline! ?backgroundColor().withOpacity(0.6) : backgroundColor().withOpacity(0.1) :  _isHovered ? HoverbackgroundColor() : widget.isActive! ?HoverbackgroundColor(): backgroundColor(),
                   // color: widget.disabled ?backgroundColor().withOpacity(0.6) :  _isToggle ? Colors.transparent : _isHovered ? widget.hoverBtnColor! :widget.colorBtn!,
                   width: 1,
                 ),

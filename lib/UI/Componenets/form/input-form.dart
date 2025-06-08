@@ -40,6 +40,7 @@ class InputForm extends StatefulWidget {
   double? inputWidth;
   Color? borderColor;
   BorderRadius? borderRadius;
+  Color? lableColor;
 
   InputForm({this.lableText ,
     this.hintText ,
@@ -58,6 +59,7 @@ class InputForm extends StatefulWidget {
     this.inputWidth,
     this.borderColor = color5,
     this.borderRadius,
+    this.lableColor = dark,
 
   });
   @override
@@ -79,20 +81,22 @@ class _InputFormState extends State<InputForm> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.layoutDirection == direction.vertical ? Column(
+    return widget.layoutDirection == direction.vertical ?
+    Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if(widget.lableText != null)
-           Txt(widget.lableText!),
+           Txt(widget.lableText! , fontSize: 16, fontWeight: FontWeight.w400,color: widget.lableColor,),
         if(widget.lableText != null)
            SizedBox(height: 10,),
         FormBox(),
        if(widget.formText != null)
-          SizedBox(height: 5,),
+          SizedBox(height: 10,),
        if(widget.formText != null)
           Txt(widget.formText!, fontSize: 14, fontWeight: FontWeight.w400,color: widget.formTextColor),
       ],
-    ) : Wrap(
+    ) :
+    Wrap(
       runSpacing: 10,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
@@ -128,7 +132,7 @@ class _InputFormState extends State<InputForm> {
       child: TextFormField(
         controller: widget.keyBoardType == keyboardType.password ? _passwordController : _emailController,
         decoration:  InputDecoration(
-          labelText: widget.lableText!= null ? widget.lableText : '',
+          // labelText: widget.lableText!= null ? widget.lableText : '',
           hintText: widget.hintText != null ? widget.hintText : '',
           enabledBorder: widget.isPlainTxt! ? InputBorder.none : OutlineInputBorder(
           borderRadius: widget.borderRadius!= null ? widget.borderRadius! : BorderRadius.zero,

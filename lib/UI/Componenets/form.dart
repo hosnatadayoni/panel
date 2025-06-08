@@ -11,6 +11,7 @@ import 'package:finance/UI/Componenets/form/input-group-form.dart';
 import 'package:finance/UI/Componenets/form/range-form.dart';
 import 'package:finance/UI/Componenets/form/select-form.dart';
 import 'package:finance/UI/Componenets/form/switch-form.dart';
+import 'package:finance/UI/Componenets/switch-box.dart';
 import 'package:flutter/material.dart';
 import 'form/color-form.dart';
 import 'form/radioButton-form.dart';
@@ -90,13 +91,13 @@ class _MyFormPageState extends State<MyFormPage> {
           const SizedBox(height: 15),
           CheckBoxForm(text: 'Check me out' , checked: true , disabled: true,),
           const SizedBox(height: 15),
-          CustomSwitch(disabled: true,checked: true,label: 'disable checekd',),
+          SwitchBox(disabled: true,checked: true,label: 'disable checekd',),
           const SizedBox(height: 15),
-          CustomSwitch(checked: true,label: 'checked'),
+          SwitchBox(checked: true,label: 'checked'),
           const SizedBox(height: 15),
-          CustomSwitch(disabled: true,label: 'disable',),
+          SwitchBox(disabled: true,label: 'disable',),
           const SizedBox(height: 15),
-          CustomSwitch(label: 'default',),
+          SwitchBox(label: 'default',),
           const SizedBox(height: 30),
           RadioButton(items: [RadioItem(text: 'item 1'  , ) , RadioItem(text: 'item 2' , disabled: true)],onChanged: (d){}),
           const SizedBox(height: 30),
@@ -132,13 +133,14 @@ class _MyFormPageState extends State<MyFormPage> {
           const SizedBox(height: 30),
           InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
           const SizedBox(height: 30),
-          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(dropDownTitle: 'DropDown',itemsDropDown: [
+          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],
+            icons: [Dropdown(type: btnType.secondary,dropDownTitle: 'DropDown',itemsDropDown: [
                 DropdownItem(text: "Action"),
                 DropdownItem(text: "Another action"),
                 DropdownItem(text: "Something else here"),
               ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
           const SizedBox(height: 30),
-          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
+          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(type: btnType.secondary,isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
             DropdownItem(text: "Action"),
             DropdownItem(text: "Another action"),
             DropdownItem(text: "Something else here"),

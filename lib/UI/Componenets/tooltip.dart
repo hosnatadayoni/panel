@@ -113,8 +113,19 @@ class _TooltipWidgetState extends State<TooltipWidget> {
         });
 
         return MouseRegion(
-          onExit: (_) async => await _controller.hideTooltip(),
-          onEnter: (_) async => await _controller.showTooltip(),
+
+          // onExit: (_) async => await _controller.hideTooltip(),
+          // onEnter: (_) async => await _controller.showTooltip(),
+          onExit: (_) async {
+            if (_controller.isVisible) {
+              await _controller.hideTooltip();
+            }
+          },
+          onEnter: (_) async {
+            if (!_controller.isVisible) {
+              await _controller.showTooltip();
+            }
+          },
           child: SuperTooltip(
             showBarrier: false,
             controller: _controller,
@@ -123,11 +134,23 @@ class _TooltipWidgetState extends State<TooltipWidget> {
             hasShadow: false,
             elevation: 0,
             arrowLength: 10,
-            arrowTipDistance: _calculateArrowOffset(),
+            // arrowTipDistance: _calculateArrowOffset(),
             content: IntrinsicWidth(child: widget.content),
-            child: KeyedSubtree(
-              key: _btnKey,
-              child: widget.btn!,
+            child: MouseRegion(
+              onExit: (_) async {
+                if (_controller.isVisible) {
+                  await _controller.hideTooltip();
+                }
+              },
+              onEnter: (_) async {
+                if (!_controller.isVisible) {
+                  await _controller.showTooltip();
+                }
+              },
+              child: KeyedSubtree(
+                key: _btnKey,
+                child: widget.btn!,
+              ),
             ),
           ),
         );

@@ -12,7 +12,7 @@ class RadioButton extends StatefulWidget {
    Function(String?)? onChanged;
 
   RadioButton({this.items,
-    this.activeColor = Colors.blue ,
+    this.activeColor = colorBtn ,
     this.layoutDirection = directionRadioButton.vertical ,
     this.onChanged,
   });

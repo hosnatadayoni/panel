@@ -28,7 +28,7 @@ class CustomRangeSlider extends StatefulWidget {
      this.disabled = false,
      this.disabledColor = Colors.grey,
      this.lableColor = blackColor,
-     this.step = 1,
+     this.step,
    });
 
   @override
@@ -81,7 +81,7 @@ class _CustomRangeSliderState extends State<CustomRangeSlider> {
                 widget.onChanged!(newValue);
               }
             },
-            divisions: (widget.max! - widget.min!) ~/ widget.step!,
+            divisions:widget.step != null ? (widget.max! - widget.min!) ~/ widget.step! : null,
 
           ),
         ),

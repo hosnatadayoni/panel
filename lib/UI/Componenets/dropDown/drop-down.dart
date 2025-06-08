@@ -37,12 +37,14 @@ class Dropdown extends StatefulWidget {
   Color? ColorHoverBox;
   Color? ColorDisableTxt;
   BorderRadius? borderRadius;
+  BorderRadius? borderRadiusSplitBtn;
   EdgeInsets? padding;
   Color? borderColor;
+  bool? isOutline;
 
 
   Dropdown({
-     this.type,
+     required this.type,
      this.itemsDropDown,
     required this.dropDownTitle,
     this.dropDownTitelColor = whiteColor,
@@ -59,8 +61,10 @@ class Dropdown extends StatefulWidget {
     this.ColorHoverBox = color39,
     this.ColorDisableTxt = color14,
     this.borderRadius,
+    this.borderRadiusSplitBtn,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.borderColor = color31,
+    this.isOutline = false,
 
   });
 
@@ -139,22 +143,6 @@ class _DropdownState extends State<Dropdown> {
       }
       return Colors.transparent;
     }
-    Color iconColor() {
-      if (widget.type == btnType.primary ||
-          widget.type == btnType.secondary ||
-          widget.type == btnType.success ||
-          widget.type == btnType.danger ||
-          widget.type == btnType.dark) {
-        return whiteColor;
-      } else if (widget.type == btnType.warning ||
-          widget.type == btnType.info ||
-          widget.type == btnType.light) {
-        return blackColor;
-      } else if (widget.type == btnType.link) {
-        return colorBtn;
-      }
-      return whiteColor;
-    }
     Color HoverbackgroundColor(){
       if(widget.type == btnType.primary){
         return primaryHover;
@@ -198,6 +186,44 @@ class _DropdownState extends State<Dropdown> {
       }
       return dark;
     }
+    Color textColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return Colors.transparent;
+    }
+    Color colorBox() {
+        if (isHover.value) {
+        return HoverbackgroundColor();
+      } else if (widget.isOutline!) {
+        return Colors.transparent;
+      }
+      return backgroundColor();
+    }
 
     return Obx(() {
       return this.widget.isSplitButton!
@@ -220,15 +246,15 @@ class _DropdownState extends State<Dropdown> {
                     decoration: BoxDecoration(
                       color: isHoverSplit.value
                           ? HoverbackgroundColor()
-                          : backgroundColor(),
-                      borderRadius:widget.borderRadius != null ? widget.borderRadius :  BorderRadius.only(
+                          : widget.isOutline!? Colors.transparent :backgroundColor(),
+                      borderRadius:widget.borderRadiusSplitBtn != null ? widget.borderRadiusSplitBtn :  BorderRadius.only(
                           topRight: Radius.circular(5),
                           bottomRight: Radius.circular(5)
                       ),
                         border: Border.all(width: 1, color: isHoverSplit.value ? HoverbackgroundColor() : backgroundColor())
                     ),
                     child: Icon(Icons.arrow_drop_down,
-                        color: iconColor(), size:getIconSize()),
+                        color: isHoverSplit.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size:getIconSize()),
                   ),
                 ),),
               ),
@@ -253,11 +279,11 @@ class _DropdownState extends State<Dropdown> {
                       border: Border.all(width: 1, color: isHoverMain.value ? HoverbackgroundColor() : backgroundColor()),
                       color: isHoverMain.value
                           ? HoverbackgroundColor()
-                          : backgroundColor(),
+                          : widget.isOutline!? Colors.transparent :backgroundColor(),
                     ),
                     child: Center(
                       child: Txt(this.widget.dropDownTitle,
-                          color: contentColor() , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                          color: isHoverMain.value ?contentColor(): widget.isOutline! ? textColor(): contentColor() , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
                     ),
                   ),
                 ),
@@ -277,7 +303,8 @@ class _DropdownState extends State<Dropdown> {
                 widget.padding,
                 decoration: BoxDecoration(
                   color:
-                  isHover.value ? HoverbackgroundColor() :  backgroundColor(),
+                  colorBox(),
+                  // widget.isOutline! ? Colors.transparent :isHover.value ? HoverbackgroundColor() :  backgroundColor(),
                   borderRadius:widget.borderRadius != null ?  widget.borderRadius:
                   BorderRadius.all(Radius.circular(5)),
                   border: Border.all(width: 1, color:isHover.value
@@ -287,9 +314,9 @@ class _DropdownState extends State<Dropdown> {
                 child: Row(
                   children: [
                     Icon(Icons.arrow_drop_down,
-                        color: iconColor(), size: getIconSize()),
+                        color: isHover.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size: getIconSize()),
                     Txt(this.widget.dropDownTitle,
-                        color:contentColor()  , fontSize: getFontSize())
+                        color: isHover.value ?contentColor(): widget.isOutline! ? textColor(): contentColor()  , fontSize: getFontSize())
                   ],
                 ),
               )

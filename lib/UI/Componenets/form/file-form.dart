@@ -15,6 +15,8 @@ class FileForm extends StatefulWidget {
   bool? isMultipleFiles;
   InputSize? size;
   BorderRadius? borderRadius;
+  String? lable;
+  Color? lableColor;
     FileForm({
       this.disabled = false,
       this.fileTxt = 'Choose File',
@@ -25,6 +27,8 @@ class FileForm extends StatefulWidget {
       this.isMultipleFiles = false,
       this.size = InputSize.medium,
       this.borderRadius,
+      this.lable,
+      this.lableColor = dark,
 });
 
   @override
@@ -57,8 +61,7 @@ class _FileFormState extends State<FileForm> {
       result = await FilePicker.platform.pickFiles(allowMultiple: true);
     } else {
       result = await FilePicker.platform.pickFiles();
-    }
-    print('result!.files>>>${result!.files}');
+    };
 
 
     if (result != null) {
@@ -93,50 +96,66 @@ class _FileFormState extends State<FileForm> {
     InputSize.medium => 16,
     InputSize.small => 14,
     };
-    return InkWell(
-      onTap: widget.disabled! ? null : _pickFile,
-      child: Container(
-     height: 48,
-        decoration: BoxDecoration(
-          borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.all(Radius.circular(5)),
-          border: Border.all(width: 1, color: widget.borderColor!),
-        ),
-        child: Row(
-          children: [
-            MouseRegion(
-            onEnter: (_){
-             isHover.value = true;
-            },
-            onExit: (_){
-             isHover.value = false;
-            },
-              child: Obx((){
-                return Container(
-                padding: padding,
-                height: 48,
-                decoration: BoxDecoration(
-                borderRadius: widget.borderRadius != null ? widget.borderRadius! : BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
-                // borderRadius: BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
-                border: Border.all(width: 1, color: widget.borderColor!),
-                color: isHover.value ? widget.fileTxtBoxHoverColor:widget.fileTxtBoxColor,
-                ),
-                child: Center(child: Txt(widget.fileTxt! , fontSize:textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,)),
-                );
-              })
+    return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(widget.lable != null)Txt(widget.lable! , fontSize:16 , fontWeight: FontWeight.w400 , color: widget.lableColor,),
+        if(widget.lable != null)SizedBox(height: 5,),
+        InkWell(
+          onTap: widget.disabled! ? null : _pickFile,
+          child: Container(
+         height: 48,
+            decoration: BoxDecoration(
+              borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.all(Radius.circular(5)),
+              border: Border.all(width: 1, color: widget.borderColor!),
             ),
-            Expanded(
-              child: Container(
-                padding: padding,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft:Radius.circular(5) , bottomLeft: Radius.circular(5)),
-                  color:widget.disabled! ? color27: Colors.transparent,
+            child: Row(
+              children: [
+                widget.disabled! ?fileBox(padding ,textStyle) :MouseRegion(
+                onEnter: (_){
+                 isHover.value = true;
+                },
+                onExit: (_){
+                 isHover.value = false;
+                },
+                  child: Obx((){
+                    return fileBox(padding , textStyle);
+                  })
                 ),
-                child: Txt(getDisplayText() , fontSize: textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,),
-              ),
-            )
-          ],
+                Expanded(
+                  child: Container(
+                    height: 48,
+                    padding: padding,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft:Radius.circular(5) , bottomLeft: Radius.circular(5)),
+                      color:widget.disabled! ? color40: Colors.transparent,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Txt(getDisplayText() , fontSize: textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
+      ],
+    );
+  }
+  Widget fileBox(padding , textStyle){
+    return Container(
+      padding: padding,
+      height: 48,
+      decoration: BoxDecoration(
+        borderRadius: widget.borderRadius != null ? widget.borderRadius! : BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
+        // borderRadius: BorderRadius.only(topRight:Radius.circular(5) , bottomRight: Radius.circular(5)),
+        border: Border.all(width: 1, color: widget.borderColor!),
+        color: isHover.value ? widget.fileTxtBoxHoverColor:widget.fileTxtBoxColor,
       ),
+      child: Center(child: Txt(widget.fileTxt! , fontSize:textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,)),
     );
   }
 }

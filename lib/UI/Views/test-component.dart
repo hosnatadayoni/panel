@@ -19,7 +19,13 @@ import 'package:finance/UI/Componenets/dissmisiable-alert.dart';
 import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
 import 'package:finance/UI/Componenets/dropDown/drop-down.dart';
 import 'package:finance/UI/Componenets/form.dart';
+import 'package:finance/UI/Componenets/form/checkbox-form.dart';
 import 'package:finance/UI/Componenets/form/dataList-form.dart';
+import 'package:finance/UI/Componenets/form/file-form.dart';
+import 'package:finance/UI/Componenets/form/input-form.dart';
+import 'package:finance/UI/Componenets/form/radioButton-form.dart';
+import 'package:finance/UI/Componenets/form/select-form.dart';
+import 'package:finance/UI/Componenets/input-group-form2.dart';
 import 'package:finance/UI/Componenets/modal.dart';
 import 'package:finance/UI/Componenets/placeholder/btn-placeholder.dart';
 import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
@@ -32,6 +38,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
+import '../Componenets/form/color-form.dart';
+import '../Componenets/form/range-form.dart';
+import '../Componenets/form/switch-form.dart';
+import '../Componenets/switch-box.dart';
 import '../Componenets/tooltip.dart';
 
 class TestComponent extends StatelessWidget {
@@ -893,74 +903,6 @@ class TestComponent extends StatelessWidget {
         ),
         //end dropDown
 
-        SizedBox(height: 60),
-
-        //modal
-        //basic
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch demo modal',),
-        SizedBox(height: 30),
-        //Static backdrop
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch static backdrop modal',staticBackdrop: true),
-        SizedBox(height: 30),
-        //Scrolling long content
-        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
-            'the majority have suffered alteration in some form, by injected humour, or r'
-            'andomised words which dont look even slightly believable. If you are going to'
-            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
-            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
-            'end to repeat predefined chunks as necessary, making this the first true generator '
-            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
-            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
-            'generated Lorem Ipsum is therefore always free from repetition, injected h'
-            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
-            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
-            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
-            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
-            'ley of type and scrambled it to make a type specimen book. It has survived not'
-            ' only five centuries, but also the leap into electronic typesetting, remaining '
-            'essentially unchanged. It was popularised in the 1960s with the release of '
-            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
-            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
-            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
-            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
-            titleBox: 'Save Message', btnTxt: 'Scrolling long content'),
-        SizedBox(height: 30),
-        //vertically center
-        CustomModal(title: 'ssss',body: Txt('jjjjjjjjjjjjjjjj'
-            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered modal',isModalDialogCenter: true),
-        SizedBox(height:30),
-        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
-            'the majority have suffered alteration in some form, by injected humour, or r'
-            'andomised words which dont look even slightly believable. If you are going to'
-            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
-            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
-            'end to repeat predefined chunks as necessary, making this the first true generator '
-            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
-            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
-            'generated Lorem Ipsum is therefore always free from repetition, injected h'
-            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
-            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
-            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
-            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
-            'ley of type and scrambled it to make a type specimen book. It has survived not'
-            ' only five centuries, but also the leap into electronic typesetting, remaining '
-            'essentially unchanged. It was popularised in the 1960s with the release of '
-            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
-            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
-            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
-            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered scrollable modal',isModalDialogCenter: true),
-        SizedBox(height:30),
-        //sizes
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Small Modal',modalSize: ModalSize.small),
-        SizedBox(height:30),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Default Modal',),
-        SizedBox(height:30),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Large Modal',modalSize: ModalSize.large),
-        SizedBox(height:30),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Extra Large Modal', modalSize: ModalSize.xlarge),
-        SizedBox(height:30),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full Screen', modalSize: ModalSize.fullScreen),
-        //end modal
 
         SizedBox(height: 60),
 
@@ -1058,10 +1000,535 @@ class TestComponent extends StatelessWidget {
 
         SizedBox(height: 60),
 
+        //modal
+        //basic
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,), contetnBtn: Txt('Launch demo modal'),type: btnType.primary),
+        SizedBox(height: 30),
+        //Static backdrop
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,), contetnBtn: Txt('Launch demo modal'),type: btnType.primary,staticBackdrop: true),
+        SizedBox(height: 30),
+        //Scrolling long content
+        CustomModal(header: Txt('ssss'),body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+            'the majority have suffered alteration in some form, by injected humour, or r'
+            'andomised words which dont look even slightly believable. If you are going to'
+            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+            'end to repeat predefined chunks as necessary, making this the first true generator '
+            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+            'generated Lorem Ipsum is therefore always free from repetition, injected h'
+            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+            'ley of type and scrambled it to make a type specimen book. It has survived not'
+            ' only five centuries, but also the leap into electronic typesetting, remaining '
+            'essentially unchanged. It was popularised in the 1960s with the release of '
+            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
+         contetnBtn: Txt('Scrolling long content'),type: btnType.primary,),
+        SizedBox(height: 30),
+        //vertically center
+        CustomModal(header: Txt('ssss'),body: Txt('jjjjjjjjjjjjjjjj'
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Vertically centered modal'),type: btnType.primary,isModalDialogCenter: true),
+        SizedBox(height:30),
+        CustomModal(header: Txt('ssss'),body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+            'the majority have suffered alteration in some form, by injected humour, or r'
+            'andomised words which dont look even slightly believable. If you are going to'
+            ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
+            'sing hidden in the middle of text. All the Lorem Ipsum generators on the Internet t'
+            'end to repeat predefined chunks as necessary, making this the first true generator '
+            'on the Internet. It uses a dictionary of over 200 Latin words, combined with a handfu'
+            'l of model sentence structures, to generate Lorem Ipsum which looks reasonable. The '
+            'generated Lorem Ipsum is therefore always free from repetition, injected h'
+            'umour, or non-characteristic words etc.ffffffffffffffffffffffffffffffffdsss'
+            'sssssssssssssssssssssssssssssssssssssss Lorem Ipsum is simply dummy text of'
+            ' the printing and typesetting industry. Lorem Ipsum has been the industrys '
+            'standard dummy text ever since the 1500s, when an unknown printer took a gal'
+            'ley of type and scrambled it to make a type specimen book. It has survived not'
+            ' only five centuries, but also the leap into electronic typesetting, remaining '
+            'essentially unchanged. It was popularised in the 1960s with the release of '
+            ' sheets containing Lorem Ipsum passages, and more recently with desktop publishing '
+            'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
+            'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
+            'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Vertically centered scrollable modal'),type: btnType.primary ,isModalDialogCenter: true),
+        SizedBox(height:30),
+        //sizes
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Small Modal'),type: btnType.primary,modalSize: ModalSize.small),
+        SizedBox(height:30),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Default Modal'),type: btnType.primary),
+        SizedBox(height:30),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Large Modal'),type: btnType.primary,modalSize: ModalSize.large),
+        SizedBox(height:30),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Extra Large Modal'),type: btnType.primary, modalSize: ModalSize.xlarge),
+        SizedBox(height:30),
+
+
+        //fullscrenn responsive
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full Screen'),type: btnType.primary , modalSize: ModalSize.fullScreen),
+        SizedBox(height:30),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full screen below sm'),type: btnType.primary , modalFullscreenMode: ModalFullscreenMode.smDown),
+        SizedBox(height:40),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full screen below md'),type: btnType.primary , modalFullscreenMode: ModalFullscreenMode.mdDown),
+        SizedBox(height:40),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full screen below lg'),type: btnType.primary , modalFullscreenMode: ModalFullscreenMode.lgDown),
+        SizedBox(height:40),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full screen below xl'),type: btnType.primary , modalFullscreenMode: ModalFullscreenMode.xlDown),
+        SizedBox(height:40),
+        CustomModal(header: Txt('ssss'),body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),contetnBtn: Txt('Full screen below xxl'),type: btnType.primary , modalFullscreenMode: ModalFullscreenMode.xxlDown),
+        //end modal
+
+
+        SizedBox(height: 60),
+        //form
+        //email
+        InputForm(lableText: 'Email Address', keyBoardType: keyboardType.email ,formText: 'Well never share your email with anyone else.'),
+        SizedBox(height: 30),
+        InputForm(lableText: 'Password', keyBoardType: keyboardType.password ,),
+        SizedBox(height: 30),
+        CheckBoxForm(text: 'Check me out' ,),
+        SizedBox(height: 30),
+        //disable
+        InputForm(lableText: 'Disabled input', keyBoardType: keyboardType.password , disabled: true,),
+        SizedBox(height: 30),
+        CheckBoxForm(text: 'can not Check me out' , disabled: true),
+        SizedBox(height: 30),
+        Btn(type: btnType.primary , content: Txt('submit'),disabled: true,),
+        SizedBox(height: 30),
+        InputForm(lableText: 'Example textarea', fieldType: FieldType.textarea,),
+        SizedBox(height: 30),
+        //sizing
+        InputForm(size: InputSize.small,),
+        SizedBox(height: 30),
+        InputForm(size: InputSize.large,),
+        SizedBox(height: 30),
+        InputForm(size: InputSize.medium,),
+        SizedBox(height: 30),
+        InputForm(lableText: 'Password', keyBoardType: keyboardType.password ,
+            formText: 'Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.'),
+        SizedBox(height: 30),
+        InputForm(lableText: 'Password', keyBoardType: keyboardType.password ,
+            formText: 'st not contain spaces, special characters, or emoji.', layoutDirection: direction.horizontal),
+        //disabled
+        SizedBox(height: 30),
+        InputForm(lableText: 'disabled input',disabled: true,),
+        SizedBox(height: 30),
+        //Disabled readonly input
+        InputForm(lableText: 'Disabled readonly input',readOnly: true, disabled: true, ),
+        SizedBox(height: 30),
+        //read only
+        InputForm(lableText: 'readonly input here...',readOnly: true, ),
+        SizedBox(height: 30),
+        //Readonly plain text
+        InputForm(lableText: 'readonly input here...',readOnly: true,isPlainTxt: true,hintText: 'email@example.com',),
+        SizedBox(height: 30),
+        Row(
+          children: [
+            Expanded(child: InputForm(readOnly: true,isPlainTxt: true,hintText: 'email@example.com',)),
+            SizedBox(width: 5,),
+            Expanded(child:InputForm(keyBoardType: keyboardType.password , hintText: 'password',),)
+
+          ],
+        ),
+        SizedBox(height: 30),
+        //File input
+        FileForm(lable: 'Default file input example'),
+        SizedBox(height: 30),
+        FileForm(lable: 'Disabled file input example' , disabled: true),
+        //end File input
+        SizedBox(height: 30),
+        //size
+        FileForm(lable: 'Small file input example' ,size: InputSize.small),
+        SizedBox(height: 30),
+        FileForm(lable: 'Large file input example' ,size: InputSize.large),
+        //end size
+        SizedBox(height: 30),
+        //Color
+        ColorPickerBox(selectedColor: Colors.blue),
+        //end color
+        SizedBox(height: 30),
+        //dataLists
         DataListInput(options: ['aaaaaa' , 'vvvvv' , 'kkkk'] , label: 'xxxx' , ),
+        //end dataLists
+        SizedBox(height: 30),
+        //select
+        //end select
+        CustomSelect(
+          hintText: 'Open this select menu',
+          items: const [
+            DropdownMenuItem(value: '1', child: Text('One')),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three')),
+          ],
+          onChanged: (value) {
+
+          },
+        ),
+        SizedBox(height: 30),
+        //size
+        CustomSelect(
+          hintText: 'Open this select menu',
+          items: const [
+            DropdownMenuItem(value: '1', child: Text('One')),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three')),
+          ],
+          onChanged: (value) {
+
+          },
+          size: InputSize.large,
+        ),
+        SizedBox(height: 30),
+        CustomSelect(
+          hintText: 'Open this select menu',
+          items: const [
+            DropdownMenuItem(value: '1', child: Text('One'),),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three'),),
+          ],
+          onChanged: (value) {
+
+          },
+          size: InputSize.small,
+        ),
+        SizedBox(height: 30),
+        //disabled
+        CustomSelect(
+          hintText: 'Open this select menu',
+          items: const [
+            DropdownMenuItem(value: '1', child: Text('One'),),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three'),),
+          ],
+          onChanged: (value) {
+
+          },
+          disabled: true,
+        ),
         SizedBox(height: 30),
 
+        //checkes and radio and switch
+        //checkes
+        CheckBoxForm(text: 'Default checkbox' ,),
+        SizedBox(height: 30),
+        CheckBoxForm(text: 'Checked checkbox' , checked: true),
+        SizedBox(height: 30),
+        CheckBoxForm(text: 'Disabled checkbox' , disabled: true,),
+        SizedBox(height: 30),
+        CheckBoxForm(text: 'Disabled Checked checkbox' , disabled: true, checked: true,),
+        SizedBox(height: 30),
+        //radios
+        RadioButton(items: [RadioItem(text: 'Default radio'  , ) , RadioItem(text: 'Default Checked radio' , checked: true)],onChanged: (d){}),
+        SizedBox(height: 30),
+        //disabled
+        RadioButton(items: [RadioItem(text: 'Disabled radio'  , disabled: true) , RadioItem(text: 'Disabled Checked radio' , checked: true , disabled: true ,)],onChanged: (d){}),
+        SizedBox(height: 30),
+        //switchs
+        SwitchBox(label: 'Default switch checkbox input',),
+        SizedBox(height: 30),
+        SwitchBox(label: 'Checked switch checkbox input', checked: true,),
+        SizedBox(height: 30),
+        SwitchBox(label: 'Disabled switch checkbox input', disabled: true,),
+        SizedBox(height: 30),
+        SwitchBox(label: 'Disabled checked switch checkbox input', disabled: true, checked: true,),
+        //end  checkes and radio and switch
+        SizedBox(height: 30),
 
+        //rang
+        CustomRangeSlider(
+          label: "Example range",
+          min: 0,
+          max: 100,
+          onChanged: (value) {
+            print("Selected value: $value");
+          },
+        ),
+        SizedBox(height: 30),
+        //disabled
+        CustomRangeSlider(
+          label: "Example range",
+          min: 0,
+          max: 100,
+          disabled: true,
+          onChanged: (value) {
+            print("Selected value: $value");
+          },
+        ),
+        SizedBox(height: 30),
+        //steps
+        CustomRangeSlider(
+          label: "Example range",
+          min: 0,
+          max: 100,
+          step: 5,
+          onChanged: (value) {
+            print("Selected value: $value");
+          },
+        ),
+        //end range
+
+        //input group
+        SizedBox(height: 30),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),],prefixIcons: [Container(
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          decoration: BoxDecoration(
+        color: color38,
+        border: Border.all(width: 1 , color: color5),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
+        )
+       ),
+          child: Center(
+            child: Txt('@' , fontSize:14 ,),
+          ),
+        )] , formTxt: 'Example help text goes outside the input group.'),
+        SizedBox(height: 30),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),],
+          prefixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('00.' , fontSize:14 ,)))] ,
+          suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('@' , fontSize:14 ,)))],),
+        SizedBox(height: 30),
+        InputGroup2(
+          inputs: [
+            InputForm(
+              hintText: 'Username',
+              borderColor: Colors.grey,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight:Radius.circular(5) , ),
+            ),
+            Container(
+
+              padding: EdgeInsets.only(top: 6 , bottom:  6 , left: 12 , right: 12),
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+
+              ),
+              alignment: Alignment.center,
+              child: IntrinsicHeight(
+                child: Txt('@', fontSize: 16),
+              ),
+
+            ),
+            InputForm(
+              hintText: 'Server',
+              borderColor: Colors.grey,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5),bottomLeft:Radius.circular(5) , ),
+            ),
+          ],
+        ),
+        SizedBox(height: 30),
+        //textarea
+        InputGroup2(inputs: [InputForm(hintText: 'نام',fieldType: FieldType.textarea),],
+          suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('with textarea' , fontSize:14 ,)))],),
+        SizedBox(height: 30),
+        //wrapping
+
+        SizedBox(height: 30),
+        //size
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.small,),] ,
+        suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+              color: color38,
+              border: Border.all(width: 1 , color: color5),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(5),
+                bottomLeft: Radius.circular(5),
+              )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.small,),
+        SizedBox(height: 30),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.medium,),] , suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.medium,),
+        SizedBox(height: 30),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.large,),] , suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.large,),
+        //end size
+        SizedBox(height: 30),
+        //radios
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),] , suffixIcons: [Container(
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                )
+            ),
+            child: Center(child: RadioButton(items: [RadioItem(text: '')],)))],),
+        SizedBox(height: 30),
+        //Checkboxes
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),] , suffixIcons: [Container(
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                )
+            ),
+            child: CheckBoxForm())]),
+        SizedBox(height: 30),
+        //Multiple inputs
+        InputGroup2(inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))), InputForm(hintText: 'نام خانوادگی',),],
+            suffixIcons: [Container( padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('First and last name' , fontSize:14 ,)))]),
+        SizedBox(height: 30),
+        //Multiple addons
+        InputGroup2(inputs: [InputForm(hintText: 'نام',)],
+            suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                    color: color38,
+                    border: Border.all(width: 1 , color: color5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                    )
+                ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',)],prefixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+            ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
+        SizedBox(height: 30),
+        //Button addons
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+            suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(0),
+                  bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5) ),)]),
+        SizedBox(height: 30),
+        //Buttons with dropdowns
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+            suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
+              DropdownItem(text: "Action"),
+              DropdownItem(text: "Another action"),
+              DropdownItem(text: "Something else here"),
+            ],
+                spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey ,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(5),
+                    bottomLeft:Radius.circular(5) )),],),
+        SizedBox(height: 30),
+        //Segmented buttons
+        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+          suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
+            DropdownItem(text: "Action"),
+            DropdownItem(text: "Another action"),
+            DropdownItem(text: "Something else here"),
+          ],
+              spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey ,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5),
+                  bottomLeft:Radius.circular(5) ), isSplitButton: true ,
+              borderRadiusSplitBtn: BorderRadius.only(topRight: Radius.circular(0),
+              bottomRight:Radius.circular(0),)),],),
+        SizedBox(height: 30),
+        //Custom select
+        InputGroup2(inputs: [CustomSelect(hintText: 'choose...',
+          borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+          onChanged: (value) {},
+          items:  [
+            DropdownMenuItem(value: '1', child: Text('One')),
+            DropdownMenuItem(value: '2', child: Text('Two')),
+            DropdownMenuItem(value: '3', child: Text('Three')),
+
+          ],)],
+          suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
+          borderRadius: BorderRadius.only(topRight: Radius.circular(0),
+          bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5)))]),
+        SizedBox(height: 30),
+        //Custom file input
+        InputGroup2(inputs: [FileForm(borderRadius:  BorderRadius.only(
+          topLeft: Radius.circular(0),
+          bottomLeft: Radius.circular(0),
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
+
+        ),)],
+            suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                    color: color38,
+                    border: Border.all(width: 1 , color: color5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                    )
+                ),child: Center(child: Txt('Upload' , fontSize:14 ,)))]),
+        InputGroup2(inputs: [FileForm(borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(0),
+          bottomLeft: Radius.circular(0),
+          topRight: Radius.circular(5),
+          bottomRight: Radius.circular(5),
+
+        ),)],
+            suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(0),
+                  bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5) ),)]),
+        //end input group
+        //end form
+
+        SizedBox(height: 30),
+        SwitchBox(),
+        SizedBox(height: 30),
+        SwitchBox(disabled: true,),
+        SizedBox(height: 30),
+        SwitchBox(checked: true,),
+        SizedBox(height: 30),
+        SwitchBox(checked: true,disabled: true,),
 
 
 

@@ -399,11 +399,11 @@ class TestComponent2 extends StatelessWidget {
 
 
         //Modal
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch demo modal',),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch demo modal',),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch static backdrop modal',staticBackdrop: true),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Launch static backdrop modal',staticBackdrop: true),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+        CustomModal(header: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
             'the majority have suffered alteration in some form, by injected humour, or r'
             'andomised words which dont look even slightly believable. If you are going to'
             ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
@@ -425,7 +425,7 @@ class TestComponent2 extends StatelessWidget {
             'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
             titleBox: 'Save Message', btnTxt: 'Scrolling long content'),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+        CustomModal(header: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
             'the majority have suffered alteration in some form, by injected humour, or r'
             'andomised words which dont look even slightly believable. If you are going to'
             ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
@@ -446,7 +446,7 @@ class TestComponent2 extends StatelessWidget {
             'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
             'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered modal',isModalDialogCenter: true),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
+        CustomModal(header: 'ssss',body: Txt('Where can I get some There are many variations of passages of Lorem Ipsum available, but '
             'the majority have suffered alteration in some form, by injected humour, or r'
             'andomised words which dont look even slightly believable. If you are going to'
             ' use a passage of Lorem Ipsum, you need to be sure there isnt anything embarras'
@@ -468,26 +468,26 @@ class TestComponent2 extends StatelessWidget {
             'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Vertically centered scrollable modal',isModalDialogCenter: true),
         SizedBox(height:40),
         //size.............
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Small Modal',modalSize: ModalSize.small),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Small Modal',modalSize: ModalSize.small),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Default Modal',),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Default Modal',),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Large Modal',modalSize: ModalSize.large),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Large Modal',modalSize: ModalSize.large),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Extra Large Modal', modalSize: ModalSize.xlarge),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Extra Large Modal', modalSize: ModalSize.xlarge),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full Screen', modalSize: ModalSize.fullScreen),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full Screen', modalSize: ModalSize.fullScreen),
         SizedBox(height:40),
         //fullscrenn responsive
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below sm', modalFullscreenMode: ModalFullscreenMode.smDown),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below sm', modalFullscreenMode: ModalFullscreenMode.smDown),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below md', modalFullscreenMode: ModalFullscreenMode.mdDown),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below md', modalFullscreenMode: ModalFullscreenMode.mdDown),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below lg', modalFullscreenMode: ModalFullscreenMode.lgDown),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below lg', modalFullscreenMode: ModalFullscreenMode.lgDown),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xl', modalFullscreenMode: ModalFullscreenMode.xlDown),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xl', modalFullscreenMode: ModalFullscreenMode.xlDown),
         SizedBox(height:40),
-        CustomModal(title: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xxl', modalFullscreenMode: ModalFullscreenMode.xxlDown),
+        CustomModal(header: 'ssss',body: Txt('aaaaaa' , fontSize: 16, fontWeight: FontWeight.w400,),titleBox: 'Save Message', btnTxt: 'Full screen below xxl', modalFullscreenMode: ModalFullscreenMode.xxlDown),
         SizedBox(height:100),
         //placeholder
         Column(

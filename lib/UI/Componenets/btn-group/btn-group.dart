@@ -244,7 +244,10 @@ class _ButtonGroupState extends State<ButtonGroup> {
                     ? widget.buttons[index].backgroundColor()
                     : isHover || widget.buttons[index].isActive!
                     ? widget.buttons[index].HoverbackgroundColor()
-                    : widget.buttons[index].backgroundColor(),) : Container(
+                    : widget.buttons[index].backgroundColor(),
+                isOutline: widget.buttons[index].isOutline,
+              ) :
+              Container(
                 padding: _getPadding(),
                 decoration: BoxDecoration(
                     color:widget.buttons[index].isActive! || isHover ?
