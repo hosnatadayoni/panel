@@ -14,6 +14,7 @@ class CustomSelect extends StatelessWidget {
    bool? disabled;
    Color? disabledBoxColor;
    BorderRadius? borderRadius;
+   double? width;
 
    CustomSelect({
     required this.items,
@@ -26,10 +27,12 @@ class CustomSelect extends StatelessWidget {
      this.disabled = false,
      this.disabledBoxColor = color38,
      this.borderRadius,
+     this.width,
   });
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     final padding = switch(this.size!) {
     InputSize.large => EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     InputSize.medium => EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -41,20 +44,23 @@ class CustomSelect extends StatelessWidget {
     InputSize.medium => 16,
     InputSize.small => 14,
     };
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      decoration: InputDecoration(
-      contentPadding: padding,
-        border: OutlineInputBorder(
-            borderRadius: this.borderRadius != null ?this.borderRadius! :BorderRadius.circular(0)
-    ),
-       fillColor: this.disabledBoxColor,
-       filled:this.disabled! ?  true : false,
+    return Container(
+      width: this.width ?? size.width,
+      child: DropdownButtonFormField<String>(
+        value: selectedValue,
+        decoration: InputDecoration(
+        contentPadding: padding,
+          border: OutlineInputBorder(
+              borderRadius: this.borderRadius != null ?this.borderRadius! :BorderRadius.circular(0)
       ),
-      hint: Txt(hintText , fontSize:fontSize , fontWeight: FontWeight.w400,color: this.colorHintText,),
-      items: items,
-      style: TextStyle(fontSize: fontSize , fontWeight: FontWeight.w400 , color: this.colorDropDownItem),
-      onChanged: this.disabled! ? null : onChanged,
+         fillColor: this.disabledBoxColor,
+         filled:this.disabled! ?  true : false,
+        ),
+        hint: Txt(hintText , fontSize:fontSize , fontWeight: FontWeight.w400,color: this.colorHintText,),
+        items: items,
+        style: TextStyle(fontSize: fontSize , fontWeight: FontWeight.w400 , color: this.colorDropDownItem),
+        onChanged: this.disabled! ? null : onChanged,
+      ),
     );
   }
 }

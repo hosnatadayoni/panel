@@ -124,11 +124,12 @@ class _InputFormState extends State<InputForm> {
     final textAreaPadding = widget.fieldType == FieldType.textarea
     ? EdgeInsets.symmetric(vertical: 12, horizontal: 12)
         : padding;
+    var size = MediaQuery.of(context).size;
 
     return  Container(
       width:  widget.layoutDirection == direction.horizontal
           ? widget.inputWidth ?? 200
-          : null,
+          :widget.inputWidth ?? size.width,
       child: TextFormField(
         controller: widget.keyBoardType == keyboardType.password ? _passwordController : _emailController,
         decoration:  InputDecoration(

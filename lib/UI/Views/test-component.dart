@@ -25,7 +25,7 @@ import 'package:finance/UI/Componenets/form/file-form.dart';
 import 'package:finance/UI/Componenets/form/input-form.dart';
 import 'package:finance/UI/Componenets/form/radioButton-form.dart';
 import 'package:finance/UI/Componenets/form/select-form.dart';
-import 'package:finance/UI/Componenets/input-group-form2.dart';
+import 'package:finance/UI/Componenets/form/input-group-form2.dart';
 import 'package:finance/UI/Componenets/modal.dart';
 import 'package:finance/UI/Componenets/placeholder/btn-placeholder.dart';
 import 'package:finance/UI/Componenets/placeholder/content-placeholder.dart';
@@ -41,7 +41,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 import '../Componenets/form/color-form.dart';
 import '../Componenets/form/range-form.dart';
 import '../Componenets/form/switch-form.dart';
-import '../Componenets/switch-box.dart';
+import '../Componenets/form/switch-box.dart';
 import '../Componenets/tooltip.dart';
 
 class TestComponent extends StatelessWidget {
@@ -1157,7 +1157,9 @@ class TestComponent extends StatelessWidget {
         //end select
         CustomSelect(
           hintText: 'Open this select menu',
+          selectedValue: '0',
           items: const [
+            DropdownMenuItem(value: '0', child: Text('Open this select menu')),
             DropdownMenuItem(value: '1', child: Text('One')),
             DropdownMenuItem(value: '2', child: Text('Two')),
             DropdownMenuItem(value: '3', child: Text('Three')),
@@ -1271,7 +1273,9 @@ class TestComponent extends StatelessWidget {
 
         //input group
         SizedBox(height: 30),
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),],prefixIcons: [Container(
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),],prefixIcons: [Container(
+          width: 40,
+          height: 40,
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           decoration: BoxDecoration(
         color: color38,
@@ -1286,8 +1290,11 @@ class TestComponent extends StatelessWidget {
           ),
         )] , formTxt: 'Example help text goes outside the input group.'),
         SizedBox(height: 30),
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),],
-          prefixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),],
+          prefixIcons: [Container(
+            width: 46,
+              height: 40,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1296,7 +1303,10 @@ class TestComponent extends StatelessWidget {
                   bottomRight: Radius.circular(5),
                 )
             ),child: Center(child: Txt('00.' , fontSize:14 ,)))] ,
-          suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          suffixIcons: [Container(
+            width: 40,
+              height:40,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1312,6 +1322,7 @@ class TestComponent extends StatelessWidget {
               hintText: 'Username',
               borderColor: Colors.grey,
               borderRadius: BorderRadius.only(topRight: Radius.circular(5),bottomRight:Radius.circular(5) , ),
+              inputWidth: 500,
             ),
             Container(
 
@@ -1331,13 +1342,17 @@ class TestComponent extends StatelessWidget {
               hintText: 'Server',
               borderColor: Colors.grey,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(5),bottomLeft:Radius.circular(5) , ),
+              inputWidth: 500,
             ),
           ],
         ),
         SizedBox(height: 30),
         //textarea
-        InputGroup2(inputs: [InputForm(hintText: 'نام',fieldType: FieldType.textarea),],
-          suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',fieldType: FieldType.textarea , inputWidth: 500,),],
+          suffixIcons: [Container(
+              width: 120,
+              height: 94,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1351,8 +1366,11 @@ class TestComponent extends StatelessWidget {
 
         SizedBox(height: 30),
         //size
-        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.small,),] ,
-        suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.small,inputWidth: 500,),] ,
+        suffixIcons: [Container(
+            width: 40,
+            height: 40,
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
               color: color38,
               border: Border.all(width: 1 , color: color5),
@@ -1361,7 +1379,10 @@ class TestComponent extends StatelessWidget {
                 bottomLeft: Radius.circular(5),
               )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.small,),
         SizedBox(height: 30),
-        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.medium,),] , suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.medium,inputWidth: 500,),] , suffixIcons: [Container(
+            width: 40,
+            height: 40,
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1370,7 +1391,10 @@ class TestComponent extends StatelessWidget {
                   bottomLeft: Radius.circular(5),
                 )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.medium,),
         SizedBox(height: 30),
-        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.large,),] , suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',size: InputSize.large,inputWidth: 500,),] , suffixIcons: [Container(
+          width: 40,
+            height: 40,
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1381,34 +1405,10 @@ class TestComponent extends StatelessWidget {
         //end size
         SizedBox(height: 30),
         //radios
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),] , suffixIcons: [Container(
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] , suffixIcons: [Container(
+          width: 42,
+            height: 40,
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                )
-            ),
-            child: Center(child: RadioButton(items: [RadioItem(text: '')],)))],),
-        SizedBox(height: 30),
-        //Checkboxes
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),] , suffixIcons: [Container(
-            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                )
-            ),
-            child: CheckBoxForm())]),
-        SizedBox(height: 30),
-        //Multiple inputs
-        InputGroup2(inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))), InputForm(hintText: 'نام خانوادگی',),],
-            suffixIcons: [Container( padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1416,15 +1416,53 @@ class TestComponent extends StatelessWidget {
                   topLeft: Radius.circular(5),
                   bottomLeft: Radius.circular(5),
                 )
-            ),child: Center(child: Txt('First and last name' , fontSize:14 ,)))]),
+            ),
+
+            child: Center(child: RadioButton(items: [RadioItem(text: '')],mainAxisAlignment: MainAxisAlignment.center,)))],),
         SizedBox(height: 30),
-        //Multiple addons
-        InputGroup2(inputs: [InputForm(hintText: 'نام',)],
-            suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        //Checkboxes
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] , suffixIcons: [Container(
+          width: 42,
+            height:40,
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
-            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )
+            ),
+            child: CheckBoxForm())]),
+        SizedBox(height: 30),
+        //Multiple inputs
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))), InputForm(hintText: 'نام خانوادگی',),],
+            suffixIcons: [Container(
+                width: 160,
+                height:40,
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                )
+            ),child: Center(child: Txt('First and last name' , fontSize:14 ,)))], isWrap: false),
+        SizedBox(height: 30),
+        //Multiple addons
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,)],
+            suffixIcons: [Container(
+               width: 40,
+                height: 40,
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
+            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
+               width: 58,
+                height:40,
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(
                     color: color38,
                     border: Border.all(width: 1 , color: color5),
@@ -1433,7 +1471,10 @@ class TestComponent extends StatelessWidget {
                       bottomLeft: Radius.circular(5),
                     )
                 ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
-        InputGroup2(inputs: [InputForm(hintText: 'نام',)],prefixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,)],prefixIcons: [
+          Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            width: 40,
+            height:40,
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
@@ -1441,20 +1482,23 @@ class TestComponent extends StatelessWidget {
                   topRight: Radius.circular(5),
                   bottomRight: Radius.circular(5),
                 )
-            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
+              width: 58,
+              height: 40,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
             ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
         SizedBox(height: 30),
         //Button addons
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] ,
             suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
               borderRadius: BorderRadius.only(topRight: Radius.circular(0),
                   bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5) ),)]),
         SizedBox(height: 30),
         //Buttons with dropdowns
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+        InputGroup2(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] ,
             suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
               DropdownItem(text: "Action"),
               DropdownItem(text: "Another action"),
@@ -1465,7 +1509,7 @@ class TestComponent extends StatelessWidget {
                     bottomLeft:Radius.circular(5) )),],),
         SizedBox(height: 30),
         //Segmented buttons
-        InputGroup2(inputs: [InputForm(hintText: 'نام',),] ,
+        InputGroup2(inputs: [InputForm(hintText: 'نام' , inputWidth: 500,),] ,
           suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
             DropdownItem(text: "Action"),
             DropdownItem(text: "Another action"),
@@ -1481,6 +1525,7 @@ class TestComponent extends StatelessWidget {
         InputGroup2(inputs: [CustomSelect(hintText: 'choose...',
           borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
           onChanged: (value) {},
+          width: 800,
           items:  [
             DropdownMenuItem(value: '1', child: Text('One')),
             DropdownMenuItem(value: '2', child: Text('Two')),
@@ -1498,8 +1543,11 @@ class TestComponent extends StatelessWidget {
           topRight: Radius.circular(5),
           bottomRight: Radius.circular(5),
 
-        ),)],
-            suffixIcons: [Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        ),width: 500,)],
+            suffixIcons: [Container(
+               width: 77,
+                height:40,
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(
                     color: color38,
                     border: Border.all(width: 1 , color: color5),
@@ -1514,7 +1562,7 @@ class TestComponent extends StatelessWidget {
           topRight: Radius.circular(5),
           bottomRight: Radius.circular(5),
 
-        ),)],
+        ),width: 500,)],
             suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
               borderRadius: BorderRadius.only(topRight: Radius.circular(0),
                   bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5) ),)]),

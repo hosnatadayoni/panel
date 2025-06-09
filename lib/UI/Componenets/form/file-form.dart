@@ -17,6 +17,7 @@ class FileForm extends StatefulWidget {
   BorderRadius? borderRadius;
   String? lable;
   Color? lableColor;
+  double? width;
     FileForm({
       this.disabled = false,
       this.fileTxt = 'Choose File',
@@ -29,6 +30,7 @@ class FileForm extends StatefulWidget {
       this.borderRadius,
       this.lable,
       this.lableColor = dark,
+      this.width,
 });
 
   @override
@@ -85,6 +87,7 @@ class _FileFormState extends State<FileForm> {
   }
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     final padding = switch(widget.size!) {
     InputSize.large => EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     InputSize.medium => EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -105,6 +108,7 @@ class _FileFormState extends State<FileForm> {
           onTap: widget.disabled! ? null : _pickFile,
           child: Container(
          height: 48,
+            width: widget.width ?? size.width,
             decoration: BoxDecoration(
               borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.all(Radius.circular(5)),
               border: Border.all(width: 1, color: widget.borderColor!),
@@ -130,10 +134,10 @@ class _FileFormState extends State<FileForm> {
                       borderRadius: BorderRadius.only(topLeft:Radius.circular(5) , bottomLeft: Radius.circular(5)),
                       color:widget.disabled! ? color40: Colors.transparent,
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Txt(getDisplayText() , fontSize: textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,),
+                        Txt(getDisplayText() , fontSize: textStyle, fontWeight: FontWeight.w400, color: widget.fileTxtColor,maxLine: 1,),
                       ],
                     ),
                   ),

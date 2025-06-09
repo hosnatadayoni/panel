@@ -227,68 +227,70 @@ class _DropdownState extends State<Dropdown> {
 
     return Obx(() {
       return this.widget.isSplitButton!
-          ? Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MouseRegion(
-                onEnter: (_) {
-                  isHoverSplit.value = true;
-                },
-                onExit: (_) {
-                  isHoverSplit.value = false;
-                },
-                child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Center(
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.only(
-                        left: 9, right: 9, top: 11, bottom: 11),
-                    decoration: BoxDecoration(
-                      color: isHoverSplit.value
-                          ? HoverbackgroundColor()
-                          : widget.isOutline!? Colors.transparent :backgroundColor(),
-                      borderRadius:widget.borderRadiusSplitBtn != null ? widget.borderRadiusSplitBtn :  BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          bottomRight: Radius.circular(5)
+          ? IntrinsicWidth(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MouseRegion(
+                  onEnter: (_) {
+                    isHoverSplit.value = true;
+                  },
+                  onExit: (_) {
+                    isHoverSplit.value = false;
+                  },
+                  child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Center(
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.only(
+                          left: 9, right: 9, top: 11, bottom: 11),
+                      decoration: BoxDecoration(
+                        color: isHoverSplit.value
+                            ? HoverbackgroundColor()
+                            : widget.isOutline!? Colors.transparent :backgroundColor(),
+                        borderRadius:widget.borderRadiusSplitBtn != null ? widget.borderRadiusSplitBtn :  BorderRadius.only(
+                            topRight: Radius.circular(5),
+                            bottomRight: Radius.circular(5)
+                        ),
+                          border: Border.all(width: 1, color: isHoverSplit.value ? HoverbackgroundColor() : backgroundColor())
                       ),
-                        border: Border.all(width: 1, color: isHoverSplit.value ? HoverbackgroundColor() : backgroundColor())
+                      child: Icon(Icons.arrow_drop_down,
+                          color: isHoverSplit.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size:getIconSize()),
                     ),
-                    child: Icon(Icons.arrow_drop_down,
-                        color: isHoverSplit.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size:getIconSize()),
-                  ),
-                ),),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  isHoverMain.value = true;
-                },
-                onExit: (_) {
-                  isHoverMain.value = false;
-                },
-                child: Center(
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.only(
-                        left: 12, right: 12, top: 6, bottom: 6),
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.only(
-                      //     topLeft: Radius.circular(15),
-                      //     bottomLeft: Radius.circular(15)),
-                      borderRadius:widget.borderRadius != null ?  widget.borderRadius:
-                      BorderRadius.all(Radius.circular(0)),
-                      border: Border.all(width: 1, color: isHoverMain.value ? HoverbackgroundColor() : backgroundColor()),
-                      color: isHoverMain.value
-                          ? HoverbackgroundColor()
-                          : widget.isOutline!? Colors.transparent :backgroundColor(),
-                    ),
-                    child: Center(
-                      child: Txt(this.widget.dropDownTitle,
-                          color: isHoverMain.value ?contentColor(): widget.isOutline! ? textColor(): contentColor() , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                  ),),
+                ),
+                MouseRegion(
+                  onEnter: (_) {
+                    isHoverMain.value = true;
+                  },
+                  onExit: (_) {
+                    isHoverMain.value = false;
+                  },
+                  child: Center(
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.only(
+                          left: 12, right: 12, top: 6, bottom: 6),
+                      decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.only(
+                        //     topLeft: Radius.circular(15),
+                        //     bottomLeft: Radius.circular(15)),
+                        borderRadius:widget.borderRadius != null ?  widget.borderRadius:
+                        BorderRadius.all(Radius.circular(0)),
+                        border: Border.all(width: 1, color: isHoverMain.value ? HoverbackgroundColor() : backgroundColor()),
+                        color: isHoverMain.value
+                            ? HoverbackgroundColor()
+                            : widget.isOutline!? Colors.transparent :backgroundColor(),
+                      ),
+                      child: Center(
+                        child: Txt(this.widget.dropDownTitle,
+                            color: isHoverMain.value ?contentColor(): widget.isOutline! ? textColor(): contentColor() , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
           : Container(
             child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex,  MouseRegion(

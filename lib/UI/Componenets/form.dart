@@ -11,7 +11,7 @@ import 'package:finance/UI/Componenets/form/input-group-form.dart';
 import 'package:finance/UI/Componenets/form/range-form.dart';
 import 'package:finance/UI/Componenets/form/select-form.dart';
 import 'package:finance/UI/Componenets/form/switch-form.dart';
-import 'package:finance/UI/Componenets/switch-box.dart';
+import 'package:finance/UI/Componenets/form/switch-box.dart';
 import 'package:flutter/material.dart';
 import 'form/color-form.dart';
 import 'form/radioButton-form.dart';

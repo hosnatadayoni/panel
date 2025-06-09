@@ -2,9 +2,9 @@ import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/form/input-form.dart';
 import 'package:flutter/material.dart';
-import 'Buttons/btn.dart';
-import 'form/file-form.dart';
-import 'form/select-form.dart';
+import '../Buttons/btn.dart';
+import 'file-form.dart';
+import 'select-form.dart';
 
 class InputGroup2 extends StatelessWidget {
   List<Widget>? inputs;
@@ -30,7 +30,7 @@ class InputGroup2 extends StatelessWidget {
      this.size = InputSize.medium,
      this.width,
      this.height,
-     this.isWrap = false,
+     this.isWrap = true,
 
 });
 
@@ -47,8 +47,8 @@ class InputGroup2 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         this.isWrap!? Wrap(
+        runSpacing: 5,
         crossAxisAlignment: WrapCrossAlignment.start,
-
         children: buildElements(),
         ):
         Row(
@@ -88,7 +88,12 @@ class InputGroup2 extends StatelessWidget {
            inputs![i] is InputForm ||
               inputs![i] is FileForm ||
               inputs![i] is CustomSelect
-              ? Flexible(child: inputs![i])
+              ?  ? (isWrap!
+               ? ConstrainedBox(
+             constraints: BoxConstraints(minWidth: 100), // مقدار دلخواه
+             child: inputs![i],
+           )
+               : Flexible(child: inputs![i]))
               : Container(
             width: width ?? 40,
             height: height ?? 48,

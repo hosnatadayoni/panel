@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import '../../Public/styles.dart';
-import 'General/txt.dart';
+import '../../../Public/styles.dart';
+import '../General/txt.dart';
 
 
 class SwitchBox extends StatefulWidget {
@@ -44,9 +44,11 @@ class _SwitchBoxState extends State<SwitchBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
+      runSpacing: 10,
+      spacing: 10,
       children: [
-        Container(
+        IntrinsicWidth(
           child: FlutterSwitch(
             width: 60,
             height: 30,
@@ -65,10 +67,10 @@ class _SwitchBoxState extends State<SwitchBox> {
               setState(() {
                 _currentValue = val;
               });
+              widget.onChanged?.call(val);
             },
           ),
         ),
-        const SizedBox(width: 8),
         Txt(
           widget.label ?? '',
           color: widget.disabled ? Colors.grey : null,
