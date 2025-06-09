@@ -28,6 +28,7 @@ late Future<Widget> _future;
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
+    print('_MainTableBoxState.build>>\$eq>>${MainController.tableInfo}>>>${MainController.tableInfo['filters']}');
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -64,9 +65,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-
                       List<dynamic>w=MainController.tableInfo['filters'];
-                      String opration='==';
+                      String opration='\$eq';
                       if(ViewController.request.length!=0){
                         var d;
                         List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();

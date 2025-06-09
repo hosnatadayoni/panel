@@ -38,6 +38,11 @@
           }
         ]
       }
+    ],
+    "filters":
+    [
+      {"column": "price","oprator": "$lte"},
+      {"column": "title","oprator": "$eq"}
     ]
   },
   {
@@ -49,7 +54,6 @@
     "countShowRow": 10,
     "relations": [],
     "columns": [
-
       {
         "name": "title",
         "title": "description",
@@ -64,7 +68,7 @@
       },
       {
         "name": "product",
-        "title": "description",
+        "title": "product",
         "type": "multiSelect",
         "type_filed": "array",
         "sourceItems": "table",
@@ -77,6 +81,10 @@
           }
         ]
       }
+    ],
+    "filters":
+    [
+      {"column":"product","oprator": "$eq"}
     ]
   }
 ]

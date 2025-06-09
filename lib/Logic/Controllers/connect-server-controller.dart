@@ -6,11 +6,13 @@ import 'package:finance/Logic/Models/ServerModel/project.dart';
 import 'package:finance/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
+import '../Models/db.dart';
 
 class ConncetServerController extends GetxController {
 
   static Map<String, dynamic>storeRecordRes={};
   static Map<String, dynamic>updateRecordRes={};
+  static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
   static createProject() async {
@@ -78,6 +80,39 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           updateRecordRes={};
           updateRecordRes=response!.data['data'];
+          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
+          // MainController.tableInfo=
+        },printResponse: true);
+  }
+  static createJsonFilter(var wheres,String tableName){
+    Map<String,dynamic>filter={};
+    List<dynamic>l=[];
+    Map<String,dynamic> c={};
+         Map<String,dynamic> body ={};
+    body.addAll({
+        'table_name':tableName,
+      });
+      for(Where item in wheres.values){
+        c.addAll({'${item.fieldName}': {"${item.oprator!=null?item.oprator:"\$eq"}": "${item.value}"}
+        });
+      }
+    body.addAll({
+        'filter':(json.encode(c)).toString(),
+      });
+      print('MainController.createJsonSchemaApi>>>>${body}');
+      // ConncetServerController.createSchema(list);
+
+    return body;
+  }
+  static filterRecordGeneral(var wheres,String tableName) async {
+    var json=createJsonFilter(wheres, tableName);
+    var response = await RestApi.post(filterRecordsUrl, body: json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          filterRecordRes=response!.data['data'].cast<Map<String, dynamic>>();
+          // updateRecordRes={};
+          // updateRecordRes=response!.data['data'];
           // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
           // MainController.tableInfo=
         },printResponse: true);

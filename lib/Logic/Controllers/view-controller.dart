@@ -688,7 +688,7 @@ class ViewController extends GetxController {
       checkBoxTitle: '',
       onChange: (text) async {
 
-        DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[indexRow]['id']}').updateRecord({'${name}':'${text}'});
+        DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[indexRow]['id']}').updateRecord({'${name}':'${text}'});
         // dataModel = text;
         // final data = DataModel(
         //   id: dataModel['id'],
@@ -1661,7 +1661,7 @@ class ViewController extends GetxController {
       if (selectedId != '') {
         List<dynamic> itemSelect = [];
         var object =
-        (await DB(tableName).where('id', '==', selectedId).getRecords());
+        (await DB(tableName).where('id', '\$eq', selectedId).getRecords());
         if (object.length == 0) {
           selectedTitle = 'نامشخص';
         } else {
@@ -1700,7 +1700,7 @@ class ViewController extends GetxController {
     for (var i = 0; i < selectedId.length; i++) {
       if (sourceItem != 'custom') {
         var object =
-        (await DB(tableName).where('id', '==', selectedId[i]).getRecords());
+        (await DB(tableName).where('id', '\$eq', selectedId[i]).getRecords());
         if (object.length != 0) {
           var objectItem = object.first;
           List<dynamic> items = column['items'];
@@ -1767,7 +1767,7 @@ class ViewController extends GetxController {
         }
         else{
         for (var item in dataModel[column['name']])
-          dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+          dropDownListItems.add((await DB(tableName).where('id', '\$eq', item).getRecords()).first);
 
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
@@ -1832,7 +1832,7 @@ class ViewController extends GetxController {
         }
         else{
           for (var item in dataModel[column['name']])
-            dropDownListItems.add((await DB(tableName).where('id', '==', item).getRecords()).first);
+            dropDownListItems.add((await DB(tableName).where('id', '\$eq', item).getRecords()).first);
 
           for (int i = 0; i < dropDownListItems.length; i++) {
             List<dynamic> a = [];

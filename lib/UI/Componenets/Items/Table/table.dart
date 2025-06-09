@@ -97,7 +97,7 @@ class _TableBoxState extends State<TableBox> {
                                   children: [
                                     if(MainController.tableData.value[i]['sync']=='false')
                                     IconButton(onPressed: (){
-                                      DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
+                                      DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
                                       // ConncetServerController.setDatabaseme(MainController.tableData.value[i]);
                                       // MainController.isClickedItem.value = false;
                                       // ViewController.isClickedBtn.value = false;
@@ -159,7 +159,7 @@ class _TableBoxState extends State<TableBox> {
                                                             InkWell(
                                                               onTap: ()async{
                                                                 setState(() {
-                                                                  DB('${MainController.tableInfo['table-name']}').where('_id', '==', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                                  DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                                 });
                                                                 Navigator.pop(context);
                                                               },

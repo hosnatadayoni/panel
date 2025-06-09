@@ -158,6 +158,30 @@ class HelperController extends GetxController {
           return false;
         }
       }
+      else if(opration=="!="){
+        if(itemDataTime.hour != itemSearchTime.hour && itemDataTime.minute != itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration==">"){
+        if(itemDataTime.hour > itemSearchTime.hour && itemDataTime.minute > itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="<"){
+        if(itemDataTime.hour < itemSearchTime.hour && itemDataTime.minute < itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
   }
 
 // تابع کمکی: تبدیل رشته تاریخ جلالی به Jalali

@@ -861,6 +861,16 @@ class MainController extends GetxController {
     }
     return null;
   }
+  static getInfoTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere(
+        (element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
+
+      return tableInfo;
+    }
+    return null;
+  }
 
   static void renderPagination({var table}) {
     if (table == null) {
@@ -887,10 +897,7 @@ class MainController extends GetxController {
 
   }
 
-  static getTypeOfField(
-    String tableName,
-    String name,
-  ) {
+  static getTypeOfField(String tableName, String name) {
     var type;
     var column = getColumnInfoTable(tableName);
     for (var item in column) {
@@ -1084,22 +1091,25 @@ class MainController extends GetxController {
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
-        print('MainController.loadData tableInfo>>>${tableInfo}');
+        print('MainController.loadData tableInfo1>>>${tableInfo}');
 
-        await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
-        // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       } else {
         tableInfo = tableData;
+        print('MainController.loadData tableInfo2>>>${tableInfo}');
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else
-          await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+          MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+          // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
 
         // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
       }
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
+        print('MainController.loadData tableInfo3>>>${tableInfo}');
       }
     }
     if (tableData == null) {
@@ -1117,6 +1127,7 @@ class MainController extends GetxController {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
         }
       }
+      print('MainController.loadData tableInfo4>>>${tableInfo}');
     } else {
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
@@ -1132,6 +1143,7 @@ class MainController extends GetxController {
           tableData['columns'][j]['is-show-excel'] = true;
         }
       }
+      print('MainController.loadData tableInfo5>>>${tableInfo}');
     }
   }
 
