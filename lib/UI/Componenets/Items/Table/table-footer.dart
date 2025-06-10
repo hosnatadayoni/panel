@@ -32,7 +32,128 @@ class _TableFooterState extends State<TableFooter> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // alignment:WrapAlignment.spaceBetween,
             children: [
+              Container(
+                padding: EdgeInsets.only(left: 40, right: 40),
+                child: Row(
+                  children: [
+                    Txt('${AppController.of(context)!.value('show')}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${MainController.tableData.value.length == 0
+                        ? 0
+                        : MainController.startIndex.value + 1}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${AppController.of(context)!.value('until')}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${MainController.endIndex.value}', fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${AppController.of(context)!.value('from')}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${MainController.tableData.value.length}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                    Txt('${AppController.of(context)!.value('row')}',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: color3,),
+                  ],
+                ),
+              ),
+              Expanded(child: Container(
+                child:
+                Wrap(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(5)),
+                        color: MainController
+                            .tableInfo['currentPage'] > 1
+                            ? color3
+                            : color7,
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(15)),
+                        onPressed: MainController
+                            .tableInfo['currentPage'] > 1 ? () async {
+                          setState(() {
+                            MainController.tableInfo['currentPage']--;
+                          });
+                          // MainController.renderPagination();
+                          MainController.tableData.value= await DB('${tableSelected}').pageInate();
+                        } : null,
+                        child: Txt('${AppController.of(context)!.value(
+                            'previous')}', color: MainController
+                            .tableInfo['currentPage'] > 1
+                            ? whiteColor
+                            : color3),
+                      ),
+                    ),
+                    SizedBox(width: 5,),
+                    if (totalPages > 5) ...[
+                      box(1, tableSelected),
+                      box(2, tableSelected),
+                      SizedBox(width: 5),
+                      Container(
+                        margin: EdgeInsets.only(left: 5),
+                        width: 40,
+                        height: 40,
+                        child: Center(child: Txt('...', fontSize: 20)),
+                      ),
+                      SizedBox(width: 5),
+                      box(totalPages - 1, tableSelected),
+                      box(totalPages, tableSelected),
+                    ] else ...[
+                      for (var i = 1; i <= totalPages; i++)
+                        box(i, tableSelected),
+                    ],
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(5)),
+                        color: MainController.tableInfo['currentPage'] <
+                            totalPages
+                            ? color3
+                            : color7,
+                      ),
+                      child: Container(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(15)),
+                          onPressed: MainController
+                              .tableInfo['currentPage'] <
+                              totalPages ? () async {
+                            setState(() {
+                              MainController.tableInfo['currentPage']++;
+                            });
+                            // MainController.renderPagination();
+                            MainController.tableData.value= await DB('${tableSelected}').pageInate();
 
+                          } : null,
+                          child: Txt(
+                            '${AppController.of(context)!.value('next')}',
+                            color: MainController
+                                .tableInfo['currentPage'] <
+                                totalPages
+                                ? whiteColor
+                                : color3,),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+              )),
             ],
           ) :
           Column(
@@ -388,6 +509,5 @@ class _TableFooterState extends State<TableFooter> {
       ),
     );
   }
-
 
 }
