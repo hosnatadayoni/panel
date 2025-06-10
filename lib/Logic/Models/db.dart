@@ -157,6 +157,27 @@ class DB {
     }).toList();
   }
 
+  pageInate() async {
+    int currentPage=await MainController.getInfoTable('${this.tableName}')['currentPage'];
+    print('DB.pageInate>>>${currentPage}');
+    int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
+    print('DB.pageInate2>>${countShowRow}');
+    int  perPage=countShowRow!=null?countShowRow:10;
+    int s=(currentPage-1)*perPage;
+
+    // List<Map<String,dynamic>>list=await getRecords();
+    return (await skip(s).getRecords()).take(perPage).toList();
+  }
+
+  infoPage() async {
+    int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
+    int  perPage=countShowRow!=null?countShowRow:10;
+    List<Map<String,dynamic>> records=await getRecords();
+    int totalItems=records.length;
+    int totalPage=(totalItems/perPage).ceil();
+    return totalPage;
+  }
+
   getRecords() async {
     List<Map<String,dynamic>> dataItems = [];
     Box box;
@@ -365,6 +386,7 @@ class DB {
       }
       if (this.skipCount != null) {
         data = data.skip(this.skipCount!).toList();
+        print('DB.getRecords skip>>${data}');
       }
       if (this.randomCount != null) {
         data = getRandomItems(data, this.randomCount!);
@@ -414,7 +436,7 @@ class DB {
           }
           // await MainController.multiSelectStore(this.tableName!, Id);
           await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
-          MainController.renderPagination();
+          // MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
           request = {};
           newRequest = {};
@@ -471,7 +493,7 @@ class DB {
               showSnackbar(snackTypes.error, after['message']);
             }
             await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
-            MainController.renderPagination();
+            // MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
 
@@ -507,7 +529,7 @@ class DB {
         }
         box.deleteAt(index);
         await MainController.loadData();
-        MainController.renderPagination();
+        // MainController.renderPagination();
         var after = HelperController.afterDelete(index, item);
         if (after['status'] == false) {
           showSnackbar(snackTypes.error, after['message']);

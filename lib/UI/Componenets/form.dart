@@ -116,53 +116,53 @@ class _MyFormPageState extends State<MyFormPage> {
 
 
           //input group
-          InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',),],icons: [Txt('@' , fontSize:14 ,)],isShowStart: true,),
-          const SizedBox(height: 30),
-          InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Txt('@' , fontSize:14 ,)], size: InputSize.small),
-          const SizedBox(height: 30),
-          InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),], icons: [ Txt('@' , fontSize:14 ,)] ,size: InputSize.large),
-          const SizedBox(height: 30),
-          InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Center(
-              child: RadioButton(items: [RadioItem(text: '')],))]),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true ,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [CheckBoxForm()]),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',), InputForm(hintText: 'نام خانوادگی',), InputForm(hintText: 'سن',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [ Txt('@' , fontSize:14 ,)]),
-          const SizedBox(height: 30),
-          InputGroup(isShowEnd: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)))],icons: [Txt('@' , fontSize:14 ,) , Txt('0.00' , fontSize:14 ,)]),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],
-            icons: [Dropdown(type: btnType.secondary,dropDownTitle: 'DropDown',itemsDropDown: [
-                DropdownItem(text: "Action"),
-                DropdownItem(text: "Another action"),
-                DropdownItem(text: "Something else here"),
-              ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(type: btnType.secondary,isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
-            DropdownItem(text: "Action"),
-            DropdownItem(text: "Another action"),
-            DropdownItem(text: "Something else here"),
-          ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey, ),],),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true , isSelectBox: true, selectList: [
-            CustomSelect(hintText: 'choose...',
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
-              onChanged: (value) {
-                setState(() {
-
-                });
-              },
-              items: const [
-            DropdownMenuItem(value: '1', child: Text('One')),
-            DropdownMenuItem(value: '2', child: Text('Two')),
-            DropdownMenuItem(value: '3', child: Text('Three')),
-
-          ],)],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
-          const SizedBox(height: 30),
-          InputGroup(isShowStart: true,isFileBox: true,fileList: [FileForm(borderRadius: BorderRadius.all(Radius.circular(0)),)],icons: [Txt('Upload' , fontSize:14 ,)],),
-          const SizedBox(height: 30),
+          // InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',),],icons: [Txt('@' , fontSize:14 ,)],isShowStart: true,),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Txt('@' , fontSize:14 ,)], size: InputSize.small),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowEnd: true, inputs: [InputForm(hintText: 'نام', borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),], icons: [ Txt('@' , fontSize:14 ,)] ,size: InputSize.large),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowEnd: true , inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),),],icons: [Center(
+          //     child: RadioButton(items: [RadioItem(text: '')],))]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true ,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [CheckBoxForm()]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',), InputForm(hintText: 'نام خانوادگی',), InputForm(hintText: 'سن',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),],icons: [ Txt('@' , fontSize:14 ,)]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowEnd: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)))],icons: [Txt('@' , fontSize:14 ,) , Txt('0.00' , fontSize:14 ,)]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true,inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))],
+          //   icons: [Dropdown(type: btnType.secondary,dropDownTitle: 'DropDown',itemsDropDown: [
+          //       DropdownItem(text: "Action"),
+          //       DropdownItem(text: "Another action"),
+          //       DropdownItem(text: "Something else here"),
+          //     ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey , borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) )),],),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true, inputs: [InputForm(hintText: 'نام',borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)))], icons: [Dropdown(type: btnType.secondary,isSplitButton: true,dropDownTitle: 'DropDown',itemsDropDown: [
+          //   DropdownItem(text: "Action"),
+          //   DropdownItem(text: "Another action"),
+          //   DropdownItem(text: "Something else here"),
+          // ],spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey, ),],),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true , isSelectBox: true, selectList: [
+          //   CustomSelect(hintText: 'choose...',
+          //     borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5)),
+          //     onChanged: (value) {
+          //       setState(() {
+          //
+          //       });
+          //     },
+          //     items: const [
+          //   DropdownMenuItem(value: '1', child: Text('One')),
+          //   DropdownMenuItem(value: '2', child: Text('Two')),
+          //   DropdownMenuItem(value: '3', child: Text('Three')),
+          //
+          // ],)],icons: [Btn(type: btnType.secondary,content: Center(child: Txt('button')),borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight:Radius.circular(5) ),)]),
+          // const SizedBox(height: 30),
+          // InputGroup(isShowStart: true,isFileBox: true,fileList: [FileForm(borderRadius: BorderRadius.all(Radius.circular(0)),)],icons: [Txt('Upload' , fontSize:14 ,)],),
+          // const SizedBox(height: 30),
           InputGroup(
             inputs: [
               InputForm(

@@ -40,7 +40,7 @@ class CustomSelect extends StatelessWidget {
     };
 
     double fontSize = switch(this.size!) {
-    InputSize.large => 20,
+    InputSize.large => 18,
     InputSize.medium => 16,
     InputSize.small => 14,
     };

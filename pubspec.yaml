@@ -60,6 +60,7 @@ dependencies:
   super_tooltip: ^2.0.9
   flutter_typeahead: ^4.8.0
   flutter_switch: ^0.3.2
+  url_launcher: ^6.1.14
 
 
 

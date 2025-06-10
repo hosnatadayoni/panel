@@ -33,7 +33,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../UI/Views/table-page.dart';
 import 'helper-controller.dart';
 import 'package:intl/intl.dart';
-// import 'dart:html' as html;
+// import 'dart:html' as html show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 class MainController extends GetxController {
   static Rx<bool> isLightMode = true.obs;
@@ -75,6 +76,7 @@ class MainController extends GetxController {
   static RxList<dynamic> tableData = [].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
+  static String tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
 
   //dasboard page
   static var hoveredIndex = (-1).obs;
@@ -268,14 +270,28 @@ class MainController extends GetxController {
         //   ..click();
         //
         // html.Url.revokeObjectUrl(url);
+
+        // final bytes = excel.save();
+        // if (bytes != null) {
+        //   final blob = html.Blob([bytes], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //   final url = html.Url.createObjectUrlFromBlob(blob);
+        //
+        //   final anchor = html.AnchorElement(href: url)
+        //     ..setAttribute('download', '${MainController.tableInfo['table-name']}.xlsx')
+        //     ..click();
+        //
+        //   html.Url.revokeObjectUrl(url);
+        //
+        // }
       } else {
         File(filePath!)
           ..createSync(recursive: true)
           ..writeAsBytesSync(excel.save()!);
+        print('Excel file created at $filePath');
+        showSnackbar(snackTypes.success,
+            '${AppController.of(Get.context!)!.value('the desired file')}  ${fileExelPath} ${AppController.of(Get.context!)!.value('saved')}');
       }
-      print('Excel file created at $filePath');
-      showSnackbar(snackTypes.success,
-          '${AppController.of(Get.context!)!.value('the desired file')}  ${fileExelPath} ${AppController.of(Get.context!)!.value('saved')}');
+
     }
   }
 
@@ -544,7 +560,9 @@ class MainController extends GetxController {
     /// no:new data read of excel
     /// finaly :add table with new json
 
-    MainController.renderPagination();
+    // MainController.renderPagination();
+
+
     // }
   }
 
@@ -593,7 +611,7 @@ class MainController extends GetxController {
     // dataController.allData.value.add(newData);
     MainController.tableData.add(newData);
     await MainController.loadData();
-    MainController.renderPagination();
+    // MainController.renderPagination();
   }
 
   static Future<Map> generateJsonExcel(
@@ -903,31 +921,32 @@ class MainController extends GetxController {
   }
 
   static void renderPagination({var table}) {
-    if (table == null) {
-      MainController.totalPages.value =
-          (tableData.value.length / MainController.tableInfo['countShowRow'])
-              .ceil();
-      MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
-          MainController.tableInfo['countShowRow'];
-      MainController.endIndex.value = MainController.startIndex.value +
-          int.parse('${MainController.tableInfo['countShowRow']}');
-    } else {
-      MainController.totalPages.value =
-          (tableData.value.length / table['countShowRow']).ceil();
-      MainController.startIndex.value =
-          (table['currentPage'] - 1) * table['countShowRow'];
-      MainController.endIndex.value = MainController.startIndex.value +
-          int.parse('${table['countShowRow']}');
-    }
-
-    if (MainController.endIndex.value > tableData.value.length) {
-      MainController.endIndex.value = tableData.value.length;
-    } else {
-      print('not exsits');
-    }
-    print(
-        'MainController.startIndex.value>>>${MainController.startIndex.value}');
-    print('MainController.endIndex.value>>>${MainController.endIndex.value}');
+    // if (table == null) {
+    //   MainController.totalPages.value =
+    //       (tableData.value.length / MainController.tableInfo['countShowRow'])
+    //           .ceil();
+    //   MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
+    //       MainController.tableInfo['countShowRow'];
+    //   MainController.endIndex.value = MainController.startIndex.value +
+    //       int.parse('${MainController.tableInfo['countShowRow']}');
+    //
+    // } else {
+    //   MainController.totalPages.value =
+    //       (tableData.value.length / table['countShowRow']).ceil();
+    //   MainController.startIndex.value =
+    //       (table['currentPage'] - 1) * table['countShowRow'];
+    //   MainController.endIndex.value = MainController.startIndex.value +
+    //       int.parse('${table['countShowRow']}');
+    // }
+    //
+    // if (MainController.endIndex.value > tableData.value.length) {
+    //   MainController.endIndex.value = tableData.value.length;
+    // } else {
+    //   print('not exsits');
+    // }
+    // print(
+    //     'MainController.startIndex.value>>>${MainController.startIndex.value}');
+    // print('MainController.endIndex.value>>>${MainController.endIndex.value}');
   }
 
   static getTypeOfField(
@@ -970,7 +989,7 @@ class MainController extends GetxController {
       }).toList();
     }
     // }
-    MainController.renderPagination();
+    // MainController.renderPagination();
   }
 
   static Future<void> loadJson() async {
@@ -1100,7 +1119,8 @@ class MainController extends GetxController {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        MainController.tableData.value= await DB('${tableInfo['table-name']}').pageInate();
         print('table data>>${MainController.tableData.value}');
       } else {
         tableInfo = tableData;
@@ -1108,8 +1128,8 @@ class MainController extends GetxController {
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else
-          MainController.tableData.value =
-              await DB('${tableInfo['table-name']}').getRecords();
+          // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+          MainController.tableData.value= await DB('${tableInfo['table-name']}').pageInate();
       }
     } else {
       if (SubMenuList.length > 0) {
@@ -1258,5 +1278,15 @@ class MainController extends GetxController {
     } else {
       await Get.to(() => TablePage());
     }
+  }
+  static getInfoTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
+
+      return tableInfo;
+    }
+    return null;
   }
 }

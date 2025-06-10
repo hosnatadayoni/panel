@@ -54,6 +54,6 @@ class RecordController extends GetxController {
     await box.add(newData);
     // dataController.allData.value.add(newData);
     await MainController.loadData();
-    MainController.renderPagination();
+    // MainController.renderPagination();
   }
 }

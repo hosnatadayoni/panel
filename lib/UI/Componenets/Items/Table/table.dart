@@ -70,8 +70,10 @@ class _TableBoxState extends State<TableBox> {
                       padding: EdgeInsets.all(10),
                       child: Center(child: Txt('${AppController.of(context)!.value('operation')}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2)))
                 ]),
-                for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++)
-                  if(MainController.tableData.value.length > i)
+                // for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++)
+                //   if(MainController.tableData.value.length > i)
+                if(MainController.tableData.value.length > 0)
+                  for(int i=0;i<MainController.tableData.value.length;i++)
                        TableRow(
                         children: [
                           for(var j =0 ; j<MainController.tableInfo['columns'].length;j++)
