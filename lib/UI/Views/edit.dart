@@ -60,6 +60,7 @@ class _EditPageState extends State<EditPage> {
                       FutureBuilder<Widget>(
                         future: _future,
                         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                          print('snapshot>>>${snapshot}');
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();
                           } else if (snapshot.hasError) {

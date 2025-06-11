@@ -275,7 +275,10 @@ class _FormTextFieldState extends State<FormTextField> {
                 // else {
                 //   text.value = value!;
                 // }
-                ViewController.request[widget.column['name']] = value;
+                if(widget.column != null){
+                  ViewController.request[widget.column['name']] = value;
+                }
+
                 if(widget.onChange!=null)
                   this.widget.onChange!(value);
               },

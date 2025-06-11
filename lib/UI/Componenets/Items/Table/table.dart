@@ -185,7 +185,7 @@ class _TableBoxState extends State<TableBox> {
                                           print('items take>>>${items}');
                                           print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
-                                          MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
+                                          // MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
                                           await MainController.goToTablePage();
                                           //   for(var item in items){
                                           //   print('_TableBoxState.build>>${MainController.tableData.value[i]}');

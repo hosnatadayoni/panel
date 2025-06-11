@@ -61,6 +61,7 @@ class _MenuBoxState extends State<MenuBox>{
 
                                         await MainController.loadData();
                                         print('aaaaaaa>>>${MainController.SubMenuList[j]['table-name']}>>>${await DB('${MainController.SubMenuList[j]['table-name']}').infoPage()}');
+                                        ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
                                         // MainController.renderPagination();
                                         await MainController.goToTablePage();
 

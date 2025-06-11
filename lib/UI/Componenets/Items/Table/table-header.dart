@@ -1,5 +1,7 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
@@ -43,15 +45,18 @@ class _TableHeaderState extends State<TableHeader> {
                   child: PopupMenuButton<int>(
                     elevation: 0,
                     offset: Offset(0, 45),
-                    onSelected: (value) {
+                    onSelected: (value) async {
                       setState(() {
                         MainController.tableInfo['countShowRow'] = value;
                         selectedCount = value;
                         MainController.startIndex.value = (MainController.tableInfo['currentPage']-1) * MainController.tableInfo['countShowRow'];
                         MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['countShowRow']}');
-                        MainController.tableInfo['currentPage'] =1;
-                        MainController.renderPagination();
+                        MainController.tableInfo['currentPage'] = 1;
+                        // MainController.renderPagination();
                       });
+                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
+                      ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
+                      print('ViewController.totalPage.value>>>${ViewController.totalPage.value}');
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
@@ -144,15 +149,18 @@ class _TableHeaderState extends State<TableHeader> {
                   child: PopupMenuButton<int>(
                     elevation: 0,
                     offset: Offset(0, 45),
-                    onSelected: (value) {
+                    onSelected: (value) async {
                       setState(() {
                         MainController.tableInfo['countShowRow'] = value;
                         selectedCount = value;
                         MainController.startIndex.value = (MainController.tableInfo['currentPage']-1) * MainController.tableInfo['countShowRow'];
                         MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['countShowRow']}');
                         MainController.tableInfo['currentPage'] =1;
-                        MainController.renderPagination();
+                        // MainController.renderPagination();
                       });
+                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
+                      ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
+                      print('ViewController.totalPage.value>>>${ViewController.totalPage.value}');
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {

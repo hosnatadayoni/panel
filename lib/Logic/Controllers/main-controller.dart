@@ -29,7 +29,6 @@ import 'package:excel/excel.dart' as exl;
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import '../../UI/Views/table-page.dart';
 import 'helper-controller.dart';
 import 'package:intl/intl.dart';
@@ -76,7 +75,6 @@ class MainController extends GetxController {
   static RxList<dynamic> tableData = [].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
-  static String tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
 
   //dasboard page
   static var hoveredIndex = (-1).obs;
@@ -117,16 +115,21 @@ class MainController extends GetxController {
       }
     }
     int rowIndex = 2;
-    for (var data in MainController.tableData.value) {
+    var dataTable = await DB('${MainController.tableInfo['table-name']}').getRecords();
+    for (var data in dataTable) {
       List<exl.CellValue> rowData = [];
-      rowData.add(exl.TextCellValue(data.id));
-      print('data.id>>>>${data.id}');
+      // rowData.add(exl.TextCellValue(data.id));
+      rowData.add(exl.TextCellValue(data['id']));
+      print('data.id>>>>${data['id']}');
+      print('all data>>>${data}');
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
           // var value = data.data[name]?.toString() ?? '';
-          var value = data.data[name] ?? '';
+          // var value = data.data[name] ?? '';
+          print('data[name]>>>${data[name]} ${name}');
+          var value = data[name] ?? '';
           List<dynamic> items = [];
           String tableName = '';
           if (column['type'] == 'select' ||
@@ -139,9 +142,9 @@ class MainController extends GetxController {
               tableName = column['sourceTable'];
             }
             String title;
-            if (data.data[name] != null) {
+            if (data[name] != null) {
               title = await ViewController.getTitleSelectedItem(
-                  '${tableName}', data.data[name], column);
+                  '${tableName}', data[name], column);
             } else {
               title = '';
             }
@@ -153,9 +156,9 @@ class MainController extends GetxController {
               }
             }
             List<dynamic> listTitle = [];
-            if (data.data[name] != null) {
+            if (data[name] != null) {
               listTitle = await ViewController.getTitleMultiSelectedItem(
-                  '${tableName}', data.data[name], column);
+                  '${tableName}', data[name], column);
             }
 
             rowData.add(exl.TextCellValue(listTitle.join(',')));
@@ -485,49 +488,61 @@ class MainController extends GetxController {
       //function generate json record with columns name and data excel
       var excelJson = await generateJsonExcel(data, findIndexRecord);
       bool isValidator;
-      List<bool> isValidatorList = [];
-      for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-        var column = MainController.tableInfo['columns'][j];
-        bool isValidator =
-            await identificationValidator(excelJson[column['name']], column);
+      // List<bool> isValidatorList = [];
+      // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      //   var column = MainController.tableInfo['columns'][j];
+      //   bool isValidator =
+      //       await identificationValidator(excelJson[column['name']], column);
+      //
+      //   isValidatorList.add(isValidator);
+      // }
+      // bool isExsistsValidation = isValidatorList.contains(false);
+      // print('isValidatorList>>>${isValidatorList}');
+      // print('findIndexRecord excel>>>${findIndexRecord}');
 
-        isValidatorList.add(isValidator);
-      }
-      bool isExsistsValidation = isValidatorList.contains(false);
-      print('isValidatorList>>>${isValidatorList}');
-      print('findIndexRecord excel>>>${findIndexRecord}');
-
+      print('excelJsontt>>>${excelJson}');
+      print('findIndexRecordt>>>${findIndexRecord}');
       if (findIndexRecord != -1) {
+        DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
+        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
-        bool isValidator;
-        List<bool> isValidatorList = [];
-        for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          var column = MainController.tableInfo['columns'][j];
-          bool isValidator =
-              await identificationValidator(excelJson[column['name']], column);
-          isValidatorList.add(isValidator);
-        }
-        bool isExsistsValidation = isValidatorList.contains(false);
-        if (isExsistsValidation) {
-          isValidatorList = [];
-        } else {
-          updateRecord(excelJson, findIndexRecord, columnPrime);
-        }
+        // bool isValidator;
+        // List<bool> isValidatorList = [];
+        // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+        //   var column = MainController.tableInfo['columns'][j];
+        //   bool isValidator =
+        //       await identificationValidator(excelJson[column['name']], column);
+        //   isValidatorList.add(isValidator);
+        // }
+        // bool isExsistsValidation = isValidatorList.contains(false);
+        // if (isExsistsValidation) {
+        //   isValidatorList = [];
+        // } else {
+        //   print('excelJsonf>>>${excelJson}');
+        //   DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
+        //   print('k.data>>>${k.data}');
+        //   // updateRecord(excelJson, findIndexRecord, columnPrime);
+        //     print('kjhgft>>>${DB('${MainController.tableInfo['table-name']}').getTypeOfField([k])}');
+        //   await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
+
+        // }
       } else {
-        bool isValidator;
-        List<bool> isValidatorList = [];
-        for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          var column = MainController.tableInfo['columns'][j];
-          bool isValidator =
-              await identificationValidator(excelJson[column['name']], column);
-          isValidatorList.add(isValidator);
-        }
-        bool isExsistsValidation = isValidatorList.contains(false);
-        if (isExsistsValidation) {
-          isValidatorList = [];
-        } else {
-          createRecord(excelJson);
-        }
+        print('ydjdfff');
+        await DB('${MainController.tableInfo['table-name']}').storeRecord(excelJson);
+        // bool isValidator;
+        // List<bool> isValidatorList = [];
+        // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+        //   var column = MainController.tableInfo['columns'][j];
+        //   bool isValidator =
+        //       await identificationValidator(excelJson[column['name']], column);
+        //   isValidatorList.add(isValidator);
+        // }
+        // bool isExsistsValidation = isValidatorList.contains(false);
+        // if (isExsistsValidation) {
+        //   isValidatorList = [];
+        // } else {
+        //   createRecord(excelJson);
+        // }
       }
     }
     //read all record of excel
@@ -564,14 +579,16 @@ class MainController extends GetxController {
 
 
     // }
+
   }
 
   static int findByColumn(var dataRow, var primeColumn) {
     // search by id
     if (primeColumn == null) {
+      print('dataRow>>>${dataRow['id']}');
       String Id = dataRow['id'].toString();
       var existingDataIndex =
-          MainController.tableData.value.indexWhere((data) => data.id == Id);
+          MainController.tableData.value.indexWhere((data) => data['id'] == Id);
       print('existingDataIndex>>>${existingDataIndex}');
       return existingDataIndex;
     }
@@ -609,12 +626,13 @@ class MainController extends GetxController {
     await box.add(newData);
     print('newData>>>${newData}');
     // dataController.allData.value.add(newData);
-    MainController.tableData.add(newData);
+    print('aswertff>>>${MainController.tableData}');
+    MainController.tableData.add(newData.data);
     await MainController.loadData();
     // MainController.renderPagination();
   }
 
-  static Future<Map> generateJsonExcel(
+  static Future<Map<String, dynamic>> generateJsonExcel(
       var dataRowExcel, var recordIndex) async {
     Map<String, dynamic> dataExlJson = {};
     for (var i = 0; i < MainController.tableInfo['columns'].length; i++) {
@@ -660,6 +678,7 @@ class MainController extends GetxController {
 
           // not select or radio button
           else {
+            print('dataRowExcel[name]>>>${dataRowExcel[name]}');
             if (dataRowExcel[name] != null) {
               if (type == 'multiSelect') {
                 var selectedItem;
@@ -670,7 +689,7 @@ class MainController extends GetxController {
                   } else {
                     selectedItem = items.firstWhere(
                         (item) => data == item['title'],
-                        orElse: () => null);
+                        orElse: () => <String, dynamic>{});
                     if (selectedItem != null) {
                       itemSelectedList.add('${selectedItem['value']}');
                     }
@@ -688,8 +707,10 @@ class MainController extends GetxController {
                   int findIndexRecord = findByColumn(dataRowExcel, columnPrime);
                   if (MainController.tableData.value.length != 0) {
                     if (findIndexRecord != -1) {
+                      // dataExlJson[name] = MainController
+                      //     .tableData.value[findIndexRecord].data[name];
                       dataExlJson[name] = MainController
-                          .tableData.value[findIndexRecord].data[name];
+                          .tableData.value[findIndexRecord][name];
                     }
                   } else {
                     dataExlJson[name] = [];
@@ -964,32 +985,196 @@ class MainController extends GetxController {
     }
   }
 
+  // static Future<void> search(String query) async {
+  //
+  //   List<dynamic> allData = [];
+  //   for(var i=0;i<box.values.toList().length;i++){
+  //     allData.add(box.values.toList()[i].data);
+  //     print('allDataf>>>${allData}');
+  //     searchQuery.value = query;
+  //     // if (MainController.table['table-name'] == box.name) {
+  //     if (query.isEmpty) {
+  //       MainController.tableData.value = allData;
+  //     } else {
+  //       MainController.tableInfo['currentPage'] = 1;
+  //
+  //       MainController.tableData.value= allData.where((data) {
+  //         for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
+  //           var column = MainController.tableInfo['columns'][j];
+  //           var name = column['name'];
+  //           if (data[name] != null &&
+  //               data[name]
+  //                   .toString()
+  //                   .toLowerCase()
+  //                   .contains(query.toLowerCase())) {
+  //             return true;
+  //           }
+  //         }
+  //         return false;
+  //       }).toList().cast<DataModel>();
+  //     }
+  //   }
+  //
+  //
+  //
+  //   // }
+  //   // MainController.renderPagination();
+  // }
+
+  // static Future<void> search(String query) async {
+  //   List<Map<String, dynamic>> allData = [];
+  //
+  //   for (var item in box.values.toList()) {
+  //     if (item.data is Map) {
+  //       allData.add(Map<String, dynamic>.from(item.data));
+  //     }
+  //   }
+  //
+  //   searchQuery.value = query;
+  //
+  //   if (query.isEmpty) {
+  //     MainController.tableData.value = allData;
+  //   } else {
+  //     MainController.tableInfo['currentPage'] = 1;
+  //
+  //     // حل مشکل async در where
+  //     List<Map<String, dynamic>> filteredData = [];
+  //
+  //     for (var data in allData) {
+  //       bool shouldInclude = false;
+  //
+  //       for (var column in MainController.tableInfo['columns']) {
+  //         if (column['type'] == 'select' || column['type'] == 'radiobutton') {
+  //           var selectValue = await MainController.searchSelect(query, column);
+  //           if (selectValue != null) {
+  //             var name = column['name'];
+  //             if (data[name]?.toString() == selectValue.toString()) {
+  //               shouldInclude = true;
+  //               break;
+  //             }
+  //           }
+  //         } else {
+  //           var name = column['name'];
+  //           if (data[name] != null &&
+  //               data[name].toString().toLowerCase().contains(
+  //                   query.toLowerCase())) {
+  //             shouldInclude = true;
+  //             break;
+  //           }
+  //         }
+  //         if (shouldInclude) {
+  //           filteredData.add(data);
+  //         }
+  //         MainController.tableData.value = filteredData;
+  //       }
+  //
+  //
+  //     }
+  //
+  //
+  //   }
+  // }
+  //
+  // static Future<dynamic> searchSelect(String text, var column) async {
+  //   try {
+  //     var items = await ViewController.itemsList(column);
+  //     for (var item in items) {
+  //       if (text == item['title']) {
+  //         return item['value'];
+  //       }
+  //     }
+  //     return null; // اضافه کردن return در صورت عدم یافتن
+  //   } catch (e, stackTrace) {
+  //     debugPrint('Error in searchSelect: $e\n$stackTrace');
+  //     return null;
+  //   }
+  // }
+
+  // static Future<void> search(String query) async {
+  //   List<Map<String, dynamic>> allData = [];
+  //
+  //   for (var item in box.values.toList()) {
+  //     if (item.data is Map) {
+  //       allData.add(Map<String, dynamic>.from(item.data));
+  //     }
+  //   }
+  //
+  //   searchQuery.value = query;
+  //
+  //   if (query.isEmpty) {
+  //     MainController.tableData.value = allData;
+  //   } else {
+  //     MainController.tableInfo['currentPage'] = 1;
+  //
+  //     MainController.tableData.value = allData.where((data)  {
+  //       for (var column in MainController.tableInfo['columns']) {
+  //         if(column['type'] == 'select'){
+  //           print('d1200>>>${await MainController.searchSelect(query, column)}');
+  //         }
+  //
+  //         var name = column['name'];
+  //         if (data[name] != null &&
+  //             data[name].toString().toLowerCase().contains(query.toLowerCase())) {
+  //           return true;
+  //         }
+  //       }
+  //       return false;
+  //     }).toList();
+  //   }
+  // }
+
   static Future<void> search(String query) async {
-    List<dynamic> allData = box.values.toList();
+    List<Map<String, dynamic>> allData = [];
+
+    for (var item in box.values.toList()) {
+      if (item.data is Map) {
+        allData.add(Map<String, dynamic>.from(item.data));
+      }
+    }
 
     searchQuery.value = query;
-    // if (MainController.table['table-name'] == box.name) {
+
     if (query.isEmpty) {
       MainController.tableData.value = allData;
     } else {
       MainController.tableInfo['currentPage'] = 1;
-      tableData.value = allData.where((data) {
-        for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          var column = MainController.tableInfo['columns'][j];
+
+      MainController.tableData.value = await Future.wait(allData.map((data) async {
+        for (var column in MainController.tableInfo['columns']) {
+          dynamic selectValue;
+          if (column['type'] == 'select' || column['type'] == 'radiobutton') {
+            selectValue = await MainController.searchSelect(query, column);
+            var name = column['name'];
+            if(selectValue == data[name]){
+              return data;
+            }
+          }
           var name = column['name'];
-          if (data.data[name] != null &&
-              data.data[name]
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase())) {
-            return true;
+          if (
+              (data[name] != null &&
+                  data[name].toString().toLowerCase().contains(query.toLowerCase()))) {
+            return data;
           }
         }
-        return false;
-      }).toList();
+        return null;
+      })).then((results) => results.where((item) => item != null).toList().cast<Map<String, dynamic>>());
     }
-    // }
-    // MainController.renderPagination();
+  }
+
+  static Future<dynamic> searchSelect(String text , var column)async{
+    var items = await ViewController.itemsList(column);
+    for(var item in items){
+      // print('item[title]>>>${item['title']}');
+      // print('text>>>${text}');
+      // // print('text == item[title]>>>${text == item['title']}');
+      if(text == item['title']){
+        // print('item search select>>>${item}');
+        return item['value'];
+
+      }
+    }
+    return null;
+
   }
 
   static Future<void> loadJson() async {
@@ -1218,7 +1403,10 @@ class MainController extends GetxController {
 
       //cehcek not range cell
       else {
-        if (column['type'] == 'Number int' || column['type'] == 'Number double') {
+        if (column['type'] == 'Number double' || column['type'] == 'Number int') {
+          if(column['type'] == 'Number int'){
+            print('gggggj>>>${column['name']}');
+          }
           var minValidator = column['validators'].firstWhere(
               (validator) => validator['type'] == 'min',
               orElse: () => null);
@@ -1228,11 +1416,14 @@ class MainController extends GetxController {
           // int numberExcel = int.parse('${cellExcel}');
           print('cellExcel number>>>${cellExcel}');
           num? intValue;
+          print('ffffffffff>>>${column['type']} ${column['name']}');
           if(column['type'] == 'Number int'){
             intValue = int.tryParse(cellExcel);
+            print('intValue Number int>>>${intValue}');
           }
           else if(column['type'] == 'Number double'){
             intValue = double.tryParse(cellExcel);
+            print('intValue Number double>>>${intValue}');
           }
           if (intValue == null) {
             return false;

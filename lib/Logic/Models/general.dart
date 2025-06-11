@@ -1,3 +1,5 @@
+import 'package:finance/UI/Componenets/Popups/snackbar.dart';
+
 class General{
   String? tableName;
   List<dynamic>data=[];
@@ -5,12 +7,28 @@ class General{
     this.data=data;
   }
   static withFormat(String type,var value){
-    if(type=='string'){
+    if(type=='string' || type == 'time' || type == 'date'){
       return value.toString();
     }else if(type=='Number double'){
-      return double.parse(value.toString());
+      if(value != ''){
+        try{
+          return double.parse(value.toString());
+        }
+        catch(e){
+          showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد...');
+        }
+
+      }
     }else if(type=='Number int'){
-      return int.parse(value.toString());
+      if(value != ''){
+        try{
+          return double.parse(value.toString());
+        }
+        catch(e){
+          showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد...');
+        }
+      }
+
     }else if(type=='checkbox'){
       if(value=='true'|| value==true){
         return true;
