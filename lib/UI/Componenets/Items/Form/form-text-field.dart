@@ -15,7 +15,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class FormTextField extends StatefulWidget {
   String? lable;
   String? hint;
-  Function? onChange;
+  Function? onChange,updateChange;
   bool? isNumberInt;
   bool? isNumberDouble;
   String? initValue;
@@ -23,6 +23,7 @@ class FormTextField extends StatefulWidget {
   bool? isLoginPage;
   bool? isPassword;
   bool? isLongTxt;
+  bool? isValidate;
   String name;
  GlobalKey<FormBuilderState>? fbKey;
  var column;
@@ -31,8 +32,8 @@ class FormTextField extends StatefulWidget {
   bool? isEmail;
 
 
-   FormTextField({this.lable,  this.hint , this.onChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
-     this.fbKey , this.isLongTxt = false , required this.name , this.column , this.isEmail});
+   FormTextField({this.lable,  this.hint , this.onChange,this.updateChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
+     this.fbKey , this.isLongTxt = false , this.isValidate= true , required this.name , this.column , this.isEmail});
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -53,7 +54,13 @@ class _FormTextFieldState extends State<FormTextField> {
     super.initState();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
+
+       if(widget.isValidate==true)
         _validateInput();
+
+        if(widget.updateChange!=null){
+          widget.updateChange!();
+        }
       }
     });
   }
@@ -271,9 +278,16 @@ class _FormTextFieldState extends State<FormTextField> {
                 // else {
                 //   text.value = value!;
                 // }
-                ViewController.request[widget.column['name']] = value;
+                // ViewController.request[widget.column['name']] = value;
                 if(widget.onChange!=null)
                   this.widget.onChange!(value);
+              },
+              onEditingComplete: (){
+                print('_FormTextFieldState.build onEditingComplete');
+              },
+              onSubmitted: (value){
+                print('_FormTextFieldState.build onSubmitted>>>${value}');
+
               },
               name: widget.name,
               decoration: InputDecoration(

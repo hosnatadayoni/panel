@@ -6,6 +6,7 @@
     "table-name": "products",
     "currentPage": 1,
     "countShowRow": 10,
+    "status": "online",
     "relations": [],
     "columns": [
       {
@@ -42,6 +43,7 @@
     "filters":
     [
       {"column": "price","oprator": "$lte"},
+      {"column": "price","oprator": "$gte"},
       {"column": "title","oprator": "$eq"}
     ]
   },
@@ -52,6 +54,7 @@
     "table-name": "categoriess",
     "currentPage": 1,
     "countShowRow": 10,
+    "status": "online",
     "relations": [],
     "columns": [
       {
@@ -73,7 +76,7 @@
         "type_filed": "array",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["عنوان","قیمت"],
+        "items":["title","price"],
         "validators": [
           {
             "type": "required",
@@ -81,10 +84,6 @@
           }
         ]
       }
-    ],
-    "filters":
-    [
-      {"column":"product","oprator": "$eq"}
     ]
   }
 ]

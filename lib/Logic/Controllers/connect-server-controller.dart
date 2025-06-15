@@ -15,6 +15,7 @@ class ConncetServerController extends GetxController {
   static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
+
   static createProject() async {
     var response = await RestApi.post(createProjectUrl, body: {'name':'panel'});
     RestApi.responseHandler(
@@ -27,6 +28,14 @@ class ConncetServerController extends GetxController {
 
   static createSchema(Map<String,dynamic> json) async {
     var response = await RestApi.post(createSchemaUrl, body:json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+        },printResponse: true);
+  }
+
+  static updateSchema(Map<String,dynamic> json) async {
+    var response = await RestApi.post(updateSchemaUrl, body:json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
@@ -60,71 +69,67 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static getRecordGeneral(String? tableName) async {
-    var response = await RestApi.post(getRecordsUrl, body: {'table_name':tableName});
+  static updateRecordGeneral(var json) async {
+    var response = await RestApi.post(storeRecordUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          storeRecordRes={};
+          storeRecordRes=response!.data['data'];
+        },printResponse: true);
+  }
+
+  static getRecordGeneral(var tableName) async {
+    var info=await MainController.getInfoTable(tableName);
+    var perPage=info['countShowRow'];
+    var currentPage=info['currentPage'];
+    var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
+      'pageNumber':currentPage.toString(),
+      'perPage':perPage.toString()})
+    );
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           getRecordRes=[];
-          getRecordRes=response!.data['data'];
-          MainController.tableData.value=response!.data['data'];
-          print('ConncetServerController.getRecordGeneral>>>${MainController.tableData.value}');
-          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
-          // MainController.tableInfo=
+          getRecordRes=response!.data['data']['data'];
+          MainController.tableData.value=response.data['data']['data'];
         },printResponse: true);
   }
-  static updateRecordGeneral(var json) async {
-    var response = await RestApi.post(updateRecordUrl, body: json);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-          updateRecordRes={};
-          updateRecordRes=response!.data['data'];
-          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
-          // MainController.tableInfo=
-        },printResponse: true);
-  }
-  static createJsonFilter(var wheres,String tableName){
-    Map<String,dynamic>filter={};
+
+  static createJsonFilter(var wheres,String tableName,String type){
     List<dynamic>l=[];
     Map<String,dynamic> c={};
-         Map<String,dynamic> body ={};
+    Map<String,dynamic> body ={};
     body.addAll({
         'table_name':tableName,
+        'type':type,
       });
-      for(Where item in wheres.values){
-        c.addAll({'${item.fieldName}': {"${item.oprator!=null?item.oprator:"\$eq"}": "${item.value}"}
-        });
+    for(Where item in wheres.values){
+      l.add({'column':'${item.fieldName}','operation': "${item.oprator!=null?item.oprator:"\$eq"}",'value': "${item.value}"});
       }
     body.addAll({
-        'filter':(json.encode(c)).toString(),
+        'filter':json.encode(l),
       });
-      print('MainController.createJsonSchemaApi>>>>${body}');
-      // ConncetServerController.createSchema(list);
-
     return body;
   }
-  static filterRecordGeneral(var wheres,String tableName) async {
-    var json=createJsonFilter(wheres, tableName);
+
+  static filterRecordGeneral(var wheres,String tableName,String type) async {
+      print('DB.where>>>${wheres}');
+    var json=createJsonFilter(wheres, tableName,type);
     var response = await RestApi.post(filterRecordsUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           filterRecordRes=response!.data['data'].cast<Map<String, dynamic>>();
-          // updateRecordRes={};
-          // updateRecordRes=response!.data['data'];
-          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
-          // MainController.tableInfo=
         },printResponse: true);
   }
+
   static deleteRecordGeneral(var json) async {
     var response = await RestApi.post(deleteRecordUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           deleteRecordRes=true;
-          // print('ConncetServerController.getRecordGeneral>>>${response!.data['data'].first.keys}');
-          // MainController.tableInfo=
         },printResponse: true,errorCallback:()=> deleteRecordRes=false);
   }
 

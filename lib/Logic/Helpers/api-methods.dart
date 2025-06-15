@@ -142,7 +142,7 @@ class RestApi {
   }
 
   static Future<Response?> post(url, {body=null, useToken = true}) async {
-
+    print('**body runtimeType**>>>>${body.runtimeType}');
     if(await Connectivity().checkConnectivity()==ConnectivityResult.none){
       isConnected=false;
       return null;
@@ -155,7 +155,6 @@ class RestApi {
 
       var mytoken = null;
       if (useToken) {
-
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
       dio.options.headers["Access-Control-Allow-Origin"]=true;
@@ -182,7 +181,7 @@ class RestApi {
         isConnected=false;
         return null;
       } else {
-        print('apiError>>>${e}');
+        print('apiError>>${e}>>${body}>>${body.runtimeType}');
         return null;
       }
     }

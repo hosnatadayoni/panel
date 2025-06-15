@@ -4,9 +4,8 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'app-controller.dart';
+
 class ValidatorController extends GetxController {
-
-
   static Future<bool> checkInputValidation(int indexColumn ,Map dataJson , {var tableData}) async {
     var column;
     if(tableData == null){

@@ -73,6 +73,7 @@ class MainController extends GetxController {
   static Rx<int> totalPages = 1.obs;
   static Rx<int> startIndex = 0.obs;
   static Rx<int> endIndex = 0.obs;
+  static Rx<int> totalItems = 0.obs;
   static RxList<dynamic> tableData = [].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
@@ -873,27 +874,26 @@ class MainController extends GetxController {
   }
 
   static void renderPagination({var table}) {
-    if (table == null) {
-      MainController.totalPages.value =
-          (tableData.value.length / MainController.tableInfo['countShowRow'])
-              .ceil();
-      MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
-          MainController.tableInfo['countShowRow'];
-      MainController.endIndex.value = MainController.startIndex.value +
-          int.parse('${MainController.tableInfo['countShowRow']}');
-    } else {
-      MainController.totalPages.value =
-          (tableData.value.length / table['countShowRow']).ceil();
-      MainController.startIndex.value =
-          (table['currentPage'] - 1) * table['countShowRow'];
-      MainController.endIndex.value = MainController.startIndex.value +
-          int.parse('${table['countShowRow']}');
-    }
-
-    if (MainController.endIndex.value > tableData.value.length) {
-      MainController.endIndex.value = tableData.value.length;
-    } else {
-    }
+    // if (table == null) {
+    //   MainController.totalPages.value =
+    //       (tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
+    //   MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
+    //       MainController.tableInfo['countShowRow'];
+    //   MainController.endIndex.value = MainController.startIndex.value +
+    //       int.parse('${MainController.tableInfo['countShowRow']}');
+    // } else {
+    //   MainController.totalPages.value =
+    //       (tableData.value.length / table['countShowRow']).ceil();
+    //   MainController.startIndex.value =
+    //       (table['currentPage'] - 1) * table['countShowRow'];
+    //   MainController.endIndex.value = MainController.startIndex.value +
+    //       int.parse('${table['countShowRow']}');
+    // }
+    //
+    // if (MainController.endIndex.value > tableData.value.length) {
+    //   MainController.endIndex.value = tableData.value.length;
+    // } else {
+    // }
 
   }
 
@@ -1091,20 +1091,21 @@ class MainController extends GetxController {
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
-        print('MainController.loadData tableInfo1>>>${tableInfo}');
-
-        // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
-        MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        if(tableInfo['status']=="online")
+        await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+        else
+        MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
       } else {
         tableInfo = tableData;
         print('MainController.loadData tableInfo2>>>${tableInfo}');
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
-        else
-          MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
-          // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
-
-        // MainController.tableData.value = await DB('${tableInfo['table-name']}').getRecords();
+        else {
+          if (tableInfo['status'] == "online")
+            await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
+          else
+            MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+        }
       }
     } else {
       if (SubMenuList.length > 0) {

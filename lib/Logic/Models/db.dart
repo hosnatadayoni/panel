@@ -51,30 +51,17 @@ class DB {
     return newData;
   }
 
-  getTypeOfFieldJson(Map<String, dynamic> d) {
-    var type;
-    Map<String, dynamic> newData = <String, dynamic>{};
-
-
-    Map<String, dynamic> e = <String, dynamic>{};
-    for (var key in d.keys) {
-      type = MainController.getTypeOfField(this.tableName!, key);
-      if (type != null) {
-        e['id'] = d['id'];
-        e[key] = General.withFormat(type, d[key]);
-      }
-    }
-    newData = (e);
-
-    return newData;
-  }
-
   where(String? fieldName, String? oprator, var value) {
     counter++;
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.whereList[counter] = l;
-    print('DB.where>>>${this.whereList}');
+
+    for(var i in this.whereList.values)
+      print('DB.where is>>>${i.fieldName}>>>${i.oprator}>>>${i.value}');
+
+    print('DB.where 1>>>${counter}>${this.whereList.length}');
+
     return this;
   }
 
@@ -83,6 +70,7 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.orWhereList[counter] = l;
+    print('DB.where 2>>${this.orWhereList.length}');
 
     return this;
   }
@@ -148,18 +136,30 @@ class DB {
     }).toList();
   }
 
-  pageInate({int currentPage = 1}) async {
-    int  countShowRow=MainController.getInfoTable('${this.tableName}');
+  pageInate() async {
+    int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
+    int  currentPage=await MainController.getInfoTable('${this.tableName}')['currentPage'];
     int  perPage=countShowRow!=null?countShowRow:10;
-    int skip=(currentPage-1)*perPage;
-    return await getRecords().skip(skip).take(perPage);
+    int s=(currentPage-1)*perPage;
+    var t =(await DB('${tableName}').skip(s).getRecords()).take(perPage).toList();
+    print('DB.pageInate>>>${t.length}');
+    int totalItems=(await getRecords()).length;
+
+    var data=(await skip(s).getRecords()).take(perPage).toList();
+    var start =s;
+    var end = s+perPage;
+    MainController.startIndex.value = s;
+    MainController.endIndex.value = MainController.endIndex.value > (await getRecords()).length? totalItems:end;
+    return data;
   }
 
   infoPage() async {
-    int  countShowRow=MainController.getInfoTable('${this.tableName}');
+    int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
     int  perPage=countShowRow!=null?countShowRow:10;
-    int totalItems=await getRecords().length;
-    int totalPage=(totalItems/perPage).round();
+    List<Map<String,dynamic>> items=await getRecords();
+    int totalItems=items.length;
+    int totalPage=(totalItems/perPage).ceil();
+    MainController.totalItems.value = totalItems;
     return totalPage;
   }
 
@@ -188,75 +188,183 @@ class DB {
       }
 
       if (this.orWhereList.length != 0) {
-        if (data.length != 0)
-          for (var d in data) {
-            if (this.orWhereList.length != 0) {
+        if (data.length != 0){
+          await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
+          if(ConncetServerController.filterRecordRes.isNotEmpty){
+            dataItems=ConncetServerController.filterRecordRes;
+          }
+          else{
+            for (var d in data) {
+              bool flag = true;
               for (int j = 1; j <= orWhereList.length; j++) {
                 if (d['${orWhereList[j]!.fieldName}'] != null) {
-                if (orWhereList[j]!.value != '') {
-                    if (orWhereList[j]!.oprator == '\$eq') {
-                      if (d['${orWhereList[j]!.fieldName}'] is List<dynamic>) {
-                        if (d['${orWhereList[j]!.fieldName}']
-                            .contains(orWhereList[j]!.value)) {
-                          dataItems.add(d);
-                          break;
+                  if (orWhereList[j]!.value != '') {
+                    if (orWhereList[j]!.oprator == '\$eq' ||
+                        orWhereList[j]!.oprator == null) {
+                      if (d['${orWhereList[j]!.fieldName}'] is List) {
+                        if (d['${orWhereList[j]!.fieldName}'].contains(
+                            orWhereList[j]!.value) && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (MainController.getTypeOfField(
+                            this.tableName!, orWhereList[j]!.fieldName!) ==
+                            'Date') {
+                          if (HelperController.filterDate(
+                              d['${orWhereList[j]!.fieldName}'],
+                              orWhereList[j]!.value, "==") == true &&
+                              flag == true) {
+                            flag = true;
+                          } else
+                            flag = false;
+                        } else if (MainController.getTypeOfField(
+                            this.tableName!, orWhereList[j]!.fieldName!) ==
+                            'time') {
+                          if (HelperController.filterTime(
+                              d['${orWhereList[j]!.fieldName}'],
+                              orWhereList[j]!.value, "==") == true &&
+                              flag == true) {
+                            flag = true;
+                          } else
+                            flag = false;
+                        }
+                        else {
+                          if (d['${orWhereList[j]!.fieldName}'] ==
+                              orWhereList[j]!.value && flag == true) {
+                            flag = true;
+                          } else
+                            flag = false;
                         }
                       }
-                      if (d['${orWhereList[j]!.fieldName}'] ==
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
-                      }
-                      break;
                     } else if (orWhereList[j]!.oprator == '\$gte') {
-                      if (d['${orWhereList[j]!.fieldName}'] >=
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
+                      if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'Date') {
+                        if (HelperController.filterDate(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, ">=") == true &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'time') {
+                        if (HelperController.filterTime(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, ">=") == true &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (d['${orWhereList[j]!.fieldName}'] >=
+                            orWhereList[j]!.value && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-                      break;
                     } else if (orWhereList[j]!.oprator == '\$lte') {
-                      if (d['${orWhereList[j]!.fieldName}'] <=
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
+                      if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'Date') {
+                        if (HelperController.filterDate(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, "<=") == true &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-                      break;
+                      else if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'time') {
+                        if (HelperController.filterTime(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, "<=") == true &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      }
+                      else {
+                        if (d['${orWhereList[j]!.fieldName}'] <=
+                            orWhereList[j]!.value && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      }
                     } else if (orWhereList[j]!.oprator == '\$nq') {
-                      if (d['${orWhereList[j]!.fieldName}'] !=
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
+                      if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'time') {
+                        if (HelperController.filterTime(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, "!=") == true &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (d['${orWhereList[j]!.fieldName}'] !=
+                            orWhereList[j]!.value && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-                      break;
                     } else if (orWhereList[j]!.oprator == '\$lt') {
-                      if (d['${orWhereList[j]!.fieldName}'] <
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
+                      if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'time') {
+                        if (HelperController.filterTime(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, "<") == true && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (d['${orWhereList[j]!.fieldName}'] <
+                            orWhereList[j]!.value &&
+                            flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-                      break;
                     } else if (orWhereList[j]!.oprator == '\$gt') {
-                      if (d['${orWhereList[j]!.fieldName}'] >
-                          orWhereList[j]!.value) {
-                        dataItems.add(d);
+                      if (MainController.getTypeOfField(
+                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                          'time') {
+                        if (HelperController.filterTime(
+                            d['${orWhereList[j]!.fieldName}'],
+                            orWhereList[j]!.value, ">") == true && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
+                      } else {
+                        if (d['${orWhereList[j]!.fieldName}'] >
+                            orWhereList[j]!.value && flag == true) {
+                          flag = true;
+                        } else
+                          flag = false;
                       }
-                      break;
-                    } else if (orWhereList[j]!.oprator == null) {
-                      dataItems.add(d);
-
-                      break;
                     }
-                  } else {
-                    dataItems.add(d);
-                  }
-                }
+                  } else
+                    flag = false;
+                } else
+                  flag = false;
+              }
+              if (flag == true) {
+                dataItems.add(d);
               }
             }
-            else {
-              dataItems.add(d);
-            }
-          }
+          }}
       }
       else {
         if (this.whereList.length != 0) {
+          print('DB.getRecords where list>>${this.whereList.length}');
           if (data.length != 0){
-            await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!);
+            await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
             if(ConncetServerController.filterRecordRes.isNotEmpty){
               dataItems=ConncetServerController.filterRecordRes;
             }
@@ -434,7 +542,9 @@ class DB {
 
       data = dataItems;
       if (this.takeCount != null) {
+        print('DB.getRecords take>>${takeCount}');
         data = data.take(this.takeCount!).toList();
+        print('DB.getRecords take out put>>${data.length}>>>${data}');
       }
       if (this.skipCount != null) {
         data = data.skip(this.skipCount!).toList();
@@ -457,7 +567,7 @@ class DB {
     return this;
   }
 
-  Future<void> storeRecord(Map<String, dynamic> request) async {
+  Future<void> storeRecord(Map<dynamic, dynamic> request) async {
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     ViewController.isClickedBtn.value = true;
     // print('DB.storeRecord>>>${request}');
@@ -604,32 +714,38 @@ class DB {
     print('DB.deleteRecord>>${records}');
     for (var data in records) {
       var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['_id']);
-      DataModel item = box.values.toList()[tableDataIndex];
+      await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
+      if(ConncetServerController.deleteRecordRes==true){
+        await MainController.loadData();
 
-      var before = await HelperController.beforeDelete(tableDataIndex);
+      }
+      if(tableDataIndex!=-1){
+        DataModel item = box.values.toList()[tableDataIndex];
 
-      if (before['status'] == false) {
-        showSnackbar(snackTypes.error, before['message']);
-      } else {
-        if (relations['relations'].length != 0) {
-          for (var relation in relations['relations']) {
-            DB(relation['table-name'])
-                .where('parent_id', '\$eq', data['_id'])
-                .deleteRecord();
+        var before = await HelperController.beforeDelete(tableDataIndex);
+
+        if (before['status'] == false) {
+          showSnackbar(snackTypes.error, before['message']);
+        } else {
+          if (relations['relations'].length != 0) {
+            for (var relation in relations['relations']) {
+              DB(relation['table-name'])
+                  .where('parent_id', '\$eq', data['_id'])
+                  .deleteRecord();
+            }
+          }
+
+          if(ConncetServerController.deleteRecordRes==true)
+            box.deleteAt(tableDataIndex);
+          await MainController.loadData();
+          MainController.renderPagination();
+          var after = HelperController.afterDelete(tableDataIndex, item);
+          if (after['status'] == false) {
+            showSnackbar(snackTypes.error, after['message']);
           }
         }
-
-        await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
-        if(ConncetServerController.deleteRecordRes==true)
-        box.deleteAt(tableDataIndex);
-
-        await MainController.loadData();
-        MainController.renderPagination();
-        var after = HelperController.afterDelete(tableDataIndex, item);
-        if (after['status'] == false) {
-          showSnackbar(snackTypes.error, after['message']);
-        }
       }
+
     }
   }
 }

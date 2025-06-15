@@ -68,18 +68,20 @@ class _MainTableBoxState extends State<MainTableBox> {
                       List<dynamic>w=MainController.tableInfo['filters'];
                       String opration='\$eq';
                       if(ViewController.request.length!=0){
+                        print('_MainTableBoxState.build>>>2>>${ViewController.request.values}');
                         var d;
                         List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
                         var a= DB('${MainController.tableInfo['table-name']}');
-                      for(var filter in ViewController.request.keys){
+                      for(var filter in ViewController.request.values){
                         print('_MainTableBoxState.build>>>${filter}');
-                          var indexFilter=w.indexWhere((element) => element['column']==filter);
+                          var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
                         if(w[indexFilter]['oprator']!=null){
 
                             opration=w[indexFilter]['oprator'];
                         }
-                        if(ViewController.request[filter]!='' && ViewController.request[filter]!=null){
-                          d=a.where('${filter}','${opration}',ViewController.request[filter]);
+                        if(filter['value']!='' && filter['value']!=null){
+
+                          d=a.where('${filter['column']}','${filter['oprator']}',filter['value']);
                         }
                       }
                       if(d!=null){
