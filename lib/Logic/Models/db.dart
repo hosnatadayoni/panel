@@ -33,17 +33,20 @@ class DB {
     this.tableName = tableName;
   }
 
-  getTypeOfField(List<dynamic> data) {
+  getTypeOfField (List<dynamic> data) async {
     var type;
     List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
     for (var d in data) {
 
       Map<String, dynamic> e = <String, dynamic>{};
+      print('DB.getTypeOfField>>${d.data.length}');
       for (var key in d.data.keys) {
+        print('DB.getTypeOfField key>>${key}');
+
         type = MainController.getTypeOfField(this.tableName!, key);
         if (type != null) {
-          e['id'] = d.id;
-          e[key] = General.withFormat(type, d.data[key]);
+          e['_id'] = d.id;
+          e[key] =await General(this.tableName!).withFormat(type, d.data[key],key);
         }
       }
       newData.add(e);
@@ -58,9 +61,7 @@ class DB {
     this.whereList[counter] = l;
 
     for(var i in this.whereList.values)
-      print('DB.where is>>>${i.fieldName}>>>${i.oprator}>>>${i.value}');
 
-    print('DB.where 1>>>${counter}>${this.whereList.length}');
 
     return this;
   }
@@ -70,7 +71,6 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.orWhereList[counter] = l;
-    print('DB.where 2>>${this.orWhereList.length}');
 
     return this;
   }
@@ -141,10 +141,7 @@ class DB {
     int  currentPage=await MainController.getInfoTable('${this.tableName}')['currentPage'];
     int  perPage=countShowRow!=null?countShowRow:10;
     int s=(currentPage-1)*perPage;
-    var t =(await DB('${tableName}').skip(s).getRecords()).take(perPage).toList();
-    print('DB.pageInate>>>${t.length}');
     int totalItems=(await getRecords()).length;
-
     var data=(await skip(s).getRecords()).take(perPage).toList();
     var start =s;
     var end = s+perPage;
@@ -166,27 +163,25 @@ class DB {
   getRecords() async {
     List<Map<String, dynamic>> dataItems = [];
     Box box;
+
     List<Map<String, dynamic>> data=[];
     int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
+
     if(ConncetServerController.getRecordRes.isNotEmpty){
       data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-
     }
     else
       {
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-        data = getTypeOfField(box.values.toList());
-      }
+        data =await getTypeOfField(box.values.toList());
+        print('DB.getRecords>>>${data}');
+    }
     if (index != -1) {
-
-
-      // for (var i in box.values.toList())
 
       if (this.parentItem.length != 0) {
         data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
       }
-
       if (this.orWhereList.length != 0) {
         if (data.length != 0){
           await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
@@ -362,7 +357,6 @@ class DB {
       }
       else {
         if (this.whereList.length != 0) {
-          print('DB.getRecords where list>>${this.whereList.length}');
           if (data.length != 0){
             await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
             if(ConncetServerController.filterRecordRes.isNotEmpty){
@@ -542,9 +536,7 @@ class DB {
 
       data = dataItems;
       if (this.takeCount != null) {
-        print('DB.getRecords take>>${takeCount}');
         data = data.take(this.takeCount!).toList();
-        print('DB.getRecords take out put>>${data.length}>>>${data}');
       }
       if (this.skipCount != null) {
         data = data.skip(this.skipCount!).toList();
@@ -603,13 +595,11 @@ class DB {
           await ConncetServerController.storeRecordGeneral(setRecord);
           if(ConncetServerController.storeRecordRes.isNotEmpty){
             DataModel recordStored=DataModel(id: '${ConncetServerController.storeRecordRes['_id']}', data: ConncetServerController.storeRecordRes);
-            print('DB.storeRecord>>>${recordStored.id}>>>${recordStored.data}');
             await box.add(recordStored);
           }
           else
             await box.add(customData);
 
-          print('customData>>>${customData.data}');
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
@@ -630,7 +620,6 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
-    print('DB.updateRecord>>${records}');
     ViewController.isClickedEditBtn.value = true;
 
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
@@ -641,18 +630,27 @@ class DB {
     //   allData=ConncetServerController.getRecordRes;
     // }
     Map<String,dynamic>a={};
+    List<MapEntry<String, dynamic>> toAdd = [];
+
     for (var data in records) {
-      a=data;
+      a = data;
       a.forEach((key, value) {
         if (request.containsKey(key)) {
           a[key] = request[key];
+        }else{
+          toAdd.add(MapEntry(request.keys.first, request.values.first));
+
         }
+      });
+      toAdd.forEach((entry) {
+        a[entry.key] = entry.value;
       });
 
       final record = DataModel(
         id: data['_id'],
         data: a,
       );
+
       var beforeValidate =
           await HelperController.beforeUpdateValidation(record);
       if (beforeValidate['status'] == false) {
@@ -668,9 +666,7 @@ class DB {
             var customUpdate = await HelperController.beforeUpdate(record)['data'];
 
             var allDataIndex = allData.indexWhere((element) => element.id == data['_id']);
-            print('element.id>>>>${record.id}>>${data['_id']}>>>${allData}');
             for(var a in allData){
-              print('all data>>>>${a.id}>>>${a.data}');
             }
             allData[allDataIndex] = customUpdate;
             await ConncetServerController.setDatabaseme(customUpdate.data);
@@ -711,7 +707,6 @@ class DB {
     List<dynamic> records = await getRecords();
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     var relations = ViewCustomController.getDataTable(this.tableName!);
-    print('DB.deleteRecord>>${records}');
     for (var data in records) {
       var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['_id']);
       await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
@@ -748,6 +743,7 @@ class DB {
 
     }
   }
+
 }
 
 class Where {

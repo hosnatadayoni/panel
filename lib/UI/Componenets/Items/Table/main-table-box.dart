@@ -28,7 +28,6 @@ late Future<Widget> _future;
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
-    print('_MainTableBoxState.build>>\$eq>>${MainController.tableInfo}>>>${MainController.tableInfo['filters']}');
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -68,12 +67,10 @@ class _MainTableBoxState extends State<MainTableBox> {
                       List<dynamic>w=MainController.tableInfo['filters'];
                       String opration='\$eq';
                       if(ViewController.request.length!=0){
-                        print('_MainTableBoxState.build>>>2>>${ViewController.request.values}');
                         var d;
                         List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
                         var a= DB('${MainController.tableInfo['table-name']}');
                       for(var filter in ViewController.request.values){
-                        print('_MainTableBoxState.build>>>${filter}');
                           var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
                         if(w[indexFilter]['oprator']!=null){
 
@@ -97,7 +94,7 @@ class _MainTableBoxState extends State<MainTableBox> {
               SizedBox(height: 10,),
               TableBox(),
               SizedBox(height: 20,),
-              TableFooter(),
+              // TableFooter(),
             ],
           ),
         ],

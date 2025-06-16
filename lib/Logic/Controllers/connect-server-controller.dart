@@ -70,17 +70,18 @@ class ConncetServerController extends GetxController {
   }
 
   static updateRecordGeneral(var json) async {
-    var response = await RestApi.post(storeRecordUrl, body: (json));
+    var response = await RestApi.post(updateRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          storeRecordRes={};
-          storeRecordRes=response!.data['data'];
+          updateRecordRes={};
+          updateRecordRes=response!.data['data'];
         },printResponse: true);
   }
 
   static getRecordGeneral(var tableName) async {
     var info=await MainController.getInfoTable(tableName);
+
     var perPage=info['countShowRow'];
     var currentPage=info['currentPage'];
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
@@ -114,7 +115,6 @@ class ConncetServerController extends GetxController {
   }
 
   static filterRecordGeneral(var wheres,String tableName,String type) async {
-      print('DB.where>>>${wheres}');
     var json=createJsonFilter(wheres, tableName,type);
     var response = await RestApi.post(filterRecordsUrl, body: json);
     RestApi.responseHandler(

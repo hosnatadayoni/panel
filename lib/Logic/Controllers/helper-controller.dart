@@ -94,7 +94,6 @@ class HelperController extends GetxController {
    static filterDate(String dataDate,String searchDate,String opration) {
       Jalali baseDate = convertJalaliStringToDate(searchDate);
       Jalali date = convertJalaliStringToDate(dataDate);
-      print('date>>>${date} isBefore>>>${baseDate}>>>${opration}');
       if(opration=='>='){
         if(date.isAfter(baseDate))
         {
@@ -104,7 +103,6 @@ class HelperController extends GetxController {
         }
       }
       else if(opration=="<="){
-        print('date>>>${date} isBefore>>>${baseDate}');
       if(date.isBefore(baseDate))
         {
           return true;

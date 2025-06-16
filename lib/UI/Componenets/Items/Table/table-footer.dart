@@ -28,7 +28,6 @@ class _TableFooterState extends State<TableFooter> {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-        print('_TableFooterState.build>>${snapshot.requireData}');
         int totalPages = snapshot.data!;
         return Container(
           child: size.width > 556 ?
@@ -60,7 +59,6 @@ class _TableFooterState extends State<TableFooter> {
             MainController.tableInfo['currentPage'] = i;
           });
           MainController.tableData.value= await DB('${tableSelected}').pageInate();
-          print('_TableFooterState.box>>>${MainController.tableData.value}');
 
         },
         child: Container(

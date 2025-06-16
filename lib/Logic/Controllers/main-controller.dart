@@ -995,12 +995,10 @@ class MainController extends GetxController {
       list.addAll({
         'columns':(json.encode(c)).toString(),
       });
-      print('MainController.createJsonSchemaApi>>>>${list}');
-      // ConncetServerController.createSchema(list);
+      // ConncetServerController.updateSchema(list);
       l.add(list);
     };
-    // ConncetServerController.createSchema(list);
-    // return list;
+
     return l;
   }
 
@@ -1087,7 +1085,6 @@ class MainController extends GetxController {
   }
 
   static Future<void> loadData({var tableData, var tableDataItems}) async {
-    print('MainController.loadData>>>${tableData==null}>>>${tableDataItems}');
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
@@ -1097,7 +1094,6 @@ class MainController extends GetxController {
         MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
       } else {
         tableInfo = tableData;
-        print('MainController.loadData tableInfo2>>>${tableInfo}');
         if (tableDataItems != null)
           MainController.tableData.value = tableDataItems;
         else {
@@ -1110,7 +1106,6 @@ class MainController extends GetxController {
     } else {
       if (SubMenuList.length > 0) {
         tableInfo = SubMenuList[0];
-        print('MainController.loadData tableInfo3>>>${tableInfo}');
       }
     }
     if (tableData == null) {
@@ -1128,7 +1123,6 @@ class MainController extends GetxController {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
         }
       }
-      print('MainController.loadData tableInfo4>>>${tableInfo}');
     } else {
       for (var j = 0; j < tableData['columns'].length; j++) {
         if (tableData['columns'][j]['is-show-store'] == null) {
@@ -1144,7 +1138,6 @@ class MainController extends GetxController {
           tableData['columns'][j]['is-show-excel'] = true;
         }
       }
-      print('MainController.loadData tableInfo5>>>${tableInfo}');
     }
   }
 

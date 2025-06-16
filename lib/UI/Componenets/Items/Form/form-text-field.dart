@@ -283,10 +283,8 @@ class _FormTextFieldState extends State<FormTextField> {
                   this.widget.onChange!(value);
               },
               onEditingComplete: (){
-                print('_FormTextFieldState.build onEditingComplete');
               },
               onSubmitted: (value){
-                print('_FormTextFieldState.build onSubmitted>>>${value}');
 
               },
               name: widget.name,

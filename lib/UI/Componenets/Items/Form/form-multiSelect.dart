@@ -26,7 +26,6 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    print('_MultiSelectDropdownState.build multi>>>${widget.items}');
     var inputRequired;
     String? errorMessage;
     if(widget.column['validators'] != null){

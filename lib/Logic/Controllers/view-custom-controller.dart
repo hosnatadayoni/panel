@@ -88,7 +88,7 @@ class ViewCustomController extends GetxController{
   }
 
   //show table
-  static Future<String> getTitleSelectBoxFormCustom(var column , DataModel dataModel) async {
+  static Future<String> getTitleSelectBoxFormCustom (var column , DataModel dataModel) async {
     String tableName = '';
     if (column['sourceItems'] != 'custom') {
       tableName = column['sourceTable'];
