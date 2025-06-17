@@ -123,11 +123,16 @@ class Header extends StatelessWidget {
                           ),
                           PopupMenuItem(
                             value: 'logout',
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Txt('${AppController.of(context)!.value('logout')}' , fontSize: 18 , fontWeight: FontWeight.w300, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,),
-                              ],
+                            child: InkWell(
+                              onTap:(){
+                                Get.to(() => LoginPage());
+                        },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Txt('${AppController.of(context)!.value('logout')}' , fontSize: 18 , fontWeight: FontWeight.w300, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,),
+                                ],
+                              ),
                             ),
                           ),
                         ];

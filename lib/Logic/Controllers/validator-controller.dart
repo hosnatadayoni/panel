@@ -1,15 +1,12 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
-import 'package:finance/Logic/Models/general.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'app-controller.dart';
+
 class ValidatorController extends GetxController {
-
-
   static Future<bool> checkInputValidation(int indexColumn ,Map dataJson , {var tableData}) async {
-    print('dataJsont>>>${dataJson}');
     var column;
     if(tableData == null){
       column= MainController.tableInfo['columns'][indexColumn];
@@ -24,7 +21,6 @@ class ValidatorController extends GetxController {
     if(column['is-show-store'] == true){
       if(column['type']=='multiSelect'){
         if(dataJson[name] != null){
-          print('dataJson[name] multi select 123>>>${dataJson[name]}');
           // List<dynamic> items = await ViewController.itemsList(column);
           // if(items.length != 0) {
           //   if (dataJson[name] != null) {
@@ -67,8 +63,6 @@ class ValidatorController extends GetxController {
 
       }
       if(dataJson[name] == '' || dataJson[name] == null){
-        print('data json is empty');
-        print('name data is empty>>>${name}');
         return checkInputRequiredValidator(indexColumn , dataJson , tableData: tableData);
       }
       else{
@@ -148,7 +142,6 @@ class ValidatorController extends GetxController {
     var maxValidator;
     var minValidator;
     var emailValidator;
-
     if(column['validators'] != null){
       maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
       minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
@@ -156,9 +149,7 @@ class ValidatorController extends GetxController {
     }
     if(column['type'] == 'Number double' || column['type'] == 'Number int'){
       var number;
-      print('zzzzzzzzz>>>${dataJson[name]} ${dataJson[name].runtimeType}');
       if(dataJson[name] != null){
-
         // if(dataJson[name].runtimeType == 'double'){
         //   print('ffffffffff>>>${dataJson[name]} ${name}');
         //   number = dataJson[name];
@@ -167,11 +158,8 @@ class ValidatorController extends GetxController {
         //   number = num.tryParse(dataJson[name]);
         // }
         number = dataJson[name];
-        if(number != null || number != ''){
-          number = General.withFormat(column['type'],number);
+        if(number != null){
           if(minValidator != null && maxValidator != null){
-            print('eeeeeee>>>${number}');
-
             if(number < minValidator['value'] || number > maxValidator['value']){
               return false;
             }

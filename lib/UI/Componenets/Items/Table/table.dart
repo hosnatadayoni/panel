@@ -1,4 +1,5 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
+import 'package:finance/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
@@ -62,7 +63,7 @@ class _TableBoxState extends State<TableBox> {
               children: [
                 TableRow(children: [
                   for(var i =0 ; i<MainController.tableInfo['columns'].length;i++)
-                    if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
+                    // if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
                       Center(child: Container(
                           padding: EdgeInsets.all(10),
                           child: Txt('${MainController.tableInfo['columns'][i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
@@ -70,10 +71,8 @@ class _TableBoxState extends State<TableBox> {
                       padding: EdgeInsets.all(10),
                       child: Center(child: Txt('${AppController.of(context)!.value('operation')}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2)))
                 ]),
-                // for(var i=MainController.startIndex.value ; i<MainController.endIndex.value; i++)
-                //   if(MainController.tableData.value.length > i)
-                if(MainController.tableData.value.length > 0)
-                  for(int i=0;i<MainController.tableData.value.length;i++)
+                if(MainController.tableData.value.length !=0)
+                for(var i=0 ; i<MainController.tableData.value.length; i++)
                        TableRow(
                         children: [
                           for(var j =0 ; j<MainController.tableInfo['columns'].length;j++)
@@ -84,7 +83,7 @@ class _TableBoxState extends State<TableBox> {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return CircularProgressIndicator();
                                   } else if (snapshot.hasError) {
-                                    return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                                    return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                                   } else {
                                     return snapshot.data ?? Container();
                                   }
@@ -96,12 +95,25 @@ class _TableBoxState extends State<TableBox> {
                                 padding: EdgeInsets.all(10),
                                 child: Wrap(
                                   children: [
+                                    if(MainController.tableData.value[i]['sync']=='false')
+                                    IconButton(onPressed: (){
+                                      DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
+                                      // ConncetServerController.setDatabaseme(MainController.tableData.value[i]);
+                                      // MainController.isClickedItem.value = false;
+                                      // ViewController.isClickedBtn.value = false;
+                                      // ViewController.isClickedEditBtn.value = false;
+                                      // ViewController.request = {...MainController.tableData.value[i]};
+                                      //   HelperController.editPageFunction(MainController.tableData.value[i]);
+
+                                      // Get.to(() =>
+                                      //     EditPage(data: MainController.tableData.value[i], index: i,));
+                                    }, icon: Icon(Icons.refresh , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(onPressed: (){
                                       MainController.isClickedItem.value = false;
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i]};
-                                      HelperController.editPageFunction(MainController.tableData.value[i]);
+                                        HelperController.editPageFunction(MainController.tableData.value[i]);
 
                                       // Get.to(() =>
                                       //     EditPage(data: MainController.tableData.value[i], index: i,));
@@ -147,9 +159,7 @@ class _TableBoxState extends State<TableBox> {
                                                             InkWell(
                                                               onTap: ()async{
                                                                 setState(() {
-                                                                  DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[i]['id']}').deleteRecord();
-
-
+                                                                  DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                                 });
                                                                 Navigator.pop(context);
                                                               },
@@ -180,12 +190,10 @@ class _TableBoxState extends State<TableBox> {
                                       InkWell(
                                         onTap: () async {
                                           var orders=await DB('category_product_products').getRecords();
-                                          print('orders take>>>${MainController.tableData.value[i]['id'] }');
                                           var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
-                                          print('items take>>>${items}');
                                           print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
-                                          // MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
+                                          MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
                                           await MainController.goToTablePage();
                                           //   for(var item in items){
                                           //   print('_TableBoxState.build>>${MainController.tableData.value[i]}');

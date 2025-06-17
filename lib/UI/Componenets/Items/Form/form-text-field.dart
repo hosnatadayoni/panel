@@ -15,7 +15,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class FormTextField extends StatefulWidget {
   String? lable;
   String? hint;
-  Function? onChange;
+  Function? onChange,updateChange;
   bool? isNumberInt;
   bool? isNumberDouble;
   String? initValue;
@@ -23,6 +23,7 @@ class FormTextField extends StatefulWidget {
   bool? isLoginPage;
   bool? isPassword;
   bool? isLongTxt;
+  bool? isValidate;
   String name;
  GlobalKey<FormBuilderState>? fbKey;
  var column;
@@ -31,8 +32,8 @@ class FormTextField extends StatefulWidget {
   bool? isEmail;
 
 
-   FormTextField({this.lable,  this.hint , this.onChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
-     this.fbKey , this.isLongTxt = false , required this.name , this.column , this.isEmail});
+   FormTextField({this.lable,  this.hint , this.onChange,this.updateChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
+     this.fbKey , this.isLongTxt = false , this.isValidate= true , required this.name , this.column , this.isEmail});
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -53,7 +54,13 @@ class _FormTextFieldState extends State<FormTextField> {
     super.initState();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
+
+       if(widget.isValidate==true)
         _validateInput();
+
+        if(widget.updateChange!=null){
+          widget.updateChange!();
+        }
       }
     });
   }
@@ -62,9 +69,7 @@ class _FormTextFieldState extends State<FormTextField> {
      if(widget.column != null){
        if(widget.column['validators'] != null){
          var inputRequired;
-         print('d345>>>${ViewController.request[widget.column['name']]}' '${widget.column['name']}');
          if(ViewController.request[widget.column['name']] == '' || ViewController.request[widget.column['name']] == null){
-           print('emptyyyyyyyyyyyyyyyy');
            inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
            if(inputRequired != null){
              if(inputRequired['message'] != null){
@@ -90,7 +95,6 @@ class _FormTextFieldState extends State<FormTextField> {
              if(number != null){
                if(minValidator != null || maxValidator != null){
                  if(number < minValidator['value']){
-                   print('value is < minvalidation');
                    setState(() {
                      _errorText = minValidator['message'];
                    });
@@ -117,7 +121,6 @@ class _FormTextFieldState extends State<FormTextField> {
                  //     _errorText = null;
                  //   });
                  // }
-                 print('_errorText number>>>${_errorText}');
                }
 
              }
@@ -275,12 +278,14 @@ class _FormTextFieldState extends State<FormTextField> {
                 // else {
                 //   text.value = value!;
                 // }
-                if(widget.column != null){
-                  ViewController.request[widget.column['name']] = value;
-                }
-
+                // ViewController.request[widget.column['name']] = value;
                 if(widget.onChange!=null)
                   this.widget.onChange!(value);
+              },
+              onEditingComplete: (){
+              },
+              onSubmitted: (value){
+
               },
               name: widget.name,
               decoration: InputDecoration(

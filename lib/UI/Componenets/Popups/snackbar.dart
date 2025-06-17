@@ -6,7 +6,6 @@ enum snackTypes{
   error,info,success,warning
 }
 showSnackbar(snackTypes snackType,message) {
-  print('<<<<<showSnackbar>>>>>');
 
 
   Get.snackbar('', '',

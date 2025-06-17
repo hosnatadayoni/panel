@@ -20,7 +20,6 @@ class OrderItemEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print('data2>>>${data}');
     return Scaffold(
       body: Container(
         width: size.width,

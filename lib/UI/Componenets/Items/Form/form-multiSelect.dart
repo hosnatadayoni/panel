@@ -9,15 +9,12 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class MultiSelectDropdown extends StatefulWidget {
   String? hintText;
-  // List<String>items;
   List<DropdownMenuItem<dynamic>>? items;
   RxList<dynamic>? selectedItems = <String>[].obs;
-  // Function(List<String>)? onSelectChanged;
   Function(List<dynamic>)? onChanged;
-  // Map<String, List<String>> selectedItemsMap;
   Rx<bool>? isSelectedItem = false.obs;
-
   var column;
+
   MultiSelectDropdown({this.hintText ,required this.items , this.column , this.onChanged,this.selectedItems , this.isSelectedItem});
   @override
   _MultiSelectDropdownState createState() => _MultiSelectDropdownState();
@@ -60,24 +57,9 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                       onChanged: (value) {
                         setState(() {
                           if (value != null) {
-                            // if (!widget.selectedItems!.value.contains(value)) {
-                            //   widget.selectedItems!.value.add(value);
-                            // } else {
-                            //   widget.selectedItems!.value.remove(value);
-                            // }
-                            // if(value == '-1'){
-                            //   widget.selectedItems!.value.remove(value);
-                            // }
                             if (widget.onChanged != null) {
                               widget.onChanged!(widget.selectedItems!.value);
                             }
-                          //   print('widget.selectedItems!.value>>>${widget.selectedItems!.value}');
-                          //   if(widget.selectedItems!.value.length ==0 ){
-                          //     widget.isSelectedItem?.value = false;
-                          //   }
-                          //   else{
-                          //     widget.isSelectedItem?.value = true;
-                          //   }
                           }
                         });
                       },

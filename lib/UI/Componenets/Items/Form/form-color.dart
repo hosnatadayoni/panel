@@ -72,7 +72,6 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
     }
 
     return Obx((){
-      print('${ViewController.isClickedBtn.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -28,6 +28,7 @@ dependencies:
     sdk: flutter
   get: ^4.6.5
   responsive_framework: ^0.2.0
+  connectivity_plus: ^5.0.2
   flutter_svg: ^1.0.3
   hive_flutter: ^1.1.0
   hive: ^2.2.3
@@ -59,8 +60,8 @@ dependencies:
   popover: ^0.2.8+2
   super_tooltip: ^2.0.9
   flutter_typeahead: ^4.8.0
-  flutter_switch: ^0.3.2
-  url_launcher: ^6.1.14
+  dio: any
+  shared_preferences: ^2.2.2
 
 
 
@@ -75,6 +76,9 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.0
   archive: ^3.4.0
+  #flutter pub run print_remover
+  print_remover: ^1.0.2
+
 
 
 dependency_overrides:

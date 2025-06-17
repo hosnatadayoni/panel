@@ -19,7 +19,6 @@ class RadioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('radioButtonItems>>>${radioButtonItems}');
     var inputRequired;
     String? errorMessage;
 
@@ -27,9 +26,10 @@ class RadioButton extends StatelessWidget {
       inputRequired = this.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }
-    return Obx((){
-      print('${isSelectedItem!.value}');
-      return Column(
+    return
+      // Obx((){
+      // return
+        Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilderRadioGroup(
@@ -51,6 +51,6 @@ class RadioButton extends StatelessWidget {
               Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
         ],
       );
-    });
+    // });
   }
 }

@@ -3,11 +3,11 @@ import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Logic/Models/order-item.dart';
 import 'package:finance/UI/Componenets/page-custom/orderItem/order-item-create.dart';
 import 'package:finance/UI/Views/edit.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Componenets/page-custom/order/order-create.dart';
 import '../../UI/Componenets/page-custom/order/order-edit.dart';
-import '../../UI/Componenets/page-custom/orderItem/order-item-edit.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/dataModel.dart';
 import 'app-controller.dart';
@@ -16,7 +16,6 @@ import 'main-controller.dart';
 class HelperController extends GetxController {
   //store
   static beforeStore(DataModel newData) {
-    print('new data5>>${newData.data}');
     return AppController.responceHelper(newData, true);
   }
 
@@ -26,16 +25,11 @@ class HelperController extends GetxController {
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
     if (tableName == 'order') {
-      print(' OrderItem.orderItemsList>>>${OrderItem.orderItemsList.length}');
-      print(' customData.id>>>${customData.id}');
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
         //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
         // }
         for (var list in OrderItem.orderItemsList.values) {
-          print('list.values>>>${list.values}');
-          print('list.values1>>>${list}');
-          print('list.values2>>>${list.values.first}');
           await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
         }
       }
@@ -92,19 +86,12 @@ class HelperController extends GetxController {
       await Get.to(() => OrderEdit(data: data));
     }
     else{
-      print('HelperController.editPageFunction>>${data}');
       ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }
   }
 
    static filterDate(String dataDate,String searchDate,String opration) {
-
-    // Jalali baseDate = Jalali.fromDateTime(
-    //   DateTime.parse(
-    //     searchDate.split('/').join('-'), // تبدیل به فرمت قابل قبول
-    //   ),
-    // );
       Jalali baseDate = convertJalaliStringToDate(searchDate);
       Jalali date = convertJalaliStringToDate(dataDate);
       if(opration=='>='){
@@ -116,7 +103,7 @@ class HelperController extends GetxController {
         }
       }
       else if(opration=="<="){
-        if(date.isBefore(baseDate))
+      if(date.isBefore(baseDate))
         {
           return true;
         }else{
@@ -131,7 +118,68 @@ class HelperController extends GetxController {
           return false;
         }
       }
+  }
 
+   static filterTime(String dataTime,String searchTime,String opration) {
+     final timeSearchParts = searchTime.split(':');
+     final itemSearchTime = TimeOfDay(
+       hour: int.parse(timeSearchParts[0]),
+       minute: int.parse(timeSearchParts[1]),
+     );
+     final timeDataParts = dataTime.split(':');
+     final itemDataTime = TimeOfDay(
+       hour: int.parse(timeDataParts[0]),
+       minute: int.parse(timeDataParts[1]),
+     );
+
+      if(opration=='>='){
+        if(itemDataTime.hour>=itemSearchTime.hour && itemDataTime.minute>=itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="<="){
+      if(itemDataTime.hour<=itemSearchTime.hour && itemDataTime.minute<=itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="=="){
+        if(itemDataTime.hour == itemSearchTime.hour && itemDataTime.minute == itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="!="){
+        if(itemDataTime.hour != itemSearchTime.hour && itemDataTime.minute != itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration==">"){
+        if(itemDataTime.hour > itemSearchTime.hour && itemDataTime.minute > itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
+      else if(opration=="<"){
+        if(itemDataTime.hour < itemSearchTime.hour && itemDataTime.minute < itemSearchTime.minute)
+        {
+          return true;
+        }else{
+          return false;
+        }
+      }
   }
 
 // تابع کمکی: تبدیل رشته تاریخ جلالی به Jalali

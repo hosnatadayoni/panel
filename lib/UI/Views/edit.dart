@@ -28,6 +28,7 @@ class _EditPageState extends State<EditPage> {
     super.initState();
     _future = ViewController.generateEditFormView(widget.data);
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -60,11 +61,10 @@ class _EditPageState extends State<EditPage> {
                       FutureBuilder<Widget>(
                         future: _future,
                         builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                          print('snapshot>>>${snapshot}');
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();
                           } else if (snapshot.hasError) {
-                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}sssssssssss');
+                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                           } else {
                             return snapshot.data ?? Container();
                           }
@@ -96,10 +96,9 @@ class _EditPageState extends State<EditPage> {
                                 isHoverBtnBack.value = false;
                               },
                               child: InkWell(
-                                onTap: (){
-                                  print('widget.data!.data>>>${widget.data}');
-                                  MainController.isClickedItem.value = true;
-                                  MainController.goToTablePage();
+                                onTap: () async {
+                                  await MainController.loadData();
+                                  await MainController.goToTablePage();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),
@@ -115,10 +114,9 @@ class _EditPageState extends State<EditPage> {
                             SizedBox(width: 5,),
                             InkWell(
                               onTap: ()async{
-                                print('_EditPageState.build>>>>${ViewController.request}');
-                                      DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
+                               await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}').updateRecord(ViewController.request);
                                 if (ViewController.isClickedBtn.value == false) {
-
+                                  await MainController.goToTablePage();
                                 }
                               },
                               child: Container(

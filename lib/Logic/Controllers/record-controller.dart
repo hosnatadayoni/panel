@@ -15,18 +15,15 @@ import 'package:finance/boxes.dart';
 
 class RecordController extends GetxController {
   static Future<bool> validate(String tableName, DataModel newData,var dataTable) async {
-    print('new data7>>${newData.data}');
 
     bool isValidator;
     List<bool> isValidatorList = [];
     var columns = ViewController.getColumnList(tableName);
-    print('new data8>>${newData.data}');
 
     for (var j = 0; j < columns.length; j++) {
       isValidator = await ValidatorController.checkInputValidation(j, newData.data,tableData: dataTable);
       isValidatorList.add(isValidator);
     }
-    print('isValidatorList>>>${ newData.data}');
     bool isExsistsValidation = isValidatorList.contains(false);
     if (isExsistsValidation) {
       isValidatorList = [];
@@ -55,5 +52,21 @@ class RecordController extends GetxController {
     // dataController.allData.value.add(newData);
     await MainController.loadData();
     // MainController.renderPagination();
+  }
+  static syncFunction(var status){
+    Map<String,dynamic>d={};
+    if(status==true)
+      d={
+      "sync":'true',
+        "server error":"",
+      };
+    else{
+      d={
+        "sync":'false',
+        "server error":"Dont sync this record!",
+      };
+
+    }
+    return d;
   }
 }

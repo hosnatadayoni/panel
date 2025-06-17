@@ -45,7 +45,7 @@ class DataModel {
   String? id;
 
   @HiveField(1)
-  Map<String , dynamic> data;
+  Map<dynamic , dynamic> data;
 
 
   DataModel({this.id , required this.data});
@@ -60,7 +60,7 @@ class DataModel {
 
   Map<String, dynamic> toJson()  {
     return {
-      'id':id,
+      '_id':id,
       'data':data,
 
     };

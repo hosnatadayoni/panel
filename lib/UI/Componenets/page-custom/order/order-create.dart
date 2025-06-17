@@ -99,9 +99,7 @@ class OrderCreatePage extends StatelessWidget {
                                               child: InkWell(
                                                 onTap: () async{
                                                   await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
-                                                  print('ViewController.request order>>>${ViewController.request}');
                                                   for (var i = MainController.startIndex.value; i < MainController.endIndex.value; i++){
-                                                    print('MainController.tableData.value>>>${MainController.tableData.value[i]}');
                                                   }
 
                                                   if(ViewController.isClickedBtn.value == false){

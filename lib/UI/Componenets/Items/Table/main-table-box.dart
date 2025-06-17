@@ -28,7 +28,6 @@ late Future<Widget> _future;
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
-    print('MainController.tableData.value >>>${MainController.tableInfo['filters']}');
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -51,7 +50,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Txt('${AppController.of(context)!.value('error')}: ${snapshot.error}');
+                      return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
                     } else {
                       return snapshot.data ?? Container();
                     }
@@ -65,23 +64,21 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-
-                      print('request>>${ViewController.request}');
                       List<dynamic>w=MainController.tableInfo['filters'];
-                      String opration='==';
+                      String opration='\$eq';
                       if(ViewController.request.length!=0){
                         var d;
                         List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
                         var a= DB('${MainController.tableInfo['table-name']}');
-                      for(var filter in ViewController.request.keys){
-                        var indexFilter=w.indexWhere((element) => element['column']==filter);
-                        print('opration >>${w[indexFilter]}');
+                      for(var filter in ViewController.request.values){
+                          var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
                         if(w[indexFilter]['oprator']!=null){
 
                             opration=w[indexFilter]['oprator'];
                         }
-                        if(ViewController.request[filter]!='' && ViewController.request[filter]!=null){
-                          d=a.where('${filter}','${opration}',ViewController.request[filter]);
+                        if(filter['value']!='' && filter['value']!=null){
+
+                          d=a.where('${filter['column']}','${filter['oprator']}',filter['value']);
                         }
                       }
                       if(d!=null){
@@ -90,8 +87,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                       }
                       MainController.tableData.value=d2;
 
-                      print('filter btn >>>}>>${MainController.tableInfo['table-name']}');
-                      print('filter bttn >>>${d2.length}>>${MainController.tableInfo['table-name']}');
                     }},
                     child: Center(child: Txt('اعمال', textAlign: TextAlign.center)),
                   ),
@@ -99,7 +94,7 @@ class _MainTableBoxState extends State<MainTableBox> {
               SizedBox(height: 10,),
               TableBox(),
               SizedBox(height: 20,),
-              TableFooter(),
+              // TableFooter(),
             ],
           ),
         ],

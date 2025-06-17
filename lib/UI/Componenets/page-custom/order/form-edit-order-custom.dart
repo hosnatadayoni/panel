@@ -79,7 +79,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     },
                     child: InkWell(
                       onTap: (){
-                        print('widget.data!.data>>>${widget.data}');
                         MainController.isClickedItem.value = true;
                         Get.to(() => TablePage());
                       },
@@ -97,14 +96,14 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      await DB('order').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
-                      var orderItems=await DB('order-itemss').where('parent_id', '==', '${widget.data!['id']}').getRecords();
+                      await DB('order').where('id', '\$eq', '${widget.data!['id']}').updateRecord(ViewController.request);
+                      var orderItems=await DB('order-itemss').where('parent_id', '\$eq', '${widget.data!['id']}').getRecords();
                       for(var orderItem in  orderItems){
                         if(OrderItem.orderItemsList.containsKey(orderItem['id'])){
-                            DB('order-itemss').where('id', '==', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
+                            DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
                         }
                         else{
-                          DB('order-itemss').where('id', '==', '${orderItem['id']}').deleteRecord();
+                          DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').deleteRecord();
                         }
                       }
                       if (OrderItem.orderItemsList2.values.length != 0) {
@@ -313,7 +312,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                                 }).toList(),
                                                 initalValue: data['initValue'],
                                                 onChanged: (value) async {
-                                                  print('selected item ${value}');
                                                   for (var item in data['items']) {
                                                     if (item['title'] == value) {
                                                       if (item['value'] == '-1') {

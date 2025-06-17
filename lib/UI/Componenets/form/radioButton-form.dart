@@ -79,7 +79,6 @@ class _RadioButtonState extends State<RadioButton> {
               onChanged: item.disabled!
                   ? null
                   : (value) {
-                print('Selected value: $value');
                 setState(() {
                   selectedValue = value;
                   if(widget.onChanged != null){

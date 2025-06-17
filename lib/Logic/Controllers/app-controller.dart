@@ -40,12 +40,10 @@ class AppController extends GetxController {
   static startLoading(String loadingTag){
     if(loadingTag!='' && loadingTag!=null)
       loadingList.add(loadingTag);
-    print('loadingList>>>${loadingList}');
   }
 
   static finishLoading(String loadingTag){
     loadingList.remove(loadingTag);
-    print('loadingList>>>${loadingList}');
   }
 
   static hasLoading(loadingTag){

@@ -20,12 +20,9 @@ class ViewCustomController extends GetxController{
     List<String>? TimeParts;
     int hour = TimeOfDay.now().hour;
     int minute = TimeOfDay.now().minute;
-    print('dateString90>>>${dateString}');
       TimeParts = dateString.split(':');
-      print('TimeParts>>>${TimeParts}');
       hour = int.parse('${TimeParts![0]}');
       minute = int.parse('${TimeParts[1]}');
-      print('hour minute>>>${hour} ${minute}');
 
     return TimeOfDay(hour: hour, minute: minute);
   }
@@ -40,8 +37,6 @@ class ViewCustomController extends GetxController{
       items = await ViewController.itemsList(column);
       // initValue = await ViewController.getInitValue(column, items);
       if(column['type'] == 'radiobutton'){
-        print('ddddd555>>>${column['name']}');
-        print('items r>>>${items}');
       }
       if(items.length != 0){
         selectedItem = items.firstWhere(
@@ -66,7 +61,6 @@ class ViewCustomController extends GetxController{
     List<dynamic> items=[];
     var initValue;
     Map<String, dynamic> selectedItem={};
-    print('data select>>>${data}');
     if(column['type'] == 'select' || column['type'] == 'radiobutton'){
       items = await ViewController.itemsList(column);
       // initValue = await ViewController.getInitValue(column, items);
@@ -79,7 +73,6 @@ class ViewCustomController extends GetxController{
         else{
           selectedItem = items.first;
         }
-        print('selectedItem select box>>>${selectedItem}');
 
         if(selectedItem['value'] != null){
           initValue = selectedItem['value'];
@@ -95,14 +88,13 @@ class ViewCustomController extends GetxController{
   }
 
   //show table
-  static Future<String> getTitleSelectBoxFormCustom(var column , DataModel dataModel) async {
+  static Future<String> getTitleSelectBoxFormCustom (var column , DataModel dataModel) async {
     String tableName = '';
     if (column['sourceItems'] != 'custom') {
       tableName = column['sourceTable'];
     }
     String titleSelect='';
 
-    print('dataModel.data>>>>>${dataModel.data['${column['name']}'] }');
     if(dataModel.data['${column['name']}'] != null){
         titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
             dataModel.data['${column['name']}'] , column);
@@ -164,7 +156,6 @@ class ViewCustomController extends GetxController{
 
   // multi select order item
   static Future<Map<String, dynamic>> getMultiSelectBoxOrderItemData(Map<String, dynamic> column ,var data) async{
-    print('cccccccccc');
 
     List<dynamic> items=[];
 
@@ -203,7 +194,6 @@ class ViewCustomController extends GetxController{
       else{
         hintTxt = RxString('${items[0]['title']}');
       }
-      print('nkfl>>>${hintTxt}');
     }
 
     return {
@@ -248,7 +238,6 @@ class ViewCustomController extends GetxController{
     Map<String,dynamic> dataTableName={};
     for(var subMenu in MainController.SubMenuList){
       if(subMenu['table-name'] == tableName){
-        print('ViewCustomController.getDataTable>>>${subMenu}');
         dataTableName = subMenu;
       }
     }
