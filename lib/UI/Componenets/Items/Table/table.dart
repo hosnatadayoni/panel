@@ -66,7 +66,7 @@ class _TableBoxState extends State<TableBox> {
                     // if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
                       Center(child: Container(
                           padding: EdgeInsets.all(10),
-                          child: Txt('${MainController.tableInfo['columns'][i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
+                          child: Txt('${MainController.tableInfo['columns'][i]}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
                   Container(
                       padding: EdgeInsets.all(10),
                       child: Center(child: Txt('${AppController.of(context)!.value('operation')}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2)))

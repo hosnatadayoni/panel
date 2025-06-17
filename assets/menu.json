@@ -1,183 +1,21 @@
 [
 
     {
-      "title": "محصولات",
-      "tooltip": "",
-      "main-menu": true,
-      "table-name": "products",
-      "currentPage": 1,
-      "countShowRow": 10,
-      "status": "ofline",
-      "relations": [],
-      "columns": [
-        {
-          "name": "title",
-          "title": "title",
-          "type": "string",
-          "type_filed": "string",
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
-        },
-        {
-          "name": "description",
-          "title": "description",
-          "type": "string",
-          "type_filed": "string"
-        },
-        {
-          "name": "price",
-          "title": "price",
-          "type": "Number double",
-          "type_filed": "double",
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "نمونه",
-      "tooltip": "",
-      "main-menu": true,
-      "table-name": "sample",
-      "currentPage": 1,
-      "countShowRow": 10,
-      "status": "ofline",
-      "relations": [],
-      "columns": [
-        {
-          "name": "title",
-          "title": "title",
-          "type": "string",
-          "type_filed": "string",
-          "is-show-store": true,
-          "is-show-edit": true,
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
-        },
-        {
-          "name": "description",
-          "title": "description",
-          "type": "string",
-          "type_filed": "string",
-          "is-show-store": true,
-          "is-show-edit": true
-        }
-      ]
-    },
-
-    {
       "title": "دسته بندی",
       "tooltip": "",
       "main-menu": true,
-      "table-name": "categoriess",
+      "table-name": "categories",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "location-data": 0,
       "relations": [],
       "columns": [
-        {
-          "name": "title",
-          "title": "title",
-          "type": "string",
-          "type_filed": "string"
-        },
-        {
-          "name": "description",
-          "title": "description",
-          "type": "string",
-          "type_filed": "string"
-        },
-        {
-          "name": "product",
-          "title": "product",
-          "type": "multiSelect",
-          "type_filed": "array",
-          "sourceItems": "table",
-          "sourceTable": "products",
-          "items":["title","price"],
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
-        },
-        {
-          "name": "productSelect",
-          "title": "productSelect",
-          "type": "select",
-          "type_filed": "string",
-          "sourceItems": "table",
-          "sourceTable": "products",
-          "items":["title","price"]
-        },
-        {
-          "name": "sampleSelect",
-          "title": "sampleSelect",
-          "type": "select",
-          "type_filed": "string",
-          "sourceItems": "table",
-          "sourceTable": "sample",
-          "items":["title"]
-        },
-        {
-          "name": "checkBox",
-          "title": "checkBox",
-          "type": "checkbox",
-          "type_filed": "bool",
-          "default_value": false
-        },
-        {
-          "name": "radiobutton",
-          "title": "radiobutton",
-          "type": "radiobutton",
-          "type_filed": "string",
-          "sourceItems": "table",
-          "sourceTable": "products",
-          "items":["title","price"]
-        }
-      ]
-    },
-
-    {
-      "title": "سفارشات",
-      "tooltip": "",
-      "main-menu": true,
-      "table-name": "order",
-      "currentPage": 1,
-      "countShowRow": 10,
-      "status": "ofline",
-      "relations": [],
-      "columns": [
-        {
-          "name": "sampleSelect",
-          "title": "sampleSelect",
-          "type": "select",
-          "type_filed": "string",
-          "sourceItems": "table",
-          "sourceTable": "sample",
-          "items":["title"]
-        }, {
-          "name": "sampleMultiSelect",
-          "title": "sampleMultiSelect",
-          "type": "multiSelect",
-          "type_filed": "array",
-          "sourceItems": "table",
-          "sourceTable": "sample",
-          "items":["title"]
-        }
+        {"title": "دسته بندی"},
+        {"tooltip": ""},
+        {"main-menu": true},
+        {"table-name": "categories"},
+        {"currentPage": 1},
+        {"countShowRow": 10}
       ]
     }
 
