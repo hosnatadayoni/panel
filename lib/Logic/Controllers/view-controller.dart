@@ -35,6 +35,7 @@ class ViewController extends GetxController {
   static List<Map<String, dynamic>> requestFilter = [];
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
+  static Rx<int> totalPage = 0.obs;
 
   static Future<Widget> generateFilterView(
       Map<String, dynamic> filterInfo) async {
@@ -415,7 +416,10 @@ class ViewController extends GetxController {
           var items = await ViewController.itemsList(column);
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
-              if (dataModel[name] != null)
+              print('dataModel[name] k>>>${dataModel[name]} ${name}');
+              print('items dass>>>${items}');
+              // if (dataModel[name] != '')
+              if(dataModel['${name}'] != null && dataModel['${name}'].length != 0)
                 selectedItem = items
                     .firstWhere((element) => element['_id'] == dataModel[name]);
               selectBox = await generateStoreFormSelectBox(
@@ -477,9 +481,12 @@ class ViewController extends GetxController {
                       : '' : ''}',
                   dataModel[name] == '' ? false.obs : true.obs);
             } else {
-              if (dataModel[name] != null)
+              if (dataModel[name] != ''){
+                print('items dfhjjk>>>${items}');
+                print('jkjkll>>>${dataModel[name]} ${name}');
                 selectedItem = items.firstWhere(
                         (element) => element['value'] == dataModel[name]);
+              }
               selectBox = await generateFormRadioButton(
                   column,
                   items,
@@ -524,11 +531,19 @@ class ViewController extends GetxController {
           int day = Jalali
               .now()
               .day;
-          if (dataModel['${name}'] != null) {
-            dateParts = dataModel['${name}'].split('/');
-            year = int.parse('${dateParts![0]}');
-            month = int.parse('${dateParts[1]}');
-            day = int.parse('${dateParts[2]}');
+          if (dataModel['${name}'] != null && dataModel['${name}'].length != 0) {
+            try{
+              dateParts = dataModel['${name}'].split('/');
+              year = int.parse('${dateParts![0]}');
+              month = int.parse('${dateParts[1]}');
+              day = int.parse('${dateParts[2]}');
+            }
+            catch(e){
+              year = Jalali.now().year;
+              month = Jalali.now().month;
+              day = Jalali.now().day;
+            }
+
           }
           dateBox = generateFormDateBox(
               column,
@@ -620,10 +635,17 @@ class ViewController extends GetxController {
           int minute = TimeOfDay
               .now()
               .minute;
-          if (dataModel['${name}'] != null) {
-            TimeParts = dataModel['${name}'].split(':');
-            hour = int.parse('${TimeParts![0]}');
-            minute = int.parse('${TimeParts[1]}');
+          if (dataModel['${name}'] != null && dataModel['${name}'].length != 0) {
+            try{
+              TimeParts = dataModel['${name}'].split(':');
+              hour = int.parse('${TimeParts![0]}');
+              minute = int.parse('${TimeParts[1]}');
+            }
+            catch(e){
+              hour = TimeOfDay.now().hour;
+              minute = TimeOfDay.now().minute;
+            }
+
           }
 
           timeBox = generateFormTimeBox(
@@ -1353,7 +1375,7 @@ class ViewController extends GetxController {
     //   (item) => item['is_selected'] == true,
     //   orElse: () => radioButtonItems.first,
     // );
-    return new Column(
+    return items.length != 0 ? new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
@@ -1420,7 +1442,7 @@ class ViewController extends GetxController {
           isSelectedItem: isSelectedItem,
         ),
       ],
-    );
+    ):Container();
   }
 
   static Widget generateFormDateBox(var column, Jalali selectedDate,
@@ -1461,7 +1483,7 @@ class ViewController extends GetxController {
     List<dynamic> selectedId = [];
 
     if (column['sourceItems'] != 'custom') {
-      await ConncetServerController.getRecordGeneral('${column['sourceTable']}');
+      // await ConncetServerController.getRecordGeneral('${column['sourceTable']}');
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
@@ -2082,7 +2104,7 @@ class ViewController extends GetxController {
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
       if (dataModel==null || dataModel.isEmpty ) {
-        await ConncetServerController.getRecordGeneral('${tableName}');
+        // await ConncetServerController.getRecordGeneral('${tableName}');
         List<dynamic> data = await DB(tableName).getRecords();
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
@@ -2094,7 +2116,7 @@ class ViewController extends GetxController {
         }
       }
       else {
-        if(dataModel[column['name']]==null){
+        if(dataModel[column['name']]==null || dataModel[column['name']]==''){
           dropDownListItems=[];
           // List<dynamic> data = await DB(tableName).getRecords();
           // dropDownListItems = data;

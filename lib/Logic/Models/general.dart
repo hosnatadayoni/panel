@@ -1,3 +1,4 @@
+import 'package:finance/UI/Componenets/Popups/snackbar.dart';
 import 'package:hive/hive.dart';
 
 import '../Controllers/view-controller.dart';
@@ -12,13 +13,28 @@ class General{
    withFormat(String type,var value,var cloumnName) async {
      print('General.withFormat withFormat>>${type}>>>${cloumnName}>>${value}');
 
-     if(type=='string'){
+     if(type=='string' || type == 'time' || type == 'date'){
 
       return value.toString();
     }else if(type=='Number double'){
-      return double.parse(value.toString());
+       if(value != ''){
+         try{
+           return double.parse(value.toString());
+         }
+         catch(e){
+           showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد...');
+         }
+
+       }
     }else if(type=='Number int'){
-      return int.parse(value.toString());
+       if(value != ''){
+         try{
+           return double.parse(value.toString());
+         }
+         catch(e){
+           showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد...');
+         }
+       }
     }else if(type=='checkbox'){
       if(value=='true'|| value==true){
         return true;

@@ -167,16 +167,16 @@ class DB {
     List<Map<String, dynamic>> data=[];
     int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
 
-    if(ConncetServerController.getRecordRes.isNotEmpty){
-      data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-    }
-    else
-      {
+    // if(ConncetServerController.getRecordRes.isNotEmpty){
+    //   data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+    // }
+    // else
+    //   {
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         data =await getTypeOfField(box.values.toList());
         print('DB.getRecords>>>${data}');
-    }
+    // }
     if (index != -1) {
 
       if (this.parentItem.length != 0) {
@@ -184,11 +184,11 @@ class DB {
       }
       if (this.orWhereList.length != 0) {
         if (data.length != 0){
-          await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
-          if(ConncetServerController.filterRecordRes.isNotEmpty){
-            dataItems=ConncetServerController.filterRecordRes;
-          }
-          else{
+          // await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
+          // if(ConncetServerController.filterRecordRes.isNotEmpty){
+          //   dataItems=ConncetServerController.filterRecordRes;
+          // }
+          // else{
             for (var d in data) {
               bool flag = true;
               for (int j = 1; j <= orWhereList.length; j++) {
@@ -353,16 +353,17 @@ class DB {
                 dataItems.add(d);
               }
             }
-          }}
+          // }
+        }
       }
       else {
         if (this.whereList.length != 0) {
           if (data.length != 0){
-            await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
-            if(ConncetServerController.filterRecordRes.isNotEmpty){
-              dataItems=ConncetServerController.filterRecordRes;
-            }
-            else{
+            // await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
+            // if(ConncetServerController.filterRecordRes.isNotEmpty){
+            //   dataItems=ConncetServerController.filterRecordRes;
+            // }
+            // else{
             for (var d in data) {
               bool flag = true;
               for (int j = 1; j <= whereList.length; j++) {
@@ -527,7 +528,8 @@ class DB {
                 dataItems.add(d);
               }
             }
-        }}
+        // }
+          }
         }
         else {
           dataItems = data;
@@ -569,11 +571,11 @@ class DB {
     if (parentItem != {}) {
       newRequest.addAll(parentItem);
     }
-    newRequest.addAll({
-      "sync":"false",
-      "server error":"Dont sync this record!",
-
-    });
+    // newRequest.addAll({
+    //   "sync":"false",
+    //   "server error":"Dont sync this record!",
+    //
+    // });
 
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
     var beforValidate = HelperController.beforeStoreValidation(newData);
@@ -592,12 +594,12 @@ class DB {
             "table_name":'${this.tableName}',
             "record":json.encode(customData.data).toString(),
           };
-          await ConncetServerController.storeRecordGeneral(setRecord);
-          if(ConncetServerController.storeRecordRes.isNotEmpty){
-            DataModel recordStored=DataModel(id: '${ConncetServerController.storeRecordRes['_id']}', data: ConncetServerController.storeRecordRes);
-            await box.add(recordStored);
-          }
-          else
+          // await ConncetServerController.storeRecordGeneral(setRecord);
+          // if(ConncetServerController.storeRecordRes.isNotEmpty){
+          //   DataModel recordStored=DataModel(id: '${ConncetServerController.storeRecordRes['_id']}', data: ConncetServerController.storeRecordRes);
+          //   await box.add(recordStored);
+          // }
+          // else
             await box.add(customData);
 
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
@@ -669,19 +671,19 @@ class DB {
             for(var a in allData){
             }
             allData[allDataIndex] = customUpdate;
-            await ConncetServerController.setDatabaseme(customUpdate.data);
-            Map<String,dynamic>setRecord={
-              "table_name":'${this.tableName}',
-              "record":json.encode(customUpdate.data).toString(),
-              "record_id":customUpdate.id
-            };
-            await ConncetServerController.updateRecordGeneral(setRecord);
-            if(ConncetServerController.updateRecordRes.isNotEmpty){
-              DataModel record= DataModel(id:ConncetServerController.updateRecordRes['_id'],data: ConncetServerController.updateRecordRes);
-              await box.putAt(allDataIndex, record);
-            }
-
-            else
+            // await ConncetServerController.setDatabaseme(customUpdate.data);
+            // Map<String,dynamic>setRecord={
+            //   "table_name":'${this.tableName}',
+            //   "record":json.encode(customUpdate.data).toString(),
+            //   "record_id":customUpdate.id
+            // };
+            // await ConncetServerController.updateRecordGeneral(setRecord);
+            // if(ConncetServerController.updateRecordRes.isNotEmpty){
+            //   DataModel record= DataModel(id:ConncetServerController.updateRecordRes['_id'],data: ConncetServerController.updateRecordRes);
+            //   await box.putAt(allDataIndex, record);
+            // }
+            //
+            // else
               await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterUpdate(
@@ -694,6 +696,7 @@ class DB {
             MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // Get.to(() => TablePage());
+            await MainController.goToTablePage();
           }
         } else {
           showSnackbar(snackTypes.error,
@@ -709,11 +712,11 @@ class DB {
     var relations = ViewCustomController.getDataTable(this.tableName!);
     for (var data in records) {
       var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['_id']);
-      await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
-      if(ConncetServerController.deleteRecordRes==true){
-        await MainController.loadData();
-
-      }
+      // await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
+      // if(ConncetServerController.deleteRecordRes==true){
+      //   await MainController.loadData();
+      //
+      // }
       if(tableDataIndex!=-1){
         DataModel item = box.values.toList()[tableDataIndex];
 
@@ -730,8 +733,8 @@ class DB {
             }
           }
 
-          if(ConncetServerController.deleteRecordRes==true)
-            box.deleteAt(tableDataIndex);
+          // if(ConncetServerController.deleteRecordRes==true)
+          //   box.deleteAt(tableDataIndex);
           await MainController.loadData();
           MainController.renderPagination();
           var after = HelperController.afterDelete(tableDataIndex, item);

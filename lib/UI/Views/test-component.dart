@@ -58,12 +58,12 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //acccordian
         CustomAccordion(accordianTitle: 'item1' ,
-            accordianTitleColor: redColor ,
-            accordianBoxColor: Colors.lightBlueAccent ,
-            accordianDescription: 'des1' ,
-            accordianDescriptionColor: Colors.black ,
-            colorIcon: color20 ,
-            colorBoxDescription: Colors.black26,
+          accordianTitleColor: redColor ,
+          accordianBoxColor: Colors.lightBlueAccent ,
+          accordianDescription: 'des1' ,
+          accordianDescriptionColor: Colors.black ,
+          colorIcon: color20 ,
+          colorBoxDescription: Colors.black26,
           width: 600,
           isOpen: true,
         ),
@@ -74,7 +74,7 @@ class TestComponent extends StatelessWidget {
           children: [
             Txt('sssssss', fontSize: 16, fontWeight: FontWeight.w400,),
             InkWell(
-              onTap: (){},
+                onTap: (){},
                 child: Txt('sssssss', fontSize: 16, fontWeight: FontWeight.w700,textDecoration: TextDecoration.underline, )),
             Txt('sssssss', fontSize: 16, fontWeight: FontWeight.w400,),
           ],
@@ -132,41 +132,41 @@ class TestComponent extends StatelessWidget {
           spacing: 5,
           runSpacing: 5,
           children: [
-          Btn(type:btnType.primary ,content: Txt('primary'),),
-          Btn(type:btnType.secondary, content: Txt('secondary'),),
-          Btn(type:btnType.success, content: Txt('success'),),
-          Btn(type:btnType.danger, content: Txt('danger'),),
-          Btn(type:btnType.warning, content: Txt('warning'),),
-          Btn(type:btnType.info, content: Txt('info'),),
-          Btn(type:btnType.light, content: Txt('light'),),
-          Btn(type:btnType.dark, content: Txt('dark'),),
-          Btn(type:btnType.link, content: Txt('link'),),
-          Btn(type:btnType.dark, content: Txt('dark'), isCenter: true,),
-        ],),
+            Btn(type:btnType.primary ,content: Txt('primary'),),
+            Btn(type:btnType.secondary, content: Txt('secondary'),),
+            Btn(type:btnType.success, content: Txt('success'),),
+            Btn(type:btnType.danger, content: Txt('danger'),),
+            Btn(type:btnType.warning, content: Txt('warning'),),
+            Btn(type:btnType.info, content: Txt('info'),),
+            Btn(type:btnType.light, content: Txt('light'),),
+            Btn(type:btnType.dark, content: Txt('dark'),),
+            Btn(type:btnType.link, content: Txt('link'),),
+            Btn(type:btnType.dark, content: Txt('dark'), isCenter: true,),
+          ],),
         //outline
         SizedBox(height: 30),
-       Wrap(
-         spacing: 5,
-         runSpacing: 5,
-         children: [
-           Btn(type:btnType.primary ,content: Txt('primary'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.secondary, content: Txt('secondary'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.success, content: Txt('success'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.danger, content: Txt('danger'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.warning, content: Txt('warning'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.info, content: Txt('info'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.light, content: Txt('light'),isOutline: true),
-           SizedBox(height: 30),
-           Btn(type:btnType.dark, content: Txt('dark'),isOutline: true),
-           Btn(type:btnType.link, content: Txt('link'),isOutline: true),
-         ],
-       ),
+        Wrap(
+          spacing: 5,
+          runSpacing: 5,
+          children: [
+            Btn(type:btnType.primary ,content: Txt('primary'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.secondary, content: Txt('secondary'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.success, content: Txt('success'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.danger, content: Txt('danger'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.warning, content: Txt('warning'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.info, content: Txt('info'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.light, content: Txt('light'),isOutline: true),
+            SizedBox(height: 30),
+            Btn(type:btnType.dark, content: Txt('dark'),isOutline: true),
+            Btn(type:btnType.link, content: Txt('link'),isOutline: true),
+          ],
+        ),
 
         //disable
         SizedBox(height: 30),
@@ -304,20 +304,20 @@ class TestComponent extends StatelessWidget {
         //Nesting
         ButtonGroup(
           buttons: [
-          ButtonItem(type: btnType.primary,contetnBtn: Txt('1', fontSize:16, fontWeight: FontWeight.w400,),),
-          ButtonItem(type: btnType.primary,contetnBtn: Txt('2', fontSize:16, fontWeight: FontWeight.w400,) ,),
-          ButtonItem(type: btnType.primary  ,contetnBtn: Txt('right', fontSize:16, fontWeight: FontWeight.w400,)  ,
-              isDropdown: true , contentBtnDropDown: 'DropDown' ,itemsDropDown: [DropdownItem(text: 'item1') , DropdownItem(text: 'item2')],isOutline: true),
-        ],),
+            ButtonItem(type: btnType.primary,contetnBtn: Txt('1', fontSize:16, fontWeight: FontWeight.w400,),),
+            ButtonItem(type: btnType.primary,contetnBtn: Txt('2', fontSize:16, fontWeight: FontWeight.w400,) ,),
+            ButtonItem(type: btnType.primary  ,contetnBtn: Txt('right', fontSize:16, fontWeight: FontWeight.w400,)  ,
+                isDropdown: true , contentBtnDropDown: 'DropDown' ,itemsDropDown: [DropdownItem(text: 'item1') , DropdownItem(text: 'item2')],isOutline: true),
+          ],),
         SizedBox(height: 30),
         //vertical
         ButtonGroup(
           axis: ButtonGroupAxis.vertical,
           buttons: [
-          ButtonItem(type: btnType.danger ,contetnBtn: Txt('radio1', fontSize:16, fontWeight: FontWeight.w400,), isRadio: true ,isOutline: true,),
-          ButtonItem(type: btnType.danger, contetnBtn: Txt('radio2', fontSize:16, fontWeight: FontWeight.w400,),  isRadio: true  ,isOutline: true),
-          ButtonItem(type: btnType.danger , contetnBtn: Txt('radio3', fontSize:16, fontWeight: FontWeight.w400,) ,  isRadio: true  , isOutline: true),
-        ],),
+            ButtonItem(type: btnType.danger ,contetnBtn: Txt('radio1', fontSize:16, fontWeight: FontWeight.w400,), isRadio: true ,isOutline: true,),
+            ButtonItem(type: btnType.danger, contetnBtn: Txt('radio2', fontSize:16, fontWeight: FontWeight.w400,),  isRadio: true  ,isOutline: true),
+            ButtonItem(type: btnType.danger , contetnBtn: Txt('radio3', fontSize:16, fontWeight: FontWeight.w400,) ,  isRadio: true  , isOutline: true),
+          ],),
         //end btn group
 
         SizedBox(height: 30),
@@ -328,8 +328,8 @@ class TestComponent extends StatelessWidget {
             imageUrl:  imgeTest,
           ),
           CarouselItem(
-            imageUrl:  test,
-            isActive: true
+              imageUrl:  test,
+              isActive: true
 
           ),
           CarouselItem(
@@ -340,21 +340,21 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //indicators
         MyCarousel(
-          showIndicators: true,
+            showIndicators: true,
             items: [
-          CarouselItem(
-            imageUrl:  imgeTest,
-          ),
-          CarouselItem(
-              imageUrl:  test,
+              CarouselItem(
+                imageUrl:  imgeTest,
+              ),
+              CarouselItem(
+                imageUrl:  test,
 
-          ),
-          CarouselItem(
-            imageUrl:  loginSvg,
-            isActive: true
+              ),
+              CarouselItem(
+                  imageUrl:  loginSvg,
+                  isActive: true
 
-          ),
-        ]),
+              ),
+            ]),
         SizedBox(height: 30),
         //captions
         MyCarousel(
@@ -372,8 +372,8 @@ class TestComponent extends StatelessWidget {
 
               ),
               CarouselItem(
-                  imageUrl:  loginSvg,
-                  isActive: true,
+                imageUrl:  loginSvg,
+                isActive: true,
                 caption:Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
 
               ),
@@ -381,7 +381,7 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //crossfade
         MyCarousel(
-          isCrossFade: true,
+            isCrossFade: true,
             hasCaption: true,
             showIndicators: true,
             items: [
@@ -408,19 +408,19 @@ class TestComponent extends StatelessWidget {
             isAutoPlay: true,
             showIndicators: true,
             items: [
-          CarouselItem(
-            imageUrl:  imgeTest,
-          ),
-          CarouselItem(
-              imageUrl:  test,
-              isActive: true
+              CarouselItem(
+                imageUrl:  imgeTest,
+              ),
+              CarouselItem(
+                  imageUrl:  test,
+                  isActive: true
 
-          ),
-          CarouselItem(
-            imageUrl:  loginSvg,
+              ),
+              CarouselItem(
+                imageUrl:  loginSvg,
 
-          ),
-        ]),
+              ),
+            ]),
         SizedBox(height: 30),
         //ride
         MyCarousel(
@@ -444,21 +444,21 @@ class TestComponent extends StatelessWidget {
         //Individual .carousel-item interval
         MyCarousel(
           items: [
-          CarouselItem(
-            imageUrl:  imgeTest,
-            caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
-            autoPlayInterval: Duration(milliseconds: 10000),
-          ),
-          CarouselItem(
-            imageUrl:  test,
-            caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
-            autoPlayInterval: Duration(milliseconds: 2000),
-          ),
-          CarouselItem(
-            imageUrl:  loginSvg,
-            caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
-          ),
-        ] , isAutoPlay: true , hasCaption: true,),
+            CarouselItem(
+              imageUrl:  imgeTest,
+              caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
+              autoPlayInterval: Duration(milliseconds: 10000),
+            ),
+            CarouselItem(
+              imageUrl:  test,
+              caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
+              autoPlayInterval: Duration(milliseconds: 2000),
+            ),
+            CarouselItem(
+              imageUrl:  loginSvg,
+              caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
+            ),
+          ] , isAutoPlay: true , hasCaption: true,),
         SizedBox(height: 30),
         //Autoplaying carousels without controls
         MyCarousel(
@@ -480,7 +480,7 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //Disable touch swiping
         MyCarousel(
-           hasTouchSwipping: false,
+          hasTouchSwipping: false,
           items: [
             CarouselItem(
               imageUrl:  imgeTest,
@@ -499,38 +499,38 @@ class TestComponent extends StatelessWidget {
         //isDark
         MyCarousel(
             items: [
-          CarouselItem(
-            imageUrl:  imgeTest,
-            caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
-          ),
-          CarouselItem(
-            imageUrl:  test,
-            caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
-          ),
-          CarouselItem(
-            imageUrl:  loginSvg,
-            caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
-          ),
-        ],showIndicators: true , hasCaption: true , colorBox: color25,colorIcon: color26,colorIndicator: color26,colorIndicatorActive: blackColor,colorTxt: blackColor, isAutoPlay: true),
+              CarouselItem(
+                imageUrl:  imgeTest,
+                caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
+              ),
+              CarouselItem(
+                imageUrl:  test,
+                caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
+              ),
+              CarouselItem(
+                imageUrl:  loginSvg,
+                caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
+              ),
+            ],showIndicators: true , hasCaption: true , colorBox: color25,colorIcon: color26,colorIndicator: color26,colorIndicatorActive: blackColor,colorTxt: blackColor, isAutoPlay: true),
         SizedBox(height: 30),
         //cros fade by autoplay
         MyCarousel(
-          items: [
-            CarouselItem(
-              imageUrl:  imgeTest,
-              caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
-              autoPlayInterval: Duration(milliseconds: 10000),
-            ),
-            CarouselItem(
-              imageUrl:  test,
-              caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
-              autoPlayInterval: Duration(milliseconds: 2000),
-            ),
-            CarouselItem(
-              imageUrl:  loginSvg,
-              caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
-            ),
-          ] , isAutoPlay: true , hasCaption: true,isCrossFade: true),
+            items: [
+              CarouselItem(
+                imageUrl:  imgeTest,
+                caption:Caption(header: "عنوان 1", body: "توضیحات مربوط به تصویر اول"),
+                autoPlayInterval: Duration(milliseconds: 10000),
+              ),
+              CarouselItem(
+                imageUrl:  test,
+                caption:Caption(header: "عنوان 2", body: "توضیحات مربوط به تصویر دوم"),
+                autoPlayInterval: Duration(milliseconds: 2000),
+              ),
+              CarouselItem(
+                imageUrl:  loginSvg,
+                caption: Caption(header: "عنوان 3", body: "توضیحات مربوط به تصویر سوم"),
+              ),
+            ] , isAutoPlay: true , hasCaption: true,isCrossFade: true),
         //end carousel slider
 
         SizedBox(height: 60),
@@ -613,36 +613,36 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //Titles, text, and links
         CustomCard(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Txt('card title' , fontSize: 20, fontWeight: FontWeight.w500,color: dark,),
-              SizedBox(height: 5,),
-              Txt('card subtitle' , fontSize: 16, fontWeight: FontWeight.w500,color: secondry,),
-              SizedBox(height: 10,),
-              Txt('This is some text within a card body.' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,),
-              SizedBox(height: 20,),
-              Wrap(
-                spacing: 10,
-                runSpacing: 5,
-                children: [
-                  InkWell(
-                      onTap: () {
-                      },
-                      child: Txt('Card Link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
-                  InkWell(
-                      onTap: () {
-                      },
-                      child: Txt('Another link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
-                ],
-              )
-            ],
-          )
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Txt('card title' , fontSize: 20, fontWeight: FontWeight.w500,color: dark,),
+                SizedBox(height: 5,),
+                Txt('card subtitle' , fontSize: 16, fontWeight: FontWeight.w500,color: secondry,),
+                SizedBox(height: 10,),
+                Txt('This is some text within a card body.' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,),
+                SizedBox(height: 20,),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 5,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                        },
+                        child: Txt('Card Link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                    InkWell(
+                        onTap: () {
+                        },
+                        child: Txt('Another link' , fontSize: 16, fontWeight: FontWeight.w400,textDecoration: TextDecoration.underline , color: Colors.blue,)),
+                  ],
+                )
+              ],
+            )
         ),
         SizedBox(height: 30),
         //images
         CustomCard(
-          padding: 0,
+            padding: 0,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -656,34 +656,13 @@ class TestComponent extends StatelessWidget {
                     child: Img(imgeTest,width: size.width ,height: 180,)),
                 SizedBox(height: 10,),
                 Container(
-                  padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     child: Txt('Some quick example text to build on the card title and make up the bulk of the card’s content.' , fontSize: 16, fontWeight: FontWeight.w400,)),
               ],
             )
         ),
         SizedBox(height: 30),
         //list groups
-        CustomCard(
-          padding: 0,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                 Container(
-                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
-                     child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
-                 MyDivider(),
-                 Container(
-                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
-                     child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
-                 MyDivider(),
-                 Container(
-                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
-                     child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
-              ],
-            )
-        ),
-        SizedBox(height: 30),
-        //list group and header
         CustomCard(
             padding: 0,
             body: Column(
@@ -701,8 +680,29 @@ class TestComponent extends StatelessWidget {
                     padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
                     child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
               ],
-            ),
-           cardHeader: 'Feature',
+            )
+        ),
+        SizedBox(height: 30),
+        //list group and header
+        CustomCard(
+          padding: 0,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('An item', fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              MyDivider(),
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('A second item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+              MyDivider(),
+              Container(
+                  padding: EdgeInsets.only(top: 8,bottom: 8,right: 16,left: 16),
+                  child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
+            ],
+          ),
+          cardHeader: 'Feature',
         ),
         SizedBox(height: 30),
         //list group and footer
@@ -724,12 +724,12 @@ class TestComponent extends StatelessWidget {
                   child: Txt('A third item' , fontSize: 16, fontWeight: FontWeight.w400, color: dark,)),
             ],
           ),
-         cardFooter: 'Card Footer',
+          cardFooter: 'Card Footer',
         ),
         SizedBox(height: 30),
         //Kitchen sink
         CustomCard(
-          padding: 0,
+            padding: 0,
             width: 400,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -744,7 +744,7 @@ class TestComponent extends StatelessWidget {
                     child: Img(imgeTest,width: size.width ,height: 180,)),
                 SizedBox(height: 10,),
                 Container(
-                  padding: EdgeInsets.only(right: 16),
+                    padding: EdgeInsets.only(right: 16),
                     child: Txt('card title' , fontSize: 20, fontWeight: FontWeight.w500,color: dark,)),
                 SizedBox(height: 5,),
                 Container(
@@ -862,12 +862,12 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //dropdown-item-text
         Dropdown(
-          itemsDropDown: [
-            DropdownItem(text: "Dropdown item text", isInteractive: false),
-            DropdownItem(text: "Action", value: "action"),
-            DropdownItem(text: "Another action", value: "another_action"),
-            DropdownItem(text: "Something else here", value: "something_else"),
-          ], dropDownTitle: 'dropDownItemText',type: btnType.primary
+            itemsDropDown: [
+              DropdownItem(text: "Dropdown item text", isInteractive: false),
+              DropdownItem(text: "Action", value: "action"),
+              DropdownItem(text: "Another action", value: "another_action"),
+              DropdownItem(text: "Something else here", value: "something_else"),
+            ], dropDownTitle: 'dropDownItemText',type: btnType.primary
         ),
         SizedBox(height: 30),
         //active
@@ -952,20 +952,20 @@ class TestComponent extends StatelessWidget {
         //progress
         MultiColorProgressBar(items: [
           ProgressItem(
-            value: 25,
-            // hasStriped: true,
-            showLabel: true,
-            type: btnType.primary
+              value: 25,
+              // hasStriped: true,
+              showLabel: true,
+              type: btnType.primary
           ),
           ProgressItem(
-            value: 50,
-            showLabel: true,
-            type: btnType.success
+              value: 50,
+              showLabel: true,
+              type: btnType.success
           ),
           ProgressItem(
-            value: 10,
-            showLabel: true,
-            type: btnType.info
+              value: 10,
+              showLabel: true,
+              type: btnType.info
           ),
           ProgressItem(
               value: 15,
@@ -1029,7 +1029,7 @@ class TestComponent extends StatelessWidget {
             'software like Aldus PageMaker including versions of Lorem Ipsumhhhhhhhhhhhhhhhhhhhhh'
             'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhwill uncover many web sites still in their infancy. '
             'Various versions have evol' , fontSize: 16, fontWeight: FontWeight.w400,),
-         contetnBtn: Txt('Scrolling long content'),type: btnType.primary,),
+          contetnBtn: Txt('Scrolling long content'),type: btnType.primary,),
         SizedBox(height: 30),
         //vertically center
         CustomModal(header: Txt('ssss'),body: Txt('jjjjjjjjjjjjjjjj'
@@ -1279,13 +1279,13 @@ class TestComponent extends StatelessWidget {
           height: 40,
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           decoration: BoxDecoration(
-        color: color38,
-        border: Border.all(width: 1 , color: color5),
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(5),
-          bottomRight: Radius.circular(5),
-        )
-       ),
+              color: color38,
+              border: Border.all(width: 1 , color: color5),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(5),
+                bottomRight: Radius.circular(5),
+              )
+          ),
           child: Center(
             child: Txt('@' , fontSize:14 ,),
           ),
@@ -1293,29 +1293,29 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),],
           prefixIcons: [Container(
-            width: 46,
+              width: 46,
               height: 40,
               padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                )
-            ),child: Center(child: Txt('00.' , fontSize:14 ,)))] ,
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(5),
+                    bottomRight: Radius.circular(5),
+                  )
+              ),child: Center(child: Txt('00.' , fontSize:14 ,)))] ,
           suffixIcons: [Container(
-            width: 40,
+              width: 40,
               height:40,
               padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  bottomLeft: Radius.circular(5),
-                )
-            ),child: Center(child: Txt('@' , fontSize:14 ,)))],),
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  )
+              ),child: Center(child: Txt('@' , fontSize:14 ,)))],),
         SizedBox(height: 30),
         InputGroup(
           inputs: [
@@ -1329,8 +1329,8 @@ class TestComponent extends StatelessWidget {
 
               padding: EdgeInsets.only(top: 6 , bottom:  6 , left: 12 , right: 12),
               decoration: BoxDecoration(
-                  color: color38,
-                  border: Border.all(width: 1 , color: color5),
+                color: color38,
+                border: Border.all(width: 1 , color: color5),
 
               ),
               alignment: Alignment.center,
@@ -1354,31 +1354,31 @@ class TestComponent extends StatelessWidget {
               width: 120,
               height: 94,
               padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  bottomLeft: Radius.circular(5),
-                )
-            ),child: Center(child: Txt('with textarea' , fontSize:14 ,)))],),
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  )
+              ),child: Center(child: Txt('with textarea' , fontSize:14 ,)))],),
         SizedBox(height: 30),
         //wrapping
 
         SizedBox(height: 30),
         //size
         InputGroup(inputs: [InputForm(hintText: 'نام',size: InputSize.small,inputWidth: 500,),] ,
-        suffixIcons: [Container(
-            width: 40,
-            height: 40,
-            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-              color: color38,
-              border: Border.all(width: 1 , color: color5),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5),
-                bottomLeft: Radius.circular(5),
-              )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.small,),
+          suffixIcons: [Container(
+              width: 40,
+              height: 40,
+              padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    bottomLeft: Radius.circular(5),
+                  )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.small,),
         SizedBox(height: 30),
         InputGroup(inputs: [InputForm(hintText: 'نام',size: InputSize.medium,inputWidth: 500,),] , suffixIcons: [Container(
             width: 40,
@@ -1393,7 +1393,7 @@ class TestComponent extends StatelessWidget {
                 )),child: Center(child: Txt('@' , fontSize:14 ,)))],size: InputSize.medium,),
         SizedBox(height: 30),
         InputGroup(inputs: [InputForm(hintText: 'نام',size: InputSize.large,inputWidth: 500,),] , suffixIcons: [Container(
-          width: 40,
+            width: 40,
             height: 40,
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
@@ -1407,7 +1407,7 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //radios
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] , suffixIcons: [Container(
-          width: 42,
+            width: 42,
             height: 40,
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
@@ -1423,7 +1423,7 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //Checkboxes
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] , suffixIcons: [Container(
-          width: 42,
+            width: 42,
             height:40,
             padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
@@ -1442,26 +1442,26 @@ class TestComponent extends StatelessWidget {
                 width: 160,
                 height:40,
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5),
-                  bottomLeft: Radius.circular(5),
-                )
-            ),child: Center(child: Txt('First and last name' , fontSize:14 ,)))], isWrap: false),
+                decoration: BoxDecoration(
+                    color: color38,
+                    border: Border.all(width: 1 , color: color5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                    )
+                ),child: Center(child: Txt('First and last name' , fontSize:14 ,)))], isWrap: false),
         SizedBox(height: 30),
         //Multiple addons
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,)],
             suffixIcons: [Container(
-               width: 40,
+                width: 40,
                 height: 40,
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
-               width: 58,
+                decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
+                width: 58,
                 height:40,
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(
@@ -1474,23 +1474,23 @@ class TestComponent extends StatelessWidget {
                 ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,)],prefixIcons: [
           Container(padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            width: 40,
-            height:40,
-            decoration: BoxDecoration(
-                color: color38,
-                border: Border.all(width: 1 , color: color5),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                )
-            ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
+              width: 40,
+              height:40,
+              decoration: BoxDecoration(
+                  color: color38,
+                  border: Border.all(width: 1 , color: color5),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(5),
+                    bottomRight: Radius.circular(5),
+                  )
+              ),child: Center(child: Txt('@' , fontSize:14 ,))) , Container(
               width: 58,
               height: 40,
               padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
+              decoration: BoxDecoration(
                 color: color38,
                 border: Border.all(width: 1 , color: color5),
-            ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
+              ),child: Center(child: Txt('0.00' , fontSize:14 ,)))]),
         SizedBox(height: 30),
         //Button addons
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] ,
@@ -1500,14 +1500,14 @@ class TestComponent extends StatelessWidget {
         SizedBox(height: 30),
         //Buttons with dropdowns
         InputGroup(inputs: [InputForm(hintText: 'نام',inputWidth: 500,),] ,
-            suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
-              DropdownItem(text: "Action"),
-              DropdownItem(text: "Another action"),
-              DropdownItem(text: "Something else here"),
-            ],
-                spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey ,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(5),
-                    bottomLeft:Radius.circular(5) )),],),
+          suffixIcons: [Dropdown(type: btnType.secondary , isOutline: true,dropDownTitle: 'DropDown',itemsDropDown: [
+            DropdownItem(text: "Action"),
+            DropdownItem(text: "Another action"),
+            DropdownItem(text: "Something else here"),
+          ],
+              spreadLinkList:['spread link'],dropDownTitelColor: Colors.grey ,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(5),
+                  bottomLeft:Radius.circular(5) )),],),
         SizedBox(height: 30),
         //Segmented buttons
         InputGroup(inputs: [InputForm(hintText: 'نام' , inputWidth: 500,),] ,
@@ -1520,7 +1520,7 @@ class TestComponent extends StatelessWidget {
               borderRadius: BorderRadius.only(topLeft: Radius.circular(5),
                   bottomLeft:Radius.circular(5) ), isSplitButton: true ,
               borderRadiusSplitBtn: BorderRadius.only(topRight: Radius.circular(0),
-              bottomRight:Radius.circular(0),)),],),
+                bottomRight:Radius.circular(0),)),],),
         SizedBox(height: 30),
         //Custom select
         InputGroup(inputs: [CustomSelect(hintText: 'choose...',
@@ -1533,9 +1533,9 @@ class TestComponent extends StatelessWidget {
             DropdownMenuItem(value: '3', child: Text('Three')),
 
           ],)],
-          suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
-          borderRadius: BorderRadius.only(topRight: Radius.circular(0),
-          bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5)))]),
+            suffixIcons: [Btn(type: btnType.secondary , isOutline: true, content: Txt('button'),
+                borderRadius: BorderRadius.only(topRight: Radius.circular(0),
+                    bottomRight: Radius.circular(0) , topLeft:Radius.circular(5) , bottomLeft:Radius.circular(5)))]),
         SizedBox(height: 30),
         //Custom file input
         InputGroup(inputs: [FileForm(borderRadius:  BorderRadius.only(
@@ -1546,7 +1546,7 @@ class TestComponent extends StatelessWidget {
 
         ),width: 500,)],
             suffixIcons: [Container(
-               width: 77,
+                width: 77,
                 height:40,
                 padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 decoration: BoxDecoration(

@@ -116,7 +116,7 @@ class _EditPageState extends State<EditPage> {
                               onTap: ()async{
                                await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}').updateRecord(ViewController.request);
                                 if (ViewController.isClickedBtn.value == false) {
-                                  await MainController.goToTablePage();
+                                  // await MainController.goToTablePage();
                                 }
                               },
                               child: Container(
