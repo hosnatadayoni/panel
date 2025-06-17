@@ -496,7 +496,7 @@ class DB {
             // MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // print('dataController.allData.value[allDataIndex]>>>${dataController.allData.value[allDataIndex].data}');
-
+            MainController.goToTablePage();
             // Get.to(() => TablePage());
           }
         } else {

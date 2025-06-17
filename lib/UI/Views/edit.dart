@@ -118,7 +118,7 @@ class _EditPageState extends State<EditPage> {
                                 print('_EditPageState.build>>>>${ViewController.request}');
                                       DB('${MainController.tableInfo['table-name']}').where('id', '==', '${widget.data!['id']}').updateRecord(ViewController.request);
                                 if (ViewController.isClickedBtn.value == false) {
-                                  MainController.goToTablePage();
+
                                 }
                               },
                               child: Container(

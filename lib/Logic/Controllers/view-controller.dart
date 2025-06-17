@@ -401,6 +401,7 @@ class ViewController extends GetxController {
           var items = await ViewController.itemsList(column);
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
+              print('dataModel[name]edit page>>>${dataModel[name]} ${name}');
               if (dataModel[name] != null)
                 selectedItem = items
                     .firstWhere((element) => element['id'] == dataModel[name]);
@@ -1708,6 +1709,7 @@ class ViewController extends GetxController {
         selectedTitle = '';
       }
     }
+    print('selectedTitle f>>>${selectedTitle}');
     return selectedTitle;
   }
 
@@ -1770,6 +1772,7 @@ class ViewController extends GetxController {
           }
           items.add({'title': a.join('%'), 'value': dropDownListItems[i]['id']});
         }
+        print('items tilte and value>>>${items}');
       }
       else {
         if(dataModel[column['name']]==null){
@@ -1814,7 +1817,9 @@ class ViewController extends GetxController {
             itemss.add(column['items'].firstWhere((element) => element['value'] == item));
       }
       dropDownListItems = itemss;
+
     }
+
 
 
     return dropDownListItems;

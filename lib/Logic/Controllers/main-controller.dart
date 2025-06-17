@@ -1142,14 +1142,29 @@ class MainController extends GetxController {
       MainController.tableData.value = await Future.wait(allData.map((data) async {
         for (var column in MainController.tableInfo['columns']) {
           dynamic selectValue;
+          var name = column['name'];
           if (column['type'] == 'select' || column['type'] == 'radiobutton') {
             selectValue = await MainController.searchSelect(query, column);
             var name = column['name'];
-            if(selectValue == data[name]){
+            print('data[name] f>>>${selectValue}');
+            // print('de456>>>${data[name].contains(selectValue)}');
+            if(selectValue != null && data[name] != null && data[name].contains(selectValue)){
               return data;
             }
           }
-          var name = column['name'];
+          else if(column['type'] == 'multiSelect'){
+            selectValue = await MainController.searchMultiSelect(query, column);
+            if(data[name] != null){
+              print('data name3s>>>${data[name]} ${name}');
+                if(selectValue != null && data[name] != null && data[name].contains(selectValue)){
+                  return data;
+
+              }
+            }
+
+
+          }
+
           if (
               (data[name] != null &&
                   data[name].toString().toLowerCase().contains(query.toLowerCase()))) {
@@ -1158,24 +1173,77 @@ class MainController extends GetxController {
         }
         return null;
       })).then((results) => results.where((item) => item != null).toList().cast<Map<String, dynamic>>());
+      print('MainController.tableData.value d>>>${MainController.tableData.value }');
     }
   }
 
   static Future<dynamic> searchSelect(String text , var column)async{
     var items = await ViewController.itemsList(column);
-    for(var item in items){
-      // print('item[title]>>>${item['title']}');
-      // print('text>>>${text}');
-      // // print('text == item[title]>>>${text == item['title']}');
-      if(text == item['title']){
-        // print('item search select>>>${item}');
-        return item['value'];
 
+    for(var item in items){
+        if(column['sourceItems'] == 'custom'){
+          if(item['title'] != null){
+            if(item['title'].contains(text)){
+              return item['value'];
+            }
+          }
       }
+        else{
+          print('search query>>>${text}');
+          print('ViewController.itemsShowSelectItem(item, column[items])>>>${ViewController.itemsShowSelectItem(item, column['items'])}');
+          print('t or f>>>${ViewController.itemsShowSelectItem(item, column['items']).contains(text)}');
+          if(ViewController.itemsShowSelectItem(item, column['items']).contains(text)){
+            print('search item>>>${item}');
+            return item['id'];
+          }
+        }
+
+
+
     }
     return null;
 
   }
+
+
+  static Future<dynamic> searchMultiSelect(String text , var column)async{
+    var items = await ViewController.itemsList(column);
+    for(var item in items){
+      if(column['sourceItems'] == 'custom'){
+        if(item['title'] != null){
+          if(item['title'].contains(text)){
+            return item['value'];
+          }
+        }
+      }
+      else{
+        List<dynamic> multiSelectedItemList = [];
+        if (column['sourceTable'] != null) {
+          for (var selectedItem in items) {
+            multiSelectedItemList.add(ViewController.itemsShowSelectItem(selectedItem, column['items']));
+          }
+        }
+        for(var itemSelected in multiSelectedItemList){
+          if(itemSelected.contains(text)){
+            return itemSelected;
+          }
+
+        }
+        // if(ViewController.itemsShowSelectItem(item, column['items']).contains(text)){
+        //   print('search item>>>${item}');
+        //   return item['id'];
+        // }
+      }
+
+
+    }
+
+    return null;
+
+  }
+
+
+
 
   static Future<void> loadJson() async {
     String jsonFileString;

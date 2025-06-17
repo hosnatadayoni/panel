@@ -137,6 +137,26 @@
             "value": "2",
             "is_selected": false
           }
+        ],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
+        ]
+      },
+      {
+        "name": "محصولات4",
+        "title": "محصولات4",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "products",
+        "items":["عنوان","قیمت"],
+        "validators": [
+          {
+            "type": "required",
+            "message": "وارد کردن این فیلد الزامی است"
+          }
         ]
       }
     ]
