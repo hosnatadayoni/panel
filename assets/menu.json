@@ -10,12 +10,30 @@
       "location-data": 0,
       "relations": [],
       "columns": [
-        {"title": "دسته بندی"},
-        {"tooltip": ""},
-        {"main-menu": true},
-        {"table-name": "categories"},
-        {"currentPage": 1},
-        {"countShowRow": 10}
+        {
+          "name": "دسته بندی",
+          "title": "دسته بندی"
+        },
+        {
+          "name": "tooltip",
+          "tooltip": ""
+        },
+        {
+          "name": "main-menu",
+          "main-menu": true
+        },
+        {
+          "name": "categories",
+          "table-name": "categories"
+        },
+        {
+          "name": "currentPage",
+          "currentPage": 1
+        },
+        {
+          "name": "countShowRow",
+          "countShowRow": 10
+        }
       ]
     }
 
