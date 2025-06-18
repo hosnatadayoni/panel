@@ -188,8 +188,9 @@ class _TableBoxState extends State<TableBox> {
                                       for(var item in MainController.tableInfo['relations'])
                                       InkWell(
                                         onTap: () async {
-                                          var orders=await DB('category_product_products').getRecords();
-                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
+                                          // var orders=await DB('category_product_products').getRecords();
+                                          print('MainController.tableData.value[i] d>>>${MainController.tableData.value[i]}');
+                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
                                           print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
                                           MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );

@@ -7,7 +7,12 @@
       "currentPage": 1,
       "countShowRow": 10,
       "location-data": 0,
-      "relations": [],
+      "relations": [
+        {
+          "title": "columns",
+          "table-name": "categories"
+        }
+        ],
       "columns": [
         {
           "name": "دسته بندی",
@@ -54,5 +59,4 @@
         }
       ]
     }
-
 ]
