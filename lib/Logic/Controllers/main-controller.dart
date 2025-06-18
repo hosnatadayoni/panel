@@ -1207,7 +1207,7 @@ class MainController extends GetxController {
       MainController.tableData.value = allData;
     } else {
       MainController.tableInfo['currentPage'] = 1;
-      tableData.value = allData.where((data) {
+      MainController.tableData.value = allData.where((data) {
         for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
