@@ -6,7 +6,7 @@
       "main-menu": true,
       "table-name": "products",
       "currentPage": 1,
-      "countShowRow": 10,
+      "countShowRow": 2,
       "status": "ofline",
       "relations": [],
       "columns": [
@@ -39,6 +39,36 @@
               "message": "وارد کردن این فیلد الزامی است"
             }
           ]
+        }
+      ]
+    },
+  {
+      "title": "جزئیات سفارش",
+      "tooltip": "",
+      "main-menu": false,
+      "table-name": "itemsOrder2",
+      "currentPage": 1,
+      "countShowRow": 10,
+      "status": "ofline",
+      "relations": [],
+      "columns": [
+        {
+          "name": "title",
+          "title": "title",
+          "type": "string",
+          "type_filed": "string",
+          "validators": [
+            {
+              "type": "required",
+              "message": "وارد کردن این فیلد الزامی است"
+            }
+          ]
+        },
+        {
+          "name": "description",
+          "title": "description",
+          "type": "string",
+          "type_filed": "string"
         }
       ]
     },
@@ -155,11 +185,14 @@
       "title": "سفارشات",
       "tooltip": "",
       "main-menu": true,
-      "table-name": "order",
+      "table-name": "order2",
       "currentPage": 1,
       "countShowRow": 10,
       "status": "ofline",
-      "relations": [],
+      "relations": [{
+        "title": "جزئیات سفارش",
+        "table-name": "itemsOrder2"
+      }],
       "columns": [
         {
           "name": "sampleSelect",

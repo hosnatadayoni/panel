@@ -12,8 +12,7 @@ class General{
     this.tableName=tableName;
   }
    withFormat(String type,var value,var cloumnName) async {
-
-     if(type=='string'){
+    if(type=='string'){
       return value.toString();
     }else if(type=='Number double'){
       return double.parse(value.toString());

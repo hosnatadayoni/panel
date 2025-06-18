@@ -1,6 +1,4 @@
 import 'package:finance/Logic/Controllers/app-controller.dart';
-import 'package:finance/Logic/Controllers/connect-server-controller.dart';
-import 'package:finance/Logic/Controllers/dataController.dart';
 import 'package:finance/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
@@ -8,12 +6,9 @@ import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../../../../Logic/Controllers/view-custom-controller.dart';
 import '../../../../Logic/Models/db.dart';
-import '../../../Views/table-page.dart';
 
 class TableBox extends StatefulWidget {
   TableBox();
@@ -63,7 +58,7 @@ class _TableBoxState extends State<TableBox> {
               children: [
                 TableRow(children: [
                   for(var i =0 ; i<MainController.tableInfo['columns'].length;i++)
-                    // if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
+                    if(MainController.tableInfo['columns'][i]['is-show-table'] == true)
                       Center(child: Container(
                           padding: EdgeInsets.all(10),
                           child: Txt('${MainController.tableInfo['columns'][i]['name']}',fontSize: 16, fontWeight: FontWeight.w700, color:MainController.isLightMode.value == true?  whiteColor:color2))),
@@ -189,21 +184,19 @@ class _TableBoxState extends State<TableBox> {
                                       for(var item in MainController.tableInfo['relations'])
                                       InkWell(
                                         onTap: () async {
-                                          var orders=await DB('category_product_products').getRecords();
-                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
-                                          print('getDataTable take>>>${ViewCustomController.getDataTable(item['table-name'])}');
-                                          await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
-                                          MainController.renderPagination(table:ViewCustomController.getDataTable(item['table-name']) );
-                                          await MainController.goToTablePage();
-                                          //   for(var item in items){
-                                          //   print('_TableBoxState.build>>${MainController.tableData.value[i]}');
-                                          //   print('_TableBoxState.build>>${item.values}');
-                                          //   // MainController.tableData.add(item.values);
-                                          // }
 
-                                          // MainController.tableInfo=MainController.SubMenuList.where((element) => element['table-name']==item['table-name']);
-                                          // print('_TableBoxState.build>>${MainController.tableInfo}');
-                                          // Get.to(() => TablePage());
+                                          var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
+
+
+                                          await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
+                                          DB.parentItem.addAll({
+                                            'parentId': MainController
+                                                .tableData.value[i]['_id'],
+                                            'parentTable': MainController
+                                                .tableInfo['table-name']
+                                          });
+                                          ViewController.totalPage.value = await DB('${item['table-name']}').infoPage();
+                                            await MainController.goToTablePage();
                                           },
                                         child: Container(
                                           child: Text(item['title']),

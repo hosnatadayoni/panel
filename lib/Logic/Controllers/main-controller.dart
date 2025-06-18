@@ -40,6 +40,8 @@ class MainController extends GetxController {
   static Rx<bool> isLightMode = true.obs;
   static Rx<int> countShowRow = 10.obs;
   static Rx<bool> isClickedItem = false.obs;
+  //get all data for search
+  static RxList<dynamic> allData=[].obs;
 
   //dehdar remove this section read icon of json
   static List<Item> items = [
@@ -641,7 +643,6 @@ class MainController extends GetxController {
                         cellValue = int.tryParse(cellValue.toString());
                       }
 
-                      print('cellValue after mobile>>>${cellValue}');
                     } else {
                       cellValue = 0;
                     }
@@ -684,25 +685,21 @@ class MainController extends GetxController {
               // rowDataTest[excelColumns[counterColumn]] = cell?.value;
               counterColumn++;
             }
-            print('rowData>>>${rowData}');
             currentIds.add('${rowDataTest[excelColumns[0]]}');
             if (rowData.any((element) => element != null)) {
               rowdetail.add(rowDataTest);
             }
-            print('rowdetail.length>>>${rowdetail.length}');
           }
           counter++;
         }
       }
     }
 
-    print('all data is:${rowdetail}');
 
     var columnPrime = getColumnPrime();
 
     for (var data in rowdetail) {
       var findIndexRecord = findByColumn(data, columnPrime);
-      print('findIndexRecord>>>${findIndexRecord}');
 
       //create data json
       //function generate json record with columns name and data excel
@@ -720,8 +717,6 @@ class MainController extends GetxController {
       // print('isValidatorList>>>${isValidatorList}');
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
-      print('excelJsontt>>>${excelJson}');
-      print('findIndexRecordt>>>${findIndexRecord}');
       if (findIndexRecord != -1) {
         DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
         await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
@@ -747,7 +742,6 @@ class MainController extends GetxController {
 
         // }
       } else {
-        print('ydjdfff');
         await DB('${MainController.tableInfo['table-name']}').storeRecord(excelJson);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -841,7 +835,6 @@ class MainController extends GetxController {
     // dataController.allData.value.add(newData);
     MainController.tableData.add(newData);
     await MainController.loadData();
-    MainController.renderPagination();
   }
 
   static Future<Map> generateJsonExcel(
@@ -1156,29 +1149,6 @@ class MainController extends GetxController {
     return null;
   }
 
-  static void renderPagination({var table}) {
-    // if (table == null) {
-    //   MainController.totalPages.value =
-    //       (tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
-    //   MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
-    //       MainController.tableInfo['countShowRow'];
-    //   MainController.endIndex.value = MainController.startIndex.value +
-    //       int.parse('${MainController.tableInfo['countShowRow']}');
-    // } else {
-    //   MainController.totalPages.value =
-    //       (tableData.value.length / table['countShowRow']).ceil();
-    //   MainController.startIndex.value =
-    //       (table['currentPage'] - 1) * table['countShowRow'];
-    //   MainController.endIndex.value = MainController.startIndex.value +
-    //       int.parse('${table['countShowRow']}');
-    // }
-    //
-    // if (MainController.endIndex.value > tableData.value.length) {
-    //   MainController.endIndex.value = tableData.value.length;
-    // } else {
-    // }
-
-  }
 
   static getTypeOfField(String tableName, String name) {
     var type;
@@ -1192,20 +1162,23 @@ class MainController extends GetxController {
   }
 
   static Future<void> search(String query) async {
-    List<dynamic> allData = box.values.toList();
-
+    List<Map<String, dynamic>> allData = [];
+    for (var item in MainController.allData.value) {
+      if (item is Map) {
+        allData.add(Map<String, dynamic>.from(item));
+      }
+    }
     searchQuery.value = query;
-    // if (MainController.table['table-name'] == box.name) {
     if (query.isEmpty) {
-      MainController.tableData.value = allData;
+      MainController.tableData.value = MainController.allData.value;
     } else {
       MainController.tableInfo['currentPage'] = 1;
-      tableData.value = allData.where((data) {
+      MainController.tableData.value = allData.where((data) {
         for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
-          if (data.data[name] != null &&
-              data.data[name]
+          if (data[name] != null &&
+              data[name]
                   .toString()
                   .toLowerCase()
                   .contains(query.toLowerCase())) {
@@ -1215,8 +1188,6 @@ class MainController extends GetxController {
         return false;
       }).toList();
     }
-    // }
-    MainController.renderPagination();
   }
 
   static Future<void> loadJson() async {
@@ -1227,11 +1198,11 @@ class MainController extends GetxController {
     // await ConncetServerController.deleteSchema({'table_name':'details'});
     // ConncetServerController.listSchema();
 
-    // for (var name in tableNames()) {
-    //   addsyncField('${name}');
-    //   createMultiSelectTable('${name}');
-    //   addParentForRelations('${name}');
-    // }
+    for (var name in tableNames()) {
+      addsyncField('${name}');
+      createMultiSelectTable('${name}');
+      addParentForRelations('${name}');
+    }
 
   }
 
@@ -1341,7 +1312,7 @@ class MainController extends GetxController {
     }
   }
 
-  static addParentForRelations(String tableName) {
+  static addParentForRelations (String tableName) {
     var getDataTable = ViewCustomController.getDataTable(tableName);
     if (getDataTable['relations'].length != 0) {
       for (var relate in getDataTable['relations']) {
@@ -1360,6 +1331,7 @@ class MainController extends GetxController {
           'name': 'parent_id',
           'title': 'parent_id',
           'type': 'string',
+          'is-show-table': false,
           'is-show-edit': false,
           'is-show-store': false,
         });
@@ -1375,15 +1347,19 @@ class MainController extends GetxController {
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
         MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+        MainController.allData.value=MainController.tableData.value;
       } else {
         tableInfo = tableData;
-        if (tableDataItems != null)
+        if (tableDataItems != null) {
           MainController.tableData.value = tableDataItems;
-        else {
+          MainController.allData.value=MainController.tableData.value;
+        } else {
           // if (tableInfo['status'] == "online")
           //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
             MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+
+            MainController.allData.value=MainController.tableData.value;
         }
       }
     } else {

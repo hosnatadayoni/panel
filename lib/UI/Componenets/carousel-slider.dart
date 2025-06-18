@@ -348,7 +348,6 @@ class _MyCarouselState extends State<MyCarousel>  with WidgetsBindingObserver {
     super.initState();
     _currentIndex = widget.items!.indexWhere((item) => item.isActive!);
     if (_currentIndex == -1) _currentIndex = 0;
-    print('_currentIndex>>>${_currentIndex}');
     WidgetsBinding.instance.addObserver(this);
     _startAutoPlay();
   }

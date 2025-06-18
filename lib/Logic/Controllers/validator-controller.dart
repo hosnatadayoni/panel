@@ -164,7 +164,6 @@ class ValidatorController extends GetxController {
         number = dataJson[name];
         if(number != null){
           number = await General(tableName).withFormat(column['type'],number,column['name']);
-          print('number f>>>${number}');
           if(minValidator != null && maxValidator != null){
             if(number < minValidator['value'] || number > maxValidator['value']){
               return false;

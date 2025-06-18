@@ -34,6 +34,10 @@ class HelperController extends GetxController {
         }
       }
     }
+    if(tableName=='itemsOrder'){
+      // await DB('itemsOrder').parent(parentTable: 'order2',parentId: customData.id!).storeRecord(list);
+
+    }
     return AppController.responceHelper(customData, true);
   }
   //end store

@@ -18,14 +18,12 @@ import 'package:get/get.dart';
 
 class DB {
   String? tableName;
-  String? parentTable;
-  String? parentId;
   Map<int, Where> whereList = <int, Where>{};
   Map<int, Where> orWhereList = <int, Where>{};
   int? takeCount;
   int? skipCount;
   int? randomCount;
-  Map<String, dynamic> parentItem = <String, dynamic>{};
+  static Map<String, dynamic> parentItem = <String, dynamic>{};
   int counter = 0;
   List<Where> w = [];
 
@@ -37,7 +35,6 @@ class DB {
     var type;
     List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
     for (var d in data) {
-
       Map<String, dynamic> e = <String, dynamic>{};
       for (var key in d.data.keys) {
 
@@ -141,7 +138,7 @@ class DB {
     int s=(currentPage-1)*perPage;
     int totalItems=(await getRecords()).length;
     var data=(await skip(s).getRecords()).take(perPage).toList();
-    var start =s;
+
     var end = s+perPage;
     MainController.startIndex.value = s;
     MainController.endIndex.value = MainController.endIndex.value > (await getRecords()).length? totalItems:end;
@@ -202,10 +199,11 @@ class DB {
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         data =await getTypeOfField(box.values.toList());
+
     }
     if (index != -1) {
-      if (this.parentItem.length != 0) {
-        data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
+      if (parentItem.length != 0) {
+        data = data.where((element) => element['parent_id'] == parentItem['parent_id']).toList();
       }
       if (this.orWhereList.length != 0) {
         data=dataByFormat;
@@ -615,6 +613,7 @@ class DB {
         }
         else {
           DataModel customData = await HelperController.beforeStore(newData)['data'];
+
           Map<String,dynamic>setRecord={
             "table_name":'${this.tableName}',
             "record":json.encode(customData.data).toString(),
@@ -624,8 +623,9 @@ class DB {
             DataModel recordStored=DataModel(id: '${ConncetServerController.storeRecordRes['_id']}', data: ConncetServerController.storeRecordRes);
             await box.add(recordStored);
           }
-          else
+          else {
             await box.add(customData);
+          }
 
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
@@ -633,7 +633,6 @@ class DB {
           }
           // await MainController.multiSelectStore(this.tableName!, Id);
           await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
-          MainController.renderPagination();
           ViewController.isClickedBtn.value = false;
           request = {};
           newRequest = {};
@@ -719,7 +718,6 @@ class DB {
             }
             await MainController.loadData(
                 tableData: ViewCustomController.getDataTable(this.tableName!));
-            MainController.renderPagination();
             ViewController.isClickedEditBtn.value = false;
             // Get.to(() => TablePage());
           }
@@ -761,7 +759,6 @@ class DB {
           if(ConncetServerController.deleteRecordRes==true)
             box.deleteAt(tableDataIndex);
           await MainController.loadData();
-          MainController.renderPagination();
           var after = HelperController.afterDelete(tableDataIndex, item);
           if (after['status'] == false) {
             showSnackbar(snackTypes.error, after['message']);

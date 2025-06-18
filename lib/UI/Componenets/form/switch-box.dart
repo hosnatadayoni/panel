@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
+// import 'package:flutter_switch/flutter_switch.dart';
 import '../../../Public/styles.dart';
 import '../General/txt.dart';
 
@@ -44,38 +44,39 @@ class _SwitchBoxState extends State<SwitchBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      runSpacing: 10,
-      spacing: 10,
-      children: [
-        IntrinsicWidth(
-          child: FlutterSwitch(
-            width: 60,
-            height: 30,
-            activeColor: widget.activeColorBox!,
-            activeToggleColor: widget.activeColorSwitch!,
-            inactiveColor: widget.inActiveColorBox!,
-            inactiveToggleColor: widget.inActiveColorSwitch!,
-            inactiveSwitchBorder: Border.all(width: 1, color: widget.inActiveBorderSwitch!),
-            valueFontSize: 25.0,
-            toggleSize: 20,
-            value: _currentValue,
-            disabled: widget.disabled,
-            borderRadius: 30.0,
-            padding: 8.0,
-            onToggle: (val) {
-              setState(() {
-                _currentValue = val;
-              });
-              widget.onChanged?.call(val);
-            },
-          ),
-        ),
-        Txt(
-          widget.label ?? '',
-          color: widget.disabled ? Colors.grey : null,
-        ),
-      ],
-    );
+    return Container();
+    // return Wrap(
+    //   runSpacing: 10,
+    //   spacing: 10,
+    //   children: [
+    //     IntrinsicWidth(
+    //       child: FlutterSwitch(
+    //         width: 60,
+    //         height: 30,
+    //         activeColor: widget.activeColorBox!,
+    //         activeToggleColor: widget.activeColorSwitch!,
+    //         inactiveColor: widget.inActiveColorBox!,
+    //         inactiveToggleColor: widget.inActiveColorSwitch!,
+    //         inactiveSwitchBorder: Border.all(width: 1, color: widget.inActiveBorderSwitch!),
+    //         valueFontSize: 25.0,
+    //         toggleSize: 20,
+    //         value: _currentValue,
+    //         disabled: widget.disabled,
+    //         borderRadius: 30.0,
+    //         padding: 8.0,
+    //         onToggle: (val) {
+    //           setState(() {
+    //             _currentValue = val;
+    //           });
+    //           widget.onChanged?.call(val);
+    //         },
+    //       ),
+    //     ),
+    //     Txt(
+    //       widget.label ?? '',
+    //       color: widget.disabled ? Colors.grey : null,
+    //     ),
+    //   ],
+    // );
   }
 }

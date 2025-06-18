@@ -7,6 +7,7 @@ import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 class TableHeader extends StatefulWidget {
   const TableHeader({Key? key}) : super(key: key);
 
@@ -17,6 +18,7 @@ class TableHeader extends StatefulWidget {
 class _TableHeaderState extends State<TableHeader> {
   List<int> showInfo = [10 , 25 , 50 , 100];
   int  selectedCount =  10;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -28,8 +30,6 @@ class _TableHeaderState extends State<TableHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            // crossAxisAlignment: WrapCrossAlignment.center,
-
             children: [
               Txt('${AppController.of(context)!.value('show')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
               SizedBox(width: 5,),
@@ -56,7 +56,6 @@ class _TableHeaderState extends State<TableHeader> {
                       });
                       MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
                       ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
-                      print('ViewController.totalPage.value>>>${ViewController.totalPage.value}');
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
@@ -115,7 +114,7 @@ class _TableHeaderState extends State<TableHeader> {
                       child: FormTextField(
                         name: 'search',
                           lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                        MainController.search(text);
+                          MainController.search(text);
                         setState(() {
                           MainController.tableInfo['currentPage'] = 1;
                         });
@@ -160,7 +159,6 @@ class _TableHeaderState extends State<TableHeader> {
                       });
                       MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
                       ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
-                      print('ViewController.totalPage.value>>>${ViewController.totalPage.value}');
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {

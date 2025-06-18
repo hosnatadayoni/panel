@@ -194,7 +194,6 @@ class _FileFormState extends State<FileForm> {
 
   }
   Future<void> _pickFile() async {
-    print('widget.isMultipleFiles>>>${widget.isMultipleFiles}');
 
     FilePickerResult? result;
     if (widget.isMultipleFiles!) {
@@ -217,9 +216,7 @@ class _FileFormState extends State<FileForm> {
     }
     if(_pickedFiles != null){
       for(var file in _pickedFiles!){
-        print('mmmmmmmm>>>>${file.name}');
       }
-      print('_pickedFiles>>>${_pickedFiles}');
     }
 
   }
