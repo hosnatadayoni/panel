@@ -10,7 +10,7 @@
       "relations": [
         {
           "title": "columns",
-          "table-name": "categories"
+          "table-name": "columns"
         }
         ],
       "columns": [
@@ -58,5 +58,60 @@
           "default_value": false
         }
       ]
-    }
+    },
+    {
+    "title": "columns",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "columns",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "relations": [],
+    "columns": [
+      {
+        "name": "columns",
+        "title": "columns",
+        "type": "string"
+      },
+      {
+        "name": "tooltip",
+        "title": "tooltip",
+        "tooltip": "",
+        "type": "string"
+      },
+      {
+        "name": "main-menu",
+        "title": "main-menu",
+        "main-menu": true,
+        "type": "checkbox",
+        "default_value": true
+      },
+      {
+        "name": "categories",
+        "title": "categories",
+        "table-name": "categories",
+        "type": "string"
+      },
+      {
+        "name": "currentPage",
+        "title": "currentPage",
+        "currentPage": 1,
+        "type": "Number int"
+      },
+      {
+        "name": "countShowRow",
+        "title": "countShowRow",
+        "countShowRow": 10,
+        "type": "Number int"
+      },
+      {
+        "name": "location-data",
+        "title": "location-data",
+        "location-data": 0,
+        "type": "checkbox",
+        "default_value": false
+      }
+    ]
+  }
 ]

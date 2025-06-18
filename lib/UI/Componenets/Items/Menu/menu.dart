@@ -117,7 +117,8 @@ class _MenuBoxState extends State<MenuBox>{
                                         }
                                         MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
                                         // Get.to(() => TablePage());
-                                        MainController.selectedSubItem.value = -1;
+
+                                        // MainController.selectedSubItem.value = -1;
                                       },
                                       child: Container(
                                           width: 50,
