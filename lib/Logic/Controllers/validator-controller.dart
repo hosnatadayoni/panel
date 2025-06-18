@@ -1,5 +1,6 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Logic/Models/general.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -129,13 +130,16 @@ class ValidatorController extends GetxController {
     }
   }
 
-  static bool checkInputRangeValidator(indexColumn , dataJson , {tableData}){
+  static Future<bool> checkInputRangeValidator(indexColumn , dataJson , {tableData}) async {
     var column;
+    String tableName = '';
     if(tableData == null){
       column = MainController.tableInfo['columns'][indexColumn];
+      tableName = MainController.tableInfo['table-name'];
     }
     else{
       column= tableData['columns'][indexColumn];
+      tableName = tableData['table-name'];
     }
 
     String name = column['name'];
@@ -159,6 +163,8 @@ class ValidatorController extends GetxController {
         // }
         number = dataJson[name];
         if(number != null){
+          number = await General(tableName).withFormat(column['type'],number,column['name']);
+          print('number f>>>${number}');
           if(minValidator != null && maxValidator != null){
             if(number < minValidator['value'] || number > maxValidator['value']){
               return false;

@@ -16,7 +16,6 @@ const Color successColor=Color(0xff4CAF50);
 const Color infoColor=Color(0xff0cccd2);
 const Color warningColor=Color(0xffFFB300);
 
-const Color dark = CupertinoColors.darkBackgroundGray;
 const Color primaryDark = Color(0xff192430);
 const Color background = Color(0xff202e3d);
 const Color primary = Color(0xff4053BA);
@@ -73,16 +72,66 @@ const Color color33 = Color(0xff5c636a);
 const Color color34 = Color(0xff343a40);
 const Color color35 = Color(0xff7e7e7e);
 const Color color36 = Color(0xff3f3f3f);
-const Color color37 = Color(0xff61a0fd);
+const Color fcolor37 = Color(0xff61a0fd);
 const Color color38 = Color(0xffe9ecef);
 const Color color39 = Color(0xfff8f9fa);
 const Color color40 = Color(0xffbfbfbf);
+const Color color41 = Color.fromRGBO(255, 255, 255, 0.15);
 const Color linkColor = Color(0xff247cfd);
 const Color linkHoverColor = Color.fromRGBO(10, 88, 202, 1.0);
 const Color lightPurple = Color(0xffeae0ef);
 const Color purpleColor = Color(0xffAB54DB);
 const Color lightBlueColor = Color(0xff00AAFF);
 const Color lightBlackColor = Color(0xff17161E);
+const secondry = Color(0xff6c757d);
+const success = Color(0xff198754);
+const danger = Color(0xffdc3545);
+const warning = Color(0xffffc107);
+const info = Color(0xff0dcaf0);
+const light = Color(0xfff8f9fa);
+const dark = Color(0xff212529);
+
+//hover
+const Color primaryHover = Color(0xff0b5ed7);
+const secondryHover = Color(0xff5c636a);
+const successHover = Color(0xff157347);
+const dangerHover = Color(0xffbb2d3b);
+const warningHover = Color(0xffffca2c);
+const infoHover = Color(0xff31d2f2);
+const lightHover = Color(0xffd3d4d5);
+const darkHover = Color(0xff424649);
+
+//color box
+const alertPrimary = Color(0xffcfe2ff);
+const alertSecondry = Color(0xffe2e3e5);
+const alertSuccess = Color(0xffd1e7dd);
+const alertDanger = Color(0xfff8d7da);
+const alertWarning = Color(0xfffff3cd);
+const alertInfo = Color(0xffcff4fc);
+const alertLight = Color(0xfffcfcfd);
+const alertDark = Color(0xffced4da);
+
+//color content
+const alertContentPrimary = Color(0xff052c65);
+const alertContentSecondry = Color(0xff2b2f32);
+const alertContentSuccess = Color(0xff0a3622);
+const alertContentDanger = Color(0xff58151c);
+const alertContentWarning = Color(0xff664d03);
+const alertContentInfo = Color(0xff055160);
+const alertContentLight = Color(0xff495057);
+const alertContentDark = Color(0xff495057);
+
+//border color
+const alertBorderPrimary = Color(0xff9ec5fe);
+const alertBorderSecondry = Color(0xffc4c8cb);
+const alertBorderSuccess = Color(0xffa3cfbb);
+const alertBorderDanger = Color(0xfff1aeb5);
+const alertBorderWarning = Color(0xffffe69c);
+const alertBorderInfo = Color(0xff9eeaf9);
+const alertBorderLight = Color(0xffe9ecef);
+const alertBorderDark = Color(0xffadb5bd);
+
+
 
 
 final LinearGradient gradiant1 =  LinearGradient(

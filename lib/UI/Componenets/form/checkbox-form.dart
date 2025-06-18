@@ -16,7 +16,7 @@ class CheckBoxForm extends StatefulWidget {
   CheckBoxForm({
     this.text,
     this.textColor = darkBackground,
-    this.activeColor = Colors.blue,
+    this.activeColor = colorBtn,
     this.checked = false,
     this.disabled = false,
     this.width = 16,

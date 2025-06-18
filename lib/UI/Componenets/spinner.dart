@@ -1,3 +1,4 @@
+import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/btn.dart';
 import 'package:flutter/material.dart';
 
@@ -12,18 +13,20 @@ enum SpinnerAlignment {
 }
 
 class Spinner extends StatefulWidget {
-   Color color;
+   // Color color;
    double size;
    SpinnerType type;
    Duration duration;
    SpinnerAlignment alignment;
+   btnType typeSpinner;
 
   Spinner({
-    this.color = Colors.blue,
+    // this.color = Colors.blue,
     this.size = 25,
     this.type = SpinnerType.border,
     this.duration = const Duration(seconds: 1),
     this.alignment = SpinnerAlignment.start,
+    required this.typeSpinner,
   });
 
   @override
@@ -65,13 +68,43 @@ class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Color backgroundColor(){
+      if(widget.typeSpinner == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.typeSpinner == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.typeSpinner == btnType.success){
+        return success;
+      }
+      else if(widget.typeSpinner == btnType.danger){
+        return danger;
+      }
+      else if(widget.typeSpinner == btnType.warning){
+        return warning;
+      }
+      else if(widget.typeSpinner == btnType.info){
+        return info;
+      }
+      else if(widget.typeSpinner == btnType.light){
+        return light;
+      }
+      else if(widget.typeSpinner == btnType.dark){
+        return dark;
+      }
+      else if(widget.typeSpinner == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
     return Align(
       alignment: widget.alignment == SpinnerAlignment.center ? Alignment.center : widget.alignment == SpinnerAlignment.end ? Alignment.centerLeft : Alignment.centerRight,
       child: SizedBox(
         width: widget.size,
         height: widget.size,
         child: widget.type == SpinnerType.border
-            ? CircularProgressIndicator(color: this.widget.color)
+            ? CircularProgressIndicator(color: backgroundColor())
             : AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
@@ -83,7 +116,7 @@ class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
                   width: widget.size,
                   height: widget.size,
                   decoration: BoxDecoration(
-                    color: widget.color,
+                    color: backgroundColor(),
                     shape: BoxShape.circle,
                   ),
                 ),

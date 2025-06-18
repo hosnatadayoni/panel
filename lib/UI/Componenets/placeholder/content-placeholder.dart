@@ -2,6 +2,8 @@ import 'package:finance/Public/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../btn.dart';
 enum PlaceholderAnimationType {
   glow,
   wave,
@@ -9,22 +11,24 @@ enum PlaceholderAnimationType {
 class ContentPlaceholder extends StatelessWidget {
   double? width;
   double? height;
-  Color? baseColor;
+  // Color? baseColor;
   Color? circleColor;
   Color? circleColorActive;
   Color? highlightColor;
   Color? boxColor;
   PlaceholderAnimationType? animationType;
+  btnType? type;
 
   ContentPlaceholder({
     this.width,
     this.height,
-    this.baseColor,
+    // this.baseColor,
     this.circleColor = colorBtn,
     this.circleColorActive = Colors.blue ,
     this.highlightColor,
     this.boxColor = whiteColor,
     this.animationType,
+    this.type,
   });
 
 
@@ -32,6 +36,36 @@ class ContentPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     final hoverPosition = Rx<Offset?>(null);
     var size = MediaQuery.of(context).size;
+    Color backgroundColor(){
+      if(this.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(this.type == btnType.secondary){
+        return secondry;
+      }
+      else if(this.type == btnType.success){
+        return success;
+      }
+      else if(this.type == btnType.danger){
+        return danger;
+      }
+      else if(this.type == btnType.warning){
+        return warning;
+      }
+      else if(this.type == btnType.info){
+        return info;
+      }
+      else if(this.type == btnType.light){
+        return light;
+      }
+      else if(this.type == btnType.dark){
+        return dark;
+      }
+      else if(this.type == btnType.link){
+        return Colors.transparent;
+      }
+      return dark;
+    }
     return  SizedBox(
       height: this.height ?? 20,
       child: Obx(() {
@@ -54,7 +88,8 @@ class ContentPlaceholder extends StatelessWidget {
                 width: this.width ??size.width,
                 height: this.height ?? 20,
                 animationType: this.animationType,
-                baseColor: this.baseColor != null ? this.baseColor! : Colors.grey[300]!,
+                // baseColor: this.baseColor != null ? this.baseColor! : Colors.grey[300]!,
+                baseColor:  backgroundColor().withOpacity(0.6),
                 highlightColor:this.highlightColor != null ? this.highlightColor! : Colors.grey[100]!,
               ),
               if (hoverPosition.value != null)

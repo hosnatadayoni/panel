@@ -1,211 +1,221 @@
-import 'package:finance/UI/Componenets/General/txt.dart';
-import 'package:flutter/gestures.dart';
+import 'package:finance/Public/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+enum AlertDirection{
+  left,
+  right,
+  center
+}
+enum alertType{
+  primary,
+  secondary,
+  success,
+  danger,
+  warning,
+  info,
+  light,
+  dark,
+}
+class Alert extends StatefulWidget {
+   Widget? content;
+   double? width;
+   bool dismissible;
+  VoidCallback? onDismissed;
+   Duration animationDuration;
+   Color? colorCloseBtn;
+   Color? colorCloseBtnHover;
+   AlertDirection? direction;
+   alertType type;
 
-// void showCustomAnimatedAlert(
-//     BuildContext context,
-//     String title,
-//     Color colorTitle,
-//     Color color,
-//     Color colorBox, {
-//       IconData? icon,
-//       Color? iconColor,
-//       String? linkText,
-//       VoidCallback? onLinkTap,
-//     }) {
-//   showDialog(
-//     context: context,
-//     builder: (context) => Dialog(
-//       backgroundColor: Colors.transparent,
-//       child: Container(
-//         decoration: BoxDecoration(
-//           color: color,
-//           borderRadius: BorderRadius.circular(20),
-//         ),
-//         padding: EdgeInsets.all(20),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               children: [
-//                 if (icon != null) Icon(icon, color: iconColor),
-//                 if (icon != null) SizedBox(width: 5),
-//                 Expanded(
-//                   child: RichText(
-//                     text: TextSpan(
-//                       children: [
-//                         TextSpan(
-//                           text: title.replaceAll(linkText ?? '', ''),
-//                           style: TextStyle(
-//                             fontSize: 18,
-//                             fontWeight: FontWeight.bold,
-//                             color: colorTitle,
-//                           ),
-//                         ),
-//                         if (linkText != null && linkText.isNotEmpty)
-//                           TextSpan(
-//                             text: linkText,
-//                             style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                               color: colorTitle,
-//                               decoration: TextDecoration.underline,
-//                             ),
-//                             recognizer: TapGestureRecognizer()
-//                               ..onTap = onLinkTap ?? () {},
-//                           ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 10),
-//             InkWell(
-//               onTap: () {
-//                 Navigator.pop(context);
-//               },
-//               child: Center(
-//                 child: Container(
-//                   width: 50,
-//                   height: 50,
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(10),
-//                     color: colorBox,
-//                   ),
-//                   child: Center(
-//                     child: Txt(
-//                       'تایید',
-//                       fontSize: 14,
-//                       fontWeight: FontWeight.w400,
-//                       color: Colors.white,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
+  Alert({
+    this.content,
+    this.width,
+    this.dismissible = false,
+    this.onDismissed,
+    this.animationDuration = const Duration(milliseconds: 300),
+    this.colorCloseBtn = Colors.grey,
+    this.colorCloseBtnHover = blackColor,
+    this.direction = AlertDirection.right,
+    required this.type,
 
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
-void showCustomAnimatedAlert(
-    BuildContext context,
-    String title,
-    Color colorTitle,
-    Color color,
-    Color colorBox, {
-      IconData? icon,
-      Color? iconColor,
-      List<TextSegment>? textSegments, // لیست بخش‌های متن با نوع (متن معمولی یا لینک)
-    }) {
-  showDialog(
-    context: context,
-    builder: (context) => Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                if (icon != null) Icon(icon, color: iconColor),
-                if (icon != null) SizedBox(width: 5),
-                Expanded(
-                  child: RichText(
-                    text: _buildTextSpan(
-                      textSegments ?? [TextSegment(text: title)],
-                      colorTitle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            InkWell(
-              onTap: () => Navigator.pop(context),
-              child: Center(
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: colorBox,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'تایید',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
+  });
+
+  @override
+  _AlertState createState() => _AlertState();
 }
 
-TextSpan _buildTextSpan(List<TextSegment> segments, Color defaultColor) {
-  final textSpans = <TextSpan>[];
+class _AlertState extends State<Alert> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _isVisible = true;
 
-  for (final segment in segments) {
-    if (segment.isLink) {
-      textSpans.add(
-        TextSpan(
-          text: segment.text,
-          style: TextStyle(
-            color: segment.color ?? defaultColor,
-            decoration: TextDecoration.underline,
-            fontWeight: FontWeight.bold,
-          ),
-          recognizer: TapGestureRecognizer()..onTap = segment.onTap,
-        ),
-      );
-    } else {
-      textSpans.add(
-        TextSpan(
-          text: segment.text,
-          style: TextStyle(
-            color: segment.color ?? defaultColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.animationDuration,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    if (widget.dismissible) {
+      _animationController.forward();
     }
   }
 
-  return TextSpan(children: textSpans);
-}
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
-class TextSegment {
-  final String text;
-  final bool isLink;
-  final Color? color;
-  final VoidCallback? onTap;
+  void _dismiss() {
+    if (!_isVisible) return;
 
-  TextSegment({
-    required this.text,
-    this.isLink = false,
-    this.color,
-    this.onTap,
-  });
+    setState(() {
+      _isVisible = false;
+    });
+
+    _animationController.reverse().then((_) {
+      if (widget.onDismissed != null) {
+        widget.onDismissed!();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return widget.dismissible ? FadeTransition(
+      opacity: _animation,
+      child: box(),
+    ): box();
+  }
+  Widget box(){
+    var size = MediaQuery.of(context).size;
+    Rx<bool> isHover =  false.obs;
+    Color backgroundColor(){
+      if(widget.type == alertType.primary){
+        return alertPrimary;
+      }
+      else if(widget.type == alertType.secondary){
+        return alertSecondry;
+      }
+      else if(widget.type == alertType.success){
+        return alertSuccess;
+      }
+      else if(widget.type == alertType.danger){
+        return alertDanger;
+      }
+      else if(widget.type == alertType.warning){
+        return alertWarning;
+      }
+      else if(widget.type == alertType.info){
+        return alertInfo;
+      }
+      else if(widget.type == alertType.light){
+        return alertLight;
+      }
+      else if(widget.type == alertType.dark){
+        return alertDark;
+      }
+      return Colors.transparent;
+    }
+    Color ContentColor(){
+      if(widget.type == alertType.primary){
+        return alertContentPrimary;
+      }
+      else if(widget.type == alertType.secondary){
+        return alertContentSecondry;
+      }
+      else if(widget.type == alertType.success){
+        return alertContentSuccess;
+      }
+      else if(widget.type == alertType.danger){
+        return alertContentDanger;
+      }
+      else if(widget.type == alertType.warning){
+        return alertContentWarning;
+      }
+      else if(widget.type == alertType.info){
+        return alertContentInfo;
+      }
+      else if(widget.type == alertType.light){
+        return alertContentLight;
+      }
+      else if(widget.type == alertType.dark){
+        return alertContentDark;
+      }
+      return Colors.transparent;
+    }
+    Color borderColor(){
+      if(widget.type == alertType.primary){
+        return alertBorderPrimary;
+      }
+      else if(widget.type == alertType.secondary){
+        return alertBorderSecondry;
+      }
+      else if(widget.type == alertType.success){
+        return alertBorderSuccess;
+      }
+      else if(widget.type == alertType.danger){
+        return alertBorderDanger;
+      }
+      else if(widget.type == alertType.warning){
+        return alertBorderWarning;
+      }
+      else if(widget.type == alertType.info){
+        return alertBorderInfo;
+      }
+      else if(widget.type == alertType.light){
+        return alertBorderLight;
+      }
+      else if(widget.type == alertType.dark){
+        return alertBorderDark;
+      }
+      return Colors.transparent;
+    }
+    return Column(
+      crossAxisAlignment: widget.direction == AlertDirection.left ?
+      CrossAxisAlignment.end : widget.direction == AlertDirection.center ? CrossAxisAlignment.center :
+      CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: widget.width ?? size.width,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(width: 1 , color: borderColor()),
+            color: backgroundColor(),
+          ),
+          child:widget.dismissible ?  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DefaultTextStyle(style: TextStyle(color: ContentColor()), child:widget.content! ),
+              MouseRegion(
+                onEnter: (_){
+                  isHover.value = true;
+                },
+                onExit: (_){
+                  isHover.value = false;
+                },
+                child: Obx((){
+                  return IconButton(
+                    icon: Icon(Icons.close, size: 20 , color:isHover.value ? widget.colorCloseBtnHover :widget.colorCloseBtn ,),
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(),
+                    onPressed: _dismiss,
+                  );
+                }),
+              ),
+            ],
+          ):DefaultTextStyle(style: TextStyle(color: ContentColor()), child:widget.content! ),
+        ),
+      ],
+    );
+  }
 }

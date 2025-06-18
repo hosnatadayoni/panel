@@ -1,107 +1,10 @@
+import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
-
-// class CollapseExample extends StatefulWidget {
-//
-//   String btnTxt;
-//   Color? btnTxtColor = whiteColor;
-//   Color? colorBox = whiteColor;
-//   Color? borderColor =  color28;
-//   String? content;
-//   Color? contentColor = blackColor;
-//   bool isHorizontal  =  false;
-//   CollapseExample({
-//     required this.btnTxt ,
-//     this.btnTxtColor ,
-//     this.colorBox ,
-//     this.borderColor ,
-//     this.content,
-//     this.contentColor,
-//     this.isHorizontal = false,
-//   });
-//
-//
-//
-//   @override
-//   State<CollapseExample> createState() => _CollapseExampleState();
-// }
-//
-// class _CollapseExampleState extends State<CollapseExample> {
-//   bool _isExpanded = false;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     var size = MediaQuery.of(context).size;
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         ElevatedButton(
-//           onPressed: () {
-//             setState(() {
-//               _isExpanded = !_isExpanded;
-//             });
-//           },
-//           child: Txt(widget.btnTxt , color: widget.btnTxtColor, fontWeight: FontWeight.w400,) ,
-//         ),
-//
-//         const SizedBox(height: 10),
-//
-//         widget.isHorizontal ?
-//         Row(
-//          children: [
-//          AnimatedContainer(
-//         duration: const Duration(milliseconds: 300),
-//         curve: Curves.easeInOut,
-//         width: _isExpanded ? 200 : 0,
-//         child: SingleChildScrollView(
-//         scrollDirection: Axis.horizontal,
-//         child: Container(
-//         width: 200,
-//         padding: const EdgeInsets.all(16),
-//         decoration: BoxDecoration(
-//         color: widget.colorBox,
-//         borderRadius: BorderRadius.circular(8),
-//         border: Border.all(
-//         width: 1,
-//         color: widget.borderColor ?? Colors.grey,
-//         ),
-//         ),
-//         child: Text(
-//         widget.content ?? '',
-//         style: TextStyle(
-//         color: widget.contentColor,
-//         fontSize: 14,
-//         ),
-//         ),
-//         ),
-//         ),
-//         ),
-//        ],
-//        )  :
-//         AnimatedContainer(
-//           duration: const Duration(milliseconds: 300),
-//           curve: Curves.easeInOut,
-//           height: _isExpanded ?  200: 0,
-//           child: SingleChildScrollView(
-//             child: Container(
-//               padding: const EdgeInsets.all(16),
-//               decoration: BoxDecoration(
-//                 color: widget.colorBox,
-//                 borderRadius: BorderRadius.circular(8),
-//                 border: Border.all(width: 1 , color:widget.borderColor != null ?  widget.borderColor!: color28)
-//               ),
-//               child:  Txt(widget.content! , color:  widget.contentColor, fontSize: 14,),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
+import 'btn.dart';
 
 class Collapse extends StatefulWidget {
-  String? btnTxt;
+  Widget? btnContent;
   Color? btnTxtColor;
   Color? colorBox;
   Color? borderColor;
@@ -110,10 +13,15 @@ class Collapse extends StatefulWidget {
   bool isHorizontal;
   String? targetId;
   List<String>? targetIds;
+  Color? colorBtn;
+  Color? colorBtnHover;
+  btnType? type;
+  bool? isOutlineBtn;
+
 
   Collapse({
-    this.btnTxt,
-    this.btnTxtColor,
+    this.btnContent,
+    this.btnTxtColor = whiteColor,
     this.colorBox,
     this.borderColor,
     this.content,
@@ -121,6 +29,10 @@ class Collapse extends StatefulWidget {
     this.isHorizontal = false,
     this.targetId,
     this.targetIds,
+    this.colorBtn =  Colors.blue,
+    this.colorBtnHover = colorHoverBtn,
+    required this.type,
+    this.isOutlineBtn =  false,
     Key? key,
   }) : super(key: key);
 
@@ -130,25 +42,23 @@ class Collapse extends StatefulWidget {
 
 class _CollapseState extends State<Collapse> {
   bool _isShow = false;
+  bool isHover = false;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.btnTxt != null)
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _isShow = !_isShow;
-              });
-            },
-            child: Txt(
-              widget.btnTxt!,
-              color: widget.btnTxtColor,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+        if (widget.btnContent != null)
+          Btn(
+            type: widget.type,
+              isOutline: widget.isOutlineBtn,
+              content: widget.btnContent,
+              onClick: (){
+            setState(() {
+              _isShow = !_isShow;
+            });
+          }),
         if (widget.content != null && widget.targetId == null) ...[
           const SizedBox(height: 10),
           widget.isHorizontal
@@ -228,6 +138,7 @@ class MultiCollapse extends StatefulWidget {
 
 class _MultiCollapseState extends State<MultiCollapse> {
   Map<String, bool> _expandedStates = {};
+  Map<int, bool> _hoverStates = {};
 
   void _toggleCollapse(String targetId) {
     setState(() {
@@ -245,41 +156,76 @@ class _MultiCollapseState extends State<MultiCollapse> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Wrap(
           runSpacing: 5,
           spacing: 5,
-          children: widget.buttons.map((button) {
+          children: widget.buttons.asMap().entries.map((entry) {
+            final index = entry.key;
+            final button = entry.value;
+
             if (button is Collapse) {
-              return ElevatedButton(
-                onPressed: () {
+              return Btn(
+                    type: button.type,
+                    isOutline: button.isOutlineBtn,
+                    content: button.btnContent,
+                    onClick: (){
+                      if (button.targetId != null) {
+                        _toggleCollapse(button.targetId!);
+                      } else if (button.targetIds != null) {
+                        _toggleAll(button.targetIds!);
+                      }
+                    },
+                );
+              return InkWell(
+                onTap: () {
                   if (button.targetId != null) {
                     _toggleCollapse(button.targetId!);
                   } else if (button.targetIds != null) {
                     _toggleAll(button.targetIds!);
                   }
                 },
-                child: Txt(
-                  button.btnTxt ?? '',
-                  color: button.btnTxtColor,
-                  fontWeight: FontWeight.w400,
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoverStates[index] = true),
+                  onExit: (_) => setState(() => _hoverStates[index] = false),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: _hoverStates[index] ?? false
+                          ? button.colorBtnHover
+                          : button.colorBtn,
+                    ),
+                    padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
+                    // child: Txt(
+                    //   button.btnTxt ?? '',
+                    //   color: button.btnTxtColor,
+                    //   fontWeight: FontWeight.w400,
+                    // ),
+                    child: button.btnContent,
+                  ),
                 ),
+                // child: Btn(
+                //     type: button.type,
+                //     isOutline: button.isOutlineBtn,
+                //     content: button.btnContent,
+                // ),
               );
             }
             return button;
           }).toList(),
         ),
         SizedBox(height: 10,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Wrap(
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: widget.collapsibles.map((collapsible) {
             if (collapsible is Collapse && collapsible.targetId != null) {
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                height: _expandedStates[collapsible.targetId!] ?? false ? 100 : 0,
+                height: _expandedStates[collapsible.targetId!] ?? false ? 0 : 100,
                 margin: EdgeInsets.only(left: 10),
                 child: SingleChildScrollView(
                   child: Container(

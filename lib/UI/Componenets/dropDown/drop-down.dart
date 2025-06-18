@@ -1,5 +1,6 @@
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
+import 'package:finance/UI/Componenets/btn.dart';
 import 'package:finance/UI/Componenets/dropDown/drop-down-item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,60 +20,51 @@ enum directions{
 }
 
 class Dropdown extends StatefulWidget {
+  btnType? type;
   List<DropdownItem>? itemsDropDown;
   String dropDownTitle;
   Color? dropDownTitelColor;
   Color? dropDownTitelHoverColor;
-  Color? colorBox;
-  Color? colorHoverBox;
-  Color? iconColor;
   bool? isSplitButton;
   List<String>? spreadLinkList;
   DropDownSize size;
   Color? ColorDropDownBox;
   Color? ColorTitleDropDownBox;
-  bool? showActiveSelectItem;
+  // bool? showActiveSelectItem;
   Color? ColorActiveBox;
-  directions? direction;
   Color? borderButtonColor;
   bool? hasForm;
   Color? ColorHoverBox;
   Color? ColorDisableTxt;
-  bool? isChangeOffset;
-  double? offsetX;
-  double? offsetY;
   BorderRadius? borderRadius;
+  BorderRadius? borderRadiusSplitBtn;
   EdgeInsets? padding;
   Color? borderColor;
-
+  bool? isOutline;
 
 
   Dropdown({
+     required this.type,
      this.itemsDropDown,
     required this.dropDownTitle,
     this.dropDownTitelColor = whiteColor,
     this.dropDownTitelHoverColor = blackColor,
-    this.colorBox = color31,
-    this.colorHoverBox = color33,
-    this.iconColor = whiteColor,
     this.isSplitButton = false,
     this.spreadLinkList,
     this.size = DropDownSize.medium,
     this.ColorDropDownBox = whiteColor,
     this.ColorTitleDropDownBox = blackColor,
-    this.showActiveSelectItem = false,
+    // this.showActiveSelectItem = false,
     this.ColorActiveBox = colorBtn,
-    this.direction = directions.down,
     this.borderButtonColor = color5,
     this.hasForm = false,
-    this.ColorHoverBox = itemColor39,
+    this.ColorHoverBox = color39,
     this.ColorDisableTxt = color14,
-    this.isChangeOffset = false,
-    this.offsetX =0,
-    this.offsetY = 0,
     this.borderRadius,
+    this.borderRadiusSplitBtn,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.borderColor = color31,
+    this.isOutline = false,
 
   });
 
@@ -81,9 +73,6 @@ class Dropdown extends StatefulWidget {
 }
 
 class _DropdownState extends State<Dropdown> {
-  late final GlobalKey buttonKey = GlobalKey();
-  late final GlobalKey<PopupMenuButtonState<String>> popupMenuKey = GlobalKey();
-  Offset? menuOffset;
   Rx<bool> isHover = false.obs;
   RxString selectedItem = RxString('');
   RxString hoveredIndex = ''.obs;
@@ -118,141 +107,192 @@ class _DropdownState extends State<Dropdown> {
     }
   }
 
-  IconData getIconDirection(){
-    switch (this.widget.direction) {
-      case directions.down:
-        return Icons.arrow_drop_down;
-      case directions.up:
-        return Icons.arrow_drop_up;
-      case directions.start:
-        return Icons.arrow_right;
-      case directions.end:
-        return Icons.arrow_left;
-      default:
-        return Icons.arrow_drop_down;
-    }
-
-  }
-
-  Offset getOffset() {
-    if(widget.isChangeOffset!){
-      return Offset(widget.offsetX!, widget.offsetY!);
-    }
-    else{
-      final renderBox = buttonKey.currentContext?.findRenderObject() as RenderBox?;
-      final popupState = popupMenuKey.currentState;
-
-
-
-      // if (popupState == null) return Offset.zero;
-
-      if (renderBox == null) return Offset.zero;
-
-
-      final size = renderBox.size;
-
-      switch (widget.direction) {
-        case directions.up:
-          return Offset(0, -size.height - 5);
-        case directions.down:
-          return Offset(0, size.height + 5);
-        case directions.start:
-          return Offset((-size.width) - 5, 0);
-        case directions.end:
-          return Offset((size.width)-5, 0);
-        case directions.right:
-          return Offset(0, size.height + 5);
-        case directions.left:
-          return Offset(size.width, size.height + 5);
-        default: return Offset(0, size.height + 5);
-      }
-    }
-
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && buttonKey.currentContext != null) {
-        setState(() {
-          menuOffset = getOffset();
-        });
-      }
-    });
     var size = MediaQuery.of(context).size;
-
     Rx<bool> isHoverMain = false.obs;
     Rx<bool> isHoverSplit = false.obs;
+    Color backgroundColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
+    Color HoverbackgroundColor(){
+      if(widget.type == btnType.primary){
+        return primaryHover;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondryHover;
+      }
+      else if(widget.type == btnType.success){
+        return successHover;
+      }
+      else if(widget.type == btnType.danger){
+        return dangerHover;
+      }
+      else if(widget.type == btnType.warning){
+        return warningHover;
+      }
+      else if(widget.type == btnType.info){
+        return infoHover;
+      }
+      else if(widget.type == btnType.light){
+        return lightHover;
+      }
+      else if(widget.type == btnType.dark){
+        return darkHover;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
+    Color contentColor(){
+      if(widget.type == btnType.primary || widget.type == btnType.secondary ||
+          widget.type == btnType.success || widget.type == btnType.danger || widget.type == btnType.dark){
+        return whiteColor;
+      }
+      else if(widget.type == btnType.warning || widget.type == btnType.info || widget.type == btnType.light){
+        return blackColor;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return dark;
+    }
+    Color textColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return Colors.transparent;
+    }
+    Color colorBox() {
+        if (isHover.value) {
+        return HoverbackgroundColor();
+      } else if (widget.isOutline!) {
+        return Colors.transparent;
+      }
+      return backgroundColor();
+    }
 
     return Obx(() {
       return this.widget.isSplitButton!
-          ? Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MouseRegion(
-                onEnter: (_) {
-                  isHoverSplit.value = true;
-                },
-                onExit: (_) {
-                  isHoverSplit.value = false;
-                },
-                child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Center(
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.only(
-                        left: 9, right: 9, top: 11, bottom: 11),
-                    decoration: BoxDecoration(
-                      color: isHoverSplit.value
-                          ? this.widget.colorHoverBox
-                          : this.widget.colorBox,
-                      borderRadius:widget.borderRadius != null ? widget.borderRadius :  BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          bottomRight: Radius.circular(5)
+          ? IntrinsicWidth(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MouseRegion(
+                  onEnter: (_) {
+                    isHoverSplit.value = true;
+                  },
+                  onExit: (_) {
+                    isHoverSplit.value = false;
+                  },
+                  child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex, Center(
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.only(
+                          left: 9, right: 9, top: 11, bottom: 11),
+                      decoration: BoxDecoration(
+                        color: isHoverSplit.value
+                            ? HoverbackgroundColor()
+                            : widget.isOutline!? Colors.transparent :backgroundColor(),
+                        borderRadius:widget.borderRadiusSplitBtn != null ? widget.borderRadiusSplitBtn :  BorderRadius.only(
+                            topRight: Radius.circular(5),
+                            bottomRight: Radius.circular(5)
+                        ),
+                          border: Border.all(width: 1, color: isHoverSplit.value ? HoverbackgroundColor() : backgroundColor())
                       ),
-                        border: Border.all(width: 1, color: widget.borderColor!)
+                      child: Icon(Icons.arrow_drop_down,
+                          color: isHoverSplit.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size:getIconSize()),
                     ),
-                    child: Icon(getIconDirection(),
-                        color: this.widget.iconColor, size:getIconSize()),
-                  ),
-                ), buttonKey, popupMenuKey),
-              ),
-              MouseRegion(
-                onEnter: (_) {
-                  isHoverMain.value = true;
-                },
-                onExit: (_) {
-                  isHoverMain.value = false;
-                },
-                child: Center(
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.only(
-                        left: 12, right: 12, top: 6, bottom: 6),
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.only(
-                      //     topLeft: Radius.circular(15),
-                      //     bottomLeft: Radius.circular(15)),
-                      borderRadius:widget.borderRadius != null ?  widget.borderRadius:
-                      BorderRadius.all(Radius.circular(0)),
-                      border: Border.all(width: 1, color: widget.borderColor!),
-                      color: isHoverMain.value
-                          ? this.widget.colorHoverBox
-                          : this.widget.colorBox,
-                    ),
-                    child: Center(
-                      child: Txt(this.widget.dropDownTitle,
-                          color: this.widget.dropDownTitelColor , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                  ),),
+                ),
+                MouseRegion(
+                  onEnter: (_) {
+                    isHoverMain.value = true;
+                  },
+                  onExit: (_) {
+                    isHoverMain.value = false;
+                  },
+                  child: Center(
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.only(
+                          left: 12, right: 12, top: 6, bottom: 6),
+                      decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.only(
+                        //     topLeft: Radius.circular(15),
+                        //     bottomLeft: Radius.circular(15)),
+                        borderRadius:widget.borderRadius != null ?  widget.borderRadius:
+                        BorderRadius.all(Radius.circular(0)),
+                        border: Border.all(width: 1, color: isHoverMain.value ? HoverbackgroundColor() : backgroundColor()),
+                        color: isHoverMain.value
+                            ? HoverbackgroundColor()
+                            : widget.isOutline!? Colors.transparent :backgroundColor(),
+                      ),
+                      child: Center(
+                        child: Txt(this.widget.dropDownTitle,
+                            color: isHoverMain.value ?contentColor(): widget.isOutline! ? textColor(): contentColor() , fontSize: getFontSize(), fontWeight: FontWeight.w400,),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
           : Container(
-            key: buttonKey,
             child: PopUpMenuButtonWidget(selectedItem, size, hoveredIndex,  MouseRegion(
               onEnter: (_) {
                 isHover.value = true;
@@ -265,36 +305,24 @@ class _DropdownState extends State<Dropdown> {
                 widget.padding,
                 decoration: BoxDecoration(
                   color:
-                  isHover.value ? this.widget.colorHoverBox : this.widget.colorBox,
+                  colorBox(),
+                  // widget.isOutline! ? Colors.transparent :isHover.value ? HoverbackgroundColor() :  backgroundColor(),
                   borderRadius:widget.borderRadius != null ?  widget.borderRadius:
                   BorderRadius.all(Radius.circular(5)),
-                  border: Border.all(width: 1, color: widget.borderColor!)
+                  border: Border.all(width: 1, color:isHover.value
+                      ? HoverbackgroundColor()
+                      : backgroundColor(),)
                 ),
-                child: this.widget.direction == directions.start?Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Row(
                   children: [
+                    Icon(Icons.arrow_drop_down,
+                        color: isHover.value ?contentColor(): widget.isOutline! ? textColor(): contentColor(), size: getIconSize()),
                     Txt(this.widget.dropDownTitle,
-                        color: this.widget.dropDownTitelColor , fontSize: getFontSize()),
-                    Icon(getIconDirection(),
-                        color: this.widget.iconColor, size: getIconSize()),
-                  ],
-                ) :Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(getIconDirection(),
-                        color: this.widget.iconColor, size: getIconSize()),
-                    Obx((){
-                      return Txt(this.widget.dropDownTitle,
-                          color:isHover.value ?widget.dropDownTitelHoverColor :this.widget.dropDownTitelColor  , fontSize: getFontSize());
-                    })
+                        color: isHover.value ?contentColor(): widget.isOutline! ? textColor(): contentColor()  , fontSize: getFontSize())
                   ],
                 ),
               )
-            ), buttonKey, popupMenuKey),
+            ),),
           );
     });
   }
@@ -387,7 +415,7 @@ class _DropdownState extends State<Dropdown> {
       ),
     );
   }
-  Widget PopUpMenuButtonWidget(RxString selectedItem, var size, RxString hoveredIndex, Widget box, buttonKey, popupMenuKey) {
+  Widget PopUpMenuButtonWidget(RxString selectedItem, var size, RxString hoveredIndex, Widget box,) {
     return PopupMenuButton<String>(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -396,7 +424,7 @@ class _DropdownState extends State<Dropdown> {
           width: 1,
         ),
       ),
-      offset: getOffset(),
+      offset: Offset(0,50),
       onSelected: (value) {
         selectedItem.value = value;
       },
@@ -553,7 +581,7 @@ class _DropdownState extends State<Dropdown> {
               ),
             ),
       ],
-      child: box,
+      child: IntrinsicWidth(child: box,),
     );
   }
 }

@@ -257,10 +257,16 @@ import '../../../Public/styles.dart';
 //     );
 //   }
 // }
-
-enum btnType {
+enum btnType{
   primary,
-  custom
+  secondary,
+  success,
+  danger,
+  warning,
+  info,
+  light,
+  dark,
+  link,
 }
 
 enum ButtonSize {
@@ -270,37 +276,36 @@ enum ButtonSize {
 }
 
 class Btn extends StatefulWidget {
+   btnType? type;
    Function? onClick;
-   btnType type;
    Widget? content;
    double? width;
    double? height;
-   Color? color;
-   Color? hoverColor;
-   bool isLink;
+   bool? isOutline;
    ButtonSize size;
    bool disabled;
    bool isBlock;
    bool responsive;
    double? responsiveBreakpoint;
+   bool? isActive;
    bool isToggle;
    bool isCenter;
    BorderRadius? borderRadius;
 
   Btn(
-      this.type, {
+       {
+         required this.type,
         this.content,
         this.onClick,
         this.width,
         this.height,
-        this.color = Colors.blue,
-        this.hoverColor = Colors.blueAccent,
-        this.isLink = false,
+        this.isOutline = false,
         this.size = ButtonSize.medium,
         this.disabled = false,
         this.isBlock = false,
         this.responsive = false,
         this.responsiveBreakpoint = 768,
+         this.isActive = false,
         this.isToggle = false,
         this.isCenter = false,
         this.borderRadius
@@ -312,7 +317,7 @@ class Btn extends StatefulWidget {
 
 class _BtnState extends State<Btn> {
   bool _isHovered = false;
-  bool _isToggle = false;
+
 
   EdgeInsets getButtonPadding() {
     switch (widget.size) {
@@ -327,69 +332,40 @@ class _BtnState extends State<Btn> {
     }
   }
 
-  double getFontSize() {
-    switch (widget.size) {
-      case ButtonSize.small:
-        return 12;
-      case ButtonSize.large:
-        return 16;
-      case ButtonSize.medium:
-      default:
-        return 14;
-    }
-  }
-
-  Color getBackgroundColor() {
-    if (widget.disabled) {
-      return widget.color?.withOpacity(0.65) ?? Colors.transparent;
-    }
-    if (_isHovered && widget.hoverColor != null) {
-      if (widget.type == btnType.primary) {
-        if (widget.isToggle) {
-          widget.hoverColor = Colors.transparent;
-        }
-      }
-      return widget.hoverColor!;
-    }
-
-    switch (widget.type) {
-      case btnType.primary:
-        return _isHovered ? (widget.color ?? Colors.transparent) : Colors.transparent;
-      case btnType.custom:
-        return widget.color ?? Colors.transparent;
-      default:
-        return whiteColor;
-    }
-  }
-
-  Color getBorderColor() {
-    if (widget.type == btnType.primary) {
-      return _isHovered ? (widget.color ?? Colors.transparent) : (widget.color ?? Colors.transparent);
-    }
-    return Colors.transparent;
-  }
-
-  Color getTextColor() {
-    const defaultColor = whiteColor;
-    if (widget.isLink) {
-      if (widget.isToggle) {
-        return widget.color ?? defaultColor;
-      } else {
-        if (widget.disabled == false) {
-          return Colors.blue;
-        }
-      }
-    }
-
-    return widget.type == btnType.custom
-        ? whiteColor
-        : widget.color ?? defaultColor;
-  }
+  // Color getBackgroundColor() {
+  //   if (widget.disabled) {
+  //     return widget.colorBtn?.withOpacity(0.65) ?? Colors.transparent;
+  //   }
+  //   if (_isHovered && widget.hoverColor != null) {
+  //     if (widget.type == btnType.primary) {
+  //       if (widget.isToggle) {
+  //         widget.hoverColor = Colors.transparent;
+  //       }
+  //     }
+  //     return widget.hoverColor!;
+  //   }
+  //
+  //   switch (widget.type) {
+  //     case btnType.primary:
+  //       return _isHovered ? (widget.colorBtn ?? Colors.transparent) : Colors.transparent;
+  //     case btnType.custom:
+  //       return widget.colorBtn ?? Colors.transparent;
+  //     default:
+  //       return whiteColor;
+  //   }
+  // }
+  //
+  // Color getBorderColor() {
+  //   if (widget.type == btnType.primary) {
+  //     return _isHovered ? (widget.colorBtn ?? Colors.transparent) : (widget.colorBtn ?? Colors.transparent);
+  //   }
+  //   return Colors.transparent;
+  // }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    double? calculatedWidth;
+    // double? calculatedWidth;
     // bool isValidGridColumns = widget.gridColumns != null && widget.gridColumns! > 0 && widget.gridColumns! <= 12;
     //
     // if (isValidGridColumns) {
@@ -402,6 +378,136 @@ class _BtnState extends State<Btn> {
   }
   Widget btnWidget(){
     var size = MediaQuery.of(context).size;
+    bool _isToggle = false;
+    if(widget.type == null){
+      _isHovered = false;
+    }
+
+    Color backgroundColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return widget.isActive! ? dark:Colors.transparent;
+    }
+
+    Color textColor(){
+      if(widget.type == btnType.primary){
+        return colorBtn;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondry;
+      }
+      else if(widget.type == btnType.success){
+        return success;
+      }
+      else if(widget.type == btnType.danger){
+        return danger;
+      }
+      else if(widget.type == btnType.warning){
+        return warning;
+      }
+      else if(widget.type == btnType.info){
+        return info;
+      }
+      else if(widget.type == btnType.light){
+        return light;
+      }
+      else if(widget.type == btnType.dark){
+        return dark;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return widget.isActive! ? dark:Colors.transparent;
+    }
+
+    Color HoverbackgroundColor(){
+      if(widget.type == btnType.primary){
+        return primaryHover;
+      }
+      else if(widget.type == btnType.secondary){
+        return secondryHover;
+      }
+      else if(widget.type == btnType.success){
+        return successHover;
+      }
+      else if(widget.type == btnType.danger){
+        return dangerHover;
+      }
+      else if(widget.type == btnType.warning){
+        return warningHover;
+      }
+      else if(widget.type == btnType.info){
+        return infoHover;
+      }
+      else if(widget.type == btnType.light){
+        return lightHover;
+      }
+      else if(widget.type == btnType.dark){
+        return darkHover;
+      }
+      else if(widget.type == btnType.link){
+        return Colors.transparent;
+      }
+      return Colors.transparent;
+    }
+
+    Color contentColor(){
+      if(widget.type == btnType.primary || widget.type == btnType.secondary ||
+          widget.type == btnType.success || widget.type == btnType.danger || widget.type == btnType.dark){
+        return whiteColor;
+      }
+      else if(widget.type == btnType.warning || widget.type == btnType.info || widget.type == btnType.light){
+        return blackColor;
+      }
+      else if(widget.type == btnType.link){
+        return colorBtn;
+      }
+      return dark;
+    }
+
+    Color colorBox() {
+      if (widget.disabled) {
+        if (widget.isOutline!) {
+          return Colors.transparent;
+        } else {
+          return backgroundColor().withOpacity(0.6);
+        }
+      } else if (_isHovered) {
+        return HoverbackgroundColor();
+      } else if (widget.isOutline!) {
+        return Colors.transparent;
+      }
+      return backgroundColor();
+    }
+
+
+
+
     return MouseRegion(
       onEnter: (_) => setState(() => widget.disabled == false ? _isHovered = true : _isHovered = false),
       onExit: (_) => setState(() => _isHovered = false),
@@ -411,33 +517,50 @@ class _BtnState extends State<Btn> {
           onTap: widget.disabled
               ? null
               : () async {
+            // if (widget.isToggle) {
+            //   setState(() {
+            //     _isToggle = !_isToggle;
+            //   });
+            // }
             if (widget.isToggle) {
               setState(() {
-                _isToggle = !_isToggle;
+                widget.isActive = !widget.isActive!;
               });
             }
             if (widget.onClick != null) {
               widget.onClick!();
             }
           },
-          child: Container(
-            decoration: BoxDecoration(
-              color: getBackgroundColor(),
-              border: Border.all(
-                color: _isToggle ? Colors.transparent : (getBorderColor() ?? Colors.transparent),
-                width: 1,
+          child: IntrinsicWidth(
+            child: Container(
+              decoration: BoxDecoration(
+                color:widget.isActive! ?HoverbackgroundColor() :colorBox(),
+                border: Border.all(
+                  color:widget.disabled ? widget.isOutline! ?backgroundColor().withOpacity(0.6) : backgroundColor().withOpacity(0.1) :  _isHovered ? HoverbackgroundColor() : widget.isActive! ?HoverbackgroundColor(): backgroundColor(),
+                  // color: widget.disabled ?backgroundColor().withOpacity(0.6) :  _isToggle ? Colors.transparent : _isHovered ? widget.hoverBtnColor! :widget.colorBtn!,
+                  width: 1,
+                ),
+                borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.circular(5),
               ),
-              borderRadius: widget.borderRadius != null ? widget.borderRadius : BorderRadius.circular(5),
+              padding: getButtonPadding(),
+              width: widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint!
+                  ? size.width : widget.isCenter ? size.width * 0.5
+                  : widget.width,
+              height: widget.height != null ? widget.height : null,
+              child:
+              Center(
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(
+                    color:_isHovered ?contentColor(): widget.isOutline! ? textColor(): contentColor(),
+                    decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
+                  ),
+                  child: widget.content!,
+                ),
+              ),
             ),
-            padding: getButtonPadding(),
-            width: widget.isBlock || widget.responsive && size.width <= widget.responsiveBreakpoint!
-                ? size.width : widget.isCenter ? size.width * 0.5
-                : widget.width,
-            child:widget.isCenter || widget.responsive && size.width <= widget.responsiveBreakpoint! || widget.isBlock
-            ?Center(child: widget.content!,) : widget.content!,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

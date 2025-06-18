@@ -94,7 +94,7 @@ class _MainTableBoxState extends State<MainTableBox> {
               SizedBox(height: 10,),
               TableBox(),
               SizedBox(height: 20,),
-              // TableFooter(),
+              TableFooter(),
             ],
           ),
         ],

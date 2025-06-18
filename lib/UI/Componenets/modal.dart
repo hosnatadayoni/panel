@@ -5,6 +5,8 @@ import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'btn.dart';
+
 enum ModalSize {
   small,   // 300px
   medium, // 500px
@@ -21,21 +23,12 @@ enum ModalFullscreenMode {
   xxlDown    // زیر 1400px
 }
 class CustomModal extends StatelessWidget {
-   String title;
+  btnType type;
+  Widget contetnBtn;
+   Widget? header;
    Widget body;
-   Function? onSave;
-   Color? borderClorBox;
-   Color? colorCloseBox;
-   Color? colorCloseTxt;
-   Color? colorCloseBoxHover;
-   String? titleBox;
-   Color? titleBoxColor;
-   Color? BtnMainColor;
-   Color? BtnMainHoverColor;
-   String? btnTxt;
-   Color? btnTxtColor;
-   Color? btnColor;
-   Color? btnHoverColor;
+   Widget? footer;
+   Color? borderColorBox;
    Color? closeIconColor;
    Color? closeIconHoverColor;
    bool? staticBackdrop;
@@ -44,24 +37,14 @@ class CustomModal extends StatelessWidget {
    ModalFullscreenMode? modalFullscreenMode;
 
    CustomModal({
-    Key? key,
-    required this.title,
-    required this.body,
-    this.onSave,
-    this.borderClorBox = color28,
-    this.colorCloseBox = color13,
-     this.colorCloseTxt = whiteColor,
-     this.colorCloseBoxHover = color33,
-     this.titleBox,
-     this.titleBoxColor = whiteColor,
-     this.BtnMainColor = colorBtn,
-     this.BtnMainHoverColor = colorHoverBtn,
-     this.btnTxt,
-     this.btnTxtColor = whiteColor,
-     this.btnColor = colorBtn,
+     required this.type,
+     required this.contetnBtn,
+     required this.header,
+     required this.body,
+     this.footer,
+     this.borderColorBox = color28,
      this.closeIconColor = color35,
      this.closeIconHoverColor = color36,
-     this.btnHoverColor = colorHoverBtn,
      this.staticBackdrop = false,
      this.isModalDialogCenter =  false,
      this.modalSize = ModalSize.medium,
@@ -92,11 +75,11 @@ class CustomModal extends StatelessWidget {
              child: FadeTransition(
                opacity: animation,
                child: Container(
-                   padding: EdgeInsets.only(
-                       top: _shouldBeFullscreen(context)
-                           ? 0
-                           : (this.isModalDialogCenter == false ? 20 : 0)
-                   ),
+                   // padding: EdgeInsets.only(
+                   //     top: _shouldBeFullscreen(context)
+                   //         ? 0
+                   //         : (this.isModalDialogCenter == false ? 20 : 0)
+                   // ),
                    // padding:  EdgeInsets.only(top:this.modalSize == ModalSize.fullScreen ? 0: this.isModalDialogCenter == false ? 20 : 0),
                    child: child
                ),
@@ -123,12 +106,12 @@ class CustomModal extends StatelessWidget {
                  // insetPadding: this.modalSize == ModalSize.fullScreen ?EdgeInsets.zero : EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                  insetPadding: _shouldBeFullscreen(context)
                      ? EdgeInsets.zero
-                     : EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                     : getPadding(context),
                  alignment: this.isModalDialogCenter == false ? Alignment.topCenter : Alignment.center,
                  shape: RoundedRectangleBorder(
                    borderRadius: BorderRadius.circular(_shouldBeFullscreen(context) == false ? 16.0:0),
                    side: BorderSide(
-                     color: this.borderClorBox!,
+                     color: this.borderColorBox!,
                      width: 1.0,
                    ),
                  ),
@@ -173,19 +156,18 @@ class CustomModal extends StatelessWidget {
 
      switch(modalSize) {
        case ModalSize.small:
-         return min(300, screenWidth * 0.9);
+         return screenWidth < 575 ? screenWidth : 300;
        case ModalSize.medium:
-         return min(500, screenWidth * 0.9);
+         return screenWidth < 575 ? screenWidth : 500;
        case ModalSize.large:
-         return min(800, screenWidth * 0.9);
+         return screenWidth < 575 ? screenWidth : 800;
        case ModalSize.xlarge:
-         return min(1140, screenWidth * 0.9);
+         return screenWidth < 575 ? screenWidth : 1140;
        case ModalSize.fullScreen:
          return screenWidth;
        default:
-         return 500; // مقدار پیش‌فرض برای حالت null
+         return 500;
      }
-
    }
 
    double _getModalHeight(BuildContext context) {
@@ -195,32 +177,53 @@ class CustomModal extends StatelessWidget {
      return MediaQuery.of(context).size.height * 0.8;
    }
 
+   EdgeInsets getPadding(BuildContext context){
+     final screenWidth = MediaQuery.of(context).size.width;
+     if(screenWidth < 575){
+       if(this.modalSize == ModalSize.small ||
+           this.modalSize == ModalSize.large ||
+           this.modalSize == ModalSize.xlarge || this.modalSize == ModalSize.medium){
+
+         return EdgeInsets.symmetric(horizontal: 10, vertical: 10);
+
+       }
+
+     }
+     return EdgeInsets.symmetric(horizontal: 20, vertical: 20);
+
+   }
+
    @override
   Widget build(BuildContext context) {
-     return Obx((){
-       Rx<bool> isHoverBtn =  false.obs;
-       return MouseRegion(
-         onEnter: (_){
-           isHoverBtn.value = true;
-         },
-         onExit: (_){
-           isHoverBtn.value = false;
-         },
-         child: InkWell(
-           onTap: (){
-             _showModal(context);
-           },
-           child: Container(
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.circular(10),
-               color:isHoverBtn.value == false ?  btnColor:btnHoverColor,
-             ),
-             padding: EdgeInsets.only(top: 6 , bottom: 6 , left: 12 , right: 12),
-             child: Txt('${this.btnTxt}' , color: this.colorCloseTxt, fontSize: 16, fontWeight: FontWeight.w400,),
-           ),
-         ),
-       );
-     });
+     return Btn(type: this.type, onClick:(){
+       _showModal(context);
+     } ,
+       content: this.contetnBtn,
+     );
+     // return Obx((){
+     //   Rx<bool> isHoverBtn =  false.obs;
+     //   return MouseRegion(
+     //     onEnter: (_){
+     //       isHoverBtn.value = true;
+     //     },
+     //     onExit: (_){
+     //       isHoverBtn.value = false;
+     //     },
+     //     child: InkWell(
+     //       onTap: (){
+     //         _showModal(context);
+     //       },
+     //       child: Container(
+     //         decoration: BoxDecoration(
+     //           borderRadius: BorderRadius.circular(10),
+     //           color:isHoverBtn.value == false ?  btnColor:btnHoverColor,
+     //         ),
+     //         padding: EdgeInsets.only(top: 6 , bottom: 6 , left: 12 , right: 12),
+     //         child: Txt('${this.btnTxt}' , color: this.colorCloseTxt, fontSize: 16, fontWeight: FontWeight.w400,),
+     //       ),
+     //     ),
+     //   );
+     // });
    }
    Widget box(BuildContext context){
      Rx<bool> isHoverCloseBtn =  false.obs;
@@ -241,15 +244,18 @@ class CustomModal extends StatelessWidget {
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
            // Header
-           Container(
+           if(this.header != null)Container(
              padding: EdgeInsets.all(15),
              child: Row(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
-                 Txt(
-                   title,
-                   fontSize: 20,
-                   fontWeight: FontWeight.w500,
+                 // Txt(
+                 //   header,
+                 //   fontSize: 20,
+                 //   fontWeight: FontWeight.w500,
+                 // ),
+                 Expanded(
+                   child: header!,
                  ),
                  Obx((){
                    return MouseRegion(
@@ -269,8 +275,7 @@ class CustomModal extends StatelessWidget {
              ),
            ),
 
-           SizedBox(height: 16),
-           MyDivider(),
+           if(this.header != null)MyDivider(),
 
            // Body
            Expanded(
@@ -281,65 +286,14 @@ class CustomModal extends StatelessWidget {
                )
            ),
 
-           SizedBox(height: 16),
+           if(this.footer != null)SizedBox(height: 16),
 
-           MyDivider(),
+           if(this.footer != null)MyDivider(),
 
            // Footer
            Container(
              padding: EdgeInsets.all(15),
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.end,
-               children: [
-                 Obx((){
-                   return MouseRegion(
-                     onExit: (_){
-                       isHoverCloseBtn.value = false;
-                     },
-                     onEnter: (_){
-                       isHoverCloseBtn.value = true;
-                     },
-                     child: InkWell(
-                       onTap: (){
-                         Navigator.of(context).pop();
-                       },
-                       child: Container(
-                         decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(10),
-                           color:isHoverCloseBtn.value == false ?  colorCloseBox:colorCloseBoxHover,
-                         ),
-                         padding: EdgeInsets.only(top: 6 , bottom: 6 , left: 12 , right: 12),
-                         child: Txt('close' , color: this.colorCloseTxt, fontSize: 16, fontWeight: FontWeight.w400,),
-                       ),
-                     ),
-                   );
-                 }),
-                 SizedBox(width: 8),
-                 Obx((){
-                   return MouseRegion(
-                     onEnter: (_){
-                       isHoverMainBtn.value = false;
-                     },
-                     onExit: (_){
-                       isHoverMainBtn.value = true;
-                     },
-                     child: InkWell(
-                       onTap: (){
-                         if (onSave != null) onSave!();
-                       },
-                       child: Container(
-                         decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(10),
-                           color:isHoverMainBtn.value == false ?  BtnMainColor:BtnMainHoverColor,
-                         ),
-                         padding: EdgeInsets.only(top: 6 , bottom: 6 , left: 12 , right: 12),
-                         child: Txt('${this.titleBox}' , color: this.titleBoxColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                       ),
-                     ),
-                   );
-                 })
-               ],
-             ),
+             child: this.footer != null ? this.footer: Container(),
            ),
          ],
        ),

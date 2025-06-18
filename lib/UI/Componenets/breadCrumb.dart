@@ -3,23 +3,23 @@ import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 
 class Breadcrumb extends StatefulWidget {
-  final List<BreadcrumbItem> items;
-  final Color? separatorColor;
-  final double separatorSize;
-  final Axis direction;
-  final MainAxisAlignment alignment;
-  final String? separator;
-  final bool showSeparator;
-  final double spaceBetweenItems;
-  final Color? itemClickedColor;
-  final double separatorPadding;
-  final Color? itemColor;
+   List<BreadcrumbItem> items;
+   Color? separatorColor;
+   double separatorSize;
+   // Axis direction;
+   MainAxisAlignment alignment;
+   String? separator;
+   bool showSeparator;
+   double spaceBetweenItems;
+   Color? itemClickedColor;
+  double separatorPadding;
+   Color? itemColor;
 
    Breadcrumb({
     required this.items,
     this.separatorColor,
     this.separatorSize = 16.0,
-    this.direction = Axis.horizontal,
+    // this.direction = Axis.horizontal,
     this.alignment = MainAxisAlignment.start,
     this.separator = '>',
     this.showSeparator = true,
@@ -49,8 +49,8 @@ class _BreadcrumbState extends State<Breadcrumb> {
 
     return Container(
       width: size.width,
-      child: Flex(
-        direction: widget.direction,
+      child: Row(
+        // direction: widget.direction,
         mainAxisAlignment: widget.alignment,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(widget.items.length * 2 - 1, (index) {

@@ -68,6 +68,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
   @override
   Widget build(BuildContext context) {
     return  Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         InkWell(
           onTap: widget.disabled! ? null :(){

@@ -9,45 +9,54 @@ class CustomAccordion extends StatefulWidget {
   Color accordianDescriptionColor;
   Color colorIcon;
   Color colorBoxDescription;
+  double? width;
+  bool? isOpen;
+  Color? borderColor;
 
 
-  CustomAccordion({required this.accordianTitle ,
+  CustomAccordion({
+    required this.accordianTitle ,
     required this.accordianTitleColor ,
     required this.accordianBoxColor,
     required this.accordianDescription,
     required this.accordianDescriptionColor,
     required this.colorIcon,
     required this.colorBoxDescription,
+    this.width,
+    this.isOpen =  false,
+    this.borderColor
   });
   @override
   _CustomAccordionState createState() => _CustomAccordionState();
 }
 
 class _CustomAccordionState extends State<CustomAccordion> {
-  bool _isExpanded = false;
-
+  late bool _isExpanded;
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.isOpen ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    var size=MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
-          },
+        InkWell(
+          onTap: () => setState(() => _isExpanded = !_isExpanded),
           child: Container(
+            width: widget.width != null ? widget.width : size.width,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: widget.accordianBoxColor,
+                color: widget.accordianBoxColor,
+              border:widget.borderColor != null ? Border.all(width: 1, color: widget.borderColor!) : null
             ),
-
             child: Row(
               children: [
                 Txt(
-                  '${widget.accordianTitle}',
+                  widget.accordianTitle,
                   color: widget.accordianTitleColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w200,
@@ -61,15 +70,26 @@ class _CustomAccordionState extends State<CustomAccordion> {
             ),
           ),
         ),
-        AnimatedContainer(
+        AnimatedSize(
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
-          height: _isExpanded ? 100 : 0,
-          width:size.width,
-          color: widget.colorBoxDescription,
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Txt('${widget.accordianDescription}' , color: widget.accordianDescriptionColor, fontSize: 14, fontWeight: FontWeight.w500,),
+          child: Container(
+            decoration: BoxDecoration(
+              border:widget.borderColor != null ? Border.all(width: 1, color: widget.borderColor!) : null,
+              color: widget.colorBoxDescription,
+            ),
+            width: widget.width != null ? widget.width : size.width,
+            child: _isExpanded
+                ? Padding(
+              padding: EdgeInsets.all(16),
+              child: Txt(
+                widget.accordianDescription,
+                color: widget.accordianDescriptionColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+                : null,
           ),
         ),
       ],

@@ -5,16 +5,23 @@ enum directionRadioButton {
   vertical,
   horizontal,
 }
+
 class RadioButton extends StatefulWidget {
    List<RadioItem>? items;
    Color? activeColor;
    directionRadioButton? layoutDirection;
    Function(String?)? onChanged;
+   MainAxisAlignment? mainAxisAlignment;
+   CrossAxisAlignment? crossAxisAlignment;
+
 
   RadioButton({this.items,
-    this.activeColor = Colors.blue ,
+    this.activeColor = colorBtn ,
     this.layoutDirection = directionRadioButton.vertical ,
     this.onChanged,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.start
+
   });
 
   @override
@@ -38,12 +45,16 @@ class _RadioButtonState extends State<RadioButton> {
   @override
   Widget build(BuildContext context) {
     return widget.layoutDirection == directionRadioButton.vertical ?  Column(
+      mainAxisAlignment: widget.mainAxisAlignment ?? MainAxisAlignment.start,
+      crossAxisAlignment: widget.crossAxisAlignment ?? CrossAxisAlignment.start,
       children: [
         for (var item in widget.items!)
           radioBox(item)
       ],
     ) :
     Row(
+      mainAxisAlignment: widget.mainAxisAlignment ?? MainAxisAlignment.start,
+      crossAxisAlignment: widget.crossAxisAlignment ?? CrossAxisAlignment.start,
       children: [
         for (var item in widget.items!) ...[
           radioBox(item),
@@ -56,7 +67,8 @@ class _RadioButtonState extends State<RadioButton> {
     return  Opacity(
       opacity: item.disabled! ? 0.5 : 1.0,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: widget.mainAxisAlignment ?? MainAxisAlignment.start,
+        crossAxisAlignment: widget.crossAxisAlignment ?? CrossAxisAlignment.start,
         children: [
           Container(
             width: item.width,

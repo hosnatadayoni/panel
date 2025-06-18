@@ -114,7 +114,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                           }
                         }
                       await MainController.loadData(tableData:ViewCustomController.getDataTable('order') );
-                      MainController.renderPagination();
+                      // MainController.renderPagination();
                       MainController.goToTablePage();
                     },
                     child: Container(

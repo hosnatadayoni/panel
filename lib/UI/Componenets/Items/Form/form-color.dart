@@ -72,6 +72,7 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
     }
 
     return Obx((){
+      print('${widget.isSeletedColor!.value}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,4 +1,6 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
+import 'package:finance/Logic/Controllers/view-controller.dart';
+import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Views/dashboard.dart';
@@ -53,10 +55,16 @@ class _MenuBoxState extends State<MenuBox>{
                                   Column(children:[
                                   InkWell(
                                       onTap: ()async {
+                                        print('oooooooooooooo');
                                         MainController.selectedSubItem.value = j;
+                                        print('bbbbb>>>${MainController.SubMenuList[j]['title']}');
+
                                         await MainController.loadData();
-                                        MainController.renderPagination();
+                                        print('aaaaaaa>>>${MainController.SubMenuList[j]['table-name']}>>>${await DB('${MainController.SubMenuList[j]['table-name']}').infoPage()}');
+                                        ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
+                                        // MainController.renderPagination();
                                         await MainController.goToTablePage();
+
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
                                         color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
