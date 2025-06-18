@@ -1812,15 +1812,6 @@ class ViewController extends GetxController {
       ],
     );
   }
-
-  // static Future<List<dynamic>> getRowTable (String tableName) async {
-  //   List<DataModel> rowList = [];
-  //   List<dynamic> tableData = [];
-  //   Box box2;
-  //   tableData = await DB('${tableName}').getRecords();
-  //   return tableData;
-  // }
-
   static Future<String> getTitleSelectedItem(String tableName,
       String selectedId, var column) async {
     String selectedTitle = '';
