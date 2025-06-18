@@ -1192,7 +1192,14 @@ class MainController extends GetxController {
   }
 
   static Future<void> search(String query) async {
-    List<dynamic> allData = box.values.toList();
+    // List<dynamic> allData = box.values.toList();
+    List<Map<String, dynamic>> allData = [];
+
+    for (var item in box.values.toList()) {
+      if (item.data is Map) {
+        allData.add(Map<String, dynamic>.from(item.data));
+      }
+    }
 
     searchQuery.value = query;
     // if (MainController.table['table-name'] == box.name) {
@@ -1204,8 +1211,8 @@ class MainController extends GetxController {
         for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
-          if (data.data[name] != null &&
-              data.data[name]
+          if (data[name] != null &&
+              data[name]
                   .toString()
                   .toLowerCase()
                   .contains(query.toLowerCase())) {

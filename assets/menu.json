@@ -1,5 +1,4 @@
 [
-
     {
       "title": "دسته بندی",
       "tooltip": "",
@@ -12,27 +11,46 @@
       "columns": [
         {
           "name": "دسته بندی",
-          "title": "دسته بندی"
+          "title": "دسته بندی",
+          "type": "string"
         },
         {
           "name": "tooltip",
-          "tooltip": ""
+          "title": "tooltip",
+          "tooltip": "",
+          "type": "string"
         },
         {
           "name": "main-menu",
-          "main-menu": true
+          "title": "main-menu",
+          "main-menu": true,
+          "type": "checkbox",
+          "default_value": true
         },
         {
           "name": "categories",
-          "table-name": "categories"
+          "title": "categories",
+          "table-name": "categories",
+          "type": "string"
         },
         {
           "name": "currentPage",
-          "currentPage": 1
+          "title": "currentPage",
+          "currentPage": 1,
+          "type": "Number int"
         },
         {
           "name": "countShowRow",
-          "countShowRow": 10
+          "title": "countShowRow",
+          "countShowRow": 10,
+          "type": "Number int"
+        },
+        {
+          "name": "location-data",
+          "title": "location-data",
+          "location-data": 0,
+          "type": "checkbox",
+          "default_value": false
         }
       ]
     }
