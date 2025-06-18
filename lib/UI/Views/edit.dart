@@ -115,9 +115,9 @@ class _EditPageState extends State<EditPage> {
                             InkWell(
                               onTap: ()async{
                                 await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}').updateRecord(ViewController.request);
-                                if (ViewController.isClickedBtn.value == false) {
-                                  await MainController.goToTablePage();
-                                }
+                                // if (ViewController.isClickedBtn.value == false) {
+                                //   await MainController.goToTablePage();
+                                // }
                               },
                               child: Container(
                                 padding: EdgeInsets.all(10),

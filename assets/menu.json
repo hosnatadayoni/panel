@@ -6,7 +6,7 @@
       "main-menu": true,
       "table-name": "products",
       "currentPage": 1,
-      "countShowRow": 2,
+      "countShowRow": 10,
       "status": "ofline",
       "relations": [],
       "columns": [
@@ -14,13 +14,7 @@
           "name": "title",
           "title": "title",
           "type": "string",
-          "type_filed": "string",
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
+          "type_filed": "string"
         },
         {
           "name": "description",

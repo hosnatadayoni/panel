@@ -168,11 +168,13 @@ class DB {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
-      for (var d in box.values.toList()) {
 
+      for (var d in box.values.toList()) {
+        print('DB.getBoxRecords>>${d.data}');
         Map<String, dynamic> e = <String, dynamic>{};
         for (var key in d.data.keys) {
-            e['_id'] = d.id;
+
+          e['_id'] = d.id;
             e[key] = d.data[key];
 
         }
@@ -646,6 +648,7 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getBoxRecords();
+    print('DB.updateRecord11>>${records}');
     ViewController.isClickedEditBtn.value = true;
 
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
@@ -656,21 +659,23 @@ class DB {
     //   allData=ConncetServerController.getRecordRes;
     // }
     Map<String,dynamic>a={};
-    List<MapEntry<String, dynamic>> toAdd = [];
+    List<Map<String, dynamic>> toAdd = [];
 
     for (var data in records) {
       a = data;
+      // print('DB.updateRecord11>>${a}');
       a.forEach((key, value) {
         if (request.containsKey(key)) {
           a[key] = request[key];
+          print('DB.updateRecord${a[key]}');
         }else{
-          toAdd.add(MapEntry(request.keys.first, request.values.first));
-
+          toAdd.add({request.keys.first:request.values.first});
         }
       });
-      toAdd.forEach((entry) {
-        a[entry.key] = entry.value;
-      });
+
+      // toAdd.forEach((entry) {
+      //   a[entry.keys] = entry.value;
+      // });
 
 
       final record = DataModel(
@@ -702,14 +707,14 @@ class DB {
               "record":json.encode(customUpdate.data).toString(),
               "record_id":customUpdate.id
             };
-            await ConncetServerController.updateRecordGeneral(setRecord);
-            if(ConncetServerController.updateRecordRes.isNotEmpty){
-              DataModel record= DataModel(id:ConncetServerController.updateRecordRes['_id'],data: ConncetServerController.updateRecordRes);
-              await box.putAt(allDataIndex, record);
-            }
-
-            else
-              await box.putAt(allDataIndex, customUpdate);
+            // await ConncetServerController.updateRecordGeneral(setRecord);
+            // if(ConncetServerController.updateRecordRes.isNotEmpty){
+            //   DataModel record= DataModel(id:ConncetServerController.updateRecordRes['_id'],data: ConncetServerController.updateRecordRes);
+            //   await box.putAt(allDataIndex, record);
+            // }
+            //
+            // else
+            //   await box.putAt(allDataIndex, customUpdate);
             MainController.isClickedItem.value = true;
             var after = await HelperController.afterUpdate(
                 this.tableName!, customUpdate);
