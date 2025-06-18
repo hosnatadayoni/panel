@@ -39,9 +39,7 @@ class DB {
     for (var d in data) {
 
       Map<String, dynamic> e = <String, dynamic>{};
-      print('DB.getTypeOfField>>${d.data.length}');
       for (var key in d.data.keys) {
-        print('DB.getTypeOfField key>>${key}');
 
         type = MainController.getTypeOfField(this.tableName!, key);
         if (type != null) {
@@ -160,29 +158,57 @@ class DB {
     return totalPage;
   }
 
-  getRecords() async {
+  getBoxRecords() async {
+    Box box;
+    List<Map<String, dynamic>> data=[];
+    int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
+    if(MainController.SubMenuList[index]['status']=='online'){
+      await ConncetServerController.getRecordGeneral('${tableName}');
+      if(ConncetServerController.getRecordRes.isNotEmpty){
+        data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+      }}
+    else{
+      var tableInfo = MainController.SubMenuList[index];
+      box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
+      for (var d in box.values.toList()) {
+
+        Map<String, dynamic> e = <String, dynamic>{};
+        for (var key in d.data.keys) {
+            e['_id'] = d.id;
+            e[key] = d.data[key];
+
+        }
+        newData.add(e);
+      }
+      data=newData;
+    }
+    return data;
+  }
+
+  getRecords({bool withFormat = true}) async {
     List<Map<String, dynamic>> dataItems = [];
     Box box;
 
     List<Map<String, dynamic>> data=[];
+    List<Map<String, dynamic>> dataByFormat=[];
     int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
-
+    if(MainController.SubMenuList[index]['status']=='online'){
+    await ConncetServerController.getRecordGeneral('${tableName}');
     if(ConncetServerController.getRecordRes.isNotEmpty){
       data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-    }
-    else
-      {
+    }}
+    else{
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         data =await getTypeOfField(box.values.toList());
-        print('DB.getRecords>>>${data}');
     }
     if (index != -1) {
-
       if (this.parentItem.length != 0) {
         data = data.where((element) => element['parent_id'] == this.parentItem['parent_id']).toList();
       }
       if (this.orWhereList.length != 0) {
+        data=dataByFormat;
         if (data.length != 0){
           await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
           if(ConncetServerController.filterRecordRes.isNotEmpty){
@@ -357,6 +383,7 @@ class DB {
       }
       else {
         if (this.whereList.length != 0) {
+          data=dataByFormat;
           if (data.length != 0){
             await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
             if(ConncetServerController.filterRecordRes.isNotEmpty){
@@ -619,7 +646,7 @@ class DB {
 
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
-    List<dynamic> records = await getRecords();
+    List<dynamic> records = await getBoxRecords();
     ViewController.isClickedEditBtn.value = true;
 
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
@@ -645,6 +672,7 @@ class DB {
       toAdd.forEach((entry) {
         a[entry.key] = entry.value;
       });
+
 
       final record = DataModel(
         id: data['_id'],

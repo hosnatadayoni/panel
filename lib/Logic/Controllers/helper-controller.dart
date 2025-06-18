@@ -86,6 +86,7 @@ class HelperController extends GetxController {
       await Get.to(() => OrderEdit(data: data));
     }
     else{
+
       ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }

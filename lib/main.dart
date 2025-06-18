@@ -1,5 +1,4 @@
 import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Helpers/token-methods.dart';
 import 'package:finance/Logic/Models/dataModel.dart';
 import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Public/styles.dart';
@@ -14,7 +13,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'Logic/Controllers/app_localization_delegate.dart';
-import 'Logic/Controllers/connect-server-controller.dart';
 import 'UI/Views/table-page.dart';
 
 void main()async {
@@ -26,6 +24,8 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
+  // var a= await DB('categoriess').getBoxRecords();
+  // print('main>>>${a}');
   // var box=await Hive.openBox<DataModel>('categoriess');
   // box.clear();
   // await Token.setToken('3ba7fd50-69c5-4293-8aa8-77e752a967ae');
