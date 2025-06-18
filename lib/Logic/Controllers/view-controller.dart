@@ -1812,8 +1812,9 @@ class ViewController extends GetxController {
       ],
     );
   }
-  static Future<String> getTitleSelectedItem(String tableName,
-      String selectedId, var column) async {
+
+  //delete & replace
+  static Future<String> getTitleSelectedItem(String tableName, String selectedId, var column) async {
     String selectedTitle = '';
     var sourceItem = column['sourceItems'];
     if (sourceItem != 'custom') {
@@ -1851,6 +1852,7 @@ class ViewController extends GetxController {
     return selectedTitle;
   }
 
+  //delete & replace
   static Future<List<dynamic>> getTitleMultiSelectedItem (String tableName, List<dynamic> selectedId, var column) async {
     List<dynamic> multiSelectedTitleList = [];
     var sourceItem = column['sourceItems'];
@@ -1959,92 +1961,6 @@ class ViewController extends GetxController {
     return dropDownListItems;
   }
 
-  static Future<List> itemsSelect (var column, {var dataModel}) async {
-    List<dynamic> items = [];
-    var type = column['sourceItems'];
-    var tableName = column['sourceTable'];
-    List<dynamic> dropDownListItems = [];
-    if (type != 'custom') {
-      if (dataModel==null || dataModel.isEmpty ) {
-        List<dynamic> data = await DB(tableName).getRecords();
-        dropDownListItems = data;
-        for (int i = 0; i < dropDownListItems.length; i++) {
-          List<dynamic> a = [];
-          for (var field in column['items']) {
-            a.add(dropDownListItems[i][field]);
-          }
-          items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-        }
-      }
-      else {
-        if(dataModel[column['name']]==null){
-          List<dynamic> data = await DB(tableName).getRecords();
-          dropDownListItems = data;
-          for (int i = 0; i < dropDownListItems.length; i++) {
-            List<dynamic> a = [];
-            for (var field in column['items']) {
-              a.add(dropDownListItems[i][field]);
-            }
-            items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-          }
-        }
-        else{
-          for (var item in dataModel[column['name']])
-            dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
-
-          for (int i = 0; i < dropDownListItems.length; i++) {
-            List<dynamic> a = [];
-            for (var field in column['items']) {
-              a.add(dropDownListItems[i][field]);
-            }
-            items
-                .add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-          }
-        }}
-    }
-
-    else {
-      List<dynamic> itemss = [];
-
-      if (dataModel==null || dataModel.isEmpty ) {
-        itemss = column['items'];
-        // dropDownListItems.add(item);
-      }
-      else {
-        if(dataModel[column['name']]==null){
-          itemss = column['items'];
-        }else
-          for (var item in dataModel[column['name']])
-            itemss.add(column['items'].firstWhere((element) => element['value'] == item));
-      }
-      dropDownListItems = itemss;
-    }
-
-
-    return dropDownListItems;
-  }
-
-  // static Future<String> getInitValue(
-  //     var column, List<dynamic> items) async {
-  //     String initValue = '';
-  //     var type=column['sourceItems'];
-  //     var selectedItem;
-
-  //
-  //   // List<dynamic> items = await itemsList(column, type, tableName);
-  //   // for (var subMenu in MainController.SubMenuList) {
-  //     if (type != 'custom') {
-  //         initValue = items.length != 0 ? items[0]['value'] : "";
-  //     } else {
-  //       selectedItem = items.firstWhere(
-  //         (item) => item['is_selected'] == true,
-  //         orElse: () => items.first,
-  //       );
-  //       initValue = selectedItem['value'];
-  //     }
-  //   return initValue;
-  // }
-
   static List<dynamic> getColumnList(String tableName) {
     List<dynamic> columns = [];
     for (var table in MainController.SubMenuList) {
@@ -2057,7 +1973,7 @@ class ViewController extends GetxController {
     return columns;
   }
 
-
+  //delete
   static String hintMultiSelectBox(List<dynamic> items, List<dynamic> ListsId) {
     List<String> titles = [];
     for (var id in ListsId) {
