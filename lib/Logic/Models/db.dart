@@ -54,7 +54,6 @@ class DB {
     Where l = Where(fieldName, oprator, value);
     w.add(l);
     this.whereList[counter] = l;
-    print('DB.where>>${this.whereList[counter]!.fieldName}');
     return this;
   }
 
@@ -129,7 +128,6 @@ class DB {
   }
 
   pageInate() async {
-    print('DB.pageInate');
     int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
     int  currentPage=await MainController.getInfoTable('${this.tableName}')['currentPage'];
     int  perPage=countShowRow!=null?countShowRow:10;
@@ -145,7 +143,6 @@ class DB {
   }
 
   infoPage() async {
-    print('DB.infoPage');
     int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
     int  perPage=countShowRow!=null?countShowRow:10;
     List<Map<String,dynamic>> items=await getRecords();
@@ -168,15 +165,12 @@ class DB {
       var tableInfo = MainController.SubMenuList[index];
 
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
-      print('DB.getBoxRecords box>>${box.values.toList()}');
 
       List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
 
       for (var d in box.values.toList()) {
         Map<String, dynamic> e = <String, dynamic>{};
-        print('DB.getBoxRecords d box>>${d.data}');
         for (var key in d.data.keys) {
-          print('DB.getBoxRecords key>>>$key');
           e['_id'] = d.id;
           e[key] = d.data[key];
         }
@@ -188,7 +182,6 @@ class DB {
   }
 
   getRecords({bool withFormat = true}) async {
-    print('DB.getRecords lll');
     List<Map<String, dynamic>> dataItems = [];
     Box box;
 
@@ -204,20 +197,19 @@ class DB {
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
         data =await getTypeOfField(box.values.toList());
-        print('DB.parentItem isss>>${data}');
     }
     if (index != -1) {
       if (parentItem.length != 0) {
         data = data.where((element) => element['parent_id'] == parentItem['parent_id']).toList();
-        print('DB.getRecords>>${data}>>>${this.whereList.length}');
       }
       if (this.orWhereList.length != 0) {
 
         if (data.length != 0){
+          if(MainController.SubMenuList[index]['online']==true){
           await ConncetServerController.filterRecordGeneral(this.orWhereList,this.tableName!,'\$or');
           if(ConncetServerController.filterRecordRes.isNotEmpty){
             dataItems=ConncetServerController.filterRecordRes;
-          }
+          }}
           else{
             for (var d in data) {
               bool flag = true;
@@ -390,15 +382,19 @@ class DB {
 
 
           if (data.length != 0){
+            if(MainController.SubMenuList[index]['online']==true){
             await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');
             if(ConncetServerController.filterRecordRes.isNotEmpty){
 
               dataItems=ConncetServerController.filterRecordRes;
-            }
+            }}
             else{
             for (var d in data) {
               bool flag = true;
               for (int j = 1; j <= whereList.length; j++) {
+                print('DB.getRecords where isss>>${this.tableName!}>>${whereList[j]!.fieldName!}');
+                if(whereList[j]!.fieldName!='_id')
+                  whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
 
                 if (d['${whereList[j]!.fieldName}'] != null) {
                   if (whereList[j]!.value != '') {
@@ -463,7 +459,8 @@ class DB {
                         } else
                           flag = false;
                       } else {
-                        if (d['${whereList[j]!.fieldName}'] >=
+                        print('DB.getRecords>>>${d['${whereList[j]!.fieldName}'].runtimeType}>>>${whereList[j]!.value.runtimeType}');
+                          if (d['${whereList[j]!.fieldName}'] >=
                             whereList[j]!.value && flag == true) {
                           flag = true;
                         } else
@@ -588,7 +585,6 @@ class DB {
     if (parentTable != "" && parentId != "") {
       var json = {'parent_table': parentTable, 'parent_id': parentId};
       parentItem = json;
-      print('DB.parent>>${parentItem}>>>${parentTable}>>>${parentId}');
     } else
       parentItem = <String, dynamic>{};
 
@@ -665,7 +661,6 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getBoxRecords();
-    print('DB.updateRecord11>>${records}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     // if(ConncetServerController.getRecordRes.isEmpty){
@@ -686,14 +681,12 @@ class DB {
         }
       });
     }
-    print('DB.updateRecord a>>>${a}');
     final record = DataModel(
         id: a['_id'],
         data: a,
       );
       var beforeValidate =
           await HelperController.beforeUpdateValidation(record);
-    // print('DB.updateRecord beforeValidate>>${beforeValidate}');
     if (beforeValidate['status'] == false) {
         showSnackbar(snackTypes.error, beforeValidate['message']);
       } else {
@@ -767,10 +760,15 @@ class DB {
             }
           }
           if(MainController.getStatusTable(this.tableName!)==true){
-            await ConncetServerController.deleteRecordGeneral({"table_name":'${this.tableName}','record_id':data['_id']});
-            if(ConncetServerController.deleteRecordRes==true){
-              box.deleteAt(tableDataIndex);
-              await MainController.loadData();
+            if(MainController.getStatusTable(this.tableName!) == true) {
+              await ConncetServerController.deleteRecordGeneral({
+                "table_name": '${this.tableName}',
+                'record_id': data['_id']
+              });
+              if (ConncetServerController.deleteRecordRes == true) {
+                box.deleteAt(tableDataIndex);
+                await MainController.loadData();
+              }
             }
           }else{
             box.deleteAt(tableDataIndex);

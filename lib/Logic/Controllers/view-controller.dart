@@ -428,8 +428,8 @@ class ViewController extends GetxController {
                       : '' : ''}',
                   dataModel[name] == '' ? false.obs : true.obs);
             } else {
-              print('ViewController.generateEditFormView>>>${items}>>${dataModel}');
-              if (dataModel[name] != null)
+              print('ViewController.generateEditFormView>>>${items}>>${dataModel[name]}');
+              if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items.firstWhere((element) => element['value'] == dataModel[name]['value']);
               selectBox = await generateStoreFormSelectBox(
                   column,
@@ -1294,7 +1294,6 @@ class ViewController extends GetxController {
 
 
     if (column['sourceItems'] != 'custom') {
-      await ConncetServerController.getRecordGeneral('${column['sourceTable']}');
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
@@ -1812,13 +1811,6 @@ class ViewController extends GetxController {
     );
   }
 
-  // static Future<List<dynamic>> getRowTable (String tableName) async {
-  //   List<DataModel> rowList = [];
-  //   List<dynamic> tableData = [];
-  //   Box box2;
-  //   tableData = await DB('${tableName}').getRecords();
-  //   return tableData;
-  // }
 
   static Future<String> getTitleSelectedItem(String tableName,
       String selectedId, var column) async {
@@ -1950,13 +1942,9 @@ class ViewController extends GetxController {
           dropDownListItems=[];
         }
         else{
-          // for (var item in )
-          // dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
           List<dynamic> a = [];
         for (int i = 0; i < dataModel[column['name']].length; i++) {
-          // for (var field in column['items']) {
             a.add(dataModel[column['name']][i]);
-          // }
         };
     dropDownListItems=a;
       }}

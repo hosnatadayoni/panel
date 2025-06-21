@@ -1173,6 +1173,10 @@ class MainController extends GetxController {
     var type;
     var column = getColumnsTable(tableName);
     for (var item in column) {
+      print('MainController.getTypeOfField>>${item['name']}');
+      if(item['name'] == '_id'){
+        return 'string';
+      }
       if (item['name'] == name) {
         type = item['type'];
         return type;
