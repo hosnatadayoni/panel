@@ -48,6 +48,7 @@ class HelperController extends GetxController {
   }
 
   static beforeUpdateValidation(DataModel newData) {
+    print('HelperController.beforeUpdateValidation');
     return AppController.responceHelper(newData, true);
   }
 

@@ -375,7 +375,6 @@ class ViewController extends GetxController {
     var textField;
     var selectBox;
     var checkBox;
-    var radioButtonBox;
     var dateBox;
     var multiSelectBox;
     var colorBox;
@@ -429,9 +428,9 @@ class ViewController extends GetxController {
                       : '' : ''}',
                   dataModel[name] == '' ? false.obs : true.obs);
             } else {
+              print('ViewController.generateEditFormView>>>${items}>>${dataModel}');
               if (dataModel[name] != null)
-                selectedItem = items.firstWhere(
-                        (element) => element['value'] == dataModel[name]);
+                selectedItem = items.firstWhere((element) => element['value'] == dataModel[name]['value']);
               selectBox = await generateStoreFormSelectBox(
                   column,
                   items,
@@ -529,7 +528,7 @@ class ViewController extends GetxController {
           if (items.length != 0) {
             if (column['sourceTable'] != null) {
               for (var selectedItem in items) {
-                multiSelectedItemList.add(itemsShowSelectItem(selectedItem, column['items']));
+                multiSelectedItemList.add(itemsShowSelectItem(selectedItem, column));
               }
             } else {
               for (var selectedItem in items) {
@@ -605,8 +604,7 @@ class ViewController extends GetxController {
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children: children);
   }
 
-  static Future<Widget> generateDataColumn(int indexColumn, int indexRow,
-      {var table}) async {
+  static Future<Widget> generateDataColumn(int indexColumn, int indexRow, {var table}) async {
     var size = MediaQuery.of(Get.context!).size;
     String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -628,7 +626,7 @@ class ViewController extends GetxController {
     }
     else if (type == 'select' || type == 'radiobutton') {
       child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]['items']) }':'',
+        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -637,13 +635,12 @@ class ViewController extends GetxController {
     }
     else if (type == 'multiSelect') {
       child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]['items'])}':'',
+        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: MainController.isLightMode.value == true ? whiteColor : color2,
         textAlign: TextAlign.center,
       );
-
     }
     else if (type == 'file') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
@@ -912,7 +909,7 @@ class ViewController extends GetxController {
                 DropdownMenuItem(
                     child: Obx(() {
                       return Txt(
-                        '${itemsShowSelectItem(item, column['items'])}',
+                        '${itemsShowSelectItem(item, column)}',
                         color:
                         MainController.isLightMode.value == true
                             ? whiteColor
@@ -1111,7 +1108,7 @@ class ViewController extends GetxController {
                 DropdownMenuItem(
                     child: Obx(() {
                       return Txt(
-                        '${itemsShowSelectItem(item, column['items'])}',
+                        '${itemsShowSelectItem(item, column)}',
                         color:
                         MainController.isLightMode.value == true
                             ? whiteColor
@@ -1214,7 +1211,7 @@ class ViewController extends GetxController {
                   value: item['_id'].toString(),
                   child: Obx(() {
                     return Txt(
-                      '${itemsShowSelectItem(item, column['items'])}',
+                      '${itemsShowSelectItem(item, column)}',
                       color: MainController.isLightMode.value
                           ? whiteColor
                           : primaryDark,
@@ -1361,13 +1358,13 @@ class ViewController extends GetxController {
                                               isSelectedItem.value = true;
                                             }
                                             for (var r in selectedItemsList)
-                                              hintTxt.value = hintTxt.value + itemsShowSelectItem(r, column['items']);
+                                              hintTxt.value = hintTxt.value + itemsShowSelectItem(r, column);
                                             ViewController.request[column['name']]= selectedItemId;
                                           }
                                         });
                                   })),
                             ),
-                            Txt(itemsShowSelectItem(item, column['items']),
+                            Txt(itemsShowSelectItem(item, column),
                                 color: MainController.isLightMode.value
                                     ? whiteColor
                                     : primaryDark),
@@ -1578,7 +1575,7 @@ class ViewController extends GetxController {
                                             hintTxt.value = hintTxt
                                                 .value +
                                                 itemsShowSelectItem(r,
-                                                    column['items']);
+                                                    column);
 
                                           for (var r
                                           in selectedItemsList)
@@ -1591,7 +1588,7 @@ class ViewController extends GetxController {
                           ),
                           Txt(
                               itemsShowSelectItem(
-                                  item, column['items']),
+                                  item, column),
                               color: MainController.isLightMode.value
                                   ? whiteColor
                                   : primaryDark),
@@ -1890,36 +1887,50 @@ class ViewController extends GetxController {
     return multiSelectedTitleList;
   }
 
-  static String itemsShowSelectItem(var listItems, List<dynamic> items) {
+  static String itemsShowSelectItem(var listItems, var column) {
+    var items=column['items'];
     List<dynamic> a = [];
-
-    // if (listItems['_id'] == '') {
-    //   return "انتخاب نشده";
-    // }
     if (listItems is List) {
-
-
     if (listItems.length == 0) {
       return "انتخاب نشده";
     }
-    for (int i = 0; i < listItems.length; i++) {
-      for (var field in items) {
-        a.add(listItems[i][field]);
-      }
-    }
-  }else{
-      if (listItems['_id'] == '') {
-        return "انتخاب نشده";
-      }
-        for (var field in items) {
-          a.add(listItems[field]);
+      for (int i = 0; i < listItems.length; i++) {
+        if(listItems[i] is String){
+          a.add(listItems[i]);
         }
+        else {
+          if(column['sourceItems']=='table') {
+
+            for (var field in items) {
+              a.add(listItems[i][field]);
+            }
+          }
+          else{
+              a.add(listItems[i]['title']);
+          }
+        }
+    }
+  }else {
+      if (listItems is String) {
+        a.add(listItems);
+      }
+      else {
+        if (listItems['_id'] == '') {
+          return "انتخاب نشده";
+        }
+        if(column['sourceItems']=='table') {
+          for (var field in items) {
+            a.add(listItems[field]);
+          }
+        } else{
+          a.add(listItems['title']);
+        }
+      }
     }
     return a.join('%');
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
@@ -1950,13 +1961,10 @@ class ViewController extends GetxController {
     dropDownListItems=a;
       }}
     }
-
     else {
       List<dynamic> itemss = [];
-
       if (dataModel==null || dataModel.isEmpty ) {
         itemss = column['items'];
-        // dropDownListItems.add(item);
       }
       else {
         if(dataModel[column['name']]==null){
@@ -1967,6 +1975,7 @@ class ViewController extends GetxController {
       }
       dropDownListItems = itemss;
     }
+
     return dropDownListItems;
   }
 
@@ -2034,40 +2043,6 @@ class ViewController extends GetxController {
 
     return dropDownListItems;
   }
-
-  // static Future<String> getInitValue(
-  //     var column, List<dynamic> items) async {
-  //     String initValue = '';
-  //     var type=column['sourceItems'];
-  //     var selectedItem;
-
-  //
-  //   // List<dynamic> items = await itemsList(column, type, tableName);
-  //   // for (var subMenu in MainController.SubMenuList) {
-  //     if (type != 'custom') {
-  //         initValue = items.length != 0 ? items[0]['value'] : "";
-  //     } else {
-  //       selectedItem = items.firstWhere(
-  //         (item) => item['is_selected'] == true,
-  //         orElse: () => items.first,
-  //       );
-  //       initValue = selectedItem['value'];
-  //     }
-  //   return initValue;
-  // }
-
-  static List<dynamic> getColumnList(String tableName) {
-    List<dynamic> columns = [];
-    for (var table in MainController.SubMenuList) {
-
-
-      if (table['table-name'] == tableName) {
-        columns=table['columns'] ;
-      }
-    }
-    return columns;
-  }
-
 
   static String hintMultiSelectBox(List<dynamic> items, List<dynamic> ListsId) {
     List<String> titles = [];

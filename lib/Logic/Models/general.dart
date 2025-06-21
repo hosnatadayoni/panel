@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:hive/hive.dart';
 
+import '../Controllers/main-controller.dart';
 import '../Controllers/view-controller.dart';
 import 'dataModel.dart';
 
@@ -26,10 +27,11 @@ class General{
       }
     }
     else if(type=='select' || type=='radiobutton'){
+
       List<dynamic> dataBox=[];
       var data;
       List<dynamic> dataItem = [];
-      List<dynamic> columnList = ViewController.getColumnList('${this.tableName}');
+      List<dynamic> columnList = MainController.getColumnsTable('${this.tableName}');
       for(var column in columnList) {
         Box box2;
         if(column['name']==cloumnName )
@@ -46,6 +48,12 @@ class General{
             }
             data=dataItem.length!=0?dataItem:value;
             }
+          }else{
+            for(var item in column['items'])
+              if(item['value']==value){
+              data=item;
+              }
+
           }
       }
       return data;
@@ -55,7 +63,7 @@ class General{
          List<dynamic> dataBox = [];
          var data ;
          List<dynamic> multiSelectedTitleList = [];
-         List<dynamic> columnList = ViewController.getColumnList(
+         List<dynamic> columnList = MainController.getColumnsTable(
              '${this.tableName}');
          for (var column in columnList) {
            Box box2;
@@ -73,6 +81,10 @@ class General{
                    }
                  }
                data = multiSelectedTitleList.length != 0 ? multiSelectedTitleList : value;
+             }else{
+               for(var item in column['items'])
+                 if(item['value']==value)
+                   data.add(item['title']);
              }
          }
          return data;
@@ -81,14 +93,6 @@ class General{
         return value;
       }
     }
-    // }
-    // else if(type=='multiSelect'){
-    //   if(value=='true'|| value==true){
-    //     return true;
-    //   }else{
-    //     return false;
-    //   }
-    // }
     else{
      return value;
     }

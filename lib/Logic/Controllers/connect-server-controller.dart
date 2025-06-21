@@ -16,7 +16,7 @@ class ConncetServerController extends GetxController {
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
 
-  static createProject() async {
+  static createProject () async {
     var response = await RestApi.post(createProjectUrl, body: {'name':'panel'});
     RestApi.responseHandler(
         response: response,
@@ -26,7 +26,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static createSchema(Map<String,dynamic> json) async {
+  static createSchema (Map<String,dynamic> json) async {
     var response = await RestApi.post(createSchemaUrl, body:json);
     RestApi.responseHandler(
         response: response,
@@ -34,7 +34,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static updateSchema(Map<String,dynamic> json) async {
+  static updateSchema (Map<String,dynamic> json) async {
     var response = await RestApi.post(updateSchemaUrl, body:json);
     RestApi.responseHandler(
         response: response,
@@ -42,7 +42,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static deleteSchema(Map<String,dynamic> json) async {
+  static deleteSchema (Map<String,dynamic> json) async {
     var response = await RestApi.post(deleteSchemaUrl, body:json);
     RestApi.responseHandler(
         response: response,
@@ -50,7 +50,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static listSchema() async {
+  static listSchema () async {
     var s=await Token.getToken();
     var response = await RestApi.post(listSchemaUrl, body:{'api_key':s});
     RestApi.responseHandler(
@@ -59,7 +59,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static storeRecordGeneral(var json) async {
+  static storeRecordGeneral (var json) async {
     var response = await RestApi.post(storeRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,

@@ -186,17 +186,15 @@ class _TableBoxState extends State<TableBox> {
                                         onTap: () async {
 
                                           var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
-
-
+                                          print('_TableBoxState.build>>>${items}');
+                                          DB.parentItem={
+                                            'parent_id': MainController.tableData.value[i]['_id'],
+                                            'parent_table': MainController.tableInfo['table-name']
+                                          };
+                                          print('_TableBoxState.build>>>${DB.parentItem}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
-                                          DB.parentItem.addAll({
-                                            'parentId': MainController
-                                                .tableData.value[i]['_id'],
-                                            'parentTable': MainController
-                                                .tableInfo['table-name']
-                                          });
-                                          ViewController.totalPage.value = await DB('${item['table-name']}').infoPage();
-                                            await MainController.goToTablePage();
+
+                                          await MainController.goToTablePage();
                                           },
                                         child: Container(
                                           child: Text(item['title']),

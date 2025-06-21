@@ -7,7 +7,7 @@
       "table-name": "products",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "online": false,
       "relations": [],
       "columns": [
         {
@@ -43,7 +43,7 @@
       "table-name": "itemsOrder2",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "online": false,
       "relations": [],
       "columns": [
         {
@@ -73,7 +73,7 @@
       "table-name": "sample",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "online": false,
       "relations": [],
       "columns": [
         {
@@ -82,19 +82,64 @@
           "type": "string",
           "type_filed": "string",
           "is-show-store": true,
-          "is-show-edit": true,
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
+          "is-show-table": true,
+          "is-show-edit": true
         },
         {
           "name": "description",
           "title": "description",
           "type": "string",
           "type_filed": "string",
+          "is-show-table": true,
+          "is-show-store": true,
+          "is-show-edit": true
+        },
+        {
+          "name": "type",
+          "title": "type",
+          "type": "select",
+          "sourceItems": "custom",
+          "sourceTable": null,
+          "items": [
+            {
+              "title": "معمولی",
+              "value": "1",
+              "is_selected": true
+            },
+            {
+              "title": "ویژه",
+              "value": "2",
+              "is_selected": false
+            }
+          ]
+        }
+      ]
+    },
+  {
+      "title": "آیتم ها",
+      "tooltip": "",
+      "main-menu": true,
+      "table-name": "Items",
+      "currentPage": 1,
+      "countShowRow": 10,
+      "online": false,
+      "relations": [],
+      "columns": [
+        {
+          "name": "title",
+          "title": "title",
+          "type": "string",
+          "type_filed": "string",
+          "is-show-store": true,
+          "is-show-table": true,
+          "is-show-edit": true
+        },
+        {
+          "name": "description",
+          "title": "description",
+          "type": "string",
+          "type_filed": "string",
+          "is-show-table": true,
           "is-show-store": true,
           "is-show-edit": true
         }
@@ -108,7 +153,7 @@
       "table-name": "categoriess",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "online": false,
       "relations": [],
       "columns": [
         {
@@ -182,7 +227,7 @@
       "table-name": "order2",
       "currentPage": 1,
       "countShowRow": 10,
-      "status": "ofline",
+      "online": false,
       "relations": [{
         "title": "جزئیات سفارش",
         "table-name": "itemsOrder2"

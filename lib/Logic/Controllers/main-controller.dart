@@ -1128,16 +1128,7 @@ class MainController extends GetxController {
     return double.tryParse(str) != null;
   }
 
-  static getColumnInfoTable(String tableName) {
-    int index = MainController.SubMenuList.indexWhere(
-        (element) => element['table-name'] == '${tableName}');
-    if (index != -1) {
-      var tableInfo = MainController.SubMenuList[index];
 
-      return tableInfo['columns'];
-    }
-    return null;
-  }
   static getInfoTable(String tableName) {
     int index = MainController.SubMenuList.indexWhere(
         (element) => element['table-name'] == '${tableName}');
@@ -1148,11 +1139,39 @@ class MainController extends GetxController {
     }
     return null;
   }
+  static getStatusTable(String tableName) {
+    var infoTable=getInfoTable(tableName);
+    if(infoTable!=null){
+      return infoTable['status'];
+    }
+    return false;
+  }
+  static List<dynamic> getColumnsTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
 
+      return tableInfo['columns'];
+    }
+    return [];
+  }
+
+  static List<dynamic> getColumnsList (String tableName) {
+    List<dynamic> columns=getColumnsTable( tableName);
+    if (columns.length!=0) {
+      List<dynamic> list=[];
+      for (var column in columns) {
+        list.add(column['name']);
+      }
+      return list;
+    }
+    return [];
+  }
 
   static getTypeOfField(String tableName, String name) {
     var type;
-    var column = getColumnInfoTable(tableName);
+    var column = getColumnsTable(tableName);
     for (var item in column) {
       if (item['name'] == name) {
         type = item['type'];
@@ -1258,7 +1277,7 @@ class MainController extends GetxController {
 
   static createMultiSelectTable(String tableName) {
     var getDataTable = ViewCustomController.getDataTable(tableName);
-    List<dynamic> columnList = ViewController.getColumnList(tableName);
+    List<dynamic> columnList = MainController.getColumnsTable(tableName);
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         String tableNameNew =
@@ -1346,6 +1365,7 @@ class MainController extends GetxController {
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
+        print('MainController.loadData');
         MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
         MainController.allData.value=MainController.tableData.value;
       } else {
@@ -1493,6 +1513,7 @@ class MainController extends GetxController {
     if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
+      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }
   }
