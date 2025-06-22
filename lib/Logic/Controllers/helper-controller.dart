@@ -34,6 +34,10 @@ class HelperController extends GetxController {
         }
       }
     }
+    if(tableName=='itemsOrder'){
+      // await DB('itemsOrder').parent(parentTable: 'order2',parentId: customData.id!).storeRecord(list);
+
+    }
     return AppController.responceHelper(customData, true);
   }
   //end store
@@ -44,6 +48,7 @@ class HelperController extends GetxController {
   }
 
   static beforeUpdateValidation(DataModel newData) {
+
     return AppController.responceHelper(newData, true);
   }
 
@@ -86,7 +91,8 @@ class HelperController extends GetxController {
       await Get.to(() => OrderEdit(data: data));
     }
     else{
-      ViewController.request=data;
+
+      // ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }
   }

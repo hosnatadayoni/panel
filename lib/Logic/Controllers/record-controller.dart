@@ -18,7 +18,7 @@ class RecordController extends GetxController {
 
     bool isValidator;
     List<bool> isValidatorList = [];
-    var columns = ViewController.getColumnList(tableName);
+    var columns = MainController.getColumnsTable(tableName);
 
     for (var j = 0; j < columns.length; j++) {
       isValidator = await ValidatorController.checkInputValidation(j, newData.data,tableData: dataTable);

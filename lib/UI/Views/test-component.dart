@@ -1245,7 +1245,6 @@ class TestComponent extends StatelessWidget {
           min: 0,
           max: 100,
           onChanged: (value) {
-            print("Selected value: $value");
           },
         ),
         SizedBox(height: 30),
@@ -1256,7 +1255,6 @@ class TestComponent extends StatelessWidget {
           max: 100,
           disabled: true,
           onChanged: (value) {
-            print("Selected value: $value");
           },
         ),
         SizedBox(height: 30),
@@ -1267,7 +1265,6 @@ class TestComponent extends StatelessWidget {
           max: 100,
           step: 5,
           onChanged: (value) {
-            print("Selected value: $value");
           },
         ),
         //end range

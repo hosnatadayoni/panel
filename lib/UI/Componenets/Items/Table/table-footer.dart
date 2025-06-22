@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../../../../Logic/Controllers/view-controller.dart';
 class TableFooter extends StatefulWidget {
   const TableFooter({Key? key}) : super(key: key);
 
@@ -19,29 +21,18 @@ class _TableFooterState extends State<TableFooter> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
-    return  FutureBuilder<dynamic>(
-      future: DB(tableSelected).infoPage(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-        return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-        }
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        }
-        int totalPages = snapshot.data!;
+
+
         return Container(
           child: size.width > 556 ?
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pagenationBox(totalPages , tableSelected),
+            children: pagenationBox(ViewController.totalPage.value , tableSelected),
           ) :
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: pagenationBox(totalPages , tableSelected),
-          ),
-        );
-      },
-    );
+            children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          ),);
   }
   Widget box(int i , tableSelected){
     Rx<bool> isHover = false.obs;
@@ -54,12 +45,10 @@ class _TableFooterState extends State<TableFooter> {
       },
       child: InkWell(
         onTap: ()async{
-
           setState(() {
             MainController.tableInfo['currentPage'] = i;
           });
           MainController.tableData.value= await DB('${tableSelected}').pageInate();
-
         },
         child: Container(
             margin: EdgeInsets.only(left: 5),
@@ -71,12 +60,6 @@ class _TableFooterState extends State<TableFooter> {
                   borderRadius: BorderRadius.circular(5),
                   color:isHover.value == true  ? colorBtn:i ==MainController.tableInfo['currentPage'] ? colorBtn : Colors.blue,
                 ),
-                // onPressed: () {
-                //   setState(() {
-                //     MainController.tableInfo['currentPage'] = 1;
-                //   });
-                //   MainController.renderPagination();
-                // },
                 child: Center(child: Txt('${i}', textAlign: TextAlign.center , color: whiteColor,)),
               );
             })

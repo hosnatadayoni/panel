@@ -55,14 +55,9 @@ class _MenuBoxState extends State<MenuBox>{
                                   Column(children:[
                                   InkWell(
                                       onTap: ()async {
-                                        print('oooooooooooooo');
                                         MainController.selectedSubItem.value = j;
-                                        print('bbbbb>>>${MainController.SubMenuList[j]['title']}');
-
+                                        DB.parentItem={};
                                         await MainController.loadData();
-                                        print('aaaaaaa>>>${MainController.SubMenuList[j]['table-name']}>>>${await DB('${MainController.SubMenuList[j]['table-name']}').infoPage()}');
-                                        ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
-                                        // MainController.renderPagination();
                                         await MainController.goToTablePage();
 
                                       },
@@ -117,8 +112,7 @@ class _MenuBoxState extends State<MenuBox>{
                                         }
                                         MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
                                         // Get.to(() => TablePage());
-
-                                        // MainController.selectedSubItem.value = -1;
+                                        MainController.selectedSubItem.value = -1;
                                       },
                                       child: Container(
                                           width: 50,

@@ -40,6 +40,8 @@ class MainController extends GetxController {
   static Rx<bool> isLightMode = true.obs;
   static Rx<int> countShowRow = 10.obs;
   static Rx<bool> isClickedItem = false.obs;
+  //get all data for search
+  static RxList<dynamic> allData=[].obs;
 
   //dehdar remove this section read icon of json
   static List<Item> items = [
@@ -119,13 +121,15 @@ class MainController extends GetxController {
     int rowIndex = 2;
     for (var data in MainController.tableData.value) {
       List<exl.CellValue> rowData = [];
-      rowData.add(exl.TextCellValue(data.id));
+      // rowData.add(exl.TextCellValue(data.id));
+      rowData.add(exl.TextCellValue(data['_id']));
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
           // var value = data.data[name]?.toString() ?? '';
-          var value = data.data[name] ?? '';
+          // var value = data.data[name] ?? '';
+          var value = data[name] ?? '';
           List<dynamic> items = [];
           String tableName = '';
           if (column['type'] == 'select' ||
@@ -138,9 +142,12 @@ class MainController extends GetxController {
               tableName = column['sourceTable'];
             }
             String title;
-            if (data.data[name] != null) {
-              title = await ViewController.getTitleSelectedItem(
-                  '${tableName}', data.data[name], column);
+            if (data[name] != null) {
+              print('data[name] f>>>${data[name]} ${name}');
+              print('sdfgh>>>>${ViewController.itemsShowSelectItem(data['${name}'], column) }');
+              // title = await ViewController.getTitleSelectedItem(
+              //     '${tableName}', data[name], column);
+              title = ViewController.itemsShowSelectItem(data['${name}'], column);
             } else {
               title = '';
             }
@@ -151,13 +158,15 @@ class MainController extends GetxController {
                 tableName = column['sourceTable'];
               }
             }
-            List<dynamic> listTitle = [];
-            if (data.data[name] != null) {
-              listTitle = await ViewController.getTitleMultiSelectedItem(
-                  '${tableName}', data.data[name], column);
+            // List<dynamic> listTitle = [];
+            String listTitle='';
+            if (data[name] != null) {
+              // listTitle = await ViewController.getTitleMultiSelectedItem(
+              //     '${tableName}', data[name], column);
+              listTitle = ViewController.itemsShowSelectItem(data['${name}'], column);
             }
 
-            rowData.add(exl.TextCellValue(listTitle.join(',')));
+            rowData.add(exl.TextCellValue(listTitle));
           } else if (column['type'] == 'checkbox') {
             rowData.add(exl.BoolCellValue(value));
           } else if (column['type'] == 'file') {
@@ -641,7 +650,6 @@ class MainController extends GetxController {
                         cellValue = int.tryParse(cellValue.toString());
                       }
 
-                      print('cellValue after mobile>>>${cellValue}');
                     } else {
                       cellValue = 0;
                     }
@@ -684,25 +692,21 @@ class MainController extends GetxController {
               // rowDataTest[excelColumns[counterColumn]] = cell?.value;
               counterColumn++;
             }
-            print('rowData>>>${rowData}');
             currentIds.add('${rowDataTest[excelColumns[0]]}');
             if (rowData.any((element) => element != null)) {
               rowdetail.add(rowDataTest);
             }
-            print('rowdetail.length>>>${rowdetail.length}');
           }
           counter++;
         }
       }
     }
 
-    print('all data is:${rowdetail}');
 
     var columnPrime = getColumnPrime();
 
     for (var data in rowdetail) {
       var findIndexRecord = findByColumn(data, columnPrime);
-      print('findIndexRecord>>>${findIndexRecord}');
 
       //create data json
       //function generate json record with columns name and data excel
@@ -720,8 +724,6 @@ class MainController extends GetxController {
       // print('isValidatorList>>>${isValidatorList}');
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
-      print('excelJsontt>>>${excelJson}');
-      print('findIndexRecordt>>>${findIndexRecord}');
       if (findIndexRecord != -1) {
         DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
         await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
@@ -747,7 +749,6 @@ class MainController extends GetxController {
 
         // }
       } else {
-        print('ydjdfff');
         await DB('${MainController.tableInfo['table-name']}').storeRecord(excelJson);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -841,7 +842,6 @@ class MainController extends GetxController {
     // dataController.allData.value.add(newData);
     MainController.tableData.add(newData);
     await MainController.loadData();
-    MainController.renderPagination();
   }
 
   static Future<Map> generateJsonExcel(
@@ -1135,16 +1135,7 @@ class MainController extends GetxController {
     return double.tryParse(str) != null;
   }
 
-  static getColumnInfoTable(String tableName) {
-    int index = MainController.SubMenuList.indexWhere(
-        (element) => element['table-name'] == '${tableName}');
-    if (index != -1) {
-      var tableInfo = MainController.SubMenuList[index];
 
-      return tableInfo['columns'];
-    }
-    return null;
-  }
   static getInfoTable(String tableName) {
     int index = MainController.SubMenuList.indexWhere(
         (element) => element['table-name'] == '${tableName}');
@@ -1155,35 +1146,44 @@ class MainController extends GetxController {
     }
     return null;
   }
-
-  static void renderPagination({var table}) {
-    // if (table == null) {
-    //   MainController.totalPages.value =
-    //       (tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
-    //   MainController.startIndex.value = (tableInfo['currentPage'] - 1) *
-    //       MainController.tableInfo['countShowRow'];
-    //   MainController.endIndex.value = MainController.startIndex.value +
-    //       int.parse('${MainController.tableInfo['countShowRow']}');
-    // } else {
-    //   MainController.totalPages.value =
-    //       (tableData.value.length / table['countShowRow']).ceil();
-    //   MainController.startIndex.value =
-    //       (table['currentPage'] - 1) * table['countShowRow'];
-    //   MainController.endIndex.value = MainController.startIndex.value +
-    //       int.parse('${table['countShowRow']}');
-    // }
-    //
-    // if (MainController.endIndex.value > tableData.value.length) {
-    //   MainController.endIndex.value = tableData.value.length;
-    // } else {
-    // }
-
+  static getStatusTable(String tableName) {
+    var infoTable=getInfoTable(tableName);
+    if(infoTable!=null){
+      return infoTable['status'];
+    }
+    return false;
   }
+  static List<dynamic> getColumnsTable(String tableName) {
+    int index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == '${tableName}');
+    if (index != -1) {
+      var tableInfo = MainController.SubMenuList[index];
+
+      return tableInfo['columns'];
+    }
+    return [];
+  }
+
+  static List<dynamic> getColumnsList (String tableName) {
+    List<dynamic> columns=getColumnsTable( tableName);
+    if (columns.length!=0) {
+      List<dynamic> list=[];
+      for (var column in columns) {
+        list.add(column['name']);
+      }
+      return list;
+    }
+    return [];
+  }
+
 
   static getTypeOfField(String tableName, String name) {
     var type;
-    var column = getColumnInfoTable(tableName);
+    var column = getColumnsTable(tableName);
     for (var item in column) {
+      if(item['name'] == '_id'){
+        return 'string';
+      }
       if (item['name'] == name) {
         type = item['type'];
         return type;
@@ -1191,39 +1191,72 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> search(String query) async {
-    // List<dynamic> allData = box.values.toList();
-    List<Map<String, dynamic>> allData = [];
-
-    for (var item in box.values.toList()) {
-      if (item.data is Map) {
-        allData.add(Map<String, dynamic>.from(item.data));
+  static getDetailsOfField(String tableName, String name) {
+    var i;
+    var column = getColumnsTable(tableName);
+    for (var item in column) {
+      if (item['name'] == name) {
+        i = item;
+        return i;
       }
     }
+  }
 
-    searchQuery.value = query;
-    // if (MainController.table['table-name'] == box.name) {
-    if (query.isEmpty) {
-      MainController.tableData.value = allData;
-    } else {
-      MainController.tableInfo['currentPage'] = 1;
-      MainController.tableData.value = allData.where((data) {
-        for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          var column = MainController.tableInfo['columns'][j];
-          var name = column['name'];
-          if (data[name] != null &&
-              data[name]
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase())) {
-            return true;
-          }
-        }
-        return false;
-      }).toList();
+  static Future<void> search(String query) async {
+    List<Map<String, dynamic>> allData = [];
+    for (var item in MainController.allData.value) {
+      if (item is Map) {
+        allData.add(Map<String, dynamic>.from(item));
+      }
     }
-    // }
-    MainController.renderPagination();
+    searchQuery.value = query;
+    if (query.isEmpty) {
+      MainController.tableData.value = MainController.allData.value;
+    } else {
+      List<dynamic>list=[];
+      MainController.tableInfo['currentPage'] = 1;
+        for(Map<String, dynamic> data in allData) {
+          bool flag=true;
+
+          for(var key in data.keys) {
+            if (key != '_id'){
+              if (data[key] != null) {
+                var type = getTypeOfField(
+                    MainController.tableInfo['table-name'], key);
+
+                if (type == 'select' || type == 'multiSelect' ||
+                    type == 'radiobutton') {
+                  var column = getDetailsOfField(
+                      MainController.tableInfo['table-name'], key);
+                  data[key] =
+                      ViewController.itemsShowSelectItem(data[key], column);
+                }
+
+                var val = data[key];
+                print('MainController.search data[key] >>${val}>>${val.contains(
+                    'dd')}');
+                if (val != null &&
+                    val.toLowerCase().contains(query.toLowerCase())) {
+
+
+                  flag = true;
+                  break;
+                } else {
+                  flag = false;
+                }
+              }
+              else {
+                flag = false;
+              }
+          } else {
+              flag = false;
+            }
+          } if (flag == true) {
+            list.add(data);
+          }
+      }
+      MainController.tableData.value=list;
+      }
   }
 
   static Future<void> loadJson() async {
@@ -1234,11 +1267,11 @@ class MainController extends GetxController {
     // await ConncetServerController.deleteSchema({'table_name':'details'});
     // ConncetServerController.listSchema();
 
-    // for (var name in tableNames()) {
-    //   addsyncField('${name}');
-    //   createMultiSelectTable('${name}');
-    //   addParentForRelations('${name}');
-    // }
+    for (var name in tableNames()) {
+      addsyncField('${name}');
+      createMultiSelectTable('${name}');
+      addParentForRelations('${name}');
+    }
 
   }
 
@@ -1294,7 +1327,7 @@ class MainController extends GetxController {
 
   static createMultiSelectTable(String tableName) {
     var getDataTable = ViewCustomController.getDataTable(tableName);
-    List<dynamic> columnList = ViewController.getColumnList(tableName);
+    List<dynamic> columnList = MainController.getColumnsTable(tableName);
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
         String tableNameNew =
@@ -1348,7 +1381,7 @@ class MainController extends GetxController {
     }
   }
 
-  static addParentForRelations(String tableName) {
+  static addParentForRelations (String tableName) {
     var getDataTable = ViewCustomController.getDataTable(tableName);
     if (getDataTable['relations'].length != 0) {
       for (var relate in getDataTable['relations']) {
@@ -1367,6 +1400,7 @@ class MainController extends GetxController {
           'name': 'parent_id',
           'title': 'parent_id',
           'type': 'string',
+          'is-show-table': false,
           'is-show-edit': false,
           'is-show-store': false,
         });
@@ -1382,15 +1416,19 @@ class MainController extends GetxController {
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
         MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+        MainController.allData.value=MainController.tableData.value;
       } else {
         tableInfo = tableData;
-        if (tableDataItems != null)
+        if (tableDataItems != null) {
           MainController.tableData.value = tableDataItems;
-        else {
+          MainController.allData.value=MainController.tableData.value;
+        } else {
           // if (tableInfo['status'] == "online")
           //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
             MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+
+            MainController.allData.value=MainController.tableData.value;
         }
       }
     } else {
@@ -1524,6 +1562,7 @@ class MainController extends GetxController {
     if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
+      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }
   }

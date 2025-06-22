@@ -330,7 +330,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
 
                                                         child: Obx(() {
                                                           return Txt(
-                                                            '${ViewController.itemsShowSelectItem(item,column['items'])}',
+                                                            '${ViewController.itemsShowSelectItem(item,column)}',
                                                             color: MainController.isLightMode.value == true
                                                                 ? whiteColor
                                                                 : primaryDark,
