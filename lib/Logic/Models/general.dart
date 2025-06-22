@@ -93,9 +93,6 @@ class General{
                          dataBox[i].data.addAll({"_id": dataBox[i].id});
                          multiSelectedTitleList.add(dataBox[i].data);
                        }
-                       // else{
-                       //   multiSelectedTitleList=[];
-                       // }
                      }
                    }
                  data = multiSelectedTitleList.length != 0

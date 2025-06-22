@@ -379,8 +379,6 @@ class DB {
       }
       else {
         if (this.whereList.length != 0) {
-
-
           if (data.length != 0){
             if(MainController.SubMenuList[index]['online']==true){
             await ConncetServerController.filterRecordGeneral(this.whereList,this.tableName!,'\$and');

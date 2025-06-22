@@ -267,7 +267,8 @@
           "sourceItems": "table",
           "sourceTable": "sample",
           "items":["title"]
-        }, {
+        },
+        {
           "name": "sampleMultiSelect",
           "title": "sampleMultiSelect",
           "type": "multiSelect",

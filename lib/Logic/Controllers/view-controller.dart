@@ -1881,6 +1881,7 @@ class ViewController extends GetxController {
   }
 
   static String itemsShowSelectItem(var listItems, var column) {
+    print('ViewController.itemsShowSelectItem>>is${listItems}>>${column}');
     var items=column['items'];
     List<dynamic> a = [];
     if (listItems is List) {
@@ -1921,6 +1922,7 @@ class ViewController extends GetxController {
         }
       }
     }
+    print('ViewController.itemsShowSelectItem result>>${a.join('%')}');
     return a.join('%');
   }
 

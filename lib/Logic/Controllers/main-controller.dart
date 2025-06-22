@@ -1206,22 +1206,80 @@ class MainController extends GetxController {
     if (query.isEmpty) {
       MainController.tableData.value = MainController.allData.value;
     } else {
+      List<dynamic>list=[];
       MainController.tableInfo['currentPage'] = 1;
-      MainController.tableData.value = allData.where((data) {
-        for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
-          var column = MainController.tableInfo['columns'][j];
-          var name = column['name'];
-          if (data[name] != null &&
-              data[name]
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase())) {
-            return true;
+
+
+      // for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      //   var column = MainController.tableInfo['columns'][j];
+      //   var name = column['name'];
+        for(Map<String, dynamic> data in allData) {
+          bool flag=true;
+
+          for(var key in data.keys) {
+            if (key != '_id'){
+              if (data[key] != null) {
+                var type = getTypeOfField(
+                    MainController.tableInfo['table-name'], key);
+
+                if (type == 'select' || type == 'multiSelect' ||
+                    type == 'radiobutton') {
+                  var column = getDetailsOfField(
+                      MainController.tableInfo['table-name'], key);
+                  data[key] =
+                      ViewController.itemsShowSelectItem(data[key], column);
+                }
+
+                var val = data[key];
+                print('MainController.search data[key] >>${val}>>${val.contains(
+                    'dd')}');
+                if (val != null &&
+                    val.toLowerCase().contains(query.toLowerCase())) {
+                  print('MainController.search>> ${val}>>${val.toLowerCase()
+                      .contains(query.toLowerCase())}');
+
+                  flag = true;
+                  break;
+                } else {
+                  flag = false;
+                }
+              }
+              else {
+                flag = false;
+              }
+          } else {
+              flag = false;
+            }
+          } if (flag == true) {
+            list.add(data);
           }
-        }
-        return false;
-      }).toList();
-    }
+      }
+      MainController.tableData.value=list;
+      }
+      // MainController.tableData.value = allData.where((data) {
+      //   for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      //     var column = MainController.tableInfo['columns'][j];
+      //     var name = column['name'];
+      //     print('MainController.search type>>${column}');
+      //     if (data[name] != null) {
+      //       if (column['type'] == 'multiSelect' ) {
+      //         print('MainController.search>>${data}>******>${name}>********>${data[name]}');
+      //
+      //         // data[name] = ViewController.itemsShowSelectItem(data[name], column);
+      //
+      //       }
+      //       if (data[name].toString().toLowerCase().contains(
+      //           query.toLowerCase())) {
+      //         return true;
+      //       }else{
+      //         return false;
+      //       }
+      //     }else
+      //       return false;
+      //   }
+      //   return false;
+      // }).toList();
+    // }
   }
 
   static Future<void> loadJson() async {
