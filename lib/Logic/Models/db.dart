@@ -126,18 +126,21 @@ class DB {
   }
 
   pageInate() async {
+    MainController.endIndex.value=0;
+    MainController.startIndex.value=0;
+
     int  countShowRow=await MainController.getInfoTable('${this.tableName}')['countShowRow'];
     int  currentPage=await MainController.getInfoTable('${this.tableName}')['currentPage'];
     int  perPage=countShowRow!=null?countShowRow:10;
     int s=(currentPage-1)*perPage;
     var getRecord=await getRecords();
-    int totalItems=getRecord.length;
+    var totalItems=getRecord.length;
     var data=(await skip(s).getRecords()).take(perPage).toList();
-
     var end = s+perPage;
     MainController.startIndex.value = s;
-    MainController.endIndex.value = MainController.endIndex.value > (getRecord).length? totalItems:end;
-    print('DB.pageInate>>${data}');
+    var endBycondition=end >= totalItems ? totalItems:end;
+
+    MainController.endIndex.value =endBycondition;
     return data;
   }
 
@@ -186,7 +189,6 @@ class DB {
     Box box;
 
     List<Map<String, dynamic>> data=[];
-    List<Map<String, dynamic>> dataByFormat=[];
     int index = MainController.SubMenuList.indexWhere((element) => element['table-name'] == '${this.tableName}');
     if(MainController.SubMenuList[index]['online']==true){
     await ConncetServerController.getRecordGeneral('${tableName}');
@@ -455,7 +457,6 @@ class DB {
                         } else
                           flag = false;
                       } else {
-                        print('DB.getRecords>>>${d['${whereList[j]!.fieldName}'].runtimeType}>>>${whereList[j]!.value.runtimeType}');
                           if (d['${whereList[j]!.fieldName}'] >=
                             whereList[j]!.value && flag == true) {
                           flag = true;
@@ -608,7 +609,6 @@ class DB {
       "server error":"Dont sync this record!",
 
     });
-    print('DB.storeRecord newRequest>>${newRequest}');
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
     var beforValidate = HelperController.beforeStoreValidation(newData);
     if (beforValidate['status'] == false) {
@@ -658,7 +658,6 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
-    print('DB.updateRecord records>>${request}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
       allData = box.values.toList();
@@ -669,14 +668,19 @@ class DB {
     for (var data in records) {
 
       a = data;
-      print('DB.updateRecord a before>>${a}');
 
       a.forEach((key, value) {
         List<String> idList=[];
-
+        if(value is List){
+          for(int i=0;i<value.length;i++){
+            idList.add(value[i]['_id']);
+          }
+          a[key]=idList;
+        }
         if (request.containsKey(key)) {
-          print('DB.updateRecord data >>>${a[key]}>>>${request[key] }');
+          print('DB.updateRecord>>>${a[key]}>>${request[key]}');
           a[key] = request[key];
+
         } else {
           //must be check key exist in records if not add.
           toAdd.add({request.keys.first: request.values.first});
@@ -689,28 +693,19 @@ class DB {
             a[key] = value['_id'];
           }
         }
-        if(value is List){
-          for(int i=0;i<value.length;i++){
-            idList.add(value[i]['_id']);
-          }
-          a[key]=idList;
-        }
-        print('DB.updateRecord a after>>${a}');
+
 
       });
 
     }
-    print('DB.updateRecord !request.containsKey>>${toAdd}');
     final record = DataModel(
         id: a['_id'],
         data: a,
       );
-    print('DB.updateRecord recordtest>>${a}');
 
     var beforeValidate =
           await HelperController.beforeUpdateValidation(record);
     if (beforeValidate['status'] == false) {
-      print('HelperController.beforeUpdateValidation');
         showSnackbar(snackTypes.error, beforeValidate['message']);
       } else {
         var validate = await RecordController.validate(this.tableName!, record,

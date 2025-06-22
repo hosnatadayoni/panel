@@ -116,7 +116,7 @@ class _EditPageState extends State<EditPage> {
                               onTap: ()async{
                                 // Map<String,dynamic> parent=await DB.parentItem;
                                 // if(parent.length==0) {
-                                print('_EditPageState.build>>${ViewController.request}');
+                                print('_EditPageState.build>>>${ViewController.request}');
                                       await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}')
                                       .updateRecord(ViewController.request);
                                 // }

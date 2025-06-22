@@ -162,7 +162,6 @@ class _CreatePageState extends State<CreatePage> {
                                               onExit: (_) {},
                                               child: InkWell(
                                                 onTap: () async {
-                                                  print('_CreatePageState.build>>>${ViewController.request}');
                                                   Map<String,dynamic> parent=await DB.parentItem;
                                                   if(parent.length==0){
                                                     await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);

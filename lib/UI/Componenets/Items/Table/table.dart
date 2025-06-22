@@ -99,7 +99,6 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i]};
-                                      print('_TableBoxState.build>>>${MainController.tableData.value[i]['sampleMultiSelect']}');
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(
@@ -175,12 +174,10 @@ class _TableBoxState extends State<TableBox> {
                                         onTap: () async {
 
                                           var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
-                                          print('_TableBoxState.build>>>${items}');
                                           DB.parentItem={
                                             'parent_id': MainController.tableData.value[i]['_id'],
                                             'parent_table': MainController.tableInfo['table-name']
                                           };
-                                          print('_TableBoxState.build>>>${DB.parentItem}');
                                           await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
 
                                           await MainController.goToTablePage();

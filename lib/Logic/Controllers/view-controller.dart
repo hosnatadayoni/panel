@@ -431,7 +431,6 @@ class ViewController extends GetxController {
                       : '' : ''}',
                   dataModel[name] == '' ? false.obs : true.obs);
             } else {
-              print('ViewController.generateEditFormView>>>${items}>>${dataModel[name]}');
               if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items.firstWhere((element) => element['value'] == dataModel[name]['value']);
               selectBox = await generateStoreFormSelectBox(
@@ -527,7 +526,6 @@ class ViewController extends GetxController {
         }
         else if (type == 'multiSelect') {
           List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
-          print('ViewController.generateEditFormView items>>${dataModel}');
           List<dynamic> multiSelectedItemList = [];
           if (items.length != 0) {
             if (column['sourceTable'] != null) {
@@ -1295,12 +1293,10 @@ class ViewController extends GetxController {
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
-        print('ViewController.genarateEditFormMuiltiSelectBox>>>${selectedItemsList}');
         for (var selectedItem in selectedItemsList) {
 
           if(selectedItem['_id']!=null) {
             selectedItemId.add(selectedItem['_id']);
-            print('ViewController.genarateEditFormMuiltiSelectBox>>>${selectedItemId}');
           }
         }
         ViewController.request[column['name']] = selectedItemId;
@@ -1348,7 +1344,8 @@ class ViewController extends GetxController {
                                               requestMultiSelect.removeWhere((key, value) => value == ['_id']);
                                               selectedItemsList.removeWhere( (element) => element['_id']==item['_id']);
                                               selectedItemId.remove(item['_id']);
-                                            }
+                                              print('ViewController.genarateEditFormMuiltiSelectBox>>${selectedItemId}>>${selectedItemId.length}');
+                                                  }
                                             if (item['_id'] == '') {
                                               selectedItemId.value.remove(item['_id']);
                                             }
@@ -1881,7 +1878,6 @@ class ViewController extends GetxController {
   }
 
   static String itemsShowSelectItem(var listItems, var column) {
-    print('ViewController.itemsShowSelectItem>>is${listItems}>>${column}');
     var items=column['items'];
     List<dynamic> a = [];
     if (listItems is List) {
@@ -1922,12 +1918,10 @@ class ViewController extends GetxController {
         }
       }
     }
-    print('ViewController.itemsShowSelectItem result>>${a.join('%')}');
     return a.join('%');
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-    print('ViewController.itemsList>>${dataModel}');
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];

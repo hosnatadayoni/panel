@@ -1208,11 +1208,6 @@ class MainController extends GetxController {
     } else {
       List<dynamic>list=[];
       MainController.tableInfo['currentPage'] = 1;
-
-
-      // for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      //   var column = MainController.tableInfo['columns'][j];
-      //   var name = column['name'];
         for(Map<String, dynamic> data in allData) {
           bool flag=true;
 
@@ -1235,8 +1230,7 @@ class MainController extends GetxController {
                     'dd')}');
                 if (val != null &&
                     val.toLowerCase().contains(query.toLowerCase())) {
-                  print('MainController.search>> ${val}>>${val.toLowerCase()
-                      .contains(query.toLowerCase())}');
+
 
                   flag = true;
                   break;
@@ -1256,30 +1250,6 @@ class MainController extends GetxController {
       }
       MainController.tableData.value=list;
       }
-      // MainController.tableData.value = allData.where((data) {
-      //   for (int j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      //     var column = MainController.tableInfo['columns'][j];
-      //     var name = column['name'];
-      //     print('MainController.search type>>${column}');
-      //     if (data[name] != null) {
-      //       if (column['type'] == 'multiSelect' ) {
-      //         print('MainController.search>>${data}>******>${name}>********>${data[name]}');
-      //
-      //         // data[name] = ViewController.itemsShowSelectItem(data[name], column);
-      //
-      //       }
-      //       if (data[name].toString().toLowerCase().contains(
-      //           query.toLowerCase())) {
-      //         return true;
-      //       }else{
-      //         return false;
-      //       }
-      //     }else
-      //       return false;
-      //   }
-      //   return false;
-      // }).toList();
-    // }
   }
 
   static Future<void> loadJson() async {
@@ -1438,7 +1408,6 @@ class MainController extends GetxController {
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
-        print('MainController.loadData');
         MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
         MainController.allData.value=MainController.tableData.value;
       } else {

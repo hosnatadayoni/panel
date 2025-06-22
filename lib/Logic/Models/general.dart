@@ -13,7 +13,6 @@ class General{
     this.tableName=tableName;
   }
    withFormat(String type,var value,var cloumnName) async {
-     print('General.withFormat value>>${value}');
     if (value == '') {
        return null;
      } else {
@@ -31,7 +30,6 @@ class General{
          }
        }
        else if (type == 'select' || type == 'radiobutton') {
-         print('General.withFormat >1');
 
          List<dynamic> dataBox = [];
          var data;
@@ -39,12 +37,9 @@ class General{
          List<dynamic> columnList = MainController.getColumnsTable(
              '${this.tableName}');
          for (var column in columnList) {
-           print('General.withFormat >2');
            Box box2;
            if (column['name'] == cloumnName) {
-             print('General.withFormat >23>>${column['name'] == cloumnName}');
              if (column['sourceItems'] == 'table') {
-              print('General.withFormat >22');
               box2 = await Hive.openBox<DataModel>('${column['sourceTable']}');
               dataBox = box2.values.toList();
               if (dataBox.length != 0) {
@@ -68,7 +63,6 @@ class General{
             }
           }
         }
-         print('General.withFormat >data is>>${data}');
 
          return data;
        }

@@ -55,7 +55,6 @@ class _MenuBoxState extends State<MenuBox>{
                                   Column(children:[
                                   InkWell(
                                       onTap: ()async {
-                                        print('_MenuBoxState.build');
                                         MainController.selectedSubItem.value = j;
                                         DB.parentItem={};
                                         await MainController.loadData();

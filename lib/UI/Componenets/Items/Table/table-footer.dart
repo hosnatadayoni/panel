@@ -45,12 +45,10 @@ class _TableFooterState extends State<TableFooter> {
       },
       child: InkWell(
         onTap: ()async{
-
           setState(() {
             MainController.tableInfo['currentPage'] = i;
           });
           MainController.tableData.value= await DB('${tableSelected}').pageInate();
-
         },
         child: Container(
             margin: EdgeInsets.only(left: 5),
@@ -62,12 +60,6 @@ class _TableFooterState extends State<TableFooter> {
                   borderRadius: BorderRadius.circular(5),
                   color:isHover.value == true  ? colorBtn:i ==MainController.tableInfo['currentPage'] ? colorBtn : Colors.blue,
                 ),
-                // onPressed: () {
-                //   setState(() {
-                //     MainController.tableInfo['currentPage'] = 1;
-                //   });
-                //   MainController.renderPagination();
-                // },
                 child: Center(child: Txt('${i}', textAlign: TextAlign.center , color: whiteColor,)),
               );
             })

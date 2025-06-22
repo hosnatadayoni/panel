@@ -33,9 +33,6 @@ class RestApi {
       }
       dio.options.headers["Access-Control-Allow-Origin"]=true;
       dio.options.contentType="multipart/form-data";
-      print('**apiUrl**>>>>${url}');
-      print('**token**>>>>${mytoken}');
-      print('**data**>>>>${data}');
       var formData = null;
       if(data!=null){
         formData=FormData.fromMap(data);
@@ -57,13 +54,11 @@ class RestApi {
           break;
       }
 
-      print('>>>Success<<<<');
       return response;
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -88,12 +83,10 @@ class RestApi {
 
     else if(response.statusCode==200 ){
       if(printResponse)
-        print('>>>response>>>${response.data}<<<<end response <<<<');
       if(successCallback!=null)
         await successCallback();
     }
     else{
-      print('error status code>>>>${response.statusCode} >> ${response}');
       if(popupMessage && response.data!=null && response.data['message']!=null)
         showSnackbar(snackTypes.error,'${response.data['message']??''}');
       if(errorCallback!=null)
@@ -119,18 +112,14 @@ class RestApi {
         mytoken = await Token.getToken();
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
-      print('***apiUrl***>>>>${url}');
-      print('***token***>>>>${mytoken}');
       var response =
       await dio.get(url, queryParameters: query,);
-      print('>>>Success<<<<');
       return response;
     }catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }
       else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       }
@@ -142,7 +131,6 @@ class RestApi {
   }
 
   static Future<Response?> post(url, {body=null, useToken = true}) async {
-    print('**body runtimeType**>>>>${body.runtimeType}');
     if(await Connectivity().checkConnectivity()==ConnectivityResult.none){
       isConnected=false;
       return null;
@@ -164,24 +152,18 @@ class RestApi {
         'api_key': await Token.getToken()
       });
       // body=json.encode(body).toString();
-      print('**apiUrl**>>>>${url}');
-      print('**token**>>>>${mytoken}');
-      print('**body**>>>>${body}');
       var formData = null;
       if(body!=null)
         formData=FormData.fromMap(body);
       var response = await dio.post(url, data: formData,);
-      print('>>>Success<<<<');
       return response;
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
-        print('apiError>>${e}>>${body}>>${body.runtimeType}');
         return null;
       }
     }
@@ -207,20 +189,15 @@ class RestApi {
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
       dio.options.contentType="multipart/form-data";
-      print('**apiUrl**>>>>${url}');
-      print('**token**>>>>${mytoken}');
-      print('**body**>>>>${body}');
       var formData = null;
       if(body!=null)
         formData=FormData.fromMap(body);
       var response = await dio.put(url, data: formData,);
-      print('>>>Success<<<<');
       return response;
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -249,19 +226,15 @@ class RestApi {
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
 
-      print('***token***>>>>${mytoken}');
-      print('***apiUrl***>>>>${url}');
       var formData = null;
       if(body!=null)
         formData=FormData.fromMap(body);
       var response = await dio.delete(url, data: formData);
-      print('>>>Success<<<<');
       return response;
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -288,16 +261,11 @@ class RestApi {
         if (mytoken != null) dio.options.headers["authorization"] = mytoken;
       }
 
-      print('***token***>>>>${mytoken}');
       await dio.download(url, savePath, options: options, onReceiveProgress: (rec, total) {
-        print('>>>>res>>>>${rec}');
-        print('>>>>res>>>>${total}');
       });
-      print('>>>>complete>>>');
       return true;
     } catch (e) {
       if(e is DioError && e.response != null){
-        print(e.response);
       }
       else{
         print(e.toString());
