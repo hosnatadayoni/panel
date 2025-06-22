@@ -31,7 +31,7 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedBtn = false.obs;
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
-  static Map<dynamic, dynamic> request = {};
+  static Map<String, dynamic> request = {};
   static List<Map<String, dynamic>> requestFilter = [];
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};

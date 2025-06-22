@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -160,7 +159,8 @@ class DB {
       await ConncetServerController.getRecordGeneral('${tableName}');
       if(ConncetServerController.getRecordRes.isNotEmpty){
         data= ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-      }}
+      }
+    }
     else{
       var tableInfo = MainController.SubMenuList[index];
 
@@ -392,10 +392,8 @@ class DB {
             for (var d in data) {
               bool flag = true;
               for (int j = 1; j <= whereList.length; j++) {
-                print('DB.getRecords where isss>>${this.tableName!}>>${whereList[j]!.fieldName!}');
                 if(whereList[j]!.fieldName!='_id')
                   whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
-
                 if (d['${whereList[j]!.fieldName}'] != null) {
                   if (whereList[j]!.value != '') {
                     if (whereList[j]!.oprator == '\$eq' || whereList[j]!.oprator == null) {
@@ -612,6 +610,7 @@ class DB {
       "server error":"Dont sync this record!",
 
     });
+    print('DB.storeRecord newRequest>>${newRequest}');
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
     var beforValidate = HelperController.beforeStoreValidation(newData);
     if (beforValidate['status'] == false) {
@@ -660,36 +659,59 @@ class DB {
 
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
-    List<dynamic> records = await getBoxRecords();
-    List<dynamic> recordtest = await getRecords();
-    print('DB.updateRecord>>${recordtest}');
+    List<dynamic> records = await getRecords();
+    print('DB.updateRecord records>>${request}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    // if(ConncetServerController.getRecordRes.isEmpty){
       allData = box.values.toList();
-    // }else{
-    //   allData=ConncetServerController.getRecordRes;
-    // }
+
     Map<String,dynamic>a={};
     List<Map<String, dynamic>> toAdd = [];
 
     for (var data in records) {
+
       a = data;
+      print('DB.updateRecord a before>>${a}');
+
       a.forEach((key, value) {
+        List<String> idList=[];
+
         if (request.containsKey(key)) {
+          print('DB.updateRecord data >>>${a[key]}>>>${request[key] }');
           a[key] = request[key];
         } else {
           toAdd.add({request.keys.first: request.values.first});
         }
+        if(value is Map){
+          var sourceItem=MainController.getDetailsOfField('${this.tableName}', key)['sourceItems'];
+          if(sourceItem=='custom'){
+            a[key]=value['value'];
+          }else {
+            a[key] = value['_id'];
+          }
+        }
+        if(value is List){
+          for(int i=0;i<value.length;i++){
+            idList.add(value[i]['_id']);
+          }
+          a[key]=idList;
+        }
+        print('DB.updateRecord a after>>${a}');
+
       });
+
     }
+    print('DB.updateRecord !request.containsKey>>${toAdd}');
     final record = DataModel(
         id: a['_id'],
         data: a,
       );
-      var beforeValidate =
+    print('DB.updateRecord recordtest>>${a}');
+
+    var beforeValidate =
           await HelperController.beforeUpdateValidation(record);
     if (beforeValidate['status'] == false) {
+      print('HelperController.beforeUpdateValidation');
         showSnackbar(snackTypes.error, beforeValidate['message']);
       } else {
         var validate = await RecordController.validate(this.tableName!, record,
@@ -700,10 +722,7 @@ class DB {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
             var customUpdate = await HelperController.beforeUpdate(record)['data'];
-
             var allDataIndex = allData.indexWhere((element) => element.id == a['_id']);
-            for(var a in allData){
-            }
             allData[allDataIndex] = customUpdate;
             if(MainController.getStatusTable(this.tableName!)==true) {
               await ConncetServerController.setDatabaseme(customUpdate.data);

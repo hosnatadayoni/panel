@@ -1184,6 +1184,17 @@ class MainController extends GetxController {
     }
   }
 
+  static getDetailsOfField(String tableName, String name) {
+    var i;
+    var column = getColumnsTable(tableName);
+    for (var item in column) {
+      if (item['name'] == name) {
+        i = item;
+        return i;
+      }
+    }
+  }
+
   static Future<void> search(String query) async {
     List<Map<String, dynamic>> allData = [];
     for (var item in MainController.allData.value) {

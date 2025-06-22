@@ -123,6 +123,21 @@
           "title": "checkBox",
           "type": "checkbox",
           "default_value": false
+        },
+        {
+          "name": "price",
+          "title": "price",
+          "type": "Number double",
+          "type_filed": "double"
+        },
+        {
+          "name": "product",
+          "title": "product",
+          "type": "multiSelect",
+          "type_filed": "array",
+          "sourceItems": "table",
+          "sourceTable": "products",
+          "items":["title","price"]
         }
       ]
     },

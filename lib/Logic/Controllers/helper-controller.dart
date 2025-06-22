@@ -48,7 +48,7 @@ class HelperController extends GetxController {
   }
 
   static beforeUpdateValidation(DataModel newData) {
-    print('HelperController.beforeUpdateValidation');
+
     return AppController.responceHelper(newData, true);
   }
 
@@ -92,7 +92,7 @@ class HelperController extends GetxController {
     }
     else{
 
-      ViewController.request=data;
+      // ViewController.request=data;
       await Get.to(() => EditPage(data: data));
     }
   }
