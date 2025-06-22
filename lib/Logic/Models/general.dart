@@ -13,88 +13,108 @@ class General{
     this.tableName=tableName;
   }
    withFormat(String type,var value,var cloumnName) async {
-    if(type=='string'){
-      return value.toString();
-    }else if(type=='Number double'){
-      return double.parse(value.toString());
-    }else if(type=='Number int'){
-      return int.parse(value.toString());
-    }else if(type=='checkbox'){
-      if(value=='true'|| value==true){
-        return true;
-      }else{
-        return false;
-      }
-    }
-    else if(type=='select' || type=='radiobutton'){
+     print('General.withFormat value>>${value}');
+    if (value == '') {
+       return null;
+     } else {
+       if (type == 'string') {
+         return value.toString();
+       } else if (type == 'Number double') {
+         return double.parse(value.toString());
+       } else if (type == 'Number int') {
+         return int.parse(value.toString());
+       } else if (type == 'checkbox') {
+         if (value == 'true' || value == true) {
+           return true;
+         } else {
+           return false;
+         }
+       }
+       else if (type == 'select' || type == 'radiobutton') {
+         print('General.withFormat >1');
 
-      List<dynamic> dataBox=[];
-      var data;
-      List<dynamic> dataItem = [];
-      List<dynamic> columnList = MainController.getColumnsTable('${this.tableName}');
-      for(var column in columnList) {
-        Box box2;
-        if(column['name']==cloumnName )
-          if ( column['sourceItems'] == 'table') {
-            box2 = (await Hive.openBox<DataModel>('${column['sourceTable']}'));
-            dataBox = box2.values.toList();
-            if(dataBox.length!=0)
-          for (int i = 0; i < dataBox.length; i++) {
-            if(dataBox[i].id==value){
-              dataBox[i].data.addAll({
-                "_id":dataBox[i].id
-              });
-              dataItem.add(dataBox[i].data);
-            }
-            data=dataItem.length!=0?dataItem:value;
-            }
-          }else{
-            for(var item in column['items'])
-              if(item['value']==value){
-              data=item;
-              }
-
-          }
-      }
-      return data;
-    }
-    else if(type=='multiSelect') {
-       if (value is List) {
          List<dynamic> dataBox = [];
-         var data ;
-         List<dynamic> multiSelectedTitleList = [];
+         var data;
+         List<dynamic> dataItem = [];
          List<dynamic> columnList = MainController.getColumnsTable(
              '${this.tableName}');
          for (var column in columnList) {
+           print('General.withFormat >2');
            Box box2;
-           if (column['name'] == cloumnName)
+           if (column['name'] == cloumnName) {
+             print('General.withFormat >23>>${column['name'] == cloumnName}');
              if (column['sourceItems'] == 'table') {
-               box2 =
-               (await Hive.openBox<DataModel>('${column['sourceTable']}'));
-               dataBox = box2.values.toList();
-               if (dataBox.length != 0)
-                 for (var i = 0; i < dataBox.length; i++) {
-                   for (var val in value) {
-                     if (dataBox[i].id == val) {
-                         multiSelectedTitleList.add(dataBox[i].data);
-                     }
-                   }
-                 }
-               data = multiSelectedTitleList.length != 0 ? multiSelectedTitleList : value;
-             }else{
-               for(var item in column['items'])
-                 if(item['value']==value)
-                   data.add(item['title']);
-             }
-         }
+              print('General.withFormat >22');
+              box2 = await Hive.openBox<DataModel>('${column['sourceTable']}');
+              dataBox = box2.values.toList();
+              if (dataBox.length != 0) {
+                for (int i = 0; i < dataBox.length; i++) {
+                  if (dataBox[i].id == value) {
+                    dataBox[i].data.addAll({"_id": dataBox[i].id});
+                    dataItem.add(dataBox[i].data);
+                    data = dataItem.length != 0 ? dataItem : value;
+                  }
+                  else{
+
+                  }
+
+                }
+              }
+            } else {
+              for (var item in column['items'])
+                if (item['value'] == value) {
+                  data = item;
+                }
+            }
+          }
+        }
+         print('General.withFormat >data is>>${data}');
+
          return data;
        }
-      else{
-        return value;
-      }
-    }
-    else{
-     return value;
-    }
-  }
+       else if (type == 'multiSelect') {
+         if (value is List) {
+           List<dynamic> dataBox = [];
+           var data;
+           List<dynamic> multiSelectedTitleList = [];
+           List<dynamic> columnList = MainController.getColumnsTable(
+               '${this.tableName}');
+           for (var column in columnList) {
+             Box box2;
+             if (column['name'] == cloumnName)
+               if (column['sourceItems'] == 'table') {
+                 box2 =
+                 (await Hive.openBox<DataModel>('${column['sourceTable']}'));
+                 dataBox = box2.values.toList();
+                 if (dataBox.length != 0)
+                   for (var i = 0; i < dataBox.length; i++) {
+                     for (var val in value) {
+                       if (dataBox[i].id == val) {
+                         multiSelectedTitleList.add(dataBox[i].data);
+                       }
+                       // else{
+                       //   multiSelectedTitleList=[];
+                       // }
+                     }
+                   }
+                 data = multiSelectedTitleList.length != 0
+                     ? multiSelectedTitleList
+                     : '';
+               } else {
+                 for (var item in column['items'])
+                   if (item['value'] == value)
+                     data.add(item);
+               }
+           }
+           return data;
+         }
+         else {
+           return value;
+         }
+       }
+       else {
+         return value;
+       }
+     }
+   }
 }

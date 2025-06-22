@@ -40,7 +40,6 @@ class DB {
         if (type != null) {
           e['_id'] = d.id;
           e[key] =d.data[key]==null?'':await General(this.tableName!).withFormat(type, d.data[key],key);
-
         }
       }
       newData.add(e);
@@ -680,6 +679,7 @@ class DB {
           print('DB.updateRecord data >>>${a[key]}>>>${request[key] }');
           a[key] = request[key];
         } else {
+          //must be check key exist in records if not add.
           toAdd.add({request.keys.first: request.values.first});
         }
         if(value is Map){

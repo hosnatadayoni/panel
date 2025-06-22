@@ -415,8 +415,11 @@ class ViewController extends GetxController {
           List<dynamic> items = await ViewController.itemsList(column);
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
-              if (dataModel[name] != null)
+              if (dataModel[name] != null && dataModel[name] != ''){
+
                 selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
+
+              }
               selectBox = await generateStoreFormSelectBox(
                   column,
                   items,
@@ -465,7 +468,7 @@ class ViewController extends GetxController {
           var items = await ViewController.itemsList(column);
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
-              if (dataModel[name] != null)
+              if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items
                     .firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
               selectBox = await generateFormRadioButton(
@@ -476,7 +479,7 @@ class ViewController extends GetxController {
                       : '' : ''}',
                   dataModel[name] == '' ? false.obs : true.obs);
             } else {
-              if (dataModel[name] != null)
+              if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items.firstWhere(
                         (element) => element['value'] == dataModel[name]);
               selectBox = await generateFormRadioButton(
@@ -554,7 +557,7 @@ class ViewController extends GetxController {
         } else if (type == 'color') {
           colorBox = generateFormColorBox(
               column,
-              dataModel[name] != null
+              dataModel[name] != null && dataModel[name] != ''
                   ? Color(int.parse('${dataModel[name]}'))
                   : Colors.blue,
               dataModel[name] == '' || dataModel[name] == null
@@ -567,7 +570,7 @@ class ViewController extends GetxController {
         } else if (type == 'file') {
 
           fileBox = generateFileBox(
-              '${dataModel[name] != null ? dataModel[name] : []}',
+              '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
               dataModel[name] == null ? false.obs : true.obs);
           children.add(SizedBox(
@@ -1896,7 +1899,8 @@ class ViewController extends GetxController {
           }
         }
     }
-  }else {
+  }
+    else {
       if (listItems is String) {
         a.add(listItems);
       }
