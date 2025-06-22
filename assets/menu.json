@@ -117,6 +117,12 @@
               "is_selected": false
             }
           ]
+        },
+        {
+          "name": "checkBox",
+          "title": "checkBox",
+          "type": "checkbox",
+          "default_value": false
         }
       ]
     },

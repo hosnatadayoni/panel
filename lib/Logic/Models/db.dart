@@ -661,6 +661,8 @@ class DB {
   updateRecord(Map<String, dynamic> request) async {
     List<dynamic> allData = [];
     List<dynamic> records = await getBoxRecords();
+    List<dynamic> recordtest = await getRecords();
+    print('DB.updateRecord>>${recordtest}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     // if(ConncetServerController.getRecordRes.isEmpty){

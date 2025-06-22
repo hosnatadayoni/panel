@@ -1169,11 +1169,11 @@ class MainController extends GetxController {
     return [];
   }
 
+
   static getTypeOfField(String tableName, String name) {
     var type;
     var column = getColumnsTable(tableName);
     for (var item in column) {
-      print('MainController.getTypeOfField>>${item['name']}');
       if(item['name'] == '_id'){
         return 'string';
       }

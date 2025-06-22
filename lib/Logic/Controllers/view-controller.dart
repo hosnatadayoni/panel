@@ -683,13 +683,7 @@ class ViewController extends GetxController {
       onChange: (text) async {
 
         await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecord({'${name}':'${text}'});
-        // dataModel = text;
-        // final data = DataModel(
-        //   id: dataModel['id'],
-        //   data: dataModel,
-        // );
-        // box.values.toList()[indexRow] = data;
-        // await box.putAt(indexRow, data);
+
       },
       index: indexRow,
       column: tableData == null
