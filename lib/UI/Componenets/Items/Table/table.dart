@@ -91,17 +91,8 @@ class _TableBoxState extends State<TableBox> {
                                 child: Wrap(
                                   children: [
                                     if(MainController.tableData.value[i]['sync']=='false')
-                                    IconButton(onPressed: (){
-                                      DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
-                                      // ConncetServerController.setDatabaseme(MainController.tableData.value[i]);
-                                      // MainController.isClickedItem.value = false;
-                                      // ViewController.isClickedBtn.value = false;
-                                      // ViewController.isClickedEditBtn.value = false;
-                                      // ViewController.request = {...MainController.tableData.value[i]};
-                                      //   HelperController.editPageFunction(MainController.tableData.value[i]);
-
-                                      // Get.to(() =>
-                                      //     EditPage(data: MainController.tableData.value[i], index: i,));
+                                    IconButton(onPressed: () async {
+                                     await DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
                                     }, icon: Icon(Icons.refresh , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(onPressed: (){
                                       MainController.isClickedItem.value = false;
@@ -109,9 +100,6 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i]};
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
-
-                                      // Get.to(() =>
-                                      //     EditPage(data: MainController.tableData.value[i], index: i,));
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(
                                       onPressed: () {
