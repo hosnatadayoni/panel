@@ -90,6 +90,7 @@ class General{
                    for (var i = 0; i < dataBox.length; i++) {
                      for (var val in value) {
                        if (dataBox[i].id == val) {
+                         dataBox[i].data.addAll({"_id": dataBox[i].id});
                          multiSelectedTitleList.add(dataBox[i].data);
                        }
                        // else{

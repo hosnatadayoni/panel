@@ -99,6 +99,7 @@ class _TableBoxState extends State<TableBox> {
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
                                       ViewController.request = {...MainController.tableData.value[i]};
+                                      print('_TableBoxState.build>>>${MainController.tableData.value[i]['sampleMultiSelect']}');
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(

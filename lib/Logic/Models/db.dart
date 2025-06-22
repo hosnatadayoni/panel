@@ -137,6 +137,7 @@ class DB {
     var end = s+perPage;
     MainController.startIndex.value = s;
     MainController.endIndex.value = MainController.endIndex.value > (getRecord).length? totalItems:end;
+    print('DB.pageInate>>${data}');
     return data;
   }
 
