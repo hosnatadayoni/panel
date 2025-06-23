@@ -10,7 +10,6 @@ import '../Controllers/main-controller.dart';
 import '../Controllers/record-controller.dart';
 import '../Controllers/view-controller.dart';
 import '../Controllers/view-custom-controller.dart';
-import '../Helpers/token-methods.dart';
 import 'dataModel.dart';
 import 'general.dart';
 import 'package:get/get.dart';
@@ -36,6 +35,7 @@ class DB {
     for (var d in data) {
       Map<String, dynamic> e = <String, dynamic>{};
       for (var key in d.data.keys) {
+        print('DB.getTypeOfField>>${d.data[key]}');
         type = MainController.getTypeOfField(this.tableName!, key);
         if (type != null) {
           e['_id'] = d.id;
@@ -141,6 +141,7 @@ class DB {
     MainController.endIndex.value =endBycondition;
     var data=(await skip(s).getRecords()).take(perPage).toList();
 
+    print('DB.pageInate>>${data}');
     return data;
   }
 
@@ -607,8 +608,8 @@ class DB {
     newRequest.addAll({
       "sync":"false",
       "server error":"Dont sync this record!",
-
     });
+
     DataModel newData = DataModel(id: '${Id}', data: newRequest);
     var beforValidate = HelperController.beforeStoreValidation(newData);
     if (beforValidate['status'] == false) {
@@ -635,10 +636,10 @@ class DB {
             }
           }
           else {
+            print('DB.storeRecord>>${customData.data}');
+
             await box.add(customData);
           }
-
-
           var afterData = await HelperController.afterStore(this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);

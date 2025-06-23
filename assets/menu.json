@@ -1,6 +1,43 @@
 [
 
     {
+      "title": "جدول",
+      "tooltip": "",
+      "main-menu": true,
+      "table-name": "table",
+      "currentPage": 1,
+      "countShowRow": 10,
+      "online": false,
+      "relations": [],
+      "columns": [
+        {
+          "name": "title",
+          "title": "title",
+          "type": "string",
+          "type_filed": "string"
+        },
+        {
+          "name": "type",
+          "title": "type",
+          "type": "multiSelect",
+          "sourceItems": "custom",
+          "sourceTable": null,
+          "items": [
+            {
+              "title": "معمولی",
+              "value": "1",
+              "is_selected": true
+            },
+            {
+              "title": "ویژه",
+              "value": "2",
+              "is_selected": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "محصولات",
       "tooltip": "",
       "main-menu": true,
@@ -31,6 +68,34 @@
             {
               "type": "required",
               "message": "وارد کردن این فیلد الزامی است"
+            }
+          ]
+        },
+        {
+          "name": "sample",
+          "title": "sample",
+          "type": "multiSelect",
+          "type_filed": "array",
+          "sourceItems": "table",
+          "sourceTable": "sample",
+          "items":["title","price"]
+        },
+        {
+          "name": "type",
+          "title": "type",
+          "type": "multiSelect",
+          "sourceItems": "custom",
+          "sourceTable": null,
+          "items": [
+            {
+              "title": "معمولی",
+              "value": "1",
+              "is_selected": true
+            },
+            {
+              "title": "ویژه",
+              "value": "2",
+              "is_selected": false
             }
           ]
         }
