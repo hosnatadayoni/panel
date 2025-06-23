@@ -726,7 +726,7 @@ class MainController extends GetxController {
 
       if (findIndexRecord != -1) {
         DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['_id']);
-        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
+        await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -1234,22 +1234,12 @@ class MainController extends GetxController {
 
                 var val = data[key];
                 // if(val != null){
-                if(val is String){
-                  if (val.toLowerCase().contains(query.toLowerCase())) {
+                  if (val.toString().toLowerCase().contains(query.toString().toLowerCase())) {
                     flag = true;
                     break;
                   } else {
                     flag = false;
                   }
-                }
-                if(val is int || val is double){
-                  if (val==query) {
-                    flag = true;
-                    break;
-                  } else {
-                    flag = false;
-                  }
-                }
               }
               else {
                 flag = false;
