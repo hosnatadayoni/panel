@@ -75,7 +75,6 @@ class _TableFooterState extends State<TableFooter> {
 
     return [
       Obx((){
-        print('MainController.totalItems.value c>>>${MainController.totalItems.value}');
         return Container(
           padding: EdgeInsets.only(left: 40, right: 40),
           child: Row(
