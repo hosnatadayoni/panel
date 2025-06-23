@@ -21,18 +21,18 @@ class _TableFooterState extends State<TableFooter> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
-
-
-        return Container(
-          child: size.width > 556 ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: pagenationBox(ViewController.totalPage.value , tableSelected),
-          ) :
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: pagenationBox(ViewController.totalPage.value , tableSelected),
-          ),);
+        return Obx((){
+          return Container(
+            child: size.width > 556 ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: pagenationBox(ViewController.totalPage.value , tableSelected),
+            ) :
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: pagenationBox(ViewController.totalPage.value , tableSelected),
+            ),);
+        });
   }
   Widget box(int i , tableSelected){
     Rx<bool> isHover = false.obs;
@@ -71,42 +71,44 @@ class _TableFooterState extends State<TableFooter> {
   List<Widget> pagenationBox(totalPages , tableSelected){
     var size = MediaQuery.of(context).size;
     return [
-      Container(
-        padding: EdgeInsets.only(left: 40, right: 40),
-        child: Row(
-          children: [
-            Txt('${AppController.of(context)!.value('show')}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${MainController.tableData.value.length == 0
-                ? 0
-                : MainController.startIndex.value + 1}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${AppController.of(context)!.value('until')}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${MainController.endIndex.value}', fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${AppController.of(context)!.value('from')}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${MainController.totalItems}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-            Txt('${AppController.of(context)!.value('row')}',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: color3,),
-          ],
-        ),
-      ),
+      Obx((){
+        return Container(
+          padding: EdgeInsets.only(left: 40, right: 40),
+          child: Row(
+            children: [
+              Txt('${AppController.of(context)!.value('show')}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${MainController.tableData.value.length == 0
+                  ? 0
+                  : MainController.startIndex.value + 1}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${AppController.of(context)!.value('until')}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${MainController.endIndex.value}', fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${AppController.of(context)!.value('from')}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${MainController.totalItems}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+              Txt('${AppController.of(context)!.value('row')}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,),
+            ],
+          ),
+        );
+      }),
       size.width > 556 ?
       Expanded(child: Wrap(
         children: <Widget>[

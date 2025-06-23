@@ -670,20 +670,13 @@ class DB {
       a = data;
 
       a.forEach((key, value) {
-        List<String> idList=[];
+
         if(value is List){
+          List<String> idList=[];
           for(int i=0;i<value.length;i++){
             idList.add(value[i]['_id']);
           }
           a[key]=idList;
-        }
-        if (request.containsKey(key)) {
-          print('DB.updateRecord>>>${a[key]}>>${request[key]}');
-          a[key] = request[key];
-
-        } else {
-          //must be check key exist in records if not add.
-          toAdd.add({request.keys.first: request.values.first});
         }
         if(value is Map){
           var sourceItem=MainController.getDetailsOfField('${this.tableName}', key)['sourceItems'];
@@ -693,6 +686,15 @@ class DB {
             a[key] = value['_id'];
           }
         }
+        if (request.containsKey(key)) {
+          print('DB.updateRecord>>>${a[key]}>>${request[key]}');
+          a[key] = request[key];
+
+        } else {
+          //must be check key exist in records if not add.
+          toAdd.add({request.keys.first: request.values.first});
+        }
+
 
 
       });
