@@ -135,12 +135,12 @@ class DB {
     int s=(currentPage-1)*perPage;
     var getRecord=await getRecords();
     var totalItems=getRecord.length;
-    var data=(await skip(s).getRecords()).take(perPage).toList();
     var end = s+perPage;
     MainController.startIndex.value = s;
     var endBycondition=end >= totalItems ? totalItems:end;
-
     MainController.endIndex.value =endBycondition;
+    var data=(await skip(s).getRecords()).take(perPage).toList();
+
     return data;
   }
 
@@ -670,20 +670,13 @@ class DB {
       a = data;
 
       a.forEach((key, value) {
-        List<String> idList=[];
+
         if(value is List){
+          List<String> idList=[];
           for(int i=0;i<value.length;i++){
             idList.add(value[i]['_id']);
           }
           a[key]=idList;
-        }
-        if (request.containsKey(key)) {
-          print('DB.updateRecord>>>${a[key]}>>${request[key]}');
-          a[key] = request[key];
-
-        } else {
-          //must be check key exist in records if not add.
-          toAdd.add({request.keys.first: request.values.first});
         }
         if(value is Map){
           var sourceItem=MainController.getDetailsOfField('${this.tableName}', key)['sourceItems'];
@@ -693,11 +686,24 @@ class DB {
             a[key] = value['_id'];
           }
         }
+        if (request.containsKey(key)) {
+          print('DB.updateRecord1>>>${key}>>${a[key]}>>${request[key]}');
+          a[key] = request[key];
+          print('DB.updateRecord2>>>${key}>>${a[key]}>>${request[key]}');
+
+
+        } else {
+          //must be check key exist in records if not add.
+          toAdd.add({request.keys.first: request.values.first});
+        }
+
 
 
       });
 
     }
+    print('DB.updateRecord a>>>${a}');
+
     final record = DataModel(
         id: a['_id'],
         data: a,
