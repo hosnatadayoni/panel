@@ -1226,16 +1226,22 @@ class MainController extends GetxController {
                 }
 
                 var val = data[key];
-                print('MainController.search data[key] >>${val}>>${val.contains(
-                    'dd')}');
-                if (val != null &&
-                    val.toLowerCase().contains(query.toLowerCase())) {
-
-
-                  flag = true;
-                  break;
-                } else {
-                  flag = false;
+                // if(val != null){
+                if(val is String){
+                  if (val.toLowerCase().contains(query.toLowerCase())) {
+                    flag = true;
+                    break;
+                  } else {
+                    flag = false;
+                  }
+                }
+                if(val is int || val is double){
+                  if (val==query) {
+                    flag = true;
+                    break;
+                  } else {
+                    flag = false;
+                  }
                 }
               }
               else {
