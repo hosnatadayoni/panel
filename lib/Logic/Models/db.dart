@@ -671,32 +671,53 @@ class DB {
       a = data;
 
       a.forEach((key, value) {
+        print('DB.updateRecord1>>>>${key}>${value}');
+        if(key!='_id') {
+          if (value != null) {
+            var sourceItem = MainController.getDetailsOfField(
+                '${this.tableName}', key)['sourceItems'];
 
-        if(value is List){
-          List<String> idList=[];
-          for(int i=0;i<value.length;i++){
-            idList.add(value[i]['_id']);
+            if (value is List) {
+              if (sourceItem == 'custom') {
+                List<String> idList = [];
+                for (int i = 0; i < value.length; i++) {
+                  idList.add(value[i]['value']);
+                }
+                a[key] = idList;
+                print('DB.updateRecord custom>>>${a[key]}');
+
+              } else {
+                List<String> idList = [];
+                for (int i = 0; i < value.length; i++) {
+                  idList.add(value[i]['_id']);
+                }
+                a[key] = idList;
+                print('DB.updateRecord table>>>${a[key]}');
+
+              }
+            }
+            if (value is Map) {
+              if (sourceItem == 'custom') {
+                a[key] = value['value'];
+              } else {
+                a[key] = value['_id'];
+              }
+            }
+            if (request.containsKey(key)) {
+              print('DB.updateRecord1>>>${key}>>${a[key]}>>${request[key]}');
+              a[key] = request[key];
+              print('DB.updateRecord2>>>${key}>>${a[key]}>>${request[key]}');
+            } else {
+              //must be check key exist in records if not add.
+              toAdd.add({request.keys.first: request.values.first});
+            }
           }
-          a[key]=idList;
-        }
-        if(value is Map){
-          var sourceItem=MainController.getDetailsOfField('${this.tableName}', key)['sourceItems'];
-          if(sourceItem=='custom'){
-            a[key]=value['value'];
-          }else {
-            a[key] = value['_id'];
+          else {
+            a[key] = null;
           }
         }
-        if (request.containsKey(key)) {
-          print('DB.updateRecord1>>>${key}>>${a[key]}>>${request[key]}');
-          a[key] = request[key];
-          print('DB.updateRecord2>>>${key}>>${a[key]}>>${request[key]}');
 
 
-        } else {
-          //must be check key exist in records if not add.
-          toAdd.add({request.keys.first: request.values.first});
-        }
 
 
 

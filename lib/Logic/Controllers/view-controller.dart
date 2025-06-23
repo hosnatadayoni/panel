@@ -1958,10 +1958,10 @@ class ViewController extends GetxController {
         itemss = column['items'];
       }
       else {
-        if(dataModel[column['name']]==null){
+        if(dataModel[column['name']]==null || dataModel[column['name']]==''){
           itemss = [];
         }else {
-          // print('ViewController.itemsList>>>${ dataModel[column['name']]}');
+          // print('ViewController.itemsListg>>>${ dataModel[column['name']]}');
 
           for (var item in dataModel[column['name']]) {
             itemss.add(item);
