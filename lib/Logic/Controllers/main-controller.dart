@@ -1222,6 +1222,7 @@ class MainController extends GetxController {
                       MainController.tableInfo['table-name'], key);
                   data[key] = ViewController.itemsShowSelectItem(data[key], column);
                 }
+
                 var val = data[key];
                   if (val.toString().toLowerCase().contains(query.toString().toLowerCase())) {
                     flag = true;
