@@ -135,12 +135,12 @@ class DB {
     int s=(currentPage-1)*perPage;
     var getRecord=await getRecords();
     var totalItems=getRecord.length;
-    var data=(await skip(s).getRecords()).take(perPage).toList();
     var end = s+perPage;
     MainController.startIndex.value = s;
     var endBycondition=end >= totalItems ? totalItems:end;
-
     MainController.endIndex.value =endBycondition;
+    var data=(await skip(s).getRecords()).take(perPage).toList();
+
     return data;
   }
 
@@ -687,8 +687,10 @@ class DB {
           }
         }
         if (request.containsKey(key)) {
-          print('DB.updateRecord>>>${a[key]}>>${request[key]}');
+          print('DB.updateRecord1>>>${key}>>${a[key]}>>${request[key]}');
           a[key] = request[key];
+          print('DB.updateRecord2>>>${key}>>${a[key]}>>${request[key]}');
+
 
         } else {
           //must be check key exist in records if not add.
@@ -700,6 +702,8 @@ class DB {
       });
 
     }
+    print('DB.updateRecord a>>>${a}');
+
     final record = DataModel(
         id: a['_id'],
         data: a,
@@ -750,7 +754,6 @@ class DB {
                 tableData: ViewCustomController.getDataTable(this.tableName!));
             ViewController.isClickedEditBtn.value = false;
             // Get.to(() => TablePage());
-            await MainController.goToTablePage();
           }
         } else {
           showSnackbar(snackTypes.error,

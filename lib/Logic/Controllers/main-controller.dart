@@ -121,15 +121,13 @@ class MainController extends GetxController {
     int rowIndex = 2;
     for (var data in MainController.tableData.value) {
       List<exl.CellValue> rowData = [];
-      // rowData.add(exl.TextCellValue(data.id));
-      rowData.add(exl.TextCellValue(data['_id']));
+      rowData.add(exl.TextCellValue(data.id));
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
           // var value = data.data[name]?.toString() ?? '';
-          // var value = data.data[name] ?? '';
-          var value = data[name] ?? '';
+          var value = data.data[name] ?? '';
           List<dynamic> items = [];
           String tableName = '';
           if (column['type'] == 'select' ||
@@ -142,12 +140,9 @@ class MainController extends GetxController {
               tableName = column['sourceTable'];
             }
             String title;
-            if (data[name] != null) {
-              print('data[name] f>>>${data[name]} ${name}');
-              print('sdfgh>>>>${ViewController.itemsShowSelectItem(data['${name}'], column) }');
-              // title = await ViewController.getTitleSelectedItem(
-              //     '${tableName}', data[name], column);
-              title = ViewController.itemsShowSelectItem(data['${name}'], column);
+            if (data.data[name] != null) {
+              title = await ViewController.getTitleSelectedItem(
+                  '${tableName}', data.data[name], column);
             } else {
               title = '';
             }
@@ -158,15 +153,13 @@ class MainController extends GetxController {
                 tableName = column['sourceTable'];
               }
             }
-            // List<dynamic> listTitle = [];
-            String listTitle='';
-            if (data[name] != null) {
-              // listTitle = await ViewController.getTitleMultiSelectedItem(
-              //     '${tableName}', data[name], column);
-              listTitle = ViewController.itemsShowSelectItem(data['${name}'], column);
+            List<dynamic> listTitle = [];
+            if (data.data[name] != null) {
+              listTitle = await ViewController.getTitleMultiSelectedItem(
+                  '${tableName}', data.data[name], column);
             }
 
-            rowData.add(exl.TextCellValue(listTitle));
+            rowData.add(exl.TextCellValue(listTitle.join(',')));
           } else if (column['type'] == 'checkbox') {
             rowData.add(exl.BoolCellValue(value));
           } else if (column['type'] == 'file') {
@@ -1233,16 +1226,22 @@ class MainController extends GetxController {
                 }
 
                 var val = data[key];
-                print('MainController.search data[key] >>${val}>>${val.contains(
-                    'dd')}');
-                if (val != null &&
-                    val.toLowerCase().contains(query.toLowerCase())) {
-
-
-                  flag = true;
-                  break;
-                } else {
-                  flag = false;
+                // if(val != null){
+                if(val is String){
+                  if (val.toLowerCase().contains(query.toLowerCase())) {
+                    flag = true;
+                    break;
+                  } else {
+                    flag = false;
+                  }
+                }
+                if(val is int || val is double){
+                  if (val==query) {
+                    flag = true;
+                    break;
+                  } else {
+                    flag = false;
+                  }
                 }
               }
               else {

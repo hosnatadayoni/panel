@@ -1918,7 +1918,7 @@ class ViewController extends GetxController {
         }
       }
     }
-    return a.join('%');
+    return a.join('% ');
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {

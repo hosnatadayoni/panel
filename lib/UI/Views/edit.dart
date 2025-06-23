@@ -125,7 +125,7 @@ class _EditPageState extends State<EditPage> {
                                 //       .updateRecord(ViewController.request);
                                 // }
                                 if (ViewController.isClickedBtn.value == false) {
-                                  // await MainController.goToTablePage();
+                                  await MainController.goToTablePage();
                                 }
                               },
                               child: Container(
