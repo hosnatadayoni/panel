@@ -30,7 +30,6 @@ class General{
          }
        }
        else if (type == 'select' || type == 'radiobutton') {
-
          List<dynamic> dataBox = [];
          var data;
          List<dynamic> dataItem = [];
@@ -77,8 +76,7 @@ class General{
              Box box2;
              if (column['name'] == cloumnName)
                if (column['sourceItems'] == 'table') {
-                 box2 =
-                 (await Hive.openBox<DataModel>('${column['sourceTable']}'));
+                 box2 = (await Hive.openBox<DataModel>('${column['sourceTable']}'));
                  dataBox = box2.values.toList();
                  if (dataBox.length != 0)
                    for (var i = 0; i < dataBox.length; i++) {
@@ -93,9 +91,17 @@ class General{
                      ? multiSelectedTitleList
                      : '';
                } else {
-                 for (var item in column['items'])
-                   if (item['value'] == value)
-                     data.add(item);
+                 List<dynamic>items=[];
+                 for (var item in column['items']) {
+                   print('General.withFormat>>>${item}>>>${value}');
+                   for(var val in value) {
+                  if (item['value'] == val) {
+                    print('General.withFormat2>>>${val}>>${item['value']}>>$item');
+                    items.add(item);
+                  }
+                }
+              }
+                 data=items;
                }
            }
            return data;

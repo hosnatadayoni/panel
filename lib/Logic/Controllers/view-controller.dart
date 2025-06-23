@@ -541,7 +541,7 @@ class ViewController extends GetxController {
             if(dataModel.isNotEmpty){
               multiSelectBox = await genarateEditFormMuiltiSelectBox(
                   column,
-                  multiSelectedItemList.length != 0 ? RxString(multiSelectedItemList.join(',')) : RxString(''),
+                  multiSelectedItemList.length != 0 ? RxString(multiSelectedItemList.join(' , ')) : RxString(''),
                   items.length != 0 ? RxList(items) : <dynamic>[].obs,
                   false.obs);
             }else{
@@ -1294,7 +1294,6 @@ class ViewController extends GetxController {
 
       if (selectedItemsList.length != 0) {
         for (var selectedItem in selectedItemsList) {
-
           if(selectedItem['_id']!=null) {
             selectedItemId.add(selectedItem['_id']);
           }
@@ -1886,14 +1885,16 @@ class ViewController extends GetxController {
     }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
+          print('ViewController.itemsShowSelectItem1');
           a.add(listItems[i]);
         }
         else {
           if(column['sourceItems']=='table') {
-
+            List<dynamic> empty = [];
             for (var field in items) {
-              a.add(listItems[i][field]);
+              empty.add(listItems[i][field]);
             }
+            a.add(empty.join('%'));
           }
           else{
               a.add(listItems[i]['title']);
@@ -1910,15 +1911,18 @@ class ViewController extends GetxController {
           return "انتخاب نشده";
         }
         if(column['sourceItems']=='table') {
+          List<dynamic> empty = [];
           for (var field in items) {
-            a.add(listItems[field]);
+           empty.add(listItems[field]);
           }
+          a.add(empty.join('%'));
         } else{
           a.add(listItems['title']);
         }
       }
     }
-    return a.join('% ');
+    print('ViewController.itemsShowSelectItem>>>${a}');
+    return a.join(' , ');
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
@@ -1945,7 +1949,7 @@ class ViewController extends GetxController {
         for (int i = 0; i < dataModel[column['name']].length; i++) {
             a.add(dataModel[column['name']][i]);
         };
-    dropDownListItems=a;
+      dropDownListItems=a;
       }}
     }
     else {
@@ -1956,13 +1960,18 @@ class ViewController extends GetxController {
       else {
         if(dataModel[column['name']]==null){
           itemss = [];
-        }else
-        for (var item in dataModel[column['name']])
-          itemss.add(column['items'].firstWhere((element) => element['value'] == item));
+        }else {
+          // print('ViewController.itemsList>>>${ dataModel[column['name']]}');
+
+          for (var item in dataModel[column['name']]) {
+            itemss.add(item);
+          }
+        }
       }
       dropDownListItems = itemss;
     }
 
+    print('ViewController.itemsList>>${dropDownListItems}');
     return dropDownListItems;
   }
 
