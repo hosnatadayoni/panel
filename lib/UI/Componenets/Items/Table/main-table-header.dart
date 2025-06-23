@@ -6,6 +6,7 @@ import 'package:finance/Public/styles.dart';
 import 'package:finance/UI/Componenets/General/txt.dart';
 import 'package:finance/UI/Views/create.dart';
 import 'package:finance/UI/Views/dashboard.dart';
+import 'package:finance/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,7 +46,8 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                     MainController.isClickedItem.value = false;
                     MainController.selectedItem.value = -1;
                     MainController.selectedSubItem.value = -1;
-                    Get.to(() => DashboardPage());
+                    // Get.to(() => DashboardPage());
+                    // Navigator.of(context).pop();
                   },
                   child: Container(
                     padding: EdgeInsets.all(10),
