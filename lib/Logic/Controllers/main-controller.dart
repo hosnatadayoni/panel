@@ -725,8 +725,8 @@ class MainController extends GetxController {
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
       if (findIndexRecord != -1) {
-        DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
-        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
+        DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['_id']);
+        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -808,7 +808,7 @@ class MainController extends GetxController {
     if (primeColumn == null) {
       String Id = dataRow['id'].toString();
       var existingDataIndex =
-          MainController.tableData.value.indexWhere((data) => data.id == Id);
+          MainController.tableData.value.indexWhere((data) => data['_id'] == Id);
       return existingDataIndex;
     }
     //search by prime
@@ -897,18 +897,20 @@ class MainController extends GetxController {
                   if (data == null || data == '') {
                     itemSelectedList = [];
                   } else {
-                    selectedItem = items.firstWhere(
-                        (item) => data == item['title'],
-                        orElse: () => null);
-                    if (selectedItem != null) {
-                      itemSelectedList.add('${selectedItem['value']}');
-                    }
+                    print('items multi select excel>>>${items}');
+                    print('dddghjkksa>>>${ViewController.itemsShowSelectItem(dataRowExcel[name] , column)}');
+                    // selectedItem = items.firstWhere(
+                    //     (item) => data == item['title'],
+                    //     orElse: () => null);
+                    // if (selectedItem != null) {
+                    //   itemSelectedList.add('${selectedItem['value']}');
+                    // }
                     // else{
                     //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
                     // }
                   }
                 }
-                dataExlJson[name] = itemSelectedList;
+                dataExlJson[name] = ViewController.itemsShowSelectItem(dataRowExcel[name] , column);
               } else if (type == 'checkbox') {
                 dataExlJson[name] = dataRowExcel[name];
               } else if (type == 'file') {
