@@ -1957,7 +1957,7 @@ class ViewController extends GetxController {
         itemss = column['items'];
       }
       else {
-        if(dataModel[column['name']]==null){
+        if(dataModel[column['name']]==null || dataModel[column['name']]==''){
           itemss = [];
         }else {
           for (var item in dataModel[column['name']]) {

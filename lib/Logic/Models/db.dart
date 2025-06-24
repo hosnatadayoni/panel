@@ -761,6 +761,7 @@ class DB {
           await MainController.loadData(
               tableData: ViewCustomController.getDataTable(this.tableName!));
           ViewController.isClickedEditBtn.value = false;
+          await MainController.goToTablePage();
         }
       } else {
         showSnackbar(snackTypes.error,
