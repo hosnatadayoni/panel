@@ -17,23 +17,22 @@
           "type_filed": "string"
         },
         {
-          "name": "type",
-          "title": "type",
+          "name": "sampleSelect",
+          "title": "sampleSelect",
+          "type": "select",
+          "type_filed": "string",
+          "sourceItems": "table",
+          "sourceTable": "sample",
+          "items":["title"]
+        },
+        {
+          "name": "product",
+          "title": "product",
           "type": "multiSelect",
-          "sourceItems": "custom",
-          "sourceTable": null,
-          "items": [
-            {
-              "title": "معمولی",
-              "value": "1",
-              "is_selected": true
-            },
-            {
-              "title": "ویژه",
-              "value": "2",
-              "is_selected": false
-            }
-          ]
+          "type_filed": "array",
+          "sourceItems": "table",
+          "sourceTable": "products",
+          "items":["title","price"]
         }
       ]
     },
@@ -303,13 +302,7 @@
           "type_filed": "array",
           "sourceItems": "table",
           "sourceTable": "products",
-          "items":["title","price"],
-          "validators": [
-            {
-              "type": "required",
-              "message": "وارد کردن این فیلد الزامی است"
-            }
-          ]
+          "items":["title","price"]
         },
         {
           "name": "productSelect",

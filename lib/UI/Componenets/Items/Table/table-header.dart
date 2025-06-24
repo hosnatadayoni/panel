@@ -54,7 +54,7 @@ class _TableHeaderState extends State<TableHeader> {
                         MainController.tableInfo['currentPage'] = 1;
                         // MainController.renderPagination();
                       });
-                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
+                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
                       ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
                     },
                     itemBuilder: (BuildContext context) {
@@ -157,7 +157,7 @@ class _TableHeaderState extends State<TableHeader> {
                         MainController.tableInfo['currentPage'] =1;
                         // MainController.renderPagination();
                       });
-                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').pageInate();
+                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
                       ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
                     },
                     itemBuilder: (BuildContext context) {

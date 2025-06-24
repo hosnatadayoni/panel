@@ -50,7 +50,7 @@ class _TableFooterState extends State<TableFooter> {
           setState(() {
             MainController.tableInfo['currentPage'] = i;
           });
-          MainController.tableData.value= await DB('${tableSelected}').pageInate();
+          MainController.tableData.value= await DB('${tableSelected}').paginate();
         },
         child: Container(
             margin: EdgeInsets.only(left: 5),
@@ -136,7 +136,7 @@ class _TableFooterState extends State<TableFooter> {
                 setState(() {
                   MainController.tableInfo['currentPage']--;
                 });
-                MainController.tableData.value= await DB('${tableSelected}').pageInate();
+                MainController.tableData.value= await DB('${tableSelected}').paginate();
               } : null,
               child: Txt('${AppController.of(context)!.value(
                   'previous')}', color: MainController
@@ -182,7 +182,7 @@ class _TableFooterState extends State<TableFooter> {
                   setState(() {
                     MainController.tableInfo['currentPage']++;
                   });
-                  MainController.tableData.value= await DB('${tableSelected}').pageInate();
+                  MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                 } : null,
                 child: Txt(
@@ -219,7 +219,7 @@ class _TableFooterState extends State<TableFooter> {
                     MainController.tableInfo['currentPage']--;
                   });
                   // MainController.renderPagination();
-                  MainController.tableData.value= await DB('${tableSelected}').pageInate();
+                  MainController.tableData.value= await DB('${tableSelected}').paginate();
                 } : null,
                 child: Txt('${AppController.of(context)!.value(
                     'previous')}', color: MainController
@@ -266,7 +266,7 @@ class _TableFooterState extends State<TableFooter> {
                       MainController.tableInfo['currentPage']++;
                     });
                     // MainController.renderPagination();
-                    MainController.tableData.value= await DB('${tableSelected}').pageInate();
+                    MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                   } : null,
                   child: Txt(

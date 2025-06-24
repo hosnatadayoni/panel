@@ -79,8 +79,10 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           textField = generateFormTextFieldFilter(_fbKey, column,filterInfo, type, '');
+          children.add(SizedBox(
+            height: 20,
+          ));
           children.add(textField);
-          children.add(SizedBox(width: 10,));
         }
 
         if (type == 'select') {
@@ -258,11 +260,8 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Container(
-
-      child: Row(
-          children: children),
-    );
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 
   static Future<Widget> generateStoreFormView(var columns) async {
@@ -326,7 +325,6 @@ class ViewController extends GetxController {
         else if (type == 'radiobutton') {
           var initValue;
           List<dynamic> items = await itemsList(column);
-          // initValue = await getInitValue(column,items);
           radioButtonBox = generateFormRadioButton(column, items, '', false.obs);
           children.add(SizedBox(height: 20,));
           children.add(radioButtonBox);
@@ -418,7 +416,7 @@ class ViewController extends GetxController {
             if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
 
-                selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
+                selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name]['_id']);
 
               }
               selectBox = await generateStoreFormSelectBox(
@@ -554,7 +552,8 @@ class ViewController extends GetxController {
             children.add(multiSelectBox);
 
 
-        } else if (type == 'color') {
+        }
+        else if (type == 'color') {
           colorBox = generateFormColorBox(
               column,
               dataModel[name] != null && dataModel[name] != ''
@@ -567,8 +566,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file') {
-
+        }
+        else if (type == 'file') {
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
@@ -577,7 +576,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(fileBox);
-        } else if (type == 'time') {
+        }
+        else if (type == 'time') {
           List<String>? TimeParts;
           int hour = TimeOfDay
               .now()
@@ -808,70 +808,69 @@ class ViewController extends GetxController {
     );
   }
   static Widget generateFormTextFieldFilter(GlobalKey<FormBuilderState> _fbKey, var column,var filterInfo, var type, String initValue) {
-    return Container(
-      color: Colors.green,
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Obx(() {
-            return Txt(
-              '${column['title']}',
-              color:
-              MainController.isLightMode.value == true ? whiteColor : color2,
-            );
-          }),
-          SizedBox(width: 10,),
-          Container(
-            width: 100,
-            child: FormTextField(
-              isValidate: false,
-              name: '${column['title']}',
-              fbKey: _fbKey,
-              hint: '${column['title']}',
-              lable: '',
-              column: column,
-              initValue: initValue,
-              onChange: (text) {
-                if (text != null && text != '') {
-                  if (column['type'] == 'Number int') {
-                    ViewController.request['${column['name']}${filterInfo['oprator']}']=
-                    {
-                      'value': '${int.parse('${text}')}',
-                      'column': '${column['name']}',
-                      'oprator': '${filterInfo['oprator']}',
-                    };
-                  } else if (column['type'] == 'Number double') {
-                    ViewController.request['${column['name']}${filterInfo['oprator']}']=
-                    {
-                      'value': '${double.parse('${text}')}',
-                      'column': '${column['name']}',
-                      'oprator': '${filterInfo['oprator']}',
-                    };
-                  } else {
-                    ViewController.request['${column['name']} ${filterInfo['oprator']}']=
-                    {
-                      'value': '${text}',
-                      'column': '${column['name']}',
-                      'oprator': '${filterInfo['oprator']}',
-                    };
-                  }
+    return new Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          return Txt(
+            '${column['title']}',
+            color:
+            MainController.isLightMode.value == true ? whiteColor : color2,
+          );
+        }),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          width: 100,
+          child: FormTextField(
+            isValidate: false,
+            name: '${column['title']}',
+            fbKey: _fbKey,
+            hint: '${column['title']}',
+            lable: '',
+            column: column,
+            initValue: initValue,
+            onChange: (text) {
+              if (text != null && text != '') {
+                if (column['type'] == 'Number int') {
+                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                  {
+                    'value': '${int.parse('${text}')}',
+                    'column': '${column['name']}',
+                    'oprator': '${filterInfo['oprator']}',
+                  };
+                } else if (column['type'] == 'Number double') {
+                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                  {
+                    'value': '${double.parse('${text}')}',
+                    'column': '${column['name']}',
+                    'oprator': '${filterInfo['oprator']}',
+                  };
                 } else {
                   ViewController.request['${column['name']} ${filterInfo['oprator']}']=
                   {
-                    'value': '',
+                    'value': '${text}',
                     'column': '${column['name']}',
                     'oprator': '${filterInfo['oprator']}',
                   };
                 }
-              },
-              isMobile: type == 'mobile' ? true : false,
-              isNumberInt: type == 'Number int' ? true : false,
-              isNumberDouble: type == 'Number double' ? true : false,
-              isEmail: type == 'email' ? true : false,
-            ),
+              } else {
+                ViewController.request['${column['name']} ${filterInfo['oprator']}']=
+                {
+                  'value': '',
+                  'column': '${column['name']}',
+                  'oprator': '${filterInfo['oprator']}',
+                };
+              }
+            },
+            isMobile: type == 'mobile' ? true : false,
+            isNumberInt: type == 'Number int' ? true : false,
+            isNumberDouble: type == 'Number double' ? true : false,
+            isEmail: type == 'email' ? true : false,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
   static Widget generateStoreFormSelectBoxFilter(var column,var filterInfo, List<dynamic> items, String hintText, String initailValue, Rx<bool> isSeleted) {
@@ -1117,6 +1116,7 @@ class ViewController extends GetxController {
             ],
             initalValue: initailValue == '' || initailValue == null ?"":initailValue,
             onChanged: (value) async {
+
               if (value != '') {
                 ViewController.request[column['name']] = value;
               } else {
@@ -1345,7 +1345,6 @@ class ViewController extends GetxController {
                                               requestMultiSelect.removeWhere((key, value) => value == ['_id']);
                                               selectedItemsList.removeWhere( (element) => element['_id']==item['_id']);
                                               selectedItemId.remove(item['_id']);
-                                              print('ViewController.genarateEditFormMuiltiSelectBox>>${selectedItemId}>>${selectedItemId.length}');
                                                   }
                                             if (item['_id'] == '') {
                                               selectedItemId.value.remove(item['_id']);
@@ -1887,7 +1886,6 @@ class ViewController extends GetxController {
     }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
-          print('ViewController.itemsShowSelectItem1');
           a.add(listItems[i]);
         }
         else {
@@ -1923,7 +1921,6 @@ class ViewController extends GetxController {
         }
       }
     }
-    print('ViewController.itemsShowSelectItem>>>${a}');
     return a.join(' , ');
   }
 
@@ -1960,11 +1957,9 @@ class ViewController extends GetxController {
         itemss = column['items'];
       }
       else {
-        if(dataModel[column['name']]==null || dataModel[column['name']]==''){
+        if(dataModel[column['name']]==null){
           itemss = [];
         }else {
-          // print('ViewController.itemsListg>>>${ dataModel[column['name']]}');
-
           for (var item in dataModel[column['name']]) {
             itemss.add(item);
           }
@@ -1972,8 +1967,6 @@ class ViewController extends GetxController {
       }
       dropDownListItems = itemss;
     }
-
-    print('ViewController.itemsList>>${dropDownListItems}');
     return dropDownListItems;
   }
 

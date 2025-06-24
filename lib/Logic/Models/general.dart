@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:hive/hive.dart';
-
 import '../Controllers/main-controller.dart';
-import '../Controllers/view-controller.dart';
 import 'dataModel.dart';
 
 class General{
@@ -18,11 +14,14 @@ class General{
      } else {
        if (type == 'string') {
          return value.toString();
-       } else if (type == 'Number double') {
+       }
+       else if (type == 'Number double') {
          return double.parse(value.toString());
-       } else if (type == 'Number int') {
+       }
+       else if (type == 'Number int') {
          return int.parse(value.toString());
-       } else if (type == 'checkbox') {
+       }
+       else if (type == 'checkbox') {
          if (value == 'true' || value == true) {
            return true;
          } else {
@@ -32,7 +31,7 @@ class General{
        else if (type == 'select' || type == 'radiobutton') {
          List<dynamic> dataBox = [];
          var data;
-         List<dynamic> dataItem = [];
+         var dataItem ;
          List<dynamic> columnList = MainController.getColumnsTable(
              '${this.tableName}');
          for (var column in columnList) {
@@ -45,7 +44,7 @@ class General{
                 for (int i = 0; i < dataBox.length; i++) {
                   if (dataBox[i].id == value) {
                     dataBox[i].data.addAll({"_id": dataBox[i].id});
-                    dataItem.add(dataBox[i].data);
+                    dataItem=(dataBox[i].data);
                     data = dataItem.length != 0 ? dataItem : value;
                   }
                   else{
@@ -70,8 +69,7 @@ class General{
            List<dynamic> dataBox = [];
            var data;
            List<dynamic> multiSelectedTitleList = [];
-           List<dynamic> columnList = MainController.getColumnsTable(
-               '${this.tableName}');
+           List<dynamic> columnList = MainController.getColumnsTable('${this.tableName}');
            for (var column in columnList) {
              Box box2;
              if (column['name'] == cloumnName)
@@ -93,10 +91,8 @@ class General{
                } else {
                  List<dynamic>items=[];
                  for (var item in column['items']) {
-                   print('General.withFormat>>>${item}>>>${value}');
                    for(var val in value) {
                   if (item['value'] == val) {
-                    print('General.withFormat2>>>${val}>>${item['value']}>>$item');
                     items.add(item);
                   }
                 }

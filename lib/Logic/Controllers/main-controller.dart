@@ -121,15 +121,13 @@ class MainController extends GetxController {
     int rowIndex = 2;
     for (var data in MainController.tableData.value) {
       List<exl.CellValue> rowData = [];
-      // rowData.add(exl.TextCellValue(data.id));
-      rowData.add(exl.TextCellValue(data['_id']));
+      rowData.add(exl.TextCellValue(data.id));
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == true) {
           var column = MainController.tableInfo['columns'][j];
           var name = column['name'];
           // var value = data.data[name]?.toString() ?? '';
-          // var value = data.data[name] ?? '';
-          var value = data[name] ?? '';
+          var value = data.data[name] ?? '';
           List<dynamic> items = [];
           String tableName = '';
           if (column['type'] == 'select' ||
@@ -142,12 +140,9 @@ class MainController extends GetxController {
               tableName = column['sourceTable'];
             }
             String title;
-            if (data[name] != null) {
-              print('data[name] f>>>${data[name]} ${name}');
-              print('sdfgh>>>>${ViewController.itemsShowSelectItem(data['${name}'], column) }');
-              // title = await ViewController.getTitleSelectedItem(
-              //     '${tableName}', data[name], column);
-              title = ViewController.itemsShowSelectItem(data['${name}'], column);
+            if (data.data[name] != null) {
+              title = await ViewController.getTitleSelectedItem(
+                  '${tableName}', data.data[name], column);
             } else {
               title = '';
             }
@@ -158,15 +153,13 @@ class MainController extends GetxController {
                 tableName = column['sourceTable'];
               }
             }
-            // List<dynamic> listTitle = [];
-            String listTitle='';
-            if (data[name] != null) {
-              // listTitle = await ViewController.getTitleMultiSelectedItem(
-              //     '${tableName}', data[name], column);
-              listTitle = ViewController.itemsShowSelectItem(data['${name}'], column);
+            List<dynamic> listTitle = [];
+            if (data.data[name] != null) {
+              listTitle = await ViewController.getTitleMultiSelectedItem(
+                  '${tableName}', data.data[name], column);
             }
 
-            rowData.add(exl.TextCellValue(listTitle));
+            rowData.add(exl.TextCellValue(listTitle.join(',')));
           } else if (column['type'] == 'checkbox') {
             rowData.add(exl.BoolCellValue(value));
           } else if (column['type'] == 'file') {
@@ -725,8 +718,8 @@ class MainController extends GetxController {
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
       if (findIndexRecord != -1) {
-        DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['_id']);
-        await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
+        DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
+        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -808,7 +801,7 @@ class MainController extends GetxController {
     if (primeColumn == null) {
       String Id = dataRow['id'].toString();
       var existingDataIndex =
-          MainController.tableData.value.indexWhere((data) => data['_id'] == Id);
+          MainController.tableData.value.indexWhere((data) => data.id == Id);
       return existingDataIndex;
     }
     //search by prime
@@ -864,50 +857,51 @@ class MainController extends GetxController {
         //is importable be true or null: null==true default value
         {
           if (type == 'select' || type == 'radiobutton') {
-            // if (dataRowExcel[name] == null ||
-            //     dataRowExcel[name] == '' ||
-            //     (dataRowExcel[name] is String && dataRowExcel[name].isEmpty)) {
-            //   dataExlJson[name] = '';
-            // } else {
-            //   var itemSelected = items.firstWhere(
-            //       (element) => element['title'] == dataRowExcel[name],
-            //       orElse: () => null);
-            //
-            //   if (itemSelected != null) {
-            //     dataExlJson[name] = itemSelected['value'];
-            //   } else {
-            //     // dataExlJson[name] = '${AppController.of(Get.context!)!.value('The corresponding item was not found')}';
-            //     dataExlJson[name] = '';
-            //   }
-            // }
+            if (dataRowExcel[name] == null ||
+                dataRowExcel[name] == '' ||
+                (dataRowExcel[name] is String && dataRowExcel[name].isEmpty)) {
+              dataExlJson[name] = '';
+            } else {
+              var itemSelected = items.firstWhere(
+                  (element) => element['title'] == dataRowExcel[name],
+                  orElse: () => null);
+              // if (items.contains(dataRowExcel[name].toString())) {
+              //   dataExlJson[name] = dataRowExcel[name].toString();
+              // } else {
+              //   dataExlJson[name] = '';
+              // }
 
-            dataExlJson[name] =
-            MainController.tableData.value[recordIndex]['${name}'];
+              if (itemSelected != null) {
+                dataExlJson[name] = itemSelected['value'];
+              } else {
+                // dataExlJson[name] = '${AppController.of(Get.context!)!.value('The corresponding item was not found')}';
+                dataExlJson[name] = '';
+              }
+            }
           }
 
           // not select or radio button
           else {
             if (dataRowExcel[name] != null) {
               if (type == 'multiSelect') {
-                // var selectedItem;
-                // List<String> itemSelectedList = [];
-                // for (var data in dataRowExcel[name]) {
-                //   if (data == null || data == '') {
-                //     itemSelectedList = [];
-                //   } else {
-                //     selectedItem = items.firstWhere(
-                //         (item) => data == item['title'],
-                //         orElse: () => null);
-                //
-                //
-                //     if (selectedItem != null) {
-                //       itemSelectedList.add('${selectedItem['value']}');
-                //     }
-                //   }
-                // }
-                // dataExlJson[name] = itemSelectedList;
-                dataExlJson[name] =
-                MainController.tableData.value[recordIndex]['${name}'];
+                var selectedItem;
+                List<String> itemSelectedList = [];
+                for (var data in dataRowExcel[name]) {
+                  if (data == null || data == '') {
+                    itemSelectedList = [];
+                  } else {
+                    selectedItem = items.firstWhere(
+                        (item) => data == item['title'],
+                        orElse: () => null);
+                    if (selectedItem != null) {
+                      itemSelectedList.add('${selectedItem['value']}');
+                    }
+                    // else{
+                    //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
+                    // }
+                  }
+                }
+                dataExlJson[name] = itemSelectedList;
               } else if (type == 'checkbox') {
                 dataExlJson[name] = dataRowExcel[name];
               } else if (type == 'file') {
@@ -964,22 +958,26 @@ class MainController extends GetxController {
       else {
         if (recordIndex != -1) {
           if (type == 'select' || type == 'radiobutton') {
-            // var itemSelected = items.firstWhere(
-            //     (element) => element['title'] == dataRowExcel[name],
-            //     orElse: () => null);
-            // if (itemSelected != null) {
+            // if (items.contains(dataRowExcel[name].toString())) {
             //   dataExlJson[name] =
             //       MainController.tableData.value[recordIndex].data['${name}'];
             // } else {
-            //   dataExlJson[name] =
-            //       MainController.tableData.value[recordIndex].data['${name}'];
+            //   dataExlJson[name] = '';
             // }
-            dataExlJson[name] =
-            MainController.tableData.value[recordIndex]['${name}'];
+            var itemSelected = items.firstWhere(
+                (element) => element['title'] == dataRowExcel[name],
+                orElse: () => null);
+            if (itemSelected != null) {
+              dataExlJson[name] =
+                  MainController.tableData.value[recordIndex].data['${name}'];
+            } else {
+              dataExlJson[name] =
+                  MainController.tableData.value[recordIndex].data['${name}'];
+            }
           } else {
             if (dataRowExcel[name] != null) {
               dataExlJson[name] =
-                  MainController.tableData.value[recordIndex]['${name}'];
+                  MainController.tableData.value[recordIndex].data['${name}'];
             } else {
               dataExlJson[name] = '';
             }
@@ -987,44 +985,48 @@ class MainController extends GetxController {
         } else {
           if (dataRowExcel[name] != null) {
             if (type == 'select' || type == 'radiobutton') {
-              // if (dataRowExcel[name] == null ||
-              //     dataRowExcel[name] == '' ||
-              //     (dataRowExcel[name] is String &&
-              //         dataRowExcel[name].isEmpty)) {
-              //   dataExlJson[name] = '';
+              // if (items.contains(dataRowExcel[name].toString())) {
+              //   dataExlJson[name] = dataRowExcel[name].toString();
               // } else {
-              //   var itemSelected = items.firstWhere(
-              //       (element) => element['title'] == dataRowExcel[name],
-              //       orElse: () => null);
-              //   if (itemSelected != null) {
-              //     dataExlJson[name] = itemSelected['value'];
-              //   }
+              //   dataExlJson[name] = '';
               // }
-              dataExlJson[name] =
-              MainController.tableData.value[recordIndex]['${name}'];
+              if (dataRowExcel[name] == null ||
+                  dataRowExcel[name] == '' ||
+                  (dataRowExcel[name] is String &&
+                      dataRowExcel[name].isEmpty)) {
+                dataExlJson[name] = '';
+              } else {
+                var itemSelected = items.firstWhere(
+                    (element) => element['title'] == dataRowExcel[name],
+                    orElse: () => null);
+                if (itemSelected != null) {
+                  dataExlJson[name] = itemSelected['value'];
+                }
+                // else{
+                //   dataExlJson[name] = '${AppController.of(Get.context!)!.value('The corresponding item was not found')}';
+                // }
+              }
             }
             if (type == 'multiSelect') {
-              // var selectedItem;
-              // List<String> itemSelectedList = [];
-              // for (var data in dataRowExcel[name]) {
-              //   if (data == null || data == '') {
-              //     itemSelectedList = [];
-              //   } else {
-              //     selectedItem = items.firstWhere(
-              //         (item) => data == item['title'],
-              //         orElse: () => null);
-              //     if (selectedItem != null) {
-              //       itemSelectedList.add('${selectedItem['value']}');
-              //     }
-              //     // else{
-              //     //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
-              //     // }
-              //   }
-              // }
-              //
-              // dataExlJson[name] = itemSelectedList;
-              dataExlJson[name] =
-              MainController.tableData.value[recordIndex]['${name}'];
+              var selectedItem;
+              List<String> itemSelectedList = [];
+              for (var data in dataRowExcel[name]) {
+                if (data == null || data == '') {
+                  itemSelectedList = [];
+                } else {
+                  selectedItem = items.firstWhere(
+                      (item) => data == item['title'],
+                      orElse: () => null);
+                  if (selectedItem != null) {
+                    itemSelectedList.add('${selectedItem['value']}');
+                  }
+                  // else{
+                  //   itemSelectedList.add('${AppController.of(Get.context!)!.value('The corresponding item was not found')}');
+                  // }
+                }
+              }
+
+              dataExlJson[name] = itemSelectedList;
             } else if (type == 'checkbox') {
               dataExlJson[name] = dataRowExcel[name];
             } else if (type == 'file') {
@@ -1034,7 +1036,7 @@ class MainController extends GetxController {
                 if (MainController.tableData.value.length != 0) {
                   if (findIndexRecord != -1) {
                     dataExlJson[name] = MainController
-                        .tableData.value[findIndexRecord][name];
+                        .tableData.value[findIndexRecord].data[name];
                   } else {
                     dataExlJson[name] = [];
                   }
@@ -1222,7 +1224,6 @@ class MainController extends GetxController {
                 }
 
                 var val = data[key];
-                // if(val != null){
                   if (val.toString().toLowerCase().contains(query.toString().toLowerCase())) {
                     flag = true;
                     break;
@@ -1400,7 +1401,7 @@ class MainController extends GetxController {
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
-        MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+        MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
         MainController.allData.value=MainController.tableData.value;
       } else {
         tableInfo = tableData;
@@ -1411,7 +1412,7 @@ class MainController extends GetxController {
           // if (tableInfo['status'] == "online")
           //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
-            MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+            MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
 
             MainController.allData.value=MainController.tableData.value;
         }
