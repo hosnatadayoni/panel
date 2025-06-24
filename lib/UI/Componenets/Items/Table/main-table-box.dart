@@ -92,7 +92,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                       MainController.tableData.value=d2;
 
                     }},
-                    child: Center(child: Txt('اعمال', textAlign: TextAlign.center)),
+                    child: Center(child: Txt('${AppController.of(context)!.value('apply')}', textAlign: TextAlign.center)),
                   ),
                 ),
               SizedBox(height: 10,),

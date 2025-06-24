@@ -380,7 +380,7 @@ class DB {
               for (var d in data) {
                 bool flag = true;
                 for (int j = 1; j <= whereList.length; j++) {
-                  if (whereList[j]!.fieldName != '_id')
+                  // if (whereList[j]!.fieldName != '_id')
                   // whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
                   if (d['${whereList[j]!.fieldName}'] != null) {
                     if (whereList[j]!.value != '') {
@@ -659,7 +659,7 @@ class DB {
           newRequest = {};
         }
       } else {
-        showSnackbar(snackTypes.error, "خطا");
+        showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
       }
     }
   }

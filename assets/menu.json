@@ -71,15 +71,6 @@
           ]
         },
         {
-          "name": "sample",
-          "title": "sample",
-          "type": "multiSelect",
-          "type_filed": "array",
-          "sourceItems": "table",
-          "sourceTable": "sample",
-          "items":["title","price"]
-        },
-        {
           "name": "type",
           "title": "type",
           "type": "multiSelect",

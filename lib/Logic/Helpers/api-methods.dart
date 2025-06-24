@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:finance/Logic/Controllers/app-controller.dart';
 import 'package:finance/Logic/Helpers/token-methods.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Get;
@@ -71,12 +72,12 @@ class RestApi {
 
 
 
-  static responseHandler({Response? response,Function? successCallback,Function? errorCallback,printResponse=false,popupMessage=true})async{
+  static responseHandler({Response? response,Function? successCallback,Function? errorCallback,printResponse=false,popupMessage=true , context})async{
     if(response==null){
       if(isConnected)
         showSnackbar(snackTypes.error, 'Server Error');
       else
-        showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
+        showSnackbar(snackTypes.error, '${AppController.of(context)!.value('Check the Internet connection.')}');
       // if(ModalRoute.of(Get.Get.context!)!.settings.name!='/networkError')
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }
