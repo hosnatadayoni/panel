@@ -417,7 +417,7 @@ class ViewController extends GetxController {
             if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
 
-                selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
+                selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name]['_id']);
 
               }
               selectBox = await generateStoreFormSelectBox(
@@ -553,7 +553,8 @@ class ViewController extends GetxController {
             children.add(multiSelectBox);
 
 
-        } else if (type == 'color') {
+        }
+        else if (type == 'color') {
           colorBox = generateFormColorBox(
               column,
               dataModel[name] != null && dataModel[name] != ''
@@ -566,8 +567,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file') {
-
+        }
+        else if (type == 'file') {
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
@@ -576,7 +577,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(fileBox);
-        } else if (type == 'time') {
+        }
+        else if (type == 'time') {
           List<String>? TimeParts;
           int hour = TimeOfDay
               .now()
@@ -1115,6 +1117,7 @@ class ViewController extends GetxController {
             ],
             initalValue: initailValue == '' || initailValue == null ?"":initailValue,
             onChanged: (value) async {
+
               if (value != '') {
                 ViewController.request[column['name']] = value;
               } else {
@@ -1343,7 +1346,6 @@ class ViewController extends GetxController {
                                               requestMultiSelect.removeWhere((key, value) => value == ['_id']);
                                               selectedItemsList.removeWhere( (element) => element['_id']==item['_id']);
                                               selectedItemId.remove(item['_id']);
-                                              print('ViewController.genarateEditFormMuiltiSelectBox>>${selectedItemId}>>${selectedItemId.length}');
                                                   }
                                             if (item['_id'] == '') {
                                               selectedItemId.value.remove(item['_id']);
@@ -1885,7 +1887,6 @@ class ViewController extends GetxController {
     }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
-          print('ViewController.itemsShowSelectItem1');
           a.add(listItems[i]);
         }
         else {
@@ -1921,7 +1922,6 @@ class ViewController extends GetxController {
         }
       }
     }
-    print('ViewController.itemsShowSelectItem>>>${a}');
     return a.join(' , ');
   }
 
@@ -1961,8 +1961,6 @@ class ViewController extends GetxController {
         if(dataModel[column['name']]==null){
           itemss = [];
         }else {
-          // print('ViewController.itemsList>>>${ dataModel[column['name']]}');
-
           for (var item in dataModel[column['name']]) {
             itemss.add(item);
           }
@@ -1970,8 +1968,6 @@ class ViewController extends GetxController {
       }
       dropDownListItems = itemss;
     }
-
-    print('ViewController.itemsList>>${dropDownListItems}');
     return dropDownListItems;
   }
 

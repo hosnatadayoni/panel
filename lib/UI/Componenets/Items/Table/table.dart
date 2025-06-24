@@ -98,7 +98,7 @@ class _TableBoxState extends State<TableBox> {
                                       MainController.isClickedItem.value = false;
                                       ViewController.isClickedBtn.value = false;
                                       ViewController.isClickedEditBtn.value = false;
-                                      ViewController.request = {...MainController.tableData.value[i]};
+                                      // ViewController.request = {...MainController.tableData.value[i]};
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
                                     }, icon: Icon(Icons.edit , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(
