@@ -91,10 +91,8 @@ class General{
                } else {
                  List<dynamic>items=[];
                  for (var item in column['items']) {
-                   print('General.withFormat>>>${item}>>>${value}');
                    for(var val in value) {
                   if (item['value'] == val) {
-                    print('General.withFormat2>>>${val}>>${item['value']}>>$item');
                     items.add(item);
                   }
                 }

@@ -325,7 +325,6 @@ class ViewController extends GetxController {
         else if (type == 'radiobutton') {
           var initValue;
           List<dynamic> items = await itemsList(column);
-          // initValue = await getInitValue(column,items);
           radioButtonBox = generateFormRadioButton(column, items, '', false.obs);
           children.add(SizedBox(height: 20,));
           children.add(radioButtonBox);

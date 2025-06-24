@@ -1401,7 +1401,7 @@ class MainController extends GetxController {
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
-        MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+        MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
         MainController.allData.value=MainController.tableData.value;
       } else {
         tableInfo = tableData;
@@ -1412,7 +1412,7 @@ class MainController extends GetxController {
           // if (tableInfo['status'] == "online")
           //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
-            MainController.tableData.value = (await DB('${tableInfo['table-name']}').pageInate());
+            MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
 
             MainController.allData.value=MainController.tableData.value;
         }
