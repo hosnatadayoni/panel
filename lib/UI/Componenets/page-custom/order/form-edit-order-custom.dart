@@ -96,11 +96,11 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      await DB('order').where('id', '\$eq', '${widget.data!['id']}').updateRecord(ViewController.request);
+                      await DB('order').where('id', '\$eq', '${widget.data!['id']}').updateRecords(ViewController.request);
                       var orderItems=await DB('order-itemss').where('parent_id', '\$eq', '${widget.data!['id']}').getRecords();
                       for(var orderItem in  orderItems){
                         if(OrderItem.orderItemsList.containsKey(orderItem['id'])){
-                            DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
+                            DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').updateRecords(OrderItem.orderItemsList[orderItem['id']]);
                         }
                         else{
                           DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').deleteRecord();

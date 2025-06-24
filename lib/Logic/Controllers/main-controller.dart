@@ -719,7 +719,7 @@ class MainController extends GetxController {
 
       if (findIndexRecord != -1) {
         DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['id']);
-        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecord(k.data);
+        await DB('${MainController.tableInfo['table-name']}').where('id', '==', '${MainController.tableData.value[findIndexRecord]['id']}').updateRecords(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
         // bool isValidator;
         // List<bool> isValidatorList = [];

@@ -118,11 +118,11 @@ class _EditPageState extends State<EditPage> {
                                 // if(parent.length==0) {
                                 print('_EditPageState.build>>>${ViewController.request}');
                                       await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}')
-                                      .updateRecord(ViewController.request);
+                                      .updateRecords(ViewController.request);
                                 // }
                                 // else{
                                 //   await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).where('_id', '\$eq', '${widget.data!['_id']}')
-                                //       .updateRecord(ViewController.request);
+                                //       .updateRecords(ViewController.request);
                                 // }
                                 if (ViewController.isClickedBtn.value == false) {
                                   await MainController.goToTablePage();

@@ -92,7 +92,7 @@ class _TableBoxState extends State<TableBox> {
                                   children: [
                                     if(MainController.tableData.value[i]['sync']=='false')
                                     IconButton(onPressed: () async {
-                                     await DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecord(MainController.tableData.value[i]);
+                                     await DB('${MainController.tableInfo['table-name']}').where('id', '\$eq', '${MainController.tableData.value[i]['id']}').updateRecords(MainController.tableData.value[i]);
                                     }, icon: Icon(Icons.refresh , color: MainController.isLightMode.value == true ? whiteColor : color3),),
                                     IconButton(onPressed: (){
                                       MainController.isClickedItem.value = false;
