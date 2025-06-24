@@ -103,7 +103,15 @@
       "filters":
       [
         {"column":"title"},
-        {"column": "price","oprator": "$gte"}
+        {"column": "price","oprator": "$gte"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"},
+        {"column":"title"}
       ]
     },
   {

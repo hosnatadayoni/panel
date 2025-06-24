@@ -44,18 +44,22 @@ class _MainTableBoxState extends State<MainTableBox> {
               TableHeader(),
               if(MainController.tableInfo['filters']!=null && MainController.tableInfo['filters'].length!=0)
                 for(var filter in MainController.tableInfo['filters'])
-                FutureBuilder<Widget>(
-                  future: ViewController.generateFilterView(filter),
-                  builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-                    } else {
-                      return snapshot.data ?? Container();
-                    }
-                  },
-                ),
+                  Wrap(
+                    children: [
+                      FutureBuilder<Widget>(
+                        future: ViewController.generateFilterView(filter),
+                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
+                          } else {
+                            return snapshot.data ?? Container();
+                          }
+                        },
+                      ),
+                    ]
+                  ),
               if(MainController.tableInfo['filters']!=null &&MainController.tableInfo['filters'].length!=0)
                 Container(
                   margin: EdgeInsets.only(left: 5),
