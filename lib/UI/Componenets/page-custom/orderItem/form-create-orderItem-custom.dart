@@ -34,13 +34,15 @@ class FormCreateOrderItemCustom extends StatefulWidget {
 class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Color? colorChanged;
   Map<String, Future<Map<String, dynamic>>>  _future={};
-  var getDataTable = ViewCustomController.getDataTable('order-itemss');
+  // var getDataTable = ViewCustomController.getDataTable('order-itemss');
+  var getDataTable = ViewCustomController.getDataTable('itemsOrder2');
 
   void initState() {
     super.initState();
     _loadData();
   }
   void _loadData() {
+    print('getDataTable[columns]4>>>${getDataTable}');
     if(getDataTable['columns'].length!=0)
     for (var j = 0; j < getDataTable['columns'].length; j++) {
       String columnName = getDataTable['columns'][j]['title'];
@@ -90,7 +92,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
     return Column(
             children: [
               if(MainController.selectedSubItem.value != -1)
-                if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order')
+                if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'order3')
                   SizedBox(height: 20,),
                 Obx((){
                   return Container(
@@ -419,6 +421,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                   FutureBuilder(
                                     future: _future[getDataTable['columns'][j]['title']],
                                     builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                                      print('_future[getDataTable[columns][j][title]]>>>${_future[getDataTable['columns'][j]['title']]}');
                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                         return CircularProgressIndicator();
                                       } else if (snapshot.hasError) {
@@ -429,6 +432,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                                         }
                                       } else {
                                         var data = snapshot.data!;
+                                        print('data d>>>${data}');
                                         return data['items'].length != 0
                                             ? Obx(() {
                                           return Container(

@@ -132,7 +132,8 @@
           "type": "string",
           "type_filed": "string"
         }
-      ]
+      ],
+    "view": "custom"
     },
     {
       "title": "نمونه",
@@ -336,7 +337,7 @@
       "title": "سفارشات",
       "tooltip": "",
       "main-menu": true,
-      "table-name": "order2",
+      "table-name": "order3",
       "currentPage": 1,
       "countShowRow": 10,
       "online": false,
@@ -345,6 +346,7 @@
         "table-name": "itemsOrder2"
       }],
       "columns": [
+
         {
           "name": "sampleSelect",
           "title": "sampleSelect",
@@ -355,15 +357,59 @@
           "items":["title"]
         },
         {
-          "name": "sampleMultiSelect",
-          "title": "sampleMultiSelect",
+          "name": "price",
+          "title": "price",
+          "type": "Number double",
+          "type_filed": "double"
+        },
+        {
+          "name": "type",
+          "title": "type",
           "type": "multiSelect",
-          "type_filed": "array",
-          "sourceItems": "table",
-          "sourceTable": "sample",
-          "items":["title"]
+          "sourceItems": "custom",
+          "sourceTable": null,
+          "items": [
+            {
+              "title": "معمولی",
+              "value": "1",
+              "is_selected": true
+            },
+            {
+              "title": "ویژه",
+              "value": "2",
+              "is_selected": false
+            }
+          ]
+        },
+        {
+          "name": "checkBox",
+          "title": "checkBox",
+          "type": "checkbox",
+          "type_filed": "bool",
+          "default_value": false
+        },
+        {
+          "name": "radiobutton",
+          "title": "radiobutton",
+          "type": "radiobutton",
+          "type_filed": "string",
+          "sourceItems": "custom",
+          "sourceTable": null,
+          "items":[
+            {
+              "title": "معمولی",
+              "value": "1",
+              "is_selected": true
+            },
+            {
+              "title": "ویژه",
+              "value": "2",
+              "is_selected": false
+            }
+          ]
         }
-      ]
-    }
 
+      ],
+      "view":"custom"
+    }
 ]

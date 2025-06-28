@@ -161,9 +161,11 @@ class DB {
       var tableInfo = MainController.SubMenuList[index];
       box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
       data = await getDataTypeOfField(box.values.toList());
+      print('DB.getRecords data>>>${data}');
     }
     if (index != -1) {
       if (parentItem.length != 0) {
+        print('DB.getRecords parentItem>>${parentItem.length}');
         data = data
             .where((element) => element['parent_id'] == parentItem['parent_id'])
             .toList();
@@ -369,6 +371,7 @@ class DB {
         }
       } else {
         if (this.whereList.length != 0) {
+          print('DB.getRecords where list>>${this.whereList.length}>>${whereList.values.first}>>>${data.length}');
           if (data.length != 0) {
             if (MainController.SubMenuList[index]['online'] == true) {
               await ConncetServerController.filterRecordGeneral(
@@ -380,6 +383,8 @@ class DB {
               for (var d in data) {
                 bool flag = true;
                 for (int j = 1; j <= whereList.length; j++) {
+                  print('DB.getRecords where list2>>>${whereList[j]!.fieldName}>${d['${whereList[j]!.fieldName}']}>>${whereList.values}>>>');
+
                   // if (whereList[j]!.fieldName != '_id')
                   // whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
                   if (d['${whereList[j]!.fieldName}'] != null) {
@@ -422,6 +427,7 @@ class DB {
                             if (d['${whereList[j]!.fieldName}'] ==
                                     whereList[j]!.value &&
                                 flag == true) {
+                              print('DB.getRecords trueeeeee');
                               flag = true;
                             } else
                               flag = false;
@@ -671,6 +677,7 @@ class DB {
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     allData = box.values.toList();
     Map<String, dynamic> a = {};
+    print('DB.updateRecord records>>>${records}');
 
     List<Map<String, dynamic>> toAdd = [];
 
@@ -713,7 +720,7 @@ class DB {
         }
       });
     }
-
+    print('DB.updateRecord a>>>${a}');
     final record = DataModel(id: a['_id'], data: a);
 
     var beforeValidate = await HelperController.beforeUpdateValidation(record);
@@ -729,8 +736,13 @@ class DB {
         } else {
           var customUpdate =
               await HelperController.beforeUpdate(record)['data'];
+          for(var data in allData){
+            print('data[id] s>>>${data.id}');
+          }
+          print('a[_id]>>>${a}');
           var allDataIndex =
               allData.indexWhere((element) => element.id == a['_id']);
+
           allData[allDataIndex] = customUpdate;
           if (MainController.getStatusTable(this.tableName!) == true) {
             await ConncetServerController.setDatabaseme(customUpdate.data);

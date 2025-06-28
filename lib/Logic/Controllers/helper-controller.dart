@@ -24,18 +24,19 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    if (tableName == 'order') {
+    if (tableName == 'order3') {
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
         //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
         // }
         for (var list in OrderItem.orderItemsList.values) {
-          await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
+          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
+          await DB('itemsOrder2').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
         }
       }
     }
     if(tableName=='itemsOrder'){
-      // await DB('itemsOrder').parent(parentTable: 'order2',parentId: customData.id!).storeRecord(list);
+      // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
 
     }
     return AppController.responceHelper(customData, true);
@@ -69,12 +70,10 @@ class HelperController extends GetxController {
 
   static createPageFunction() async {
     OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order3'){
       await Get.to(() => OrderCreatePage());
     }
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-itemss'){
-      await Get.to(() => OrderItemCreatePage());
-    }
+
   }
 
   static tablePageFunction() async {
@@ -87,7 +86,7 @@ class HelperController extends GetxController {
 
   static editPageFunction(var data) async {
     OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order3'){
       await Get.to(() => OrderEdit(data: data));
     }
     else{

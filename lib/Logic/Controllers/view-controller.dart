@@ -412,6 +412,8 @@ class ViewController extends GetxController {
         else if (type == 'select') {
           Map<String, dynamic> selectedItem = <String, dynamic>{};
           List<dynamic> items = await ViewController.itemsList(column);
+          print('ViewController.generateStoreFormView>>${items}');
+
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
@@ -1929,8 +1931,11 @@ class ViewController extends GetxController {
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
+      print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        List<dynamic> data = await DB(tableName).getRecords();
+        print('tableName f>>>${tableName}');
+        List<dynamic> data = await DB('${tableName}').getRecords();
+        print('ViewController.itemsList>>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
