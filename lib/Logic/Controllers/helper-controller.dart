@@ -1,3 +1,4 @@
+import 'package:finance/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Logic/Controllers/view-controller.dart';
 import 'package:finance/Logic/Models/db.dart';
 import 'package:finance/Logic/Models/order-item.dart';
@@ -39,6 +40,13 @@ class HelperController extends GetxController {
       // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
 
     }
+    if(tableName == 'createProject'){
+      await ConncetServerController.createProject(tableName);
+    }
+    if(tableName == 'schema'){
+      await ConncetServerController.createSchema({'table-name' : tableName});
+
+    }
     return AppController.responceHelper(customData, true);
   }
   //end store
@@ -54,6 +62,12 @@ class HelperController extends GetxController {
   }
 
   static afterUpdate(dataJson, DataModel customData) {
+
+      if(dataJson == 'schema'){
+        ConncetServerController.updateSchema({'table-name' : dataJson});
+      }
+
+
     return AppController.responceHelper(customData, true);
   }
   //end update
@@ -64,6 +78,9 @@ class HelperController extends GetxController {
   }
 
   static afterDelete(int index, DataModel data) {
+    // if(tableName == 'schema'){
+    //   ConncetServerController.deleteSchema({'table-name' : 'tableName'});
+    // }
     return AppController.responceHelper(data, true);
   }
 //end delete

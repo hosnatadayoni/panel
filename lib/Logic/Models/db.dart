@@ -683,6 +683,7 @@ class DB {
 
     for (var data in records) {
       a = data;
+      print('a list ad>>>${a}');
 
       a.forEach((key, value) {
         if (value is List) {

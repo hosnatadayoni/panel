@@ -33,6 +33,7 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+    print('ViewController.request s>>>${ViewController.request}');
     return Scaffold(
       body: Container(
         width: size.width,

@@ -16,8 +16,8 @@ class ConncetServerController extends GetxController {
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
 
-  static createProject () async {
-    var response = await RestApi.post(createProjectUrl, body: {'name':'panel'});
+  static createProject (String? tableName) async {
+    var response = await RestApi.post(createProjectUrl, body: {'name':tableName});
     RestApi.responseHandler(
         response: response,
         successCallback: () async {

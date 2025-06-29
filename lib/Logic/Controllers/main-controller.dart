@@ -1577,9 +1577,7 @@ class MainController extends GetxController {
     Map<String,dynamic> c={};
     for (var table in SubMenuList) {
       Map<String,dynamic> list ={};
-      list.addAll({
-        'table_name':table['table-name'],
-      });
+    ///
       for(var column in table['columns']){
         c.addAll({'${column['name']}': {"type": "${column['type_filed']}"}
         });
