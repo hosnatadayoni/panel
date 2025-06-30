@@ -1,8 +1,8 @@
-import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Models/dataModel.dart';
-import 'package:finance/Logic/Models/db.dart';
-import 'package:finance/Public/styles.dart';
-import 'package:finance/UI/Views/dashboard.dart';
+import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
+import 'package:finance/Admin/Logic/Models/dataModel.dart';
+import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/styles.dart';
+import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +12,9 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
-import 'Logic/Controllers/app_localization_delegate.dart';
-import 'UI/Views/table-page.dart';
+import 'Admin/Logic/Controllers/main-controller.dart';
+import 'Admin/Logic/Controllers/app_localization_delegate.dart';
+import 'Admin/UI/Views/table-page.dart';
 
 void main()async {
 

@@ -7,6 +7,7 @@
     "currentPage": 1,
     "countShowRow": 10,
     "location-data": 0,
+    "online": false,
     "columns": [
       {
         "name": "project_name",
@@ -29,6 +30,7 @@
     "currentPage": 1,
     "countShowRow": 10,
     "location-data": 0,
+    "online": false,
     "columns": [
       {
         "name": "tooltip",
@@ -67,6 +69,14 @@
         "location-data": 0,
         "type": "checkbox",
         "default_value": false
+      },
+      {
+        "name": "online",
+        "title": "online",
+        "type": "checkbox",
+        "default_value": true
+
+
       }
     ],
     "relations": [
@@ -85,6 +95,7 @@
     "countShowRow": 10,
     "location-data": 0,
     "relations": [],
+    "online": false,
     "columns": [
       {
         "name": "title",
