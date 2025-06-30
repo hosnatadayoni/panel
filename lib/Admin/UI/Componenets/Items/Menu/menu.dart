@@ -3,6 +3,7 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/Admin/UI/Views/component-page.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,10 @@ class _MenuBoxState extends State<MenuBox>{
                                         MainController.selectedItem.value = i;
                                         if(MainController.selectedItem.value == 0){
                                           Get.to(() => DashboardPage());
+                                          MainController.isClickedItem.value =false;
+                                        }
+                                        else if(MainController.selectedItem.value == 1){
+                                          Get.to(() => ComponentPage());
                                           MainController.isClickedItem.value =false;
                                         }
                                         else{

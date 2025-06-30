@@ -50,9 +50,14 @@ class MainController extends GetxController {
       icon: Icons.bar_chart,
     ),
     Item(
+      title: 'component',
+      icon: Icons.settings_input_component,
+    ),
+    Item(
       title: 'Home',
       icon: Icons.home,
-    ),
+    )
+
   ];
 
   //

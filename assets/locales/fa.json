@@ -60,5 +60,7 @@
   "not selected": "انتخاب نشده",
   "choice": "انتخاب",
   "apply": "اعمال",
-  "Check the Internet connection.": "اتصال اینترنت را بررسی کنید."
+  "Check the Internet connection.": "اتصال اینترنت را بررسی کنید.",
+  "Enter the token": "توکن را وارد کنید",
+  "refresh": "به روز رسانی"
 }
