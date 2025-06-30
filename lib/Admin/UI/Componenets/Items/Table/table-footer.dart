@@ -51,6 +51,7 @@ class _TableFooterState extends State<TableFooter> {
             MainController.tableInfo['currentPage'] = i;
           });
           MainController.tableData.value= await DB('${tableSelected}').paginate();
+          MainController.allData.value= MainController.tableData.value;
         },
         child: Container(
             margin: EdgeInsets.only(left: 5),

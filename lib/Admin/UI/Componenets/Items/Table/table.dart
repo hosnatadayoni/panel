@@ -299,6 +299,8 @@ class _TableBoxState extends State<TableBox> {
                                                                     setState(() {
                                                                       DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                                     });
+                                                                    MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
+                                                                    ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
                                                                     Navigator.pop(context);
                                                                   },
                                                                   child: Container(
