@@ -1830,10 +1830,13 @@ class MainController extends GetxController {
     return true;
   }
 
-  static goToTablePage() async {
+  static goToTablePage({bool loadData=true,var tableFields=null, var tableData=null}) async {
     if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
       HelperController.tablePageFunction();
     } else {
+      if(loadData==true)
+      await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
+
       ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }

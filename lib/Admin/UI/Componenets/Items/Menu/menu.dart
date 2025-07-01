@@ -58,7 +58,7 @@ class _MenuBoxState extends State<MenuBox>{
                                       onTap: ()async {
                                         MainController.selectedSubItem.value = j;
                                         DB.parentItem={};
-                                        await MainController.loadData();
+
                                         await MainController.goToTablePage();
 
                                       },

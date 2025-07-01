@@ -142,7 +142,6 @@ class RestApi {
   }
 
   static Future<Response?> post(url, {body=null, useToken = true}) async {
-    print('**body runtimeType**>>>>${body.runtimeType}');
     if(await Connectivity().checkConnectivity()==ConnectivityResult.none){
       isConnected=false;
       return null;

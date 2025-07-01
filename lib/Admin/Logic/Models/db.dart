@@ -771,10 +771,9 @@ class DB {
           if (after['status'] == false) {
             showSnackbar(snackTypes.error, after['message']);
           }
-          await MainController.loadData(
-              tableData: ViewCustomController.getDataTable(this.tableName!));
+          // await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           ViewController.isClickedEditBtn.value = false;
-          await MainController.goToTablePage();
+          await MainController.goToTablePage(tableFields:ViewCustomController.getDataTable(this.tableName!) );
         }
       } else {
         showSnackbar(snackTypes.error,

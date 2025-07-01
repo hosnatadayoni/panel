@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Componenets/page-custom/order/order-create.dart';
 import '../../UI/Componenets/page-custom/order/order-edit.dart';
+import '../../UI/Views/create.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/dataModel.dart';
 import 'app-controller.dart';
@@ -41,12 +42,7 @@ class HelperController extends GetxController {
       // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
 
     }
-    if(tableName == 'createProject'){
-      await ConncetServerController.createProject(tableName);
-    }
-    if(tableName == 'schema'){
-      await ConncetServerController.createSchema({'table-name' : tableName});
-    }
+
     if(tableName == 'fields'){
       Map<String,dynamic> parent=await DB.parentItem;
       await ConncetServerController.createField({
@@ -97,31 +93,51 @@ class HelperController extends GetxController {
 //end delete
 
   static createPageFunction() async {
-    OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order3'){
-      await Get.to(() => OrderCreatePage());
+    var table = MainController.SubMenuList[MainController.selectedSubItem.value];
+    if(table['view']=='custom'){
+      if(table['table-name']=='project' || table['table-name']=='schema'){
+        await Get.to(() => CreatePage());
+      }
+    }else{
+      await Get.to(() => CreatePage());
     }
+  }
 
+  static createFunction({bool loadData=true,var tableFields=null, var tableData=null}) async {
+    var table=MainController.SubMenuList[MainController.selectedSubItem.value];
+    if (table['view'] == 'custom') {
+    if(table['table-name']=='project'){
+     await ConncetServerController.createProject(ViewController.request);
+     MainController.goToTablePage(loadData: false);
+    }
+    if(table['table-name']=='schema'){
+     await ConncetServerController.createSchema(ViewController.request);
+     MainController.goToTablePage(loadData: false);
+    }
+    } else {
+      Map<String,dynamic> parent=await DB.parentItem;
+      if(parent.length==0){
+        await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+      }else{
+        await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
+      }
+      if (ViewController.isClickedBtn.value == false) {
+        MainController.goToTablePage(loadData: false);
+      }
+    }
   }
 
   static tablePageFunction() async {
-    // if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-items'){
-    //   await Get.to(() => TablePage());
-    // }
-    // else
-    String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
-    print('await ConncetServerController.listProject()>>>${await ConncetServerController.listProject()}');
-    if(tableName == 'createProject'){
-      if(await ConncetServerController.listProject() != null){
-        MainController.tableData.value = await ConncetServerController.listProject();
-      }
-      else{
-        MainController.tableData.value = [];
-      }
 
+    String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
+    print('HelperController.tablePageFunction>>>${tableName}');
+    if(tableName == 'project'){
+      await ConncetServerController.listProject();
+      MainController.tableData.value = ConncetServerController.listProjectRes;
     }
     if(tableName == 'schema'){
-      MainController.tableData.value = await ConncetServerController.listSchema();
+      await ConncetServerController.listSchema();
+      MainController.tableData.value = ConncetServerController.listSchemaRes;
     }
     if(tableName == 'fields'){
 

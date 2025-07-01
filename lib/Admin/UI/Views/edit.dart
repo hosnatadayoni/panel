@@ -98,7 +98,7 @@ class _EditPageState extends State<EditPage> {
                               },
                               child: InkWell(
                                 onTap: () async {
-                                  await MainController.loadData();
+
                                   await MainController.goToTablePage();
                                 },
                                 child: Container(
