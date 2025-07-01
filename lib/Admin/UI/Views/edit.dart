@@ -1,7 +1,6 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -10,7 +9,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
+import '../../Logic/Models/db.dart';
 
 class EditPage extends StatefulWidget {
   EditPage({this.data});
@@ -33,7 +32,6 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    print('ViewController.request s>>>${ViewController.request}');
     return Scaffold(
       body: Container(
         width: size.width,
@@ -47,11 +45,7 @@ class _EditPageState extends State<EditPage> {
             Obx((){
               return Positioned(
                 // right: MainController.isClickedItem.value == true ? 300 :50,
-
-                // right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
-
-                right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
-                left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
+                right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
                 child: Container(
                   // width: MainController.isClickedItem.value == true ?(size.width) - 300:(size.width) - 50,
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
@@ -123,14 +117,14 @@ class _EditPageState extends State<EditPage> {
                                 // if(parent.length==0) {
                                 print('_EditPageState.build>>>${ViewController.request}');
                                       await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${widget.data!['_id']}')
-                                      .updateRecord(ViewController.request);
+                                      .updateRecords(ViewController.request);
                                 // }
                                 // else{
                                 //   await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).where('_id', '\$eq', '${widget.data!['_id']}')
-                                //       .updateRecord(ViewController.request);
+                                //       .updateRecords(ViewController.request);
                                 // }
                                 if (ViewController.isClickedBtn.value == false) {
-                                  // await MainController.goToTablePage();
+                                  await MainController.goToTablePage();
                                 }
                               },
                               child: Container(

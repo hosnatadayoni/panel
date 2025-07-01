@@ -1,16 +1,12 @@
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/Admin/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../Items/Header/header.dart';
 
 class OrderItemEdit extends StatelessWidget {
   OrderItemEdit({this.data});
@@ -32,10 +28,7 @@ class OrderItemEdit extends StatelessWidget {
           children: [
             Obx((){
               return Positioned(
-                // right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
-
-                right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
-                left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
+                right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
                 child: Container(
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                   height: size.height,

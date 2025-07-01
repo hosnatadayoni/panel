@@ -22,7 +22,9 @@
         "type_filed": "string",
         "sourceItems": "table",
         "sourceTable": "sample",
-        "items":["title"]
+        "items": [
+          "title"
+        ]
       },
       {
         "name": "product",
@@ -31,7 +33,10 @@
         "type_filed": "array",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["title","price"]
+        "items": [
+          "title",
+          "price"
+        ]
       }
     ]
   },
@@ -70,6 +75,18 @@
         ]
       },
       {
+        "name": "sample",
+        "title": "sample",
+        "type": "multiSelect",
+        "type_filed": "array",
+        "sourceItems": "table",
+        "sourceTable": "sample",
+        "items": [
+          "title",
+          "price"
+        ]
+      },
+      {
         "name": "type",
         "title": "type",
         "type": "multiSelect",
@@ -89,10 +106,14 @@
         ]
       }
     ],
-    "filters":
-    [
-      {"column":"title"},
-      {"column": "price","oprator": "$gte"}
+    "filters": [
+      {
+        "column": "title"
+      },
+      {
+        "column": "price",
+        "oprator": "$gte"
+      }
     ]
   },
   {
@@ -123,8 +144,7 @@
         "type": "string",
         "type_filed": "string"
       }
-    ],
-    "view": "custom"
+    ]
   },
   {
     "title": "نمونه",
@@ -192,35 +212,9 @@
         "type_filed": "array",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["title","price"]
-      },
-      {
-        "name": "product2",
-        "title": "product2",
-        "type": "select",
-        "type_filed": "string",
-        "sourceItems": "table",
-        "sourceTable": "products",
-        "items":["title","price"]
-      },
-      {
-        "name": "type2",
-        "title": "type2",
-        "type": "multiSelect",
-        "type_filed": "array",
-        "sourceItems": "custom",
-        "sourceTable": null,
         "items": [
-          {
-            "title": "معمولی",
-            "value": "1",
-            "is_selected": true
-          },
-          {
-            "title": "ویژه",
-            "value": "2",
-            "is_selected": false
-          }
+          "title",
+          "price"
         ]
       }
     ]
@@ -255,7 +249,6 @@
       }
     ]
   },
-
   {
     "title": "دسته بندی",
     "tooltip": "",
@@ -285,7 +278,10 @@
         "type_filed": "array",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["title","price"]
+        "items": [
+          "title",
+          "price"
+        ]
       },
       {
         "name": "productSelect",
@@ -294,7 +290,10 @@
         "type_filed": "string",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["title","price"]
+        "items": [
+          "title",
+          "price"
+        ]
       },
       {
         "name": "sampleSelect",
@@ -303,7 +302,9 @@
         "type_filed": "string",
         "sourceItems": "table",
         "sourceTable": "sample",
-        "items":["title"]
+        "items": [
+          "title"
+        ]
       },
       {
         "name": "checkBox",
@@ -319,25 +320,28 @@
         "type_filed": "string",
         "sourceItems": "table",
         "sourceTable": "products",
-        "items":["title","price"]
+        "items": [
+          "title",
+          "price"
+        ]
       }
     ]
   },
-
   {
     "title": "سفارشات",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "order3",
+    "table-name": "order2",
     "currentPage": 1,
     "countShowRow": 10,
     "online": false,
-    "relations": [{
-      "title": "جزئیات سفارش",
-      "table-name": "itemsOrder2"
-    }],
+    "relations": [
+      {
+        "title": "جزئیات سفارش",
+        "table-name": "itemsOrder2"
+      }
+    ],
     "columns": [
-
       {
         "name": "sampleSelect",
         "title": "sampleSelect",
@@ -345,62 +349,21 @@
         "type_filed": "string",
         "sourceItems": "table",
         "sourceTable": "sample",
-        "items":["title"]
-      },
-      {
-        "name": "price",
-        "title": "price",
-        "type": "Number double",
-        "type_filed": "double"
-      },
-      {
-        "name": "type",
-        "title": "type",
-        "type": "multiSelect",
-        "sourceItems": "custom",
-        "sourceTable": null,
         "items": [
-          {
-            "title": "معمولی",
-            "value": "1",
-            "is_selected": true
-          },
-          {
-            "title": "ویژه",
-            "value": "2",
-            "is_selected": false
-          }
+          "title"
         ]
       },
       {
-        "name": "checkBox",
-        "title": "checkBox",
-        "type": "checkbox",
-        "type_filed": "bool",
-        "default_value": false
-      },
-      {
-        "name": "radiobutton",
-        "title": "radiobutton",
-        "type": "radiobutton",
-        "type_filed": "string",
-        "sourceItems": "custom",
-        "sourceTable": null,
-        "items":[
-          {
-            "title": "معمولی",
-            "value": "1",
-            "is_selected": true
-          },
-          {
-            "title": "ویژه",
-            "value": "2",
-            "is_selected": false
-          }
+        "name": "sampleMultiSelect",
+        "title": "sampleMultiSelect",
+        "type": "multiSelect",
+        "type_filed": "array",
+        "sourceItems": "table",
+        "sourceTable": "sample",
+        "items": [
+          "title"
         ]
       }
-
-    ],
-    "view":"custom"
+    ]
   }
 ]

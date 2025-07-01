@@ -1,4 +1,3 @@
-import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Logic/Models/order-item.dart';
@@ -25,38 +24,19 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    print('customData.id4>>>${customData.id}');
-    if (tableName == 'order3') {
+    if (tableName == 'order') {
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
         //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
         // }
         for (var list in OrderItem.orderItemsList.values) {
-          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
-          await DB('itemsOrder2').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
+          await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
         }
       }
     }
     if(tableName=='itemsOrder'){
-      // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
+      // await DB('itemsOrder').parent(parentTable: 'order2',parentId: customData.id!).storeRecord(list);
 
-    }
-    if(tableName == 'createProject'){
-      await ConncetServerController.createProject(tableName);
-    }
-    if(tableName == 'schema'){
-      await ConncetServerController.createSchema({'table-name' : tableName});
-    }
-    if(tableName == 'fields'){
-      Map<String,dynamic> parent=await DB.parentItem;
-      await ConncetServerController.createField({
-        'table' :'${parent['parent_id']}',
-        'name': '${customData.data['name']}',
-        'title':'${customData.data['title']}',
-        'typeField':'${customData.data['type_filed']}',
-        'sourceItems':'${customData.data['sourceItems']}',
-        'sourceTable':'${customData.data['sourceTable']}'
-      });
     }
     return AppController.responceHelper(customData, true);
   }
@@ -73,12 +53,6 @@ class HelperController extends GetxController {
   }
 
   static afterUpdate(dataJson, DataModel customData) {
-
-      if(dataJson == 'schema'){
-        ConncetServerController.updateSchema({'table-name' : dataJson});
-      }
-
-
     return AppController.responceHelper(customData, true);
   }
   //end update
@@ -89,19 +63,18 @@ class HelperController extends GetxController {
   }
 
   static afterDelete(int index, DataModel data) {
-    // if(tableName == 'schema'){
-    //   ConncetServerController.deleteSchema({'table-name' : 'tableName'});
-    // }
     return AppController.responceHelper(data, true);
   }
 //end delete
 
   static createPageFunction() async {
     OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order3'){
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
       await Get.to(() => OrderCreatePage());
     }
-
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-itemss'){
+      await Get.to(() => OrderItemCreatePage());
+    }
   }
 
   static tablePageFunction() async {
@@ -109,29 +82,12 @@ class HelperController extends GetxController {
     //   await Get.to(() => TablePage());
     // }
     // else
-    String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
-    print('await ConncetServerController.listProject()>>>${await ConncetServerController.listProject()}');
-    if(tableName == 'createProject'){
-      if(await ConncetServerController.listProject() != null){
-        MainController.tableData.value = await ConncetServerController.listProject();
-      }
-      else{
-        MainController.tableData.value = [];
-      }
-
-    }
-    if(tableName == 'schema'){
-      MainController.tableData.value = await ConncetServerController.listSchema();
-    }
-    if(tableName == 'fields'){
-
-    }
     Get.to(() => TablePage());
   }
 
   static editPageFunction(var data) async {
     OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order3'){
+    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
       await Get.to(() => OrderEdit(data: data));
     }
     else{

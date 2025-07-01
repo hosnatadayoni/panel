@@ -7,7 +7,6 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
-import 'package:finance/Admin/UI/Views/set-token-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -33,23 +32,22 @@ class LoginPage extends StatelessWidget {
               color:MainController.isLightMode.value == true ? color12:color5,
               child: Stack(
                 alignment: Alignment.center,
-                children: [ Positioned(
-                  left:Directionality.of(context) == TextDirection.rtl ? 0 : null,
-                  right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
+                children: [Positioned(
+                  left:0,
                   child: Container(
                     height: 500,
                     width: 210,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),
-                        topRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),
-                        bottomLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15) ,
-                        bottomRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),),
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(15),
+                        bottomLeft: Radius.circular(0) ,
+                        bottomRight: Radius.circular(15),),
                       color: MainController.isLightMode.value == true ? color8:primary,
                     ),
                     child: Img(loginSvg , width: 100, height: 100, color:  whiteColor),
                   ),
-                )]
+                ),]
               ),
             ),
             Container(
@@ -59,19 +57,18 @@ class LoginPage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                   Positioned(
-                    right:Directionality.of(context) == TextDirection.rtl ?  0 : null,
-                    left:Directionality.of(context) == TextDirection.ltr ?  0 : null,
+                  Positioned(
+                    right: 0,
                     child: Container(
                     padding: EdgeInsets.all(15),
                     height: 500,
                     width: 500,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),
-                        topRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),
-                        bottomLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0) ,
-                        bottomRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),),
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(0),
+                        bottomLeft: Radius.circular(15) ,
+                        bottomRight: Radius.circular(0),),
                         color: MainController.isLightMode.value == true ? background:whiteColor,
                         boxShadow: shadow,
                     ),
@@ -103,14 +100,11 @@ class LoginPage extends StatelessWidget {
                             if(UserController.userName.value.isEmpty || UserController.password.value.isEmpty){
                               showSnackbar(snackTypes.error,'${AppController.of(context)!.value('name or password cannot be empty')}');
                             }
+                            if(UserController.userName.value.length <10 || UserController.password.value.length < 10){
+                              showSnackbar(snackTypes.error,'${AppController.of(context)!.value('first and last name and password must be more than 10 characters')}');
+                            }
                             else{
-                              if(UserController.userName.value.length <10 || UserController.password.value.length < 10){
-                                showSnackbar(snackTypes.error,'${AppController.of(context)!.value('first and last name and password must be more than 10 characters')}');
-                              }
-                              else{
-                                // Get.to(() => DashboardPage());
-                                Get.to(() => SetTokenPage());
-                              }
+                              Get.to(() => DashboardPage());
                             }
                           },
                           child: Center(
