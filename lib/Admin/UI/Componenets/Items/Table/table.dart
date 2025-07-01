@@ -365,7 +365,7 @@ class _TableBoxState extends State<TableBox> {
                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                     color: colorBtn,
                                   ),
-                                  child: Row(
+                                  child: Wrap(
                                     children: [
                                       Txt('${AppController.of(context)!.value('operation')}' , fontSize: 16, fontWeight: FontWeight.w400,color: whiteColor,),
                                       SizedBox(width: 10,),

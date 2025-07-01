@@ -33,22 +33,23 @@ class LoginPage extends StatelessWidget {
               color:MainController.isLightMode.value == true ? color12:color5,
               child: Stack(
                 alignment: Alignment.center,
-                children: [Positioned(
-                  left:0,
+                children: [ Positioned(
+                  left:Directionality.of(context) == TextDirection.rtl ? 0 : null,
+                  right: Directionality.of(context) == TextDirection.ltr ? 0 : null,
                   child: Container(
                     height: 500,
                     width: 210,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(15),
-                        bottomLeft: Radius.circular(0) ,
-                        bottomRight: Radius.circular(15),),
+                        topLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),
+                        topRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),
+                        bottomLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15) ,
+                        bottomRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),),
                       color: MainController.isLightMode.value == true ? color8:primary,
                     ),
                     child: Img(loginSvg , width: 100, height: 100, color:  whiteColor),
                   ),
-                ),]
+                )]
               ),
             ),
             Container(
@@ -58,18 +59,19 @@ class LoginPage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Positioned(
-                    right: 0,
+                   Positioned(
+                    right:Directionality.of(context) == TextDirection.rtl ?  0 : null,
+                    left:Directionality.of(context) == TextDirection.ltr ?  0 : null,
                     child: Container(
                     padding: EdgeInsets.all(15),
                     height: 500,
                     width: 500,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(0),
-                        bottomLeft: Radius.circular(15) ,
-                        bottomRight: Radius.circular(0),),
+                        topLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0),
+                        topRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),
+                        bottomLeft: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 15 : 0) ,
+                        bottomRight: Radius.circular(Directionality.of(context) == TextDirection.rtl ? 0 : 15),),
                         color: MainController.isLightMode.value == true ? background:whiteColor,
                         boxShadow: shadow,
                     ),

@@ -54,7 +54,7 @@ class _TableFooterState extends State<TableFooter> {
           MainController.allData.value= MainController.tableData.value;
         },
         child: Container(
-            margin: EdgeInsets.only(left: 5),
+            margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
             width: 40,
             height: 40,
             child: Obx((){
@@ -152,7 +152,7 @@ class _TableFooterState extends State<TableFooter> {
             box(2, tableSelected),
             SizedBox(width: 5),
             Container(
-              margin: EdgeInsets.only(left: 5),
+              margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
               width: 40,
               height: 40,
               child: Center(child: Txt('...', fontSize: 20)),
@@ -235,7 +235,7 @@ class _TableFooterState extends State<TableFooter> {
               box(2, tableSelected),
               SizedBox(width: 5),
               Container(
-                margin: EdgeInsets.only(left: 5),
+                margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
                 width: 40,
                 height: 40,
                 child: Center(child: Txt('...', fontSize: 20)),

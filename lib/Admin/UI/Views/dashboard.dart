@@ -63,7 +63,8 @@ class DashboardPage extends StatelessWidget {
                 Header(),
                 SizedBox(height: 20,),
                 Positioned(
-                  right: size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50,
+                  right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50 : 0,
+                  left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50 : 0,
                   top: 100,
                   child: Container(
                     padding: EdgeInsets.all(20),

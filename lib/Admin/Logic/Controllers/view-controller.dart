@@ -78,11 +78,7 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = Container(
-              color:Colors.green,child: generateFormTextFieldFilter(_fbKey, column,filterInfo, type, ''));
-          children.add(SizedBox(
-            height: 20,
-          ));
+          textField = generateFormTextFieldFilter(_fbKey, column,filterInfo, type, '');
           children.add(textField);
         }
 
@@ -90,9 +86,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await itemsList(column);
           selectBox = await generateStoreFormSelectBoxFilter(
               column,filterInfo, items, '', '', false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(selectBox);
         }
 
@@ -176,9 +170,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await itemsList(column);
           selectBox = await generateStoreFormSelectBoxFilter(
               column,filterInfo, items, '', '', false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(selectBox);
         }
 
@@ -217,17 +209,13 @@ class ViewController extends GetxController {
               )
             ],
           );
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(dateBox);
         }
 
         else if (type == 'time') {
           timeBox = generateFormTimeBoxFilter(column,filterInfo, TimeOfDay.now(), false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(timeBox);
         }
 
@@ -237,38 +225,26 @@ class ViewController extends GetxController {
             multiSelectBox = await generateStoreFormSelectBoxFilter(
                 column,filterInfo, items, '', '', false.obs);
             ;
-            children.add(SizedBox(
-              height: 20,
-            ));
+
             children.add(multiSelectBox);
           }
         }
 
         else if (type == 'color') {
           colorBox = generateFormColorBoxFilter(column,filterInfo, Colors.blue, false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(colorBox);
         }
 
         else if (type == 'file') {
           fileBox = generateFileBox('', column, false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(fileBox);
         }
       }
     }
-    return Container(
-      color: Colors.red,
-      width: 1000,
-      child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.start,
-          spacing: 8,
-          runSpacing: 8,
-          children: children),
+    return Wrap(
+      children: children,
     );
   }
 
@@ -818,9 +794,8 @@ class ViewController extends GetxController {
     );
   }
   static Widget generateFormTextFieldFilter(GlobalKey<FormBuilderState> _fbKey, var column,var filterInfo, var type, String initValue) {
-    return new Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      // mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Obx(() {
           return Txt(
@@ -833,7 +808,7 @@ class ViewController extends GetxController {
           height: 10,
         ),
         Container(
-          width: 100,
+          width: 120,
           child: FormTextField(
             isValidate: false,
             name: '${column['title']}',
