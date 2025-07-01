@@ -1,8 +1,8 @@
-import 'package:finance/Logic/Controllers/main-controller.dart';
-import 'package:finance/Logic/Models/dataModel.dart';
-import 'package:finance/Logic/Models/db.dart';
-import 'package:finance/Public/styles.dart';
-import 'package:finance/UI/Views/dashboard.dart';
+import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
+import 'package:finance/Admin/Logic/Models/dataModel.dart';
+import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/styles.dart';
+import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +12,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
-import 'Logic/Controllers/app_localization_delegate.dart';
-import 'UI/Views/table-page.dart';
+import 'Admin/Logic/Controllers/app_localization_delegate.dart';
+import 'Admin/UI/Views/table-page.dart';
 
 void main()async {
 
@@ -24,10 +24,10 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-  var a = await DB('table').getRecord();
+  // var a = await DB('table').getRecord();
   // var a= await DB('itemsOrder2').parent(parentTable: 'order2',parentId:'77756a94-a90f-4806-abc3-7b1ea690bf17' ).where('_id','\$eq','e71c7ae3-0b0a-43ec-8260-b5d38d89a469').updateRecords(
   //     {'title':'maryam'});
-  print('main>>>${a}');
+  // print('main>>>${a}');
   // var box=await Hive.openBox<DataModel>('sample');
   // box.clear();
   // await Token.setToken('3ba7fd50-69c5-4293-8aa8-77e752a967ae');
