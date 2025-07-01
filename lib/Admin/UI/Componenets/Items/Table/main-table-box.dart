@@ -19,7 +19,9 @@ class MainTableBox extends StatefulWidget {
   @override
   State<MainTableBox> createState() => _MainTableBoxState();
 }
-late Future<Widget> _future;
+
+
+
 
 // @override
 // void initState() {
@@ -44,21 +46,20 @@ class _MainTableBoxState extends State<MainTableBox> {
               TableHeader(),
               if(MainController.tableInfo['filters']!=null && MainController.tableInfo['filters'].length!=0)
                 for(var filter in MainController.tableInfo['filters'])
-                  Wrap(
-                    children: [
-                      FutureBuilder<Widget>(
-                        future: ViewController.generateFilterView(filter),
-                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-                          } else {
-                            return snapshot.data ?? Container();
-                          }
-                        },
-                      ),
-                    ]
+                  Container(
+                    color: Colors.blue,
+                    child: FutureBuilder<Widget>(
+                      future: ViewController.generateFilterView(filter),
+                      builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
+                        } else {
+                          return snapshot.data ?? Container();
+                        }
+                      },
+                    ),
                   ),
               if(MainController.tableInfo['filters']!=null &&MainController.tableInfo['filters'].length!=0)
                 Container(

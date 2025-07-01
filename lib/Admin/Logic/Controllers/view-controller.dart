@@ -78,7 +78,8 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextFieldFilter(_fbKey, column,filterInfo, type, '');
+          textField = Container(
+              color:Colors.green,child: generateFormTextFieldFilter(_fbKey, column,filterInfo, type, ''));
           children.add(SizedBox(
             height: 20,
           ));
@@ -260,8 +261,15 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Container(
+      color: Colors.red,
+      width: 1000,
+      child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.start,
+          spacing: 8,
+          runSpacing: 8,
+          children: children),
+    );
   }
 
   static Future<Widget> generateStoreFormView(var columns) async {
@@ -810,8 +818,9 @@ class ViewController extends GetxController {
     );
   }
   static Widget generateFormTextFieldFilter(GlobalKey<FormBuilderState> _fbKey, var column,var filterInfo, var type, String initValue) {
-    return new Row(
+    return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      // mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Obx(() {
           return Txt(
