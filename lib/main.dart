@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         hoverColor: Colors.transparent,
         primarySwatch:primarySwatch,
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       builder: (context, child) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, child!),
         defaultScale: true,
