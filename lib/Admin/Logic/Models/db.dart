@@ -1071,7 +1071,7 @@ class DB {
           newRequest = {};
         }
       } else {
-        showSnackbar(snackTypes.error, "خطا");
+        showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
       }
     }
   }
