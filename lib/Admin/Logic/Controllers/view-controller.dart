@@ -260,8 +260,9 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Wrap(
+      children: children,
+    );
   }
 
   static Future<Widget> generateStoreFormView(var columns) async {
