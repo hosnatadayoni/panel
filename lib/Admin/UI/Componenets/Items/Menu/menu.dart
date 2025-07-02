@@ -3,6 +3,7 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/Admin/UI/Views/component-page.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,18 +14,18 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 
 class MenuBox extends StatefulWidget {
-   MenuBox({Key? key}) : super(key: key);
+  MenuBox({Key? key}) : super(key: key);
 
   @override
   State<MenuBox> createState() => _MenuBoxState();
 }
 
 class _MenuBoxState extends State<MenuBox>{
-   Rx<int> hoverItem = (-1).obs;
+  Rx<int> hoverItem = (-1).obs;
 
   Rx<bool> isHoverTheme = false.obs;
 
-   @override
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Obx((){
@@ -35,13 +36,14 @@ class _MenuBoxState extends State<MenuBox>{
             color: MainController.isLightMode.value == false ? primary :primaryDark,
           ),
           Positioned(
-            right: 50,
+            right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+            left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for(var i=0 ; i<MainController.items.length ; i++)
-                      MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
-                      Container(
+                    MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
+                    Container(
                       width: 250,
                       height: size.height,
                       color: MainController.isLightMode.value == true ?background:whiteColor,
@@ -50,22 +52,22 @@ class _MenuBoxState extends State<MenuBox>{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 20,),
-                              for(var j=0;j<MainController.SubMenuList.length;j++)
-                                if(MainController.SubMenuList[j]['main-menu'])
-                                  Column(children:[
-                                  InkWell(
-                                      onTap: ()async {
-                                        MainController.selectedSubItem.value = j;
-                                        DB.parentItem={};
-                                        await MainController.loadData();
-                                        await MainController.goToTablePage();
+                          for(var j=0;j<MainController.SubMenuList.length;j++)
+                            if(MainController.SubMenuList[j]['main-menu'])
+                              Column(children:[
+                                InkWell(
+                                    onTap: ()async {
+                                      MainController.selectedSubItem.value = j;
+                                      DB.parentItem={};
+                                      await MainController.loadData();
+                                      await MainController.goToTablePage();
 
-                                      },
-                                      child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
-                                        color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
-                                  ),
-                                  SizedBox(height: 20,)
-                                ]),
+                                    },
+                                    child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
+                                      color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
+                                ),
+                                SizedBox(height: 20,)
+                              ]),
                         ],
                       ),
                     ):Container(),
@@ -107,6 +109,14 @@ class _MenuBoxState extends State<MenuBox>{
                                           Get.to(() => DashboardPage());
                                           MainController.isClickedItem.value =false;
                                         }
+                                        else if(MainController.selectedItem.value == 1){
+                                          Get.to(() => ComponentPage());
+                                          MainController.isClickedItem.value =false;
+                                        }
+                                        else if(MainController.selectedItem.value == 1){
+                                          Get.to(() => ComponentPage());
+                                          MainController.isClickedItem.value =false;
+                                        }
                                         else{
                                           MainController.isClickedItem.value =true;
                                         }
@@ -121,8 +131,10 @@ class _MenuBoxState extends State<MenuBox>{
                                           child: Center(child: Icon(MainController.items[i].icon , size: 30,
                                             color: MainController.selectedItem.value == i ? MainController.isLightMode.value == true ?
                                             itemColor8:primary: whiteColor,))))),
-                              hoverItem == i ? Positioned(
-                                right:60,
+                              hoverItem == i ?
+                              Positioned(
+                                right:Directionality.of(context) == TextDirection.rtl ? 60 : null,
+                                left:Directionality.of(context) == TextDirection.ltr ? 60 : null,
                                 child: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -168,7 +180,7 @@ class _MenuBoxState extends State<MenuBox>{
                             children: [
                               Container(
                                 padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 70),
+                                margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
                                 decoration: BoxDecoration(
                                   color: primary,
                                   borderRadius: BorderRadius.circular(10),
@@ -208,7 +220,7 @@ class _MenuBoxState extends State<MenuBox>{
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.only(right: 70),
+                                  margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
                                   decoration: BoxDecoration(
                                     color: primary,
                                     borderRadius: BorderRadius.circular(10),

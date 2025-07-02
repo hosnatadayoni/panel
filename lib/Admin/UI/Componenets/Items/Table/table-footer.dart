@@ -23,18 +23,18 @@ class _TableFooterState extends State<TableFooter> {
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
 
 
-        return Obx((){
-          return Container(
-            child: size.width > 556 ?
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: pagenationBox(ViewController.totalPage.value , tableSelected),
-            ) :
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: pagenationBox(ViewController.totalPage.value , tableSelected),
-            ),);
-        });
+    return Obx((){
+      return Container(
+        child: size.width > 556 ?
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+        ) :
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+        ),);
+    });
   }
   Widget box(int i , tableSelected){
     Rx<bool> isHover = false.obs;
