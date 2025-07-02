@@ -1806,7 +1806,7 @@ class ViewController extends GetxController {
         var object =
         (await DB(tableName).where('_id', '\$eq', selectedId).getRecords());
         if (object.length == 0) {
-          selectedTitle = 'نامشخص';
+          selectedTitle = '${AppController.of(Get.context!)!.value('Uncertain')}';
         } else {
           var objectItem = object.first;
           List<dynamic> items = column['items'];
