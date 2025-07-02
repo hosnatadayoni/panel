@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
@@ -125,8 +126,7 @@ class _CreatePageState extends State<CreatePage> {
                                               },
                                               child: InkWell(
                                                 onTap: () {
-                                                  MainController
-                                                      .goToTablePage();
+                                                  MainController.goToTablePage();
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
@@ -166,15 +166,7 @@ class _CreatePageState extends State<CreatePage> {
                                               child: InkWell(
                                                 onTap: () async {
                                                   print('_CreatePageState.build>>>${ViewController.request}');
-                                                  Map<String,dynamic> parent=await DB.parentItem;
-                                                  if(parent.length==0){
-                                                    await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
-                                                  }else{
-                                                    await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
-                                                  }
-                                                  if (ViewController.isClickedBtn.value == false) {
-                                                    MainController.goToTablePage();
-                                                  }
+                                                  HelperController.createFunction();
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
