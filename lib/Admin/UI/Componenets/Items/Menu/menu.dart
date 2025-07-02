@@ -36,7 +36,9 @@ class _MenuBoxState extends State<MenuBox>{
             color: MainController.isLightMode.value == false ? primary :primaryDark,
           ),
           Positioned(
-            right: 50,
+            // right: 50,
+            right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+            left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -127,7 +129,9 @@ class _MenuBoxState extends State<MenuBox>{
                                             color: MainController.selectedItem.value == i ? MainController.isLightMode.value == true ?
                                             itemColor8:primary: whiteColor,))))),
                               hoverItem == i ? Positioned(
-                                right:60,
+                                // right:60,
+                                right:Directionality.of(context) == TextDirection.rtl ? 60 : null,
+                                left:Directionality.of(context) == TextDirection.ltr ? 60 : null,
                                 child: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -173,7 +177,7 @@ class _MenuBoxState extends State<MenuBox>{
                             children: [
                               Container(
                                 padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 70),
+                                margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
                                 decoration: BoxDecoration(
                                   color: primary,
                                   borderRadius: BorderRadius.circular(10),
@@ -213,7 +217,7 @@ class _MenuBoxState extends State<MenuBox>{
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.only(right: 70),
+                                  margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
                                   decoration: BoxDecoration(
                                     color: primary,
                                     borderRadius: BorderRadius.circular(10),

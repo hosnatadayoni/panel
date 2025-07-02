@@ -38,7 +38,7 @@ class ConncetServerController extends GetxController {
   }
 
   static createField(Map<String, dynamic> json) async {
-    var response = await RestApi.post(createFieldUrl, body: json);
+    var response = await RestApi.post(createFieldsUrl, body: json);
     RestApi.responseHandler(
         response: response, successCallback: () async {}, printResponse: true);
   }
