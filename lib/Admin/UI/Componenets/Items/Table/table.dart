@@ -32,6 +32,7 @@ class _TableBoxState extends State<TableBox> {
 
   @override
   Widget build(BuildContext context) {
+    print('_TableBoxState.build table info is>>${MainController.tableInfo}');
     _scrollController.addListener(() {
 
     });
@@ -230,8 +231,10 @@ class _TableBoxState extends State<TableBox> {
                                         value: 'relation',
                                         child: InkWell(
                                           onTap: ()async{
-                                            print('_TableBoxState.build>>${item}');
-                                            HelperController.relationFunction (table:item ,index: i);
+                                            MainController.selectedItem.value=MainController.SubMenuList.indexWhere((element) => element['table-name']==item['table-name']);
+                                            MainController.tableName.value=item['table-name'];
+                                            print('_TableBoxState.build>>${ MainController.tableName.value}');
+                                            HelperController.relationFunction(table:item ,index: i);
                                             // var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
                                             // DB.parentItem={
                                             // 'parent_id': MainController.tableData.value[i]['_id'],

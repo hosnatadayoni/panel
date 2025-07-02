@@ -14,6 +14,7 @@ class TablePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
+    print('TablePage.build');
     return Scaffold(
         body: Obx((){
           return Container(

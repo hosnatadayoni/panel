@@ -77,7 +77,7 @@ class OrderCreatePage extends StatelessWidget {
                                               child: InkWell(
                                                 onTap: (){
 
-                                                  MainController.goToTablePage();
+                                                  // MainController.goToTablePage();
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
@@ -114,7 +114,7 @@ class OrderCreatePage extends StatelessWidget {
 
                                                   if(ViewController.isClickedBtn.value == false){
                                                     // Get.to(() => TablePage());
-                                                    MainController.goToTablePage();
+                                                    // MainController.goToTablePage();
                                                   }
                                                 },
                                                 child: Container(

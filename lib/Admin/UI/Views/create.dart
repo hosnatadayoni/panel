@@ -15,7 +15,8 @@ import '../Componenets/General/column-scroll.dart';
 import '../Componenets/General/txt.dart';
 
 class CreatePage extends StatefulWidget {
-  CreatePage();
+  String tableName;
+  CreatePage(this.tableName);
 
   @override
   State<CreatePage> createState() => _CreatePageState();
@@ -36,6 +37,8 @@ class _CreatePageState extends State<CreatePage> {
 
   @override
   Widget build(BuildContext context) {
+    print('_CreatePageState.build>>${MainController.SubMenuList.indexWhere((element) => element['table-name']=='schema')}');
+
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
 
@@ -123,7 +126,7 @@ class _CreatePageState extends State<CreatePage> {
                                               },
                                               child: InkWell(
                                                 onTap: () {
-                                                  MainController.goToTablePage();
+                                                  MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
@@ -163,7 +166,7 @@ class _CreatePageState extends State<CreatePage> {
                                               child: InkWell(
                                                 onTap: () async {
                                                   print('_CreatePageState.build>>>${ViewController.request}');
-                                                  HelperController.createFunction();
+                                                  HelperController.createFunction(widget.tableName);
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),

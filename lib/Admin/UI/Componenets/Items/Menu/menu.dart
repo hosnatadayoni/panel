@@ -58,8 +58,8 @@ class _MenuBoxState extends State<MenuBox>{
                                       onTap: ()async {
                                         MainController.selectedSubItem.value = j;
                                         DB.parentItem={};
-
-                                        await MainController.goToTablePage();
+                                        MainController.tableName.value=MainController.SubMenuList[j]['table-name'];
+                                        await MainController.goToTablePage(MainController.SubMenuList[j]);
 
                                       },
                                       child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,

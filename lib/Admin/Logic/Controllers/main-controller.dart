@@ -84,6 +84,7 @@ class MainController extends GetxController {
   static RxList<dynamic> tableData = [].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
+  static Rx<String> tableName=''.obs;
 
   //dasboard page
   static var hoveredIndex = (-1).obs;
@@ -184,68 +185,6 @@ class MainController extends GetxController {
           } else {
             rowData.add(exl.TextCellValue(value.toString()));
           }
-          // rowData.add(exl.TextCellValue(value));
-
-          // List<dynamic> items=[];
-          // String tableName ='';
-          // if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
-          //   items = await ViewController.itemsList(column);
-          // }
-          // if(value.runtimeType == 'String'){
-          //   if(column['type'] =='select' || column['type'] == 'radiobutton'){
-          //     if (column['sourceItems'] != 'custom') {
-          //       tableName = column['sourceTable'];
-          //
-          //     }
-          //     String title = await ViewController.getTitleSelectedItem('${tableName}',
-          //         data.data[name] , column);
-          //     rowData.add(exl.TextCellValue(title));
-          //   }
-          //   else{
-          //     rowData.add(exl.TextCellValue(value));
-          //   }
-          // }
-          // if(value.runtimeType == 'List<String>'){
-          //   if(column['type'] =='multiSelect'){
-          //     if (column['sourceItems'] != 'custom'){
-          //       if(column['sourceTable'] != null){
-          //         tableName = column['sourceTable'];
-          //       }
-          //     }
-          //     List<String> listTitle = await ViewController.getTitleMultiSelectedItem('${tableName}', data.data[name] , column);
-          //     rowData.add(exl.TextCellValue(listTitle.join(',')));
-          //   }
-          // }
-          // if(value.runtimeType == 'bool'){
-          //   rowData.add(exl.BoolCellValue(value));
-          // }
-          // else if(value.runtimeType == 'List<dynamic'){
-          //   rowData.add(exl.TextCellValue(value));
-          // }
-
-          // List<dynamic> items=[];
-          // String tableName ='';
-          // if(column['type'] == 'select' || column['type'] == 'multiSelect' || column['type'] == 'radiobutton'){
-          //  items = await ViewController.itemsList(column);
-          // }
-          // if(column['type'] =='multiSelect'){
-          //   if (column['sourceItems'] != 'custom'){
-          //     if(column['sourceTable'] != null){
-          //       tableName = column['sourceTable'];
-          //     }
-          //   }
-          //   List<String> listTitle = await ViewController.getTitleMultiSelectedItem('${tableName}', data.data[name] , column);
-          //   rowData.add(exl.TextCellValue(listTitle.join(',')));
-          // }
-          // if(column['type'] =='select' || column['type'] == 'radiobutton'){
-          //   if (column['sourceItems'] != 'custom') {
-          //     tableName = column['sourceTable'];
-          //
-          //   }
-          //   String title = await ViewController.getTitleSelectedItem('${tableName}',
-          //       data.data[name] , column);
-          //   rowData.add(exl.TextCellValue(title));
-          // }
         }
       }
       for (var i = 0; i < rowData.length; i++) {
@@ -254,7 +193,6 @@ class MainController extends GetxController {
       sheet.appendRow(rowData);
       rowIndex++;
     }
-    // }
 
     String? fileExelPath;
 
@@ -1430,7 +1368,7 @@ class MainController extends GetxController {
   static getStatusTable(String tableName) {
     var infoTable=getInfoTable(tableName);
     if(infoTable!=null){
-      return infoTable['status'];
+      return infoTable['online'];
     }
     return false;
   }
@@ -1739,6 +1677,7 @@ class MainController extends GetxController {
         }
       }
     }
+
   }
 
   static String getNameFile(List<dynamic> filesList) {
@@ -1830,13 +1769,13 @@ class MainController extends GetxController {
     return true;
   }
 
-  static goToTablePage({bool loadData=true,var tableFields=null, var tableData=null}) async {
-    if (MainController.SubMenuList[MainController.selectedSubItem.value]['view'] == 'custom') {
-      HelperController.tablePageFunction();
+  static goToTablePage(var table,{bool loadData=true,var tableFields=null, var tableData=null}) async {
+    if (table['view'] == 'custom') {
+      print('table>>2>>${ MainController.tableName.value}');
+      HelperController.tablePageFunction(table: table);
     } else {
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
-
       ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }

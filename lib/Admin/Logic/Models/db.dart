@@ -773,7 +773,7 @@ class DB {
           }
           // await MainController.loadData(tableData: ViewCustomController.getDataTable(this.tableName!));
           ViewController.isClickedEditBtn.value = false;
-          await MainController.goToTablePage(tableFields:ViewCustomController.getDataTable(this.tableName!) );
+          await MainController.goToTablePage(MainController.tableInfo('${this.tableName}'),tableFields:ViewCustomController.getDataTable(this.tableName!) );
         }
       } else {
         showSnackbar(snackTypes.error,

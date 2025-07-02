@@ -99,7 +99,7 @@ class _EditPageState extends State<EditPage> {
                               child: InkWell(
                                 onTap: () async {
 
-                                  await MainController.goToTablePage();
+                                  await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),

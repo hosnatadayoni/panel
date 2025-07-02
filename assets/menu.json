@@ -35,10 +35,13 @@
     "view": "custom",
     "columns": [
       {
-        "name": "table_name",
+        "name": "name",
         "title": "table_name",
         "tooltip": "",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "tooltip",
