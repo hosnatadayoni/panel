@@ -42,14 +42,6 @@ class ConncetServerController extends GetxController {
     //     },printResponse: true);
   }
 
-  // static createField (Map<String,dynamic> json) async {
-  //   var response = await RestApi.post(createFieldsUrl, body:json);
-  //   RestApi.responseHandler(
-  //       response: response,
-  //       successCallback: () async {
-  //       },printResponse: true);
-  // }
-
   static updateSchema (Map<String,dynamic> json) async {
     // var response = await RestApi.post(updateSchemaUrl, body:json);
     // RestApi.responseHandler(
