@@ -3,10 +3,10 @@
     "title": "product",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "table",
+    "table-name": "product",
     "currentPage": 1,
     "countShowRow": 10,
-    "online": false,
+    "online": true,
     "relations": [],
     "columns": [
       {
@@ -24,7 +24,7 @@
     "table-name": "category",
     "currentPage": 1,
     "countShowRow": 10,
-    "online": false,
+    "online": true,
     "relations": [],
     "columns": [
       {

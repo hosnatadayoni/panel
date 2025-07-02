@@ -1146,7 +1146,7 @@ class MainController extends GetxController {
   static getStatusTable(String tableName) {
     var infoTable=getInfoTable(tableName);
     if(infoTable!=null){
-      return infoTable['status'];
+      return infoTable['online'];
     }
     return false;
   }

@@ -55,7 +55,8 @@ class _TableHeaderState extends State<TableHeader> {
                         // MainController.renderPagination();
                       });
                       MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
-                      ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
+                      // ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
+                      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
