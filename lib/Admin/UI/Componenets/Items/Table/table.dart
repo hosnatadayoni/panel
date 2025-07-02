@@ -230,9 +230,8 @@ class _TableBoxState extends State<TableBox> {
                                         value: 'relation',
                                         child: InkWell(
                                           onTap: ()async{
-                                            String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
                                             print('_TableBoxState.build>>${item}');
-                                                  // if(item['table-name']=='')
+                                            HelperController.relationFunction (table:item ,index: i);
                                             // var items=await DB('${item['table-name']}').parent(parentId:MainController.tableData.value[i]['_id'] ,parentTable:MainController.tableInfo['table-name']).getRecords();
                                             // DB.parentItem={
                                             // 'parent_id': MainController.tableData.value[i]['_id'],
@@ -241,7 +240,7 @@ class _TableBoxState extends State<TableBox> {
                                             // await MainController.goToTablePage(tableFields: ViewCustomController.getDataTable(item['table-name']),tableData: items);
                                           },
                                           child: Container(
-                                            child: Text(item['title']),
+                                            child: Txt(item['title'],fontSize: 16, fontWeight: FontWeight.w400,color: whiteColor, ),
                                           ),
                                         )
                                     ),

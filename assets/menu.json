@@ -32,8 +32,14 @@
     "countShowRow": 10,
     "location-data": 0,
     "online": true,
-
+    "view": "custom",
     "columns": [
+      {
+        "name": "table_name",
+        "title": "table_name",
+        "tooltip": "",
+        "type": "string"
+      },
       {
         "name": "tooltip",
         "title": "tooltip",

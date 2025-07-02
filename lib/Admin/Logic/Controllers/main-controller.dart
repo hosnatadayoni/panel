@@ -1577,12 +1577,12 @@ class MainController extends GetxController {
     }
     return list;
   }
+
   static List<dynamic> createJsonSchemaApi() {
     List<dynamic>l=[];
     Map<String,dynamic> c={};
     for (var table in SubMenuList) {
       Map<String,dynamic> list ={};
-    ///
       for(var column in table['columns']){
         c.addAll({'${column['name']}': {"type": "${column['type_filed']}"}
         });
