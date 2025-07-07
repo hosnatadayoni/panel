@@ -91,29 +91,35 @@ class _EditPageState extends State<EditPage> {
                           // mainAxisAlignment: MainAxisAlignment.end,
                           alignment: WrapAlignment.end,
                           children: [
-                            MouseRegion(
-                              onEnter: (_){
-                                isHoverBtnBack.value = true;
-                              },
-                              onExit: (_){
-                                isHoverBtnBack.value = false;
-                              },
-                              child: InkWell(
-                                onTap: () async {
-                                  await MainController.loadData();
-                                  await MainController.goToTablePage();
-                                },
-                                child: Container(
-                                  // padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(color: colorBtn , width: 1),
-                                    color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
-                                  ),
-                                  child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
-                                ),
-                              ),
-                            ),
+                            // MouseRegion(
+                            //   onEnter: (_){
+                            //     isHoverBtnBack.value = true;
+                            //   },
+                            //   onExit: (_){
+                            //     isHoverBtnBack.value = false;
+                            //   },
+                            //   child: InkWell(
+                            //     onTap: () async {
+                            //       await MainController.loadData();
+                            //       await MainController.goToTablePage();
+                            //     },
+                            //     child: Container(
+                            //       padding: EdgeInsets.all(10),
+                            //       decoration: BoxDecoration(
+                            //         borderRadius: BorderRadius.all(Radius.circular(10)),
+                            //         border: Border.all(color: colorBtn , width: 1),
+                            //         color: isHoverBtnBack.value == false ? Colors.transparent : colorBtn,
+                            //       ),
+                            //       child: Txt('${AppController.of(context)!.value('back')}' , color:isHoverBtnBack.value == false ? colorBtn : whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                            //     ),
+                            //   ),
+                            // ),
+                            Btn(type: btnType.primary, isOutline: true, content: Txt(
+                              '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
+                            ),onClick: () async {
+                              await MainController.loadData();
+                              await MainController.goToTablePage();
+                            }),
                             SizedBox(width: 5,),
                             // InkWell(
                             //   onTap: ()async{
