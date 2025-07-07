@@ -210,6 +210,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
+import '../../btn.dart';
+
 class TableBox extends StatefulWidget {
   TableBox();
   @override
@@ -477,43 +479,55 @@ class _TableBoxState extends State<TableBox> {
                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                   children: [
-                                                                    InkWell(
-                                                                      onTap: (){
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: Container(
-                                                                        padding: EdgeInsets.all(15),
-                                                                        width: 52,
-                                                                        height: 52,
-                                                                        decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                            color: redColor
-                                                                        ),
-                                                                        child: Center(child: Txt('${AppController.of(context)!.value('no')}' , color: whiteColor,)),
-
-                                                                      ),
-                                                                    ),
+                                                                    Btn(type: btnType.danger,width: 52,  height: 52, content:Center(child: Txt('${AppController.of(context)!.value('no')}' , color: whiteColor,)), onClick: (){
+                                                                      Navigator.pop(context);
+                                                                    }, ),
+                                                                    // InkWell(
+                                                                    //   onTap: (){
+                                                                    //     Navigator.pop(context);
+                                                                    //   },
+                                                                    //   child: Container(
+                                                                    //     padding: EdgeInsets.all(15),
+                                                                    //     width: 52,
+                                                                    //     height: 52,
+                                                                    //     decoration: BoxDecoration(
+                                                                    //         borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                    //         color: redColor
+                                                                    //     ),
+                                                                    //     child: Center(child: Txt('${AppController.of(context)!.value('no')}' , color: whiteColor,)),
+                                                                    //
+                                                                    //   ),
+                                                                    // ),
                                                                     SizedBox(width: 5,),
-                                                                    InkWell(
-                                                                      onTap: ()async{
-                                                                        setState(() {
-                                                                          DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
-                                                                        });
-                                                                        MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
-                                                                        ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: Container(
-                                                                        padding: EdgeInsets.all(15),
-                                                                        width: 52,
-                                                                        height: 52,
-                                                                        decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                                            color: successColor
-                                                                        ),
-                                                                        child: Center(child: Txt('${AppController.of(context)!.value('yes')}' , color: whiteColor,)),
-                                                                      ),
-                                                                    )
+                                                                    Btn(type: btnType.success , onClick: () async {
+                                                                       DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                                      setState(() {
+
+                                                                      });
+                                                                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
+                                                                      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
+                                                                      Navigator.pop(context);
+                                                                    } , width: 52, height: 52, content: Txt('${AppController.of(context)!.value('yes')}' , color: whiteColor),loadingTag: 'delete-record'),
+                                                                    // InkWell(
+                                                                    //   onTap: ()async{
+                                                                    //     setState(() {
+                                                                    //       DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                                    //     });
+                                                                    //     MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
+                                                                    //     ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
+                                                                    //     Navigator.pop(context);
+                                                                    //   },
+                                                                    //   child: Container(
+                                                                    //     padding: EdgeInsets.all(15),
+                                                                    //     width: 52,
+                                                                    //     height: 52,
+                                                                    //     decoration: BoxDecoration(
+                                                                    //         borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                    //         color: successColor
+                                                                    //     ),
+                                                                    //     child: Center(child: Txt('${AppController.of(context)!.value('yes')}' , color: whiteColor,)),
+                                                                    //   ),
+                                                                    // )
                                                                   ],
                                                                 )
                                                               ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
@@ -75,6 +76,8 @@ class ConncetServerController extends GetxController {
           storeRecordRes={};
           storeRecordRes=response!.data['data'];
         },printResponse: true);
+    AppController.finishLoading('store-record');
+    AppController.finishLoading('get-records');
   }
 
   static updateRecordGeneral(var json) async {
@@ -85,6 +88,8 @@ class ConncetServerController extends GetxController {
           updateRecordRes={};
           updateRecordRes=response!.data['data'];
         },printResponse: true);
+    AppController.finishLoading('update-records');
+    AppController.finishLoading('get-records');
   }
 
   static getRecordGeneral(var tableName) async {
@@ -103,6 +108,7 @@ class ConncetServerController extends GetxController {
           getRecordRes=response!.data['data']['data'];
           MainController.tableData.value=response.data['data']['data'];
         },printResponse: true);
+    AppController.finishLoading('get-records');
   }
 
   static createJsonFilter(var wheres,String tableName,String type){
@@ -139,6 +145,8 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           deleteRecordRes=true;
         },printResponse: true,errorCallback:()=> deleteRecordRes=false);
+    AppController.finishLoading('delete-record');
+    AppController.finishLoading('get-records');
   }
 
   static addSyncField(Map<dynamic,dynamic> json,bool status){

@@ -316,7 +316,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(selectBox);
-        } else if (type == 'checkbox') {
+        }
+        else if (type == 'checkbox') {
           checkBox = generateFormCheckBox(column, false.obs);
           children.add(SizedBox(
             height: 20,

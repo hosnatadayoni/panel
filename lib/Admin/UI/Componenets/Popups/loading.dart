@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Public/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Logic/Controllers/app-controller.dart';
@@ -30,7 +31,7 @@ class Loading extends StatelessWidget {
                   color:  this.color??Colors.white.withOpacity(0.9),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: appColor,
+                      color: colorBtn,
                       strokeWidth: 4,
                     ),
                   ),

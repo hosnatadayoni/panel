@@ -12,6 +12,7 @@ import '../../Logic/Models/db.dart';
 import '../../Public/styles.dart';
 import '../Componenets/General/column-scroll.dart';
 import '../Componenets/General/txt.dart';
+import '../Componenets/btn.dart';
 
 class CreatePage extends StatefulWidget {
   CreatePage();
@@ -111,94 +112,227 @@ class _CreatePageState extends State<CreatePage> {
                                     ],
                                   ),
                                   // if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
-                                  Obx(() {
-                                    return Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            MouseRegion(
-                                              onEnter: (_) {
-                                                isHoverBtnBack.value = true;
-                                              },
-                                              onExit: (_) {
-                                                isHoverBtnBack.value = false;
-                                              },
-                                              child: InkWell(
-                                                onTap: () {
-                                                  MainController
-                                                      .goToTablePage();
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
-                                                    border: Border.all(
-                                                        color: colorBtn,
-                                                        width: 1),
-                                                    color:
-                                                        isHoverBtnBack.value ==
-                                                                false
-                                                            ? Colors.transparent
-                                                            : colorBtn,
-                                                  ),
-                                                  child: Txt(
-                                                    '${AppController.of(context)!.value('back')}',
-                                                    color:
-                                                        isHoverBtnBack.value ==
-                                                                false
-                                                            ? colorBtn
-                                                            : whiteColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            MouseRegion(
-                                              onEnter: (_) {},
-                                              onExit: (_) {},
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  print('_CreatePageState.build>>>${ViewController.request}');
-                                                  Map<String,dynamic> parent=await DB.parentItem;
-                                                  if(parent.length==0){
-                                                    await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
-                                                  }else{
-                                                    await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
-                                                  }
-                                                  if (ViewController.isClickedBtn.value == false) {
-                                                    MainController.goToTablePage();
-                                                  }
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
-                                                    color: colorBtn,
-                                                  ),
-                                                  child: Txt(
-                                                    '${AppController.of(context)!.value('save')}',
-                                                    color: whiteColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  }),
+
+                                  // Obx(() {
+                                  //   return Row(
+                                  //     children: [
+                                  //       Row(
+                                  //         children: [
+                                  //           Btn(type: btnType.primary, isOutline: true, content: Txt(
+                                  //             '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
+                                  //           ),onClick: (){
+                                  //             MainController.goToTablePage();
+                                  //           }),
+                                  //           // MouseRegion(
+                                  //           //   onEnter: (_) {
+                                  //           //     isHoverBtnBack.value = true;
+                                  //           //   },
+                                  //           //   onExit: (_) {
+                                  //           //     isHoverBtnBack.value = false;
+                                  //           //   },
+                                  //           //   child: InkWell(
+                                  //           //     onTap: () {
+                                  //           //       MainController
+                                  //           //           .goToTablePage();
+                                  //           //     },
+                                  //           //     child: Container(
+                                  //           //       // padding: EdgeInsets.all(10),
+                                  //           //       decoration: BoxDecoration(
+                                  //           //         borderRadius:
+                                  //           //             BorderRadius.all(
+                                  //           //                 Radius.circular(
+                                  //           //                     10)),
+                                  //           //         border: Border.all(
+                                  //           //             color: colorBtn,
+                                  //           //             width: 1),
+                                  //           //         color:
+                                  //           //             isHoverBtnBack.value ==
+                                  //           //                     false
+                                  //           //                 ? Colors.transparent
+                                  //           //                 : colorBtn,
+                                  //           //       ),
+                                  //           //       child: Txt(
+                                  //           //         '${AppController.of(context)!.value('back')}',
+                                  //           //         color:
+                                  //           //             isHoverBtnBack.value ==
+                                  //           //                     false
+                                  //           //                 ? colorBtn
+                                  //           //                 : whiteColor,
+                                  //           //         fontSize: 16,
+                                  //           //         fontWeight: FontWeight.w400,
+                                  //           //       ),
+                                  //           //     ),
+                                  //           //   ),
+                                  //           // ),
+                                  //           SizedBox(
+                                  //             width: 5,
+                                  //           ),
+                                  //           Btn(type: btnType.primary , content: Txt(
+                                  //             '${AppController.of(context)!.value('save')}',
+                                  //             color: whiteColor,
+                                  //             fontSize: 16,
+                                  //             fontWeight: FontWeight.w400,
+                                  //           ),
+                                  //               onClick: () async {
+                                  //             print('_CreatePageState.build>>>${ViewController.request}');
+                                  //             Map<String,dynamic> parent=await DB.parentItem;
+                                  //             if(parent.length==0){
+                                  //               await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                  //             }else{
+                                  //               await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
+                                  //             }
+                                  //             if (ViewController.isClickedBtn.value == false) {
+                                  //               MainController.goToTablePage();
+                                  //             }
+                                  //           } , loadingTag: 'store-record'),
+                                  //           // MouseRegion(
+                                  //           //   onEnter: (_) {},
+                                  //           //   onExit: (_) {},
+                                  //           //   child: InkWell(
+                                  //           //     onTap: () async {
+                                  //           //       print('_CreatePageState.build>>>${ViewController.request}');
+                                  //           //       Map<String,dynamic> parent=await DB.parentItem;
+                                  //           //       if(parent.length==0){
+                                  //           //         await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                  //           //       }else{
+                                  //           //         await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
+                                  //           //       }
+                                  //           //       if (ViewController.isClickedBtn.value == false) {
+                                  //           //         MainController.goToTablePage();
+                                  //           //       }
+                                  //           //     },
+                                  //           //     child: Container(
+                                  //           //       padding: EdgeInsets.all(10),
+                                  //           //       decoration: BoxDecoration(
+                                  //           //         borderRadius:
+                                  //           //             BorderRadius.all(
+                                  //           //                 Radius.circular(
+                                  //           //                     10)),
+                                  //           //         color: colorBtn,
+                                  //           //       ),
+                                  //           //       child: Txt(
+                                  //           //         '${AppController.of(context)!.value('save')}',
+                                  //           //         color: whiteColor,
+                                  //           //         fontSize: 16,
+                                  //           //         fontWeight: FontWeight.w400,
+                                  //           //       ),
+                                  //           //     ),
+                                  //           //   ),
+                                  //           // ),
+                                  //         ],
+                                  //       )
+                                  //     ],
+                                  //   );
+                                  // }),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Btn(type: btnType.primary, isOutline: true, content: Txt(
+                                            '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
+                                          ),onClick: (){
+                                            MainController.goToTablePage();
+                                          }),
+                                          // MouseRegion(
+                                          //   onEnter: (_) {
+                                          //     isHoverBtnBack.value = true;
+                                          //   },
+                                          //   onExit: (_) {
+                                          //     isHoverBtnBack.value = false;
+                                          //   },
+                                          //   child: InkWell(
+                                          //     onTap: () {
+                                          //       MainController
+                                          //           .goToTablePage();
+                                          //     },
+                                          //     child: Container(
+                                          //       // padding: EdgeInsets.all(10),
+                                          //       decoration: BoxDecoration(
+                                          //         borderRadius:
+                                          //             BorderRadius.all(
+                                          //                 Radius.circular(
+                                          //                     10)),
+                                          //         border: Border.all(
+                                          //             color: colorBtn,
+                                          //             width: 1),
+                                          //         color:
+                                          //             isHoverBtnBack.value ==
+                                          //                     false
+                                          //                 ? Colors.transparent
+                                          //                 : colorBtn,
+                                          //       ),
+                                          //       child: Txt(
+                                          //         '${AppController.of(context)!.value('back')}',
+                                          //         color:
+                                          //             isHoverBtnBack.value ==
+                                          //                     false
+                                          //                 ? colorBtn
+                                          //                 : whiteColor,
+                                          //         fontSize: 16,
+                                          //         fontWeight: FontWeight.w400,
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Btn(type: btnType.primary , content: Txt(
+                                            '${AppController.of(context)!.value('save')}',
+                                            color: whiteColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                              onClick: () async {
+                                                print('_CreatePageState.build>>>${ViewController.request}');
+                                                Map<String,dynamic> parent=await DB.parentItem;
+                                                if(parent.length==0){
+                                                  await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                                }else{
+                                                  await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
+                                                }
+                                                if (ViewController.isClickedBtn.value == false) {
+                                                  MainController.goToTablePage();
+                                                }
+                                              } , loadingTag: 'store-record'),
+                                          // MouseRegion(
+                                          //   onEnter: (_) {},
+                                          //   onExit: (_) {},
+                                          //   child: InkWell(
+                                          //     onTap: () async {
+                                          //       print('_CreatePageState.build>>>${ViewController.request}');
+                                          //       Map<String,dynamic> parent=await DB.parentItem;
+                                          //       if(parent.length==0){
+                                          //         await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                          //       }else{
+                                          //         await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
+                                          //       }
+                                          //       if (ViewController.isClickedBtn.value == false) {
+                                          //         MainController.goToTablePage();
+                                          //       }
+                                          //     },
+                                          //     child: Container(
+                                          //       padding: EdgeInsets.all(10),
+                                          //       decoration: BoxDecoration(
+                                          //         borderRadius:
+                                          //             BorderRadius.all(
+                                          //                 Radius.circular(
+                                          //                     10)),
+                                          //         color: colorBtn,
+                                          //       ),
+                                          //       child: Txt(
+                                          //         '${AppController.of(context)!.value('save')}',
+                                          //         color: whiteColor,
+                                          //         fontSize: 16,
+                                          //         fontWeight: FontWeight.w400,
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                        ],
+                                      )
+                                    ],
+                                  )
                                 ],
                               ),
                             ),

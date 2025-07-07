@@ -120,6 +120,7 @@ class DB {
 
 
   getRecords({bool withFormat = true}) async {
+    AppController.startLoading('get-records');
     List<Map<String, dynamic>> dataItems = [];
     Box box;
     List<Map<String, dynamic>> data = [];
@@ -563,6 +564,7 @@ class DB {
       }
       return data;
     }
+    AppController.finishLoading('get-records');
   }
 
   getRecord({bool withFormat = true}) async {
@@ -1011,6 +1013,7 @@ class DB {
   }
 
   Future<void> storeRecord(Map<dynamic, dynamic> request) async {
+    AppController.startLoading('store-record');
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     ViewController.isClickedBtn.value = true;
     var Id = Uuid().v4();
@@ -1074,6 +1077,7 @@ class DB {
         showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
       }
     }
+    AppController.finishLoading('store-record');
   }
 
   convertFormatUpdate(var value,var key,var a){
@@ -1105,6 +1109,7 @@ class DB {
     }
   }
   updateRecords(Map<String, dynamic> request) async {
+    AppController.startLoading('update-records');
     List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
     ViewController.isClickedEditBtn.value = true;
@@ -1207,6 +1212,7 @@ class DB {
             '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
       }
     }
+    AppController.finishLoading('update-records');
   }
 
   updateRecord(Map<String, dynamic> request) async {
@@ -1286,6 +1292,7 @@ class DB {
   }
 
   deleteRecord() async {
+    AppController.startLoading('delete-record');
     List<dynamic> records = await getRecords();
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     var relations = ViewCustomController.getDataTable(this.tableName!);
@@ -1329,6 +1336,7 @@ class DB {
         }
       }
     }
+    AppController.finishLoading('delete-record');
   }
 }
 
