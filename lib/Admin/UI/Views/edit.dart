@@ -118,7 +118,7 @@ class _EditPageState extends State<EditPage> {
                               '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
                             ),onClick: () async {
                               await MainController.loadData();
-                              await MainController.goToTablePage();
+                              await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                             }),
                             SizedBox(width: 5,),
                             // InkWell(
@@ -164,7 +164,7 @@ class _EditPageState extends State<EditPage> {
                                   //       .updateRecords(ViewController.request);
                                   // }
                                   if (ViewController.isClickedBtn.value == false) {
-                                    await MainController.goToTablePage();
+                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                   }
                                 } , loadingTag: 'update-records'),
                           ],

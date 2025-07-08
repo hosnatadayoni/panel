@@ -561,7 +561,7 @@ class _TableBoxState extends State<TableBox> {
                                                     };
                                                     await MainController.loadData(tableData: ViewCustomController.getDataTable(item['table-name']),tableDataItems: items);
 
-                                                    await MainController.goToTablePage();
+                                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                                   },
                                                   child: Container(
                                                     child: Text(item['title']),

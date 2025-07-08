@@ -15,7 +15,8 @@ import '../Componenets/General/txt.dart';
 import '../Componenets/btn.dart';
 
 class CreatePage extends StatefulWidget {
-  CreatePage();
+  String?tableName;
+  CreatePage(this.tableName);
 
   @override
   State<CreatePage> createState() => _CreatePageState();
@@ -231,7 +232,7 @@ class _CreatePageState extends State<CreatePage> {
                                           Btn(type: btnType.primary, isOutline: true, content: Txt(
                                             '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
                                           ),onClick: (){
-                                            MainController.goToTablePage();
+                                            MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                           }),
                                           // MouseRegion(
                                           //   onEnter: (_) {
@@ -292,7 +293,7 @@ class _CreatePageState extends State<CreatePage> {
                                                   await DB('${MainController.tableInfo['table-name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).storeRecord(ViewController.request);
                                                 }
                                                 if (ViewController.isClickedBtn.value == false) {
-                                                  MainController.goToTablePage();
+                                                  MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                                 }
                                               } , loadingTag: 'store-record'),
                                           // MouseRegion(
