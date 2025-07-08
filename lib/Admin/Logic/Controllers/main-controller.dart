@@ -1679,6 +1679,8 @@ class MainController extends GetxController {
     }
   }
 
+
+
   static String getNameFile(List<dynamic> filesList) {
     List<String> fileNameList = [];
     for (var file in filesList) {
@@ -1770,8 +1772,10 @@ class MainController extends GetxController {
 
   static goToTablePage(var table,{bool loadData=true,var tableFields=null, var tableData=null}) async {
     if (table['view'] == 'custom') {
-      print('table>>2>>${ MainController.tableName.value}');
-      HelperController.tablePageFunction(table: table);
+      HelperController.pageInateFunction();
+      Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
+
+      // HelperController.tablePageFunction(table: table);
     } else {
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);

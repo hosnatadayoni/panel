@@ -7,7 +7,6 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-date.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/Admin/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -1461,19 +1460,6 @@ class ViewCustomController extends GetxController{
   }
   //end edit order page
 
-  static Future<Widget> getOrderItems(var data) async {
-    // List<dynamic>items=await DB('order-itemss').parent(parentId:  "${data['id']}",parentTable: 'order').getRecords();
-    List<dynamic>items=await DB('itemsOrder2').parent(parentId:  "${data['_id']}",parentTable: 'order3').getRecords();
-    print('items as>>>${items}');
-    for(var item in items){
-      OrderItem.orderItemsList[item['_id']]=item;
 
-    }
-    return Column(
-      children: [
-        FormEditOrderItemCustom(),
-      ],
-    );
-  }
 
 }

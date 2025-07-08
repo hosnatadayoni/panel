@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
@@ -20,7 +21,7 @@ class _TableFooterState extends State<TableFooter> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
+    // var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
 
 
     return Obx((){
@@ -28,11 +29,13 @@ class _TableFooterState extends State<TableFooter> {
         child: size.width > 556 ?
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          // children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          children: pagenationBox(ViewController.totalPage.value , MainController.tableName.value),
         ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          // children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          children: pagenationBox(ViewController.totalPage.value , MainController.tableName.value),
         ),);
     });
   }
@@ -50,8 +53,9 @@ class _TableFooterState extends State<TableFooter> {
           setState(() {
             MainController.tableInfo['currentPage'] = i;
           });
-          MainController.tableData.value= await DB('${tableSelected}').paginate();
-          MainController.allData.value= MainController.tableData.value;
+          HelperController.pageInateFunction();
+          // MainController.tableData.value= await DB('${tableSelected}').paginate();
+          // MainController.allData.value= MainController.tableData.value;
         },
         child: Container(
             margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
@@ -101,10 +105,6 @@ class _TableFooterState extends State<TableFooter> {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              // Txt('${MainController.totalItems.value}',
-              //   fontSize: 16,
-              //   fontWeight: FontWeight.w400,
-              //   color: color3,),
               Txt('${MainController.tableData.value.length}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -137,7 +137,9 @@ class _TableFooterState extends State<TableFooter> {
                 setState(() {
                   MainController.tableInfo['currentPage']--;
                 });
-                MainController.tableData.value= await DB('${tableSelected}').paginate();
+                HelperController.pageInateFunction();
+
+                // MainController.tableData.value= await DB('${tableSelected}').paginate();
               } : null,
               child: Txt('${AppController.of(context)!.value(
                   'previous')}', color: MainController
@@ -183,7 +185,9 @@ class _TableFooterState extends State<TableFooter> {
                   setState(() {
                     MainController.tableInfo['currentPage']++;
                   });
-                  MainController.tableData.value= await DB('${tableSelected}').paginate();
+                  HelperController.pageInateFunction();
+
+                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                 } : null,
                 child: Txt(
@@ -219,8 +223,8 @@ class _TableFooterState extends State<TableFooter> {
                   setState(() {
                     MainController.tableInfo['currentPage']--;
                   });
-                  // MainController.renderPagination();
-                  MainController.tableData.value= await DB('${tableSelected}').paginate();
+                  HelperController.pageInateFunction();
+                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
                 } : null,
                 child: Txt('${AppController.of(context)!.value(
                     'previous')}', color: MainController
@@ -266,8 +270,8 @@ class _TableFooterState extends State<TableFooter> {
                     setState(() {
                       MainController.tableInfo['currentPage']++;
                     });
-                    // MainController.renderPagination();
-                    MainController.tableData.value= await DB('${tableSelected}').paginate();
+                    HelperController.pageInateFunction();
+                    // MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                   } : null,
                   child: Txt(

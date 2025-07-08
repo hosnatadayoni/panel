@@ -100,8 +100,8 @@ class DB {
     var totalItems = getRecord.length;
     var end = s + perPage;
     MainController.startIndex.value = s;
-    var endBycondition = end >= totalItems ? totalItems : end;
-    MainController.endIndex.value = endBycondition;
+    var endByCondition = end >= totalItems ? totalItems : end;
+    MainController.endIndex.value = endByCondition;
     var data = (await skip(s).getRecords()).take(perPage).toList();
     return data;
   }

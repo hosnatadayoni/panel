@@ -38,6 +38,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           listProjectRes=response!.data['data'];
+
         },
         printResponse: true);
   }
