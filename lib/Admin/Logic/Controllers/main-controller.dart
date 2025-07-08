@@ -50,6 +50,10 @@ class MainController extends GetxController {
       icon: Icons.bar_chart,
     ),
     Item(
+      title: 'component',
+      icon: Icons.settings_input_component,
+    ),
+    Item(
       title: 'Home',
       icon: Icons.home,
     ),
@@ -1142,7 +1146,7 @@ class MainController extends GetxController {
   static getStatusTable(String tableName) {
     var infoTable=getInfoTable(tableName);
     if(infoTable!=null){
-      return infoTable['status'];
+      return infoTable['online'];
     }
     return false;
   }

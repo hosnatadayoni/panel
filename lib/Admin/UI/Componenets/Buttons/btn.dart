@@ -34,7 +34,6 @@ class Btn extends StatelessWidget {
           width: this.isHalf?((size.width<maxItemWidth?size.width:maxItemWidth)-(2*paddingSize))/2.05:this.width??maxItemWidth,
           height: height??50,
           decoration: BoxDecoration(
-            gradient: this.type!=btnType.custom?gradiant1:null,
             border: Border.all(color:this.type==btnType.secondary?itemColor5:Colors.transparent,width: borderSize),
             borderRadius: BorderRadius.circular(15)
           ),

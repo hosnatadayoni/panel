@@ -31,7 +31,9 @@ class _MainTableState extends State<MainTable> {
               child:  Stack(
                 children: [
                   Positioned(
-                    right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+                    // right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+                    right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
+                    left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
                     child: Container(
                       height: size.height,
                       width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,

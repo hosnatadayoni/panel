@@ -114,7 +114,7 @@ class ViewController extends GetxController {
                       DropdownMenuItem(
                         child: Obx(() {
                           return Txt(
-                            'انتخاب نشده',
+                            '${AppController.of(Get.context!)!.value('not selected')}',
                             color: MainController.isLightMode.value == true
                                 ? whiteColor
                                 : primaryDark,
@@ -260,8 +260,9 @@ class ViewController extends GetxController {
         }
       }
     }
-    return Row(
-        crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Wrap(
+      children: children,
+    );
   }
 
   static Future<Widget> generateStoreFormView(var columns) async {
@@ -315,7 +316,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(selectBox);
-        } else if (type == 'checkbox') {
+        }
+        else if (type == 'checkbox') {
           checkBox = generateFormCheckBox(column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -895,7 +897,7 @@ class ViewController extends GetxController {
               DropdownMenuItem(
                   child: Obx(() {
                     return Txt(
-                      'انتخاب نشده',
+                      '${AppController.of(Get.context!)!.value('not selected')}',
                       color: MainController.isLightMode.value == true
                           ? whiteColor
                           : primaryDark,
@@ -1094,7 +1096,7 @@ class ViewController extends GetxController {
               DropdownMenuItem(
                   child: Obx(() {
                     return Txt(
-                      'انتخاب نشده',
+                      '${AppController.of(Get.context!)!.value('not selected')}',
                       color: MainController.isLightMode.value == true
                           ? whiteColor
                           : primaryDark,
@@ -1371,7 +1373,7 @@ class ViewController extends GetxController {
               ],
               hintText: hintTxt.value != '' || hintTxt.value != null
                   ? hintTxt.value
-                  : 'انتخاب',
+                  : '${AppController.of(Get.context!)!.value('choice')}',
               selectedItems: selectedItemsList,
               isSelectedItem: isSelectedItem,
               column: column,
@@ -1470,7 +1472,7 @@ class ViewController extends GetxController {
               ],
               hintText: hintTxt.value != '' && hintTxt.value != null
                   ? hintTxt.value
-                  : 'انتخاب',
+                  : '${AppController.of(Get.context!)!.value('choice')}',
               selectedItems: selectedItemsList,
               isSelectedItem: isSelectedItem,
               // onChanged: (selectedList){
@@ -1595,7 +1597,7 @@ class ViewController extends GetxController {
             ],
             hintText: hintTxt.value != '' && hintTxt.value != null
                 ? hintTxt.value
-                : 'انتخاب',
+                : '${AppController.of(Get.context!)!.value('choice')}',
             selectedItems: selectedItemsList,
             isSelectedItem: isSelectedItem,
             // onChanged: (selectedList){
@@ -1691,7 +1693,7 @@ class ViewController extends GetxController {
             ],
             hintText: hintTxt.value != '' && hintTxt.value != null
                 ? hintTxt.value
-                : 'انتخاب',
+                : '${AppController.of(Get.context!)!.value('choice')}',
             selectedItems: selectedItemsList,
             isSelectedItem: isSelectedItem,
             // onChanged: (selectedList){
@@ -1882,7 +1884,7 @@ class ViewController extends GetxController {
     List<dynamic> a = [];
     if (listItems is List) {
     if (listItems.length == 0) {
-      return "انتخاب نشده";
+      return "${AppController.of(Get.context!)!.value('not selected')}";
     }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
@@ -1908,7 +1910,7 @@ class ViewController extends GetxController {
       }
       else {
         if (listItems['_id'] == '') {
-          return "انتخاب نشده";
+          return "${AppController.of(Get.context!)!.value('not selected')}";
         }
         if(column['sourceItems']=='table') {
           List<dynamic> empty = [];

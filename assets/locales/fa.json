@@ -56,5 +56,11 @@
   "Summary of the chart": "خلاصه نمودار",
   "Download the report": "دانلود گزارش",
   "Please select a time": "لطفاً زمان را انتخاب کنید",
-  "No file selected": "فایلی انتخاب نشده"
+  "No file selected": "فایلی انتخاب نشده",
+  "not selected": "انتخاب نشده",
+  "choice": "انتخاب",
+  "apply": "اعمال",
+  "Check the Internet connection.": "اتصال اینترنت را بررسی کنید.",
+  "Enter the token": "توکن را وارد کنید",
+  "refresh": "به روز رسانی"
 }
