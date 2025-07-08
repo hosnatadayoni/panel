@@ -1677,7 +1677,6 @@ class MainController extends GetxController {
         }
       }
     }
-
   }
 
   static String getNameFile(List<dynamic> filesList) {

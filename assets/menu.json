@@ -26,7 +26,7 @@
   {
     "title": "schema",
     "tooltip": "",
-    "main-menu": true,
+    "main-menu": false,
     "table-name": "schema",
     "currentPage": 1,
     "countShowRow": 10,
@@ -36,7 +36,7 @@
     "columns": [
       {
         "name": "name",
-        "title": "table_name",
+        "title": "name",
         "tooltip": "",
         "type": "string",
         "is-show-table":true,
@@ -98,76 +98,129 @@
   {
     "title": "fields",
     "tooltip": "",
-    "main-menu": true,
+    "main-menu": false,
     "table-name": "fields",
     "currentPage": 1,
     "countShowRow": 10,
     "location-data": 0,
     "relations": [],
     "online": true,
+    "view": "custom",
     "columns": [
       {
         "name": "title",
         "title": "title",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "name",
         "title": "name",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "type",
         "title": "type",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":false
       },
       {
-        "name": "type_filed",
-        "title": "type_filed",
-        "type": "string"
+        "name": "type_field",
+        "title": "type_field",
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":false
       },
       {
         "name": "items",
         "title": "items",
-        "type": "String"
+        "type": "String",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
-        "name": "sourceItems",
-        "title": "sourceItems",
-        "type": "String"
+        "name": "source_items",
+        "title": "source_items",
+        "type": "String",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":false
       },
       {
-        "name": "sourceTable",
-        "title": "sourceTable",
-        "type": "string"
+        "name": "source_table",
+        "title": "source_table",
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":false
+      },
+      {
+        "name": "parent_id",
+        "title": "parent_id",
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":false,
+        "is-show-edit":false
+      },
+      {
+        "name": "parent_slug",
+        "title": "parent_slug",
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":false,
+        "is-show-edit":false
       },
       {
         "name": "is-show-table",
         "title": "is-show-table",
         "type": "checkbox",
-        "default_value": false
+        "default_value": false,
+        "is-show-table":true,
+        "is-show-store":false,
+        "is-show-edit":false
       },
       {
         "name": "is-show-store",
         "title": "is-show-store",
         "type": "checkbox",
-        "default_value": false
+        "default_value": false,
+        "is-show-table":true,
+        "is-show-store":false,
+        "is-show-edit":false
       },
       {
         "name": "is-show-edit",
         "title": "is-show-edit",
         "type": "checkbox",
-        "default_value": false
+        "default_value": false,
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "filters",
         "title": "filters",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "validators",
         "title": "validators",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       }
     ]
   }

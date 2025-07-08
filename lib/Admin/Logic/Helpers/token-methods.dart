@@ -22,4 +22,24 @@ class Token{
     return prefs.remove('full-token');
   }
 
+  static Future<String?> getName() async{
+    final prefs = await SharedPreferences.getInstance();
+    String name=prefs.getString('table-parent-name')??'';
+    if(!name.isEmpty){
+      return name;
+    }else{
+      return null;
+    }
+  }
+
+  static setName(String name) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('table-parent-name', name);
+  }
+
+  static Future<bool> removeName() async{
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.remove('table-parent-name');
+  }
+
 }

@@ -14,6 +14,7 @@ class ConncetServerController extends GetxController {
   static List<Map<String, dynamic>> filterRecordRes = [];
   static List<dynamic> listProjectRes = [];
   static List<dynamic> listSchemaRes = [];
+  static List<dynamic> listFieldsRes = [];
 
   static bool deleteRecordRes = false;
   static List<dynamic> getRecordRes = [];
@@ -25,45 +26,10 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           Project project = Project.fromJson(response!.data['data']);
-          Token.setToken(project.apiKey!);
+
         },
         printResponse: true);
   }
-
-  static createSchema(Map<String, dynamic> json) async {
-    var response = await RestApi.post(createSchemaUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-    }, printResponse: true);
-  }
-
-  static createField(Map<String, dynamic> json) async {
-    var response = await RestApi.post(createFieldUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {}, printResponse: true);
-  }
-
-  static updateSchema(Map<String, dynamic> json) async {
-    var response = await RestApi.post(updateSchemaUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {}, printResponse: true);
-  }
-
-  static deleteSchema(Map<String, dynamic> json) async {
-    var response = await RestApi.post(deleteSchemaUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {}, printResponse: true);
-  }
-
-  static listSchema() async {
-    var s = await Token.getToken();
-    var response = await RestApi.post(listSchemaUrl, body: {'api_key': s});
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-          listSchemaRes=response!.data['data'];
-    }, printResponse: true);
-  }
-
   static listProject() async {
     String? s ;
     s= await Token.getToken();
@@ -75,6 +41,63 @@ class ConncetServerController extends GetxController {
         },
         printResponse: true);
   }
+
+  static createSchema(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+    }, printResponse: true);
+  }
+  static updateSchema(Map<String, dynamic> json) async {
+    var response = await RestApi.post(updateSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static deleteSchema(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listSchema() async {
+    var s = await Token.getToken();
+    var response = await RestApi.post(listSchemaUrl, body: {'api_key': s});
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listSchemaRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+  static createField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static updateField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(updateFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static deleteField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static listField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFieldUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listFieldsRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+
+
 
   static storeRecordGeneral(var json) async {
     var response = await RestApi.post(storeRecordUrl, body: (json));

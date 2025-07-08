@@ -21,12 +21,6 @@ class MainTableBox extends StatefulWidget {
 }
 
 
-
-
-// @override
-// void initState() {
-//   _future =;
-// }
 class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
