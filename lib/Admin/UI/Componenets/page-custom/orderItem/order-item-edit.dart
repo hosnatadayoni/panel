@@ -32,7 +32,10 @@ class OrderItemEdit extends StatelessWidget {
           children: [
             Obx((){
               return Positioned(
-                right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+                // right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+
+                right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
+                left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
                 child: Container(
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                   height: size.height,
@@ -57,3 +60,4 @@ class OrderItemEdit extends StatelessWidget {
     );
   }
 }
+

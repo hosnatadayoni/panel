@@ -20,7 +20,9 @@ class Header extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Obx((){
       return Positioned(
-         right:size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+         // right:size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
+        right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+        left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
         child: Container(
           padding: EdgeInsets.all(15),
           // color: MainController.isLightMode.value == true? background:whiteColor,

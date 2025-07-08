@@ -23,18 +23,18 @@ class _TableFooterState extends State<TableFooter> {
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
 
 
-        return Obx((){
-          return Container(
-            child: size.width > 556 ?
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: pagenationBox(ViewController.totalPage.value , tableSelected),
-            ) :
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: pagenationBox(ViewController.totalPage.value , tableSelected),
-            ),);
-        });
+    return Obx((){
+      return Container(
+        child: size.width > 556 ?
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+        ) :
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+        ),);
+    });
   }
   Widget box(int i , tableSelected){
     Rx<bool> isHover = false.obs;
@@ -54,7 +54,7 @@ class _TableFooterState extends State<TableFooter> {
           MainController.allData.value= MainController.tableData.value;
         },
         child: Container(
-            margin: EdgeInsets.only(left: 5),
+            margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
             width: 40,
             height: 40,
             child: Obx((){
@@ -152,7 +152,7 @@ class _TableFooterState extends State<TableFooter> {
             box(2, tableSelected),
             SizedBox(width: 5),
             Container(
-              margin: EdgeInsets.only(left: 5),
+              margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
               width: 40,
               height: 40,
               child: Center(child: Txt('...', fontSize: 20)),
@@ -235,7 +235,7 @@ class _TableFooterState extends State<TableFooter> {
               box(2, tableSelected),
               SizedBox(width: 5),
               Container(
-                margin: EdgeInsets.only(left: 5),
+                margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
                 width: 40,
                 height: 40,
                 child: Center(child: Txt('...', fontSize: 20)),

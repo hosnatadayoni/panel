@@ -41,9 +41,9 @@ class ViewCustomController extends GetxController{
     List<String>? TimeParts;
     int hour = TimeOfDay.now().hour;
     int minute = TimeOfDay.now().minute;
-      TimeParts = dateString.split(':');
-      hour = int.parse('${TimeParts![0]}');
-      minute = int.parse('${TimeParts[1]}');
+    TimeParts = dateString.split(':');
+    hour = int.parse('${TimeParts![0]}');
+    minute = int.parse('${TimeParts[1]}');
 
     return TimeOfDay(hour: hour, minute: minute);
   }
@@ -146,9 +146,9 @@ class ViewCustomController extends GetxController{
     String titleSelect='';
 
     if(dataModel.data['${column['name']}'] != null){
-        titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
-            dataModel.data['${column['name']}'] , column);
-      }
+      titleSelect = await ViewController.getTitleSelectedItem('${tableName}',
+          dataModel.data['${column['name']}'] , column);
+    }
 
     else{
       titleSelect = dataModel.id!;
@@ -229,17 +229,17 @@ class ViewCustomController extends GetxController{
           tableName = column['sourceTable'];
         }
       }
-     if(data != null){
-       if(data[column['name']] != null){
-         multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, data[column['name']], column);
-       }
-       else{
-         multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
-       }
-     }
-     else{
-       multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
-     }
+      if(data != null){
+        if(data[column['name']] != null){
+          multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, data[column['name']], column);
+        }
+        else{
+          multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
+        }
+      }
+      else{
+        multiSelectedTitleList = await ViewController.getTitleMultiSelectedItem(tableName, [], column);
+      }
 
       if(multiSelectedTitleList.length != 0){
         hintTxt = RxString(multiSelectedTitleList.join(','));
@@ -273,18 +273,18 @@ class ViewCustomController extends GetxController{
   }
 
   static Map<String, List<dynamic>> getselectedFilesMap (var column){
-  Map<String, List<dynamic>> selectedFilesMap = {};
-  if (selectedFilesMap['${column['name']}'] == null) {
-  selectedFilesMap['${column['name']}'] = [];
-  }
-  List<dynamic> filesSelectedList;
-  if (ViewController.request[column['name']] != null) {
-  filesSelectedList = ViewController.request[column['name']];
-  for (var data in filesSelectedList) {
-  selectedFilesMap['${column['name']}']!.add(data);
-  }
-  }
-  return selectedFilesMap;
+    Map<String, List<dynamic>> selectedFilesMap = {};
+    if (selectedFilesMap['${column['name']}'] == null) {
+      selectedFilesMap['${column['name']}'] = [];
+    }
+    List<dynamic> filesSelectedList;
+    if (ViewController.request[column['name']] != null) {
+      filesSelectedList = ViewController.request[column['name']];
+      for (var data in filesSelectedList) {
+        selectedFilesMap['${column['name']}']!.add(data);
+      }
+    }
+    return selectedFilesMap;
 
   }
 
@@ -295,7 +295,7 @@ class ViewCustomController extends GetxController{
         dataTableName = subMenu;
       }
     }
-      return dataTableName;
+    return dataTableName;
   }
 
   // create order page
@@ -469,8 +469,8 @@ class ViewCustomController extends GetxController{
               selectedValue: ''),
         )
             : Container(
-              width: column['name'] == 'مشتری'  ? 150:100,
-              child: SelectBox(
+          width: column['name'] == 'مشتری'  ? 150:100,
+          child: SelectBox(
               name: '${column['title']}',
               column: column,
               items: [
@@ -507,7 +507,7 @@ class ViewCustomController extends GetxController{
               hintText: hintText,
               isSeleted: isSeleted,
               selectedValue: ''),
-            ),
+        ),
       ],
     ) : Container();
   }

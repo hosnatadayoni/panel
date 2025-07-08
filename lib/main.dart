@@ -12,7 +12,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
-import 'Admin/Logic/Controllers/main-controller.dart';
 import 'Admin/Logic/Controllers/app_localization_delegate.dart';
 import 'Admin/UI/Views/table-page.dart';
 
@@ -25,13 +24,12 @@ void main()async {
 
   await MainController.loadJson();
   await MainController.loadData();
-  // var a= await DB('itemsOrder2').parent(parentTable: 'order3',parentId:'77756a94-a90f-4806-abc3-7b1ea690bf17' ).where('_id','\$eq','e71c7ae3-0b0a-43ec-8260-b5d38d89a469').updateRecord(
+  // var a = await DB('table').getRecord();
+  // var a= await DB('itemsOrder2').parent(parentTable: 'order2',parentId:'77756a94-a90f-4806-abc3-7b1ea690bf17' ).where('_id','\$eq','e71c7ae3-0b0a-43ec-8260-b5d38d89a469').updateRecords(
   //     {'title':'maryam'});
   // print('main>>>${a}');
-  // var box=await Hive.openBox<DataModel>('itemsOrder2');
-  // var box2=await Hive.openBox<DataModel>('order3');
+  // var box=await Hive.openBox<DataModel>('sample');
   // box.clear();
-  // box2.clear();
   // await Token.setToken('3ba7fd50-69c5-4293-8aa8-77e752a967ae');
   // ConncetServerController.createProject();
   runApp(MyApp());
