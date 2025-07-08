@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../../Logic/Controllers/app-controller.dart';
-import '../../../Logic/Controllers/main-controller.dart';
-import '../../../Public/styles.dart';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
+import 'package:finance/Admin/Public/styles.dart';
 import '../General/txt.dart';
 
 

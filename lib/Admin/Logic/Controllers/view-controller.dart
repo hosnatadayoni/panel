@@ -79,9 +79,6 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           textField = generateFormTextFieldFilter(_fbKey, column,filterInfo, type, '');
-          children.add(SizedBox(
-            height: 20,
-          ));
           children.add(textField);
         }
 
@@ -89,9 +86,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await itemsList(column);
           selectBox = await generateStoreFormSelectBoxFilter(
               column,filterInfo, items, '', '', false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(selectBox);
         }
 
@@ -175,9 +170,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await itemsList(column);
           selectBox = await generateStoreFormSelectBoxFilter(
               column,filterInfo, items, '', '', false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(selectBox);
         }
 
@@ -216,17 +209,13 @@ class ViewController extends GetxController {
               )
             ],
           );
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(dateBox);
         }
 
         else if (type == 'time') {
           timeBox = generateFormTimeBoxFilter(column,filterInfo, TimeOfDay.now(), false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(timeBox);
         }
 
@@ -236,26 +225,20 @@ class ViewController extends GetxController {
             multiSelectBox = await generateStoreFormSelectBoxFilter(
                 column,filterInfo, items, '', '', false.obs);
             ;
-            children.add(SizedBox(
-              height: 20,
-            ));
+
             children.add(multiSelectBox);
           }
         }
 
         else if (type == 'color') {
           colorBox = generateFormColorBoxFilter(column,filterInfo, Colors.blue, false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(colorBox);
         }
 
         else if (type == 'file') {
           fileBox = generateFileBox('', column, false.obs);
-          children.add(SizedBox(
-            height: 20,
-          ));
+
           children.add(fileBox);
         }
       }
@@ -414,6 +397,8 @@ class ViewController extends GetxController {
         else if (type == 'select') {
           Map<String, dynamic> selectedItem = <String, dynamic>{};
           List<dynamic> items = await ViewController.itemsList(column);
+          print('ViewController.generateStoreFormView>>${items}');
+
           if (items.length != 0) {
             if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
@@ -810,7 +795,7 @@ class ViewController extends GetxController {
     );
   }
   static Widget generateFormTextFieldFilter(GlobalKey<FormBuilderState> _fbKey, var column,var filterInfo, var type, String initValue) {
-    return new Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
@@ -824,7 +809,7 @@ class ViewController extends GetxController {
           height: 10,
         ),
         Container(
-          width: 100,
+          width: 120,
           child: FormTextField(
             isValidate: false,
             name: '${column['title']}',
@@ -1822,7 +1807,7 @@ class ViewController extends GetxController {
         var object =
         (await DB(tableName).where('_id', '\$eq', selectedId).getRecords());
         if (object.length == 0) {
-          selectedTitle = 'نامشخص';
+          selectedTitle = '${AppController.of(Get.context!)!.value('Uncertain')}';
         } else {
           var objectItem = object.first;
           List<dynamic> items = column['items'];
@@ -1931,8 +1916,11 @@ class ViewController extends GetxController {
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
+      print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        List<dynamic> data = await DB(tableName).getRecords();
+        print('tableName f>>>${tableName}');
+        List<dynamic> data = await DB('${tableName}').getRecords();
+        print('ViewController.itemsList>>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
@@ -1959,7 +1947,7 @@ class ViewController extends GetxController {
         itemss = column['items'];
       }
       else {
-        if(dataModel[column['name']]==null){
+        if(dataModel[column['name']]==null || dataModel[column['name']]==''){
           itemss = [];
         }else {
           for (var item in dataModel[column['name']]) {

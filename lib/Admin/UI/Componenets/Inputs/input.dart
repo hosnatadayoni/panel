@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../Logic/Controllers/app-controller.dart';
-import '../../../Logic/Controllers/main-controller.dart';
-import '../../../Public/styles.dart';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
+import 'package:finance/Admin/Public/styles.dart';
 
 class Input extends StatefulWidget {
   String? lable,hint;

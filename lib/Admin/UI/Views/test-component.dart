@@ -5,7 +5,6 @@ import 'package:finance/Admin/UI/Componenets/General/myDivider.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/accordion.dart';
 import 'package:finance/Admin/UI/Componenets/alert.dart';
-import 'package:finance/Admin/UI/Componenets/alert.dart';
 import 'package:finance/Admin/UI/Componenets/badge.dart';
 import 'package:finance/Admin/UI/Componenets/breadCrumb.dart';
 import 'package:finance/Admin/UI/Componenets/btn-group/btn-group-item.dart';
@@ -26,7 +25,6 @@ import 'package:finance/Admin/UI/Componenets/form/input-form.dart';
 import 'package:finance/Admin/UI/Componenets/form/input-group-form.dart';
 import 'package:finance/Admin/UI/Componenets/form/radioButton-form.dart';
 import 'package:finance/Admin/UI/Componenets/form/select-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/input-group-form2.dart';
 import 'package:finance/Admin/UI/Componenets/modal.dart';
 import 'package:finance/Admin/UI/Componenets/placeholder/btn-placeholder.dart';
 import 'package:finance/Admin/UI/Componenets/placeholder/content-placeholder.dart';
@@ -38,10 +36,8 @@ import 'package:finance/Admin/UI/Componenets/spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
-
 import '../Componenets/form/color-form.dart';
 import '../Componenets/form/range-form.dart';
-import '../Componenets/form/switch-form.dart';
 import '../Componenets/form/switch-box.dart';
 import '../Componenets/tooltip.dart';
 

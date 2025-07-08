@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_switch/flutter_switch.dart';
-import '../../../Public/styles.dart';
+import 'package:finance/Admin/Public/styles.dart';
 import '../General/txt.dart';
 
 

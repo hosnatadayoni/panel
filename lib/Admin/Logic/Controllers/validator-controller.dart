@@ -39,7 +39,8 @@ class ValidatorController extends GetxController {
           //     }
           //   }
           // }
-          if(dataJson[name].length == 0){
+          print('sasddd>>>${dataJson[name]} ${name}');
+          if(dataJson[name].length == 0 ){
             return checkInputRequiredValidator(indexColumn , dataJson ,tableData: tableData);
           }
         }

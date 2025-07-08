@@ -1,14 +1,16 @@
+import 'dart:convert';
+
+import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Logic/Models/order-item.dart';
-import 'package:finance/Admin/UI/Componenets/page-custom/orderItem/order-item-create.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import '../../UI/Componenets/page-custom/order/order-create.dart';
-import '../../UI/Componenets/page-custom/order/order-edit.dart';
+import '../../UI/Views/create.dart';
 import '../../UI/Views/table-page.dart';
+import '../Helpers/token-methods.dart';
 import '../Models/dataModel.dart';
 import 'app-controller.dart';
 import 'main-controller.dart';
@@ -24,22 +26,38 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    if (tableName == 'order') {
+    print('customData.id4>>>${customData.id}');
+    if (tableName == 'order3') {
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
         //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
         // }
         for (var list in OrderItem.orderItemsList.values) {
-          await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
+          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
+          await DB('itemsOrder2')
+              .parent(parentTable: 'order3', parentId: customData.id!)
+              .storeRecord(list);
         }
       }
     }
-    if(tableName=='itemsOrder'){
-      // await DB('itemsOrder').parent(parentTable: 'order2',parentId: customData.id!).storeRecord(list);
-
+    if (tableName == 'itemsOrder') {
+      // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
     }
+
+    // if (tableName == 'fields') {
+    //   Map<String, dynamic> parent = await DB.parentItem;
+    //   await ConncetServerController.createField({
+    //     'table': '${parent['parent_id']}',
+    //     'name': '${customData.data['name']}',
+    //     'title': '${customData.data['title']}',
+    //     'typeField': '${customData.data['type_filed']}',
+    //     'sourceItems': '${customData.data['sourceItems']}',
+    //     'sourceTable': '${customData.data['sourceTable']}'
+    //   });
+    // }
     return AppController.responceHelper(customData, true);
   }
+
   //end store
 
   //update
@@ -48,11 +66,14 @@ class HelperController extends GetxController {
   }
 
   static beforeUpdateValidation(DataModel newData) {
-
     return AppController.responceHelper(newData, true);
   }
 
   static afterUpdate(dataJson, DataModel customData) {
+    // if (dataJson == 'schema') {
+    //   ConncetServerController.updateSchema({'table-name': dataJson});
+    // }
+
     return AppController.responceHelper(customData, true);
   }
   //end update
@@ -63,129 +84,307 @@ class HelperController extends GetxController {
   }
 
   static afterDelete(int index, DataModel data) {
+    // if(tableName == 'schema'){
+    //   ConncetServerController.deleteSchema({'table-name' : 'tableName'});
+    // }
     return AppController.responceHelper(data, true);
   }
 //end delete
 
-  static createPageFunction() async {
-    OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
-      await Get.to(() => OrderCreatePage());
-    }
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-itemss'){
-      await Get.to(() => OrderItemCreatePage());
+  static createPageFunction(String tableName) async {
+    var table =MainController.getInfoTable(tableName);
+    print('HelperController.createPageFunction>>${table}');
+    if (table['view'] == 'custom') {
+      if (table['table-name'] == 'project' || table['table-name'] == 'schema'|| table['table-name'] == 'fields') {
+        await Get.to(() => CreatePage(tableName));
+      }
+    } else {
+      await Get.to(() => CreatePage(tableName));
     }
   }
 
-  static tablePageFunction() async {
-    // if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order-items'){
-    //   await Get.to(() => TablePage());
+  static createFunction(String tableName,{bool loadData = true, var tableFields = null, var tableData = null}) async {
+    var table =MainController.getInfoTable(MainController.tableName.value);
+    print('HelperController.createFunction>>>${ MainController.tableName.value}');
+    if (table['view'] == 'custom') {
+      if (table['table-name'] == 'project') {
+        await ConncetServerController.createProject(ViewController.request);
+        MainController.goToTablePage(table,loadData: false);
+      }
+
+      if (table['table-name'] == 'schema') {
+        await ConncetServerController.createSchema(ViewController.request);
+        MainController.goToTablePage(table,loadData: false);
+      }
+
+      if (table['table-name'] == 'fields') {
+        Map<String, dynamic> parent = await DB.parentItem;
+        if (parent.length != 0) {
+          print('HelperController.createFunction>>>${parent}');
+          ViewController.request.addAll({
+            'table': parent['parent_id']
+          });
+        }
+        await ConncetServerController.createField(ViewController.request);
+        MainController.goToTablePage(table,loadData: false);
+      }
+
+    }
+    else {
+      Map<String, dynamic> parent = await DB.parentItem;
+      if (parent.length == 0) {
+        await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+      } else {
+        await DB('${MainController.tableInfo['table-name']}')
+            .parent(
+                parentTable: '${parent['parent_table']}',
+                parentId: '${parent['parent_id']}')
+            .storeRecord(ViewController.request);
+      }
+      if (ViewController.isClickedBtn.value == false) {
+        MainController.goToTablePage(table,loadData: false);
+      }
+    }
+  }
+
+  static relationFunction({var table = null, var index}) async {
+    table = MainController.getInfoTable('${MainController.tableName.value}');
+    var tableName=table['table-name'];
+    print('HelperController.relationFunction>>>${ MainController.tableName.value}');
+    if (table['view'] == 'custom') {
+      if (tableName == 'schema') {
+        await Token.removeToken();
+        Token.setToken(MainController.tableData.value[index]['api_key']);
+      }
+      if (tableName == 'fields') {
+        DB.parentItem={
+          'parent_id':MainController.tableData.value[index]['_id'],
+          'parent_table':MainController.tableData.value[index]['name']
+        };
+      }
+      pageInateFunction();
+      // await Token.removeName();
+      // await Token.setName(MainController.tableData.value[index]['name'].toString());
+      // print('table>>1>>${table['table-name']}');
+      // await MainController.goToTablePage(table,loadData: false);
+    } else {
+      var items = await DB('${table['table-name']}').parent(parentId: MainController.tableData.value[index]['_id'], parentTable: MainController.tableInfo['table-name']).getRecords();
+      DB.parentItem = {
+        'parent_id': MainController.tableData.value[index]['_id'],
+        'parent_table': MainController.tableInfo['table-name']
+      };
+      await MainController.goToTablePage(table, tableFields: MainController.getInfoTable(table['table-name']), tableData: items);
+    }
+  }
+
+  static tablePageFunction({var table=null}) async {
+    print('HelperController.tablePageFunction>>${MainController.tableName.value}');
+    var tabeleInfo=MainController.getInfoTable(MainController.tableName.value);
+    // String tableName =  tabeleInfo['table-name'];
+    await pageInateFunction();
+    // if (tableName == 'project') {
+    //   await ConncetServerController.listProject();
+    //   MainController.tableData.value = ConncetServerController.listProjectRes;
+    //   MainController.allData.value=MainController.tableData.value;
+    //
     // }
-    // else
-    Get.to(() => TablePage());
+    // if (tableName == 'schema') {
+    //   print('table>>3>>${table}');
+    //   await ConncetServerController.listSchema();
+    //   MainController.tableData.value = ConncetServerController.listSchemaRes;
+    //   MainController.allData.value=MainController.tableData.value;
+    //   MainController.tableInfo=tabeleInfo;
+    //   print('HelperController.tablePageFunction>>>${tabeleInfo}');
+    // }
+    // if (tableName == 'fields') {
+    //   Map<String, dynamic> parent = await DB.parentItem;
+    //   if (parent.length != 0) {
+    //     await ConncetServerController.listField({'name':parent['parent_table']});
+    //   }
+    //   MainController.tableData.value = ConncetServerController.listFieldsRes;
+    //   MainController.allData.value=MainController.tableData.value;
+    //   MainController.tableInfo=tabeleInfo;
+    // }
+    Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
+  }
+
+  static editFunction(String tableName,{ var request = null, var id = null}) async {
+    var table =MainController.getInfoTable(MainController.tableName.value);
+    tableName=table['table-name'];
+    if(table['view']=='custom'){
+      if(tableName=='schema') {
+        request.addAll({
+          'id':id
+        });
+        await ConncetServerController.updateSchema(request);
+        await MainController.goToTablePage(table);
+
+      }
+      if(tableName=='fields') {
+        var req={
+          'id':id,
+          'field':json.encode(request).toString(),
+        };
+        await ConncetServerController.updateField(req);
+        await MainController.goToTablePage(table);
+
+      }
+    }
+    else{
+      await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${id}').updateRecord(request);
+      if (ViewController.isClickedBtn.value == false) {
+        await MainController.goToTablePage(MainController.tableInfo['table-name']);
+      }
+    }
+
   }
 
   static editPageFunction(var data) async {
     OrderItem.orderItemsList = {};
-    if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name']=='order'){
-      await Get.to(() => OrderEdit(data: data));
-    }
-    else{
 
-      // ViewController.request=data;
       await Get.to(() => EditPage(data: data));
+
+  }
+
+  static deleteFunction(var id) async {
+    var table =MainController.getInfoTable(MainController.tableName.value);
+    var tableName=table['table-name'];
+    if(table['view']=='custom'){
+      if(tableName=='fields'){
+        await ConncetServerController.deleteField({'id':id});
+      }
+    }else {
+      DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
+      pageInateFunction();
+      // MainController.tableData.value =
+      // await DB('${tableName}').paginate();
+      ViewController.totalPage.value =
+      await DB('${tableName}').infoPage();
+    }
+    Navigator.pop(Get.context!);
+  }
+
+  static pageInateFunction() async {
+    var table =MainController.getInfoTable(MainController.tableName.value);
+    MainController.tableInfo=table;
+    var tableName=table['table-name'];
+    if(table['view']=='custom'){
+      MainController.endIndex.value = 0;
+      MainController.startIndex.value = 0;
+      if(tableName=='project'){
+        await ConncetServerController.listProject();
+
+        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listProjectRes );
+      }
+      if(tableName=='schema'){
+        await ConncetServerController.listSchema();
+
+        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listSchemaRes );
+
+      }  if(tableName=='fields'){
+          Map<String, dynamic> parent = await DB.parentItem;
+          if (parent.length != 0) {
+            await ConncetServerController.listField({'name':parent['parent_table']});
+          }
+        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listFieldsRes );
+      }
+    }else {
+      MainController.tableData.value= await DB('${MainController.tableName.value}').paginate();
+    MainController.allData.value= MainController.tableData.value;
+    }
+  }
+  static pageInateItems({var perPage = 10,var currentPage=1,List<dynamic>? listItems}) async {
+    var totalItems=listItems!.length;
+    int s = (currentPage - 1) * perPage;
+    var end = s + perPage;
+    MainController.startIndex.value = s;
+    var endByCondition = end >= totalItems ? totalItems : end;
+    MainController.endIndex.value = int.parse(endByCondition.toString());
+    List<dynamic> list= listItems.skip(s).take(perPage).toList();
+    print('HelperController.pageInateItems>>${totalItems}>>${end}>${s}>>${perPage}');
+    MainController.tableData.value= list;
+    MainController.allData.value= list;
+  }
+
+  static filterDate(String dataDate, String searchDate, String opration) {
+    Jalali baseDate = convertJalaliStringToDate(searchDate);
+    Jalali date = convertJalaliStringToDate(dataDate);
+    if (opration == '>=') {
+      if (date.isAfter(baseDate)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (opration == "<=") {
+      if (date.isBefore(baseDate)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (opration == "==") {
+      if (date == baseDate) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
-   static filterDate(String dataDate,String searchDate,String opration) {
-      Jalali baseDate = convertJalaliStringToDate(searchDate);
-      Jalali date = convertJalaliStringToDate(dataDate);
-      if(opration=='>='){
-        if(date.isAfter(baseDate))
-        {
-          return true;
-        }else{
-          return false;
-        }
-      }
-      else if(opration=="<="){
-      if(date.isBefore(baseDate))
-        {
-          return true;
-        }else{
-          return false;
-        }
-      }
-      else if(opration=="=="){
-        if(date==baseDate)
-        {
-          return true;
-        }else{
-          return false;
-        }
-      }
-  }
+  static filterTime(String dataTime, String searchTime, String opration) {
+    final timeSearchParts = searchTime.split(':');
+    final itemSearchTime = TimeOfDay(
+      hour: int.parse(timeSearchParts[0]),
+      minute: int.parse(timeSearchParts[1]),
+    );
+    final timeDataParts = dataTime.split(':');
+    final itemDataTime = TimeOfDay(
+      hour: int.parse(timeDataParts[0]),
+      minute: int.parse(timeDataParts[1]),
+    );
 
-   static filterTime(String dataTime,String searchTime,String opration) {
-     final timeSearchParts = searchTime.split(':');
-     final itemSearchTime = TimeOfDay(
-       hour: int.parse(timeSearchParts[0]),
-       minute: int.parse(timeSearchParts[1]),
-     );
-     final timeDataParts = dataTime.split(':');
-     final itemDataTime = TimeOfDay(
-       hour: int.parse(timeDataParts[0]),
-       minute: int.parse(timeDataParts[1]),
-     );
-
-      if(opration=='>='){
-        if(itemDataTime.hour>=itemSearchTime.hour && itemDataTime.minute>=itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    if (opration == '>=') {
+      if (itemDataTime.hour >= itemSearchTime.hour &&
+          itemDataTime.minute >= itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
-      else if(opration=="<="){
-      if(itemDataTime.hour<=itemSearchTime.hour && itemDataTime.minute<=itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    } else if (opration == "<=") {
+      if (itemDataTime.hour <= itemSearchTime.hour &&
+          itemDataTime.minute <= itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
-      else if(opration=="=="){
-        if(itemDataTime.hour == itemSearchTime.hour && itemDataTime.minute == itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    } else if (opration == "==") {
+      if (itemDataTime.hour == itemSearchTime.hour &&
+          itemDataTime.minute == itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
-      else if(opration=="!="){
-        if(itemDataTime.hour != itemSearchTime.hour && itemDataTime.minute != itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    } else if (opration == "!=") {
+      if (itemDataTime.hour != itemSearchTime.hour &&
+          itemDataTime.minute != itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
-      else if(opration==">"){
-        if(itemDataTime.hour > itemSearchTime.hour && itemDataTime.minute > itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    } else if (opration == ">") {
+      if (itemDataTime.hour > itemSearchTime.hour &&
+          itemDataTime.minute > itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
-      else if(opration=="<"){
-        if(itemDataTime.hour < itemSearchTime.hour && itemDataTime.minute < itemSearchTime.minute)
-        {
-          return true;
-        }else{
-          return false;
-        }
+    } else if (opration == "<") {
+      if (itemDataTime.hour < itemSearchTime.hour &&
+          itemDataTime.minute < itemSearchTime.minute) {
+        return true;
+      } else {
+        return false;
       }
+    }
   }
 
 // تابع کمکی: تبدیل رشته تاریخ جلالی به Jalali

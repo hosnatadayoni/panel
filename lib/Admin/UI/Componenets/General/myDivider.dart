@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../Public/styles.dart';
+import 'package:finance/Admin/Public/styles.dart';
 
 class MyDivider extends StatelessWidget {
   double padding;

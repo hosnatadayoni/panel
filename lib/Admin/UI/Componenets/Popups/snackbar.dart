@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Public/styles.dart';
+import 'package:finance/Admin/Public/styles.dart';
 enum snackTypes{
   error,info,success,warning
 }

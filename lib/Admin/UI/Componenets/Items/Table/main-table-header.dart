@@ -89,14 +89,10 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                             });
                             Future.delayed(Duration.zero , ()async{
                               ViewController.request={};
-                              if(MainController.SubMenuList[MainController.selectedSubItem.value]['view']=='custom'){
-                                HelperController.createPageFunction();
+                              // MainController.tableName.value=MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
+                              print('_MainTableHeaderState.build>>>${MainController.tableName.value}');
+                              HelperController.createPageFunction(MainController.tableName.value);
                               //   await Get.to(() => MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']);
-                              }
-                              else{
-                                await Get.to(() => CreatePage());
-                              }
-
                             });
                           },
                           value: 'create',
