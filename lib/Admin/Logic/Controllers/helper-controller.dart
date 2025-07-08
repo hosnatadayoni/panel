@@ -95,9 +95,7 @@ class HelperController extends GetxController {
     var table =MainController.getInfoTable(tableName);
     print('HelperController.createPageFunction>>${table}');
     if (table['view'] == 'custom') {
-      if (table['table-name'] == 'project' || table['table-name'] == 'schema'|| table['table-name'] == 'fields') {
-        await Get.to(() => CreatePage(tableName));
-      }
+
     } else {
       await Get.to(() => CreatePage(tableName));
     }
@@ -107,27 +105,7 @@ class HelperController extends GetxController {
     var table =MainController.getInfoTable(MainController.tableName.value);
     print('HelperController.createFunction>>>${ MainController.tableName.value}');
     if (table['view'] == 'custom') {
-      if (table['table-name'] == 'project') {
-        await ConncetServerController.createProject(ViewController.request);
-        MainController.goToTablePage(table,loadData: false);
-      }
 
-      if (table['table-name'] == 'schema') {
-        await ConncetServerController.createSchema(ViewController.request);
-        MainController.goToTablePage(table,loadData: false);
-      }
-
-      if (table['table-name'] == 'fields') {
-        Map<String, dynamic> parent = await DB.parentItem;
-        if (parent.length != 0) {
-          print('HelperController.createFunction>>>${parent}');
-          ViewController.request.addAll({
-            'table': parent['parent_id']
-          });
-        }
-        await ConncetServerController.createField(ViewController.request);
-        MainController.goToTablePage(table,loadData: false);
-      }
 
     }
     else {
@@ -212,23 +190,7 @@ class HelperController extends GetxController {
     var table =MainController.getInfoTable(MainController.tableName.value);
     tableName=table['table-name'];
     if(table['view']=='custom'){
-      if(tableName=='schema') {
-        request.addAll({
-          'id':id
-        });
-        await ConncetServerController.updateSchema(request);
-        await MainController.goToTablePage(table);
 
-      }
-      if(tableName=='fields') {
-        var req={
-          'id':id,
-          'field':json.encode(request).toString(),
-        };
-        await ConncetServerController.updateField(req);
-        await MainController.goToTablePage(table);
-
-      }
     }
     else{
       await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${id}').updateRecord(request);
@@ -250,9 +212,7 @@ class HelperController extends GetxController {
     var table =MainController.getInfoTable(MainController.tableName.value);
     var tableName=table['table-name'];
     if(table['view']=='custom'){
-      if(tableName=='fields'){
-        await ConncetServerController.deleteField({'id':id});
-      }
+
     }else {
       DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
       pageInateFunction();
@@ -271,23 +231,7 @@ class HelperController extends GetxController {
     if(table['view']=='custom'){
       MainController.endIndex.value = 0;
       MainController.startIndex.value = 0;
-      if(tableName=='project'){
-        await ConncetServerController.listProject();
 
-        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listProjectRes );
-      }
-      if(tableName=='schema'){
-        await ConncetServerController.listSchema();
-
-        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listSchemaRes );
-
-      }  if(tableName=='fields'){
-          Map<String, dynamic> parent = await DB.parentItem;
-          if (parent.length != 0) {
-            await ConncetServerController.listField({'name':parent['parent_table']});
-          }
-        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listFieldsRes );
-      }
     }else {
       MainController.tableData.value= await DB('${MainController.tableName.value}').paginate();
     MainController.allData.value= MainController.tableData.value;
