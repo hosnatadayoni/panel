@@ -16,56 +16,7 @@ class ConncetServerController extends GetxController {
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
 
-  static createProject () async {
-    var response = await RestApi.post(createProjectUrl, body: {'name':'panel'});
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-          Project project=Project.fromJson(response!.data['data']);
-          Token.setToken(project.apiKey!);
-        },printResponse: true);
-  }
 
-  static createSchema (Map<String,dynamic> json) async {
-    var response = await RestApi.post(createSchemaUrl, body:json);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-        },printResponse: true);
-  }
-
-  static createField (Map<String,dynamic> json) async {
-    var response = await RestApi.post(createFieldsUrl, body:json);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-        },printResponse: true);
-  }
-
-  static updateSchema (Map<String,dynamic> json) async {
-    var response = await RestApi.post(updateSchemaUrl, body:json);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-        },printResponse: true);
-  }
-
-  static deleteSchema (Map<String,dynamic> json) async {
-    var response = await RestApi.post(deleteSchemaUrl, body:json);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-        },printResponse: true);
-  }
-
-  static listSchema () async {
-    var s=await Token.getToken();
-    var response = await RestApi.post(listSchemaUrl, body:{'api_key':s});
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-        },printResponse: true);
-  }
 
   static storeRecordGeneral (var json) async {
     var response = await RestApi.post(storeRecordUrl, body: (json));
