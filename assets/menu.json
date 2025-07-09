@@ -121,7 +121,7 @@
         "type": "string",
         "is-show-table":true,
         "is-show-store":true,
-        "is-show-edit":true
+        "is-show-edit":false
       },
       {
         "name": "type",
