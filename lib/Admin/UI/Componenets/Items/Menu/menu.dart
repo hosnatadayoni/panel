@@ -29,171 +29,134 @@ class _MenuBoxState extends State<MenuBox>{
    @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Loading(getLoadedComponent:()=> Obx((){
-      return Stack(
-        children: [
-          Container(
-            width: 50,
-            color: MainController.isLightMode.value == false ? primary :primaryDark,
-          ),
-          Positioned(
-            // right: 50,
-            right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
-            left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
-            child: Column(
+    return
+      Obx((){
+        return Stack(
+          children: [
+            Container(
+              width: 50,
+              color: MainController.isLightMode.value == false ? primary :primaryDark,
+            ),
+        Loading(loadingName: ['get-records'],getLoadedComponent: ()=>
+               Positioned(
+                // right: 50,
+                right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+                left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for(var i=0 ; i<MainController.items.length ; i++)
+                        MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
+                        Container(
+                          width: 250,
+                          height: size.height,
+                          color: MainController.isLightMode.value == true ?background:whiteColor,
+                          padding: EdgeInsets.only(right: 20 , left: 10 , top: 10 , bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20,),
+                              for(var j=0;j<MainController.SubMenuList.length;j++)
+                                if(MainController.SubMenuList[j]['main-menu'])
+                                  Column(children:[
+                                    InkWell(
+                                        onTap: ()async {
+                                          MainController.selectedSubItem.value = j;
+                                          DB.parentItem={};
+                                          MainController.tableName.value=MainController.SubMenuList[j]['table-name'];
+                                          await MainController.loadData();
+                                          await MainController.goToTablePage(MainController.SubMenuList[j]);
+                                        },
+                                        child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
+                                          color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
+                                    ),
+                                    SizedBox(height: 20,)
+                                  ]),
+                            ],
+                          ),
+                        ):Container(),
+                    ]
+                ),
+              ),
+            ),
+            AnimatedContainer(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  InkWell(
+                      onTap: (){
+                        MainController.isClickedItem.value =false;
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Icon(Icons.menu , color: whiteColor,size: 30),)),
+                  SizedBox(height: 20,),
                   for(var i=0 ; i<MainController.items.length ; i++)
-                    MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
-                    Container(
-                      width: 250,
-                      height: size.height,
-                      color: MainController.isLightMode.value == true ?background:whiteColor,
-                      padding: EdgeInsets.only(right: 20 , left: 10 , top: 10 , bottom: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Obx((){
+                      return Column(
                         children: [
-                          SizedBox(height: 20,),
-                          for(var j=0;j<MainController.SubMenuList.length;j++)
-                            if(MainController.SubMenuList[j]['main-menu'])
-                              Column(children:[
-                                InkWell(
-                                    onTap: ()async {
-                                      MainController.selectedSubItem.value = j;
-                                      DB.parentItem={};
-                                      await MainController.loadData();
-                                      await MainController.goToTablePage(MainController.SubMenuList[j]);
-
+                          Container(
+                            width: size.width,
+                            child: Stack(
+                              children: [
+                                MouseRegion(
+                                    onEnter:(_){
+                                      hoverItem.value = i;
                                     },
-                                    child: Txt('${MainController.SubMenuList[j]['title']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
-                                      color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
-                                ),
-                                SizedBox(height: 20,)
-                              ]),
-                        ],
-                      ),
-                    ):Container(),
-                ]
-            ),
-          ),
-          AnimatedContainer(
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                    onTap: (){
-                      MainController.isClickedItem.value =false;
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Icon(Icons.menu , color: whiteColor,size: 30),)),
-                SizedBox(height: 20,),
-                for(var i=0 ; i<MainController.items.length ; i++)
-                  Obx((){
-                    return Column(
-                      children: [
-                        Container(
-                          width: size.width,
-                          child: Stack(
-                            children: [
-                              MouseRegion(
-                                  onEnter:(_){
-                                    hoverItem.value = i;
-                                  },
-                                  onExit: (_){
-                                    hoverItem.value = -1;
-                                  },
-                                  child: InkWell(
-                                      onTap: (){
-                                        MainController.selectedItem.value = i;
-                                        if(MainController.selectedItem.value == 0){
-                                          Get.to(() => DashboardPage());
-                                          MainController.isClickedItem.value =false;
-                                        }
-                                        else if(MainController.selectedItem.value == 1){
-                                          Get.to(() => ComponentPage());
-                                          MainController.isClickedItem.value =false;
-                                        }
-                                        else{
-                                          MainController.isClickedItem.value =true;
-                                        }
-                                        MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
-                                        // Get.to(() => TablePage());
-                                        MainController.selectedSubItem.value = -1;
-                                      },
-                                      child: Container(
-                                          width: 50,
-                                          padding: EdgeInsets.only(top: 10 , left: 10 , bottom: 10 , right: 10),
-                                          color: MainController.selectedItem.value == i ?MainController.isLightMode.value == false ? whiteColor :background:Colors.transparent,
-                                          child: Center(child: Icon(MainController.items[i].icon , size: 30,
-                                            color: MainController.selectedItem.value == i ? MainController.isLightMode.value == true ?
-                                            itemColor8:primary: whiteColor,))))),
-                              hoverItem == i ? Positioned(
-                                // right:60,
-                                right:Directionality.of(context) == TextDirection.rtl ? 60 : null,
-                                left:Directionality.of(context) == TextDirection.ltr ? 60 : null,
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: primary,
-                                    borderRadius: BorderRadius.circular(10),
+                                    onExit: (_){
+                                      hoverItem.value = -1;
+                                    },
+                                    child: InkWell(
+                                        onTap: (){
+                                          MainController.selectedItem.value = i;
+                                          if(MainController.selectedItem.value == 0){
+                                            Get.to(() => DashboardPage());
+                                            MainController.isClickedItem.value =false;
+                                          }
+                                          else if(MainController.selectedItem.value == 1){
+                                            Get.to(() => ComponentPage());
+                                            MainController.isClickedItem.value =false;
+                                          }
+                                          else{
+                                            MainController.isClickedItem.value =true;
+                                          }
+                                          MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
+                                          // Get.to(() => TablePage());
+                                          MainController.selectedSubItem.value = -1;
+                                        },
+                                        child: Container(
+                                            width: 50,
+                                            padding: EdgeInsets.only(top: 10 , left: 10 , bottom: 10 , right: 10),
+                                            color: MainController.selectedItem.value == i ?MainController.isLightMode.value == false ? whiteColor :background:Colors.transparent,
+                                            child: Center(child: Icon(MainController.items[i].icon , size: 30,
+                                              color: MainController.selectedItem.value == i ? MainController.isLightMode.value == true ?
+                                              itemColor8:primary: whiteColor,))))),
+                                hoverItem == i ? Positioned(
+                                  // right:60,
+                                  right:Directionality.of(context) == TextDirection.rtl ? 60 : null,
+                                  left:Directionality.of(context) == TextDirection.ltr ? 60 : null,
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: primary,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Txt('${MainController.items[i].title}' , color: whiteColor,),
                                   ),
-                                  child: Txt('${MainController.items[i].title}' , color: whiteColor,),
-                                ),
-                              ):Container()
-                            ],
+                                ):Container()
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20,),
-                      ],
-                    );
-                  }),
-                Spacer(),
-                if(MainController.isLightMode.value == true)
-                  Stack(
-                    children:
-                    [
-                      InkWell(
-                        onTap: (){
-                          MainController.isLightMode.value = false;
-                        },
-                        child: MouseRegion(
-                          onEnter:(_){
-                            isHoverTheme.value = true;
-                          },
-                          onExit: (_){
-                            isHoverTheme.value = false;
-                          },
-                          child: Container(
-                              width: 50,
-                              padding: EdgeInsets.only(top: 10 , left: 10 , bottom: 10 , right: 10),
-                              child: Center(child: Icon(Icons.dark_mode , color: whiteColor))),
-                        ),
-                      ),
-                      isHoverTheme.value == true ? Positioned(
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
-                                decoration: BoxDecoration(
-                                  color: primary,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Txt('Theme' , color: whiteColor,),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ):Container()
-                    ],
-                  ),
-                if(MainController.isLightMode.value == false)
-                  Stack(
-                      children: [
+                          SizedBox(height: 20,),
+                        ],
+                      );
+                    }),
+                  Spacer(),
+                  if(MainController.isLightMode.value == false)
+                    Stack(
+                      children:
+                      [
                         InkWell(
                           onTap: (){
                             MainController.isLightMode.value = true;
@@ -208,7 +171,7 @@ class _MenuBoxState extends State<MenuBox>{
                             child: Container(
                                 width: 50,
                                 padding: EdgeInsets.only(top: 10 , left: 10 , bottom: 10 , right: 10),
-                                child: Icon(Icons.light_mode , color: whiteColor)),
+                                child: Center(child: Icon(Icons.dark_mode , color: whiteColor))),
                           ),
                         ),
                         isHoverTheme.value == true ? Positioned(
@@ -229,14 +192,54 @@ class _MenuBoxState extends State<MenuBox>{
                             ),
                           ),
                         ):Container()
-                      ]),
-                SizedBox(height: 20,),
-              ],
-            ),
-            duration: Duration(seconds: 1),
-          )
-        ],
-      );
-    }), loadingName: ['get-records'],);
+                      ],
+                    ),
+                  if(MainController.isLightMode.value == true)
+                    Stack(
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              MainController.isLightMode.value = false;
+                            },
+                            child: MouseRegion(
+                              onEnter:(_){
+                                isHoverTheme.value = true;
+                              },
+                              onExit: (_){
+                                isHoverTheme.value = false;
+                              },
+                              child: Container(
+                                  width: 50,
+                                  padding: EdgeInsets.only(top: 10 , left: 10 , bottom: 10 , right: 10),
+                                  child: Icon(Icons.light_mode , color: whiteColor)),
+                            ),
+                          ),
+                          isHoverTheme.value == true ? Positioned(
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(right:Directionality.of(context) == TextDirection.rtl ? 70 : 0 , left: Directionality.of(context) == TextDirection.ltr? 70 : 0),
+                                    decoration: BoxDecoration(
+                                      color: primary,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Txt('Theme' , color: whiteColor,),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ):Container()
+                        ]),
+                  SizedBox(height: 20,),
+                ],
+              ),
+              duration: Duration(seconds: 1),
+            )
+          ],
+        );
+      });
   }
 }

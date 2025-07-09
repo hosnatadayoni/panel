@@ -81,7 +81,7 @@ class MainController extends GetxController {
   static Rx<int> startIndex = 0.obs;
   static Rx<int> endIndex = 0.obs;
   static Rx<int> totalItems = 0.obs;
-  static RxList<dynamic> tableData = [].obs;
+  static RxList<dynamic> tableData = <dynamic>[].obs;
   static RxString searchQuery = ''.obs;
   static Rx<bool> isSelected = false.obs;
   static Rx<String> tableName=''.obs;
@@ -1490,6 +1490,11 @@ class MainController extends GetxController {
   static addsyncField(String tableName){
     var index = SubMenuList.indexWhere((element) => element['table-name'] == tableName);
     var items = SubMenuList[index];
+    if(items['view']==null){
+      items.addAll({
+        'view':'default'
+      });
+    }
     items['columns'].add({
       'name': 'sync',
       'title': 'sync',
@@ -1774,7 +1779,6 @@ class MainController extends GetxController {
     if (table['view'] == 'custom') {
       HelperController.pageInateFunction();
       Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-
       // HelperController.tablePageFunction(table: table);
     } else {
       if(loadData==true)

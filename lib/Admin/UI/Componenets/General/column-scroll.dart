@@ -29,7 +29,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
     super.initState();
     _scrollController.addListener(() async{
       if(_scrollController.position.pixels > _scrollController.position.maxScrollExtent-100
-          && widget.onEndScroll!=null && !AppController.loadingList.value.contains(widget.loadingTag)){
+          && widget.onEndScroll!=null && !AppController.loadingList.contains(widget.loadingTag)){
         await widget.onEndScroll!();
       }
 
@@ -46,7 +46,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
           // if(widget.loadingTag==null)
           //  isLoading=AppController.isLoading.value;
           // else
-          isLoading=AppController.loadingList.value.contains(widget.loadingTag);
+          isLoading=AppController.loadingList.contains(widget.loadingTag);
           return !isLoading && widget.checkEmptyList!=null && widget.checkEmptyList!()?
           widget.emptyList??Container():Scrollbar(
               interactive: true,
@@ -82,7 +82,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
-                                    color: appColor,
+                                    color: colorBtn,
                                     strokeWidth: 4,
                                   ),
                                 ],

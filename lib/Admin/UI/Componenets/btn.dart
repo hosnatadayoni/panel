@@ -557,7 +557,7 @@ class _BtnState extends State<Btn> {
                     decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
                   ),
                   child: Obx((){
-                    return (AppController.loadingList.value.contains(widget.loadingTag) && widget.loadingTag!=null)?
+                    return (AppController.loadingList.contains(widget.loadingTag) && widget.loadingTag!=null)?
                     Container(
                       width: 25,
                       height: 25,

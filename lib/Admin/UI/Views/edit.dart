@@ -21,12 +21,17 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  late Future<Widget> _future;
+  Rx<Widget> _future=Column().obs;
 
+  addWidget()async{
+    Future.delayed(Duration.zero, () async {
+      _future.value = await ViewController.generateStoreFormView(MainController.tableInfo['columns']);
+    });
+  }
   @override
   void initState() {
     super.initState();
-    _future = ViewController.generateEditFormView(widget.data);
+    addWidget();
   }
 
   @override
@@ -61,18 +66,7 @@ class _EditPageState extends State<EditPage> {
                     children: [
                       SizedBox(height: 80,),
                       // MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom'?
-                      FutureBuilder<Widget>(
-                        future: _future,
-                        builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-                          } else {
-                            return snapshot.data ?? Container();
-                          }
-                        },
-                      ),
+                      _future.value,
                       //     :
                       // MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] == 'order' ? Column(
                       //   children: [

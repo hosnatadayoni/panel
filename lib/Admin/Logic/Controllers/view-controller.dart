@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
@@ -23,6 +25,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
+import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
 import 'connect-server-controller.dart';
 
@@ -291,10 +294,11 @@ class ViewController extends GetxController {
           children.add(textField);
         }
         if (type == 'select') {
-          var initValue;
-          List<dynamic> items = await itemsList(column);
-          selectBox = await generateStoreFormSelectBox(
-              column, items, '', '', false.obs);
+
+            List<dynamic> items = await itemsList(column);
+            selectBox = await generateStoreFormSelectBox(
+                column, items, '', '', false.obs);
+
           children.add(SizedBox(
             height: 20,
           ));
@@ -351,7 +355,7 @@ class ViewController extends GetxController {
       }
     }
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start, children: children);
+          crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 
   static Future<Widget> generateEditFormView(Map<String, dynamic> dataModel) async {
@@ -1866,6 +1870,7 @@ class ViewController extends GetxController {
 
   static String itemsShowSelectItem(var listItems, var column) {
     var items=column['items'];
+    print('ViewController.itemsShowSelectItem >>${listItems} >>${listItems.runtimeType}');
     List<dynamic> a = [];
     if (listItems is List) {
     if (listItems.length == 0) {
@@ -1884,7 +1889,7 @@ class ViewController extends GetxController {
             a.add(empty.join('%'));
           }
           else{
-              a.add(listItems[i]['title']);
+            a.add(listItems[i]['title']);
           }
         }
     }
@@ -1912,6 +1917,7 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
+
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
@@ -1919,8 +1925,10 @@ class ViewController extends GetxController {
       print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
         print('tableName f>>>${tableName}');
-        List<dynamic> data = await DB('${tableName}').getRecords();
-        print('ViewController.itemsList>>>${data}');
+        // Future.delayed(Duration.zero, () async {
+          List<dynamic> data = await DB('${tableName}').getRecords();
+
+        print('ViewController.itemsList> c>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
@@ -1928,6 +1936,7 @@ class ViewController extends GetxController {
             a.add(dropDownListItems[i][field]);
           }
         }
+      // });
       }
       else {
         if(dataModel[column['name']]==null){
@@ -1957,71 +1966,6 @@ class ViewController extends GetxController {
       }
       dropDownListItems = itemss;
     }
-    return dropDownListItems;
-  }
-
-  static Future<List> itemsSelect (var column, {var dataModel}) async {
-    List<dynamic> items = [];
-    var type = column['sourceItems'];
-    var tableName = column['sourceTable'];
-    List<dynamic> dropDownListItems = [];
-    if (type != 'custom') {
-      if (dataModel==null || dataModel.isEmpty ) {
-        List<dynamic> data = await DB(tableName).getRecords();
-        dropDownListItems = data;
-        for (int i = 0; i < dropDownListItems.length; i++) {
-          List<dynamic> a = [];
-          for (var field in column['items']) {
-            a.add(dropDownListItems[i][field]);
-          }
-          items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-        }
-      }
-      else {
-        if(dataModel[column['name']]==null){
-          List<dynamic> data = await DB(tableName).getRecords();
-          dropDownListItems = data;
-          for (int i = 0; i < dropDownListItems.length; i++) {
-            List<dynamic> a = [];
-            for (var field in column['items']) {
-              a.add(dropDownListItems[i][field]);
-            }
-            items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-          }
-        }
-        else{
-          for (var item in dataModel[column['name']])
-            dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
-
-          for (int i = 0; i < dropDownListItems.length; i++) {
-            List<dynamic> a = [];
-            for (var field in column['items']) {
-              a.add(dropDownListItems[i][field]);
-            }
-            items
-                .add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
-          }
-        }}
-    }
-
-    else {
-      List<dynamic> itemss = [];
-
-      if (dataModel==null || dataModel.isEmpty ) {
-        itemss = column['items'];
-        // dropDownListItems.add(item);
-      }
-      else {
-        if(dataModel[column['name']]==null){
-          itemss = column['items'];
-        }else
-          for (var item in dataModel[column['name']])
-            itemss.add(column['items'].firstWhere((element) => element['value'] == item));
-      }
-      dropDownListItems = itemss;
-    }
-
-
     return dropDownListItems;
   }
 

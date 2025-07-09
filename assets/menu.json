@@ -39,5 +39,28 @@
         ]
       }
     ]
+  },
+  {
+    "title": "category2",
+    "tooltip": "",
+    "main-menu": true,
+    "table-name": "category2",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "online": false,
+    "relations": [],
+    "columns": [
+      {
+        "name": "product",
+        "title": "product",
+        "type": "select",
+        "type_filed": "string",
+        "sourceItems": "table",
+        "sourceTable": "product",
+        "items": [
+          "title"
+        ]
+      }
+    ]
   }
 ]
