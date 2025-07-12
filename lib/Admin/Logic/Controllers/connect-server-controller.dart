@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
@@ -15,7 +14,27 @@ class ConncetServerController extends GetxController {
   static bool deleteRecordRes=false;
   static List<dynamic>getRecordRes=[];
 
+  static listSchemaByField() async {
+    var response = await RestApi.post(listSchemaUrl,);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
 
+          MainController.SubMenuList=response!.data['data'];
+          // storeRecordRes={};
+          // storeRecordRes=response!.data['data'];
+        },printResponse: true);
+  }
+
+  static listField(var json) async {
+    var response = await RestApi.post(listFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          // storeRecordRes={};
+          // storeRecordRes=response!.data['data'];
+        },printResponse: true);
+  }
 
   static storeRecordGeneral (var json) async {
     var response = await RestApi.post(storeRecordUrl, body: (json));

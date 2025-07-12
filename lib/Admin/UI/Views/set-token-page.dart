@@ -1,6 +1,6 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/user-controller.dart';
+import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -14,8 +14,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import '../../Public/styles.dart';
 class SetTokenPage extends StatelessWidget {
-  const SetTokenPage({Key? key}) : super(key: key);
 
+  String? token;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -85,11 +85,21 @@ class SetTokenPage extends StatelessWidget {
                                   name: 'set-token',
                                   lable: '${AppController.of(context)!.value('Enter the token')}' ,
                                   hint: '' ,onChange: (text){
+                                    token=text;
                                 },)),
                             SizedBox(height: 20,),
                             InkWell(
-                              onTap: (){
-                                Get.to(() => DashboardPage());
+                              onTap: () async {
+                                print('SetTokenPage.build>>>${token}');
+                                if(token!=null && token!.trim().length!=0) {
+                                  await Token.setToken(token!);
+                                  await MainController.loadJson();
+                                  await MainController.loadData();
+                                  Get.to(() => DashboardPage());
+                                }
+                                else{
+                                  showSnackbar(snackTypes.error, AppController.of(context)!.value('Enter the token') );
+                                }
                               },
                               child: Center(
                                 child: Container(

@@ -155,7 +155,7 @@ class _TableBoxState extends State<TableBox> {
                                           relation['table-name']);
                                       MainController
                                           .tableName.value =
-                                      relation['table-name'];
+                                      relation['name'];
                                       print(
                                           '_TableBoxState.build>>${MainController.tableName.value}');
                                       HelperController

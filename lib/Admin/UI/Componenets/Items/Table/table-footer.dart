@@ -300,7 +300,7 @@ class _TableFooterState extends State<TableFooter> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
+    var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['name'];
 
 
     return Obx((){

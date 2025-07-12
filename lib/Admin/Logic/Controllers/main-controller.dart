@@ -5,6 +5,7 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
+import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
@@ -30,6 +31,8 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../../UI/Views/dashboard.dart';
+import '../../UI/Views/set-token-page.dart';
 import '../../UI/Views/table-page.dart';
 import 'connect-server-controller.dart';
 import 'helper-controller.dart';
@@ -1472,12 +1475,10 @@ class MainController extends GetxController {
   }
 
   static Future<void> loadJson() async {
+    ConncetServerController.listSchemaByField();
     String jsonFileString;
     jsonFileString = await rootBundle.loadString('assets/menu.json');
     SubMenuList = json.decode(jsonFileString);
-    // await createJsonSchemaApi();
-    // await ConncetServerController.deleteSchema({'table_name':'details'});
-    // ConncetServerController.listSchema();
 
     for (var name in tableNames()) {
       addsyncField('${name}');
@@ -1787,5 +1788,18 @@ class MainController extends GetxController {
       await Get.to(() => TablePage());
     }
   }
+  static Rx<String>apiKey=''.obs;
 
+  static getInitData() async {
+    var token =await Token.getToken();
+    if(token!=null){
+      apiKey.value=token;
+      ConncetServerController.listSchemaByField();
+
+      Get.to(() => DashboardPage());
+    }
+    else{
+      Get.to(() => SetTokenPage());
+    }
+  }
 }

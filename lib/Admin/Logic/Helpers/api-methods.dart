@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
+import '../Controllers/app-controller.dart';
+import '../Controllers/main-controller.dart';
 
 enum requestTypes{
   get,post,put,delete
@@ -155,9 +157,15 @@ class RestApi {
       dio.options.headers["Access-Control-Allow-Origin"]=true;
       // dio.options.contentType="multipart/form-data";
       dio.options.contentType="application/json";
-      body.addAll({
-        'api_key': '0dc97507-0a1a-475c-8d8b-2fe64150374d'
-      });
+      if (MainController.apiKey.value != '') {
+        print('RestApi.post>>>${MainController.apiKey.value}');
+        if(body==null){
+          body={'api_key': '${MainController.apiKey.value}'};
+        }else {
+          body.addAll({
+            'api_key': '${MainController.apiKey.value}'
+          });
+        }
       // body=json.encode(body).toString();
       print('**apiUrl**>>>>${url}');
       print('**token**>>>>${mytoken}');
@@ -168,7 +176,13 @@ class RestApi {
       var response = await dio.post(url, data: formData,);
       print('>>>Success<<<<');
       return response;
-    } catch (e) {
+    }
+      else{
+        print('>>>>>>>>>>>>>>Enter Token<<<<<<<<<<<<<<<<');
+
+        return null;
+      }
+    }catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
