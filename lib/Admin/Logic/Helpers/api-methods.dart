@@ -137,7 +137,7 @@ class RestApi {
     }
   }
 
-  static Future<Response?> post(url, {body=null, useToken = true}) async {
+  static Future<Response?> post(url, {body=null, useToken = true, useApiKey = true}) async {
     if(await Connectivity().checkConnectivity()==ConnectivityResult.none){
       isConnected=false;
       return null;
@@ -155,9 +155,11 @@ class RestApi {
       dio.options.headers["Access-Control-Allow-Origin"]=true;
       // dio.options.contentType="multipart/form-data";
       dio.options.contentType="application/json";
-      body.addAll({
-        'api_key': await Token.getToken()
-      });
+      if(useApiKey) {
+        body.addAll({
+          'api_key': await Token.getToken()
+        });
+      }
       // body=json.encode(body).toString();
       print('**apiUrl**>>>>${url}');
       print('**token**>>>>${mytoken}');

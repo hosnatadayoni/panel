@@ -250,10 +250,7 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
-                                                              HelperController.deleteFunction(
-                                                                  MainController
-                                                                      .tableData
-                                                                      .value[i]['_id']);
+                                                              HelperController.deleteFunction(MainController.tableData.value[i]);
                                                               // setState(() {
                                                               //   DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                               // });

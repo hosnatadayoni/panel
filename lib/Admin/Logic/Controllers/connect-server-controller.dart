@@ -42,7 +42,11 @@ class ConncetServerController extends GetxController {
         },
         printResponse: true);
   }
-
+  static deleteProject(var apiKey) async {
+    var response = await RestApi.post(deleteProjectUrl, body: {'api_key':apiKey},useApiKey: false);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
   static createSchema(Map<String, dynamic> json) async {
     var response = await RestApi.post(createSchemaUrl, body: json);
     RestApi.responseHandler(

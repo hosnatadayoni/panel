@@ -180,16 +180,19 @@ class HelperController extends GetxController {
 
   }
 
-  static deleteFunction(var id) async {
+  static deleteFunction(var item) async {
     var table =MainController.getInfoTable(MainController.tableName.value);
     var tableName=table['table-name'];
     if(table['view']=='custom'){
       if(tableName=='fields'){
-        await ConncetServerController.deleteField({'id':id});
-        pageInateFunction();
+        await ConncetServerController.deleteField({'id':item['_id']});
       }
+      if(tableName=='project'){
+        await ConncetServerController.deleteProject(item['api_key']);
+      }
+      pageInateFunction();
     }else {
-      DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
+      DB('${tableName}').where('_id', '\$eq', '${item['_id']}').deleteRecord();
       pageInateFunction();
       ViewController.totalPage.value =
       await DB('${tableName}').infoPage();

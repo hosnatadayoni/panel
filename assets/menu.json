@@ -42,50 +42,58 @@
         "is-show-table":true,
         "is-show-store":true,
         "is-show-edit":true
+      }, {
+        "name": "title",
+        "title": "title",
+        "tooltip": "",
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "tooltip",
         "title": "tooltip",
         "tooltip": "",
-        "type": "string"
+        "type": "string",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
-        "name": "main-menu",
-        "title": "main-menu",
+        "name": "main_menu",
+        "title": "main_menu",
         "main-menu": true,
         "type": "checkbox",
-        "default_value": true
-      },
-      {
-        "name": "categories",
-        "title": "categories",
-        "table-name": "categories",
-        "type": "string"
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "currentPage",
         "title": "currentPage",
         "currentPage": 1,
-        "type": "Number int"
+        "type": "Number int",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "countShowRow",
         "title": "countShowRow",
         "countShowRow": 10,
-        "type": "Number int"
-      },
-      {
-        "name": "location-data",
-        "title": "location-data",
-        "location-data": 0,
-        "type": "checkbox",
-        "default_value": false
+        "type": "Number int",
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "online",
         "title": "online",
         "type": "checkbox",
-        "default_value": true
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
       }
     ],
     "relations": [
@@ -142,7 +150,7 @@
       {
         "name": "items",
         "title": "items",
-        "type": "String",
+        "type": "string",
         "is-show-table":true,
         "is-show-store":true,
         "is-show-edit":true
@@ -150,7 +158,7 @@
       {
         "name": "source_items",
         "title": "source_items",
-        "type": "String",
+        "type": "string",
         "is-show-table":true,
         "is-show-store":true,
         "is-show-edit":false
@@ -176,7 +184,7 @@
         "title": "parent_slug",
         "type": "string",
         "is-show-table":true,
-        "is-show-store":false,
+        "is-show-store":true,
         "is-show-edit":false
       },
       {
@@ -185,8 +193,8 @@
         "type": "checkbox",
         "default_value": false,
         "is-show-table":true,
-        "is-show-store":false,
-        "is-show-edit":false
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "is-show-store",
@@ -194,8 +202,8 @@
         "type": "checkbox",
         "default_value": false,
         "is-show-table":true,
-        "is-show-store":false,
-        "is-show-edit":false
+        "is-show-store":true,
+        "is-show-edit":true
       },
       {
         "name": "is-show-edit",

@@ -666,6 +666,8 @@ class ViewController extends GetxController {
     if (dataModel == null) {
       dataModel = false;
     }
+
+    dataModel='${dataModel}'=='true'?true:false;
     return CheckBox(
       defaultValue: dataModel,
       checkBoxTitle: '',
