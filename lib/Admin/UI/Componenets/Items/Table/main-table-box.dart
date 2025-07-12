@@ -7,7 +7,6 @@ import 'package:finance/Admin/UI/Componenets/Items/Table/table-header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import '../../General/txt.dart';

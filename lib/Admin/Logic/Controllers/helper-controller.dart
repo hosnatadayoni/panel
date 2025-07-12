@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -26,35 +25,6 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    print('customData.id4>>>${customData.id}');
-    if (tableName == 'order3') {
-      if (OrderItem.orderItemsList.length != 0) {
-        // for (var key in OrderItem.orderItemsList.keys) {
-        //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
-        // }
-        for (var list in OrderItem.orderItemsList.values) {
-          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
-          await DB('itemsOrder2')
-              .parent(parentTable: 'order3', parentId: customData.id!)
-              .storeRecord(list);
-        }
-      }
-    }
-    if (tableName == 'itemsOrder') {
-      // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
-    }
-
-    // if (tableName == 'fields') {
-    //   Map<String, dynamic> parent = await DB.parentItem;
-    //   await ConncetServerController.createField({
-    //     'table': '${parent['parent_id']}',
-    //     'name': '${customData.data['name']}',
-    //     'title': '${customData.data['title']}',
-    //     'typeField': '${customData.data['type_filed']}',
-    //     'sourceItems': '${customData.data['sourceItems']}',
-    //     'sourceTable': '${customData.data['sourceTable']}'
-    //   });
-    // }
     return AppController.responceHelper(customData, true);
   }
 
@@ -84,9 +54,6 @@ class HelperController extends GetxController {
   }
 
   static afterDelete(int index, DataModel data) {
-    // if(tableName == 'schema'){
-    //   ConncetServerController.deleteSchema({'table-name' : 'tableName'});
-    // }
     return AppController.responceHelper(data, true);
   }
 //end delete
@@ -105,7 +72,6 @@ class HelperController extends GetxController {
 
   static createFunction(String tableName,{bool loadData = true, var tableFields = null, var tableData = null}) async {
     var table =MainController.getInfoTable(MainController.tableName.value);
-    print('HelperController.createFunction>>>${ MainController.tableName.value}');
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'project') {
         await ConncetServerController.createProject(ViewController.request);
@@ -120,7 +86,6 @@ class HelperController extends GetxController {
       if (table['table-name'] == 'fields') {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
-          print('HelperController.createFunction>>>${parent}');
           ViewController.request.addAll({
             'table': parent['parent_id']
           });
@@ -150,7 +115,6 @@ class HelperController extends GetxController {
   static relationFunction({var table = null, var index}) async {
     table = MainController.getInfoTable('${MainController.tableName.value}');
     var tableName=table['table-name'];
-    print('HelperController.relationFunction>>>${ MainController.tableName.value}');
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
         await Token.removeToken();
@@ -163,10 +127,6 @@ class HelperController extends GetxController {
         };
       }
       pageInateFunction();
-      // await Token.removeName();
-      // await Token.setName(MainController.tableData.value[index]['name'].toString());
-      // print('table>>1>>${table['table-name']}');
-      // await MainController.goToTablePage(table,loadData: false);
     } else {
       var items = await DB('${table['table-name']}').parent(parentId: MainController.tableData.value[index]['_id'], parentTable: MainController.tableInfo['table-name']).getRecords();
       DB.parentItem = {
@@ -178,33 +138,7 @@ class HelperController extends GetxController {
   }
 
   static tablePageFunction({var table=null}) async {
-    print('HelperController.tablePageFunction>>${MainController.tableName.value}');
-    var tabeleInfo=MainController.getInfoTable(MainController.tableName.value);
-    // String tableName =  tabeleInfo['table-name'];
     await pageInateFunction();
-    // if (tableName == 'project') {
-    //   await ConncetServerController.listProject();
-    //   MainController.tableData.value = ConncetServerController.listProjectRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //
-    // }
-    // if (tableName == 'schema') {
-    //   print('table>>3>>${table}');
-    //   await ConncetServerController.listSchema();
-    //   MainController.tableData.value = ConncetServerController.listSchemaRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    //   print('HelperController.tablePageFunction>>>${tabeleInfo}');
-    // }
-    // if (tableName == 'fields') {
-    //   Map<String, dynamic> parent = await DB.parentItem;
-    //   if (parent.length != 0) {
-    //     await ConncetServerController.listField({'name':parent['parent_table']});
-    //   }
-    //   MainController.tableData.value = ConncetServerController.listFieldsRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    // }
     Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
   }
 
@@ -252,12 +186,11 @@ class HelperController extends GetxController {
     if(table['view']=='custom'){
       if(tableName=='fields'){
         await ConncetServerController.deleteField({'id':id});
+        pageInateFunction();
       }
     }else {
       DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
       pageInateFunction();
-      // MainController.tableData.value =
-      // await DB('${tableName}').paginate();
       ViewController.totalPage.value =
       await DB('${tableName}').infoPage();
     }
