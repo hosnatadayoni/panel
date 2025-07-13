@@ -290,7 +290,7 @@ class ViewCustomController extends GetxController{
   static Map<String,dynamic> getDataTable(String tableName){
     Map<String,dynamic> dataTableName={};
     for(var subMenu in MainController.SubMenuList){
-      if(subMenu['name'] == tableName){
+      if(subMenu['table-name'] == tableName){
         dataTableName = subMenu;
       }
     }

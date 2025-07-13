@@ -112,7 +112,7 @@ class MainController extends GetxController {
     exl.Sheet sheet = excel['Sheet1'];
     sheet.isRTL = true;
 
-    // if (MainController.table['name'] == box.name) {
+    // if (MainController.table['table-name'] == box.name) {
     int excelColumnIndex = 0;
     cell = sheet.cell(exl.CellIndex.indexByString(
         '${String.fromCharCode(65 + (excelColumnIndex))}1'));
@@ -206,10 +206,10 @@ class MainController extends GetxController {
     }
     String? filePath;
     if (fileExelPath != null) {
-      filePath = '${fileExelPath}\\${tableInfo['name']}.xlsx';
+      filePath = '${fileExelPath}\\${tableInfo['table-name']}.xlsx';
 
       if (kIsWeb) {
-        String tableName = tableInfo['name'];
+        String tableName = tableInfo['table-name'];
         // final bytes = excel.encode();
         // final blob = html.Blob([bytes], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         //
@@ -948,7 +948,7 @@ class MainController extends GetxController {
 
       if (findIndexRecord != -1) {
         DataModel k =DataModel(data: excelJson,id: MainController.tableData.value[findIndexRecord]['_id']);
-        await DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
+        await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}').updateRecord(k.data);
         // updateRecord(excelJson, findIndexRecord, columnPrime);
         // bool isValidator;
         // List<bool> isValidatorList = [];
@@ -971,7 +971,7 @@ class MainController extends GetxController {
 
         // }
       } else {
-        await DB('${MainController.tableInfo['name']}').storeRecord(excelJson);
+        await DB('${MainController.tableInfo['table-name']}').storeRecord(excelJson);
         // bool isValidator;
         // List<bool> isValidatorList = [];
         // for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
@@ -1360,10 +1360,7 @@ class MainController extends GetxController {
 
   static getInfoTable(String tableName) {
     int index = MainController.SubMenuList.indexWhere(
-        (element) {
-          // print('MainController.getInfoTable>>>>>${element['schema']['name']==tableName}>>>${tableName}>>${element['schema']['name']}');
-      return  element['schema']['name'] == '${tableName}';
-        });
+        (element) => element['table-name'] == '${tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
 
@@ -1372,8 +1369,6 @@ class MainController extends GetxController {
     return null;
   }
   static getStatusTable(String tableName) {
-    print('getInfoTable 10>>${tableName}');
-
     var infoTable=getInfoTable(tableName);
     if(infoTable!=null){
       return infoTable['online'];
@@ -1382,7 +1377,7 @@ class MainController extends GetxController {
   }
   static List<dynamic> getColumnsTable(String tableName) {
     int index = MainController.SubMenuList.indexWhere(
-            (element) => element['name'] == '${tableName}');
+            (element) => element['table-name'] == '${tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
 
@@ -1449,11 +1444,11 @@ class MainController extends GetxController {
             if (key != '_id'){
               if (data[key] != null) {
                 var type = getTypeOfField(
-                    MainController.tableInfo['name'], key);
+                    MainController.tableInfo['table-name'], key);
 
                 if (type == 'select' || type == 'multiSelect' || type == 'radiobutton') {
                   var column = getDetailsOfField(
-                      MainController.tableInfo['name'], key);
+                      MainController.tableInfo['table-name'], key);
                   data[key] = ViewController.itemsShowSelectItem(data[key], column);
                 }
 
@@ -1480,7 +1475,7 @@ class MainController extends GetxController {
   }
 
   static Future<void> loadJson() async {
-    ConncetServerController.listSchemaByField();
+    // ConncetServerController.listSchemaByField();
     String jsonFileString;
     jsonFileString = await rootBundle.loadString('assets/menu.json');
     SubMenuList = json.decode(jsonFileString);
@@ -1490,11 +1485,10 @@ class MainController extends GetxController {
       createMultiSelectTable('${name}');
       addParentForRelations('${name}');
     }
-
   }
 
   static addsyncField(String tableName){
-    var index = SubMenuList.indexWhere((element) => element['name'] == tableName);
+    var index = SubMenuList.indexWhere((element) => element['table-name'] == tableName);
     var items = SubMenuList[index];
     if(items['view']==null){
       items.addAll({
@@ -1522,7 +1516,7 @@ class MainController extends GetxController {
   static List<dynamic> tableNames() {
     var list = [];
     for (var table in SubMenuList) {
-      list.add(table['name']);
+      list.add(table['table-name']);
     }
     return list;
   }
@@ -1556,13 +1550,13 @@ class MainController extends GetxController {
         if (!tableNames().contains('${tableNameNew}')) {
           var table = {
             'title': '${tableNameNew}',
-            "name": '${tableNameNew}',
+            "table-name": '${tableNameNew}',
             "tooltip": "",
             'columns': [
               {
-                "title": '${getDataTable['name']}_id',
+                "title": '${getDataTable['table-name']}_id',
                 "type": "string",
-                "name": '${getDataTable['name']}_id',
+                "name": '${getDataTable['table-name']}_id',
                 'is-show-store':false,
                 'is-show-edit':false,
               },
@@ -1607,7 +1601,7 @@ class MainController extends GetxController {
     if (getDataTable['relations'].length != 0) {
       for (var relate in getDataTable['relations']) {
         var index = SubMenuList.indexWhere(
-            (element) => element['name'] == relate['name']);
+            (element) => element['table-name'] == relate['table-name']);
         var items = SubMenuList[index];
         items['columns'].add({
           'name': 'parent_table',
@@ -1634,9 +1628,9 @@ class MainController extends GetxController {
       if (tableData == null) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
         // if(tableInfo['status']=="online")
-        // await ConncetServerController.getRecordGeneral('${tableInfo['name']}');
+        // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
         // else
-        MainController.tableData.value = (await DB('${tableInfo['schema']['name']}').paginate());
+        MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
         MainController.allData.value=MainController.tableData.value;
       } else {
         tableInfo = tableData;
@@ -1644,11 +1638,10 @@ class MainController extends GetxController {
           MainController.tableData.value = tableDataItems;
           MainController.allData.value=MainController.tableData.value;
         } else {
-          print('MainController.loadData>>>${tableInfo}');
           // if (tableInfo['status'] == "online")
-          //   await ConncetServerController.getRecordGeneral('${tableInfo['name']}');
+          //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
-            MainController.tableData.value = (await DB('${tableInfo['schema']['name']}').paginate());
+            MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
 
             MainController.allData.value=MainController.tableData.value;
         }
@@ -1790,7 +1783,7 @@ class MainController extends GetxController {
     } else {
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
-      ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }
   }
@@ -1800,8 +1793,9 @@ class MainController extends GetxController {
     var token =await Token.getToken();
     if(token!=null){
       apiKey.value=token;
-      ConncetServerController.listSchemaByField();
-
+      // ConncetServerController.listSchemaByField();
+      await MainController.loadJson();
+      await MainController.loadData();
       Get.to(() => DashboardPage());
     }
     else{

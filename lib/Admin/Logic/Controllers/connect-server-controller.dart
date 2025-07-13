@@ -61,11 +61,10 @@ class ConncetServerController extends GetxController {
   }
 
   static getRecordGeneral(var tableName) async {
-    print('getInfoTable 1>>$tableName');
     var info=await MainController.getInfoTable(tableName);
 
-    var perPage=info['schema']['countShowRow'];
-    var currentPage=info['schema']['currentPage'];
+    var perPage=info['countShowRow'];
+    var currentPage=info['currentPage'];
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()})
