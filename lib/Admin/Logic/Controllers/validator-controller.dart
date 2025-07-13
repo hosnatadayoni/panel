@@ -39,7 +39,6 @@ class ValidatorController extends GetxController {
           //     }
           //   }
           // }
-          print('sasddd>>>${dataJson[name]} ${name}');
           if(dataJson[name].length == 0 ){
             return checkInputRequiredValidator(indexColumn , dataJson ,tableData: tableData);
           }
@@ -136,11 +135,11 @@ class ValidatorController extends GetxController {
     String tableName = '';
     if(tableData == null){
       column = MainController.tableInfo['columns'][indexColumn];
-      tableName = MainController.tableInfo['name'];
+      tableName = MainController.tableInfo['schema']['name'];
     }
     else{
       column= tableData['columns'][indexColumn];
-      tableName = tableData['name'];
+      tableName = tableData['schema']['name'];
     }
 
     String name = column['name'];

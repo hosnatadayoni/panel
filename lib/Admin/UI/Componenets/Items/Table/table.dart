@@ -141,7 +141,7 @@ class _TableBoxState extends State<TableBox> {
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
-                                    var relation = MainController.tableInfo['relations']
+                                    var relation = MainController.tableInfo['schema']['relation']
                                         .firstWhere((item) => item['name'] == value, orElse: () => null);
                                     if(relation!=null){
                                       MainController.selectedItem
@@ -178,7 +178,7 @@ class _TableBoxState extends State<TableBox> {
                                     }
                                     if(value=='refresh'){
                                       await DB(
-                                          '${MainController.tableInfo['name']}')
+                                          '${MainController.tableInfo['schema']['name']}')
                                           .where('id', '\$eq',
                                           '${MainController.tableData.value[i]['id']}')
                                           .updateRecord(MainController
@@ -252,10 +252,10 @@ class _TableBoxState extends State<TableBox> {
                                                                       .tableData
                                                                       .value[i]['_id']);
                                                               // setState(() {
-                                                              //   DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                              //   DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                               // });
-                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['name']}').paginate();
-                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['name']}').infoPage();
+                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['schema']['name']}').paginate();
+                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
                                                               // Navigator.pop(context);
                                                             },
                                                             child:
@@ -372,8 +372,8 @@ class _TableBoxState extends State<TableBox> {
                                               ],
                                             ),
                                           )),
-                                      if (MainController.tableInfo['relations'].length != 0)
-                                        for (var item in MainController.tableInfo['relations'])
+                                      if (MainController.tableInfo['schema']['relation'].length != 0)
+                                        for (var item in MainController.tableInfo['schema']['relation'])
                                           PopupMenuItem<String>(
                                               value: item['name'].toString(),
                                               child: Container(

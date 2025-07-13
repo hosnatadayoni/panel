@@ -376,6 +376,7 @@ class ViewController extends GetxController {
         var maxValidator;
         var minValidator;
         List<dynamic> items = [];
+        print('dataModel d>>>${dataModel['${name}']}');
         if (column['validators'] != null) {
           maxValidator = column['validators'].firstWhere(
                   (validator) => validator['type'] == 'max',
@@ -676,7 +677,7 @@ class ViewController extends GetxController {
       checkBoxTitle: '',
       onChange: (text) async {
 
-        await DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
+        await DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
 
       },
       index: indexRow,

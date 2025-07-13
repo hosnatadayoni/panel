@@ -102,8 +102,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                       String opration='\$eq';
                       if(ViewController.request.length!=0){
                         var d;
-                        List<dynamic> d2=await DB('${MainController.tableInfo['name']}').getRecords();
-                        var a= DB('${MainController.tableInfo['name']}');
+                        List<dynamic> d2=await DB('${MainController.tableInfo['schema']['name']}').getRecords();
+                        var a= DB('${MainController.tableInfo['schema']['name']}');
                         for(var filter in ViewController.request.values){
                           var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
                           if(w[indexFilter]['oprator']!=null){
