@@ -92,6 +92,8 @@ class HelperController extends GetxController {
 //end delete
 
   static createPageFunction(String tableName) async {
+    print('getInfoTable 2>>$tableName');
+
     var table =MainController.getInfoTable(tableName);
     print('HelperController.createPageFunction>>${table}');
     if (table['view'] == 'custom') {
@@ -102,6 +104,8 @@ class HelperController extends GetxController {
   }
 
   static createFunction(String tableName,{bool loadData = true, var tableFields = null, var tableData = null}) async {
+    print('getInfoTable 3>>${MainController.tableName.value}');
+
     var table =MainController.getInfoTable(MainController.tableName.value);
     print('HelperController.createFunction>>>${ MainController.tableName.value}');
     if (table['view'] == 'custom') {
@@ -111,9 +115,9 @@ class HelperController extends GetxController {
     else {
       Map<String, dynamic> parent = await DB.parentItem;
       if (parent.length == 0) {
-        await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+        await DB('${MainController.tableInfo['name']}').storeRecord(ViewController.request);
       } else {
-        await DB('${MainController.tableInfo['table-name']}')
+        await DB('${MainController.tableInfo['name']}')
             .parent(
                 parentTable: '${parent['parent_table']}',
                 parentId: '${parent['parent_id']}')
@@ -126,37 +130,30 @@ class HelperController extends GetxController {
   }
 
   static relationFunction({var table = null, var index}) async {
+    print('getInfoTable 4>>${MainController.tableName.value}');
+
     table = MainController.getInfoTable('${MainController.tableName.value}');
-    var tableName=table['table-name'];
-    print('HelperController.relationFunction>>>${ MainController.tableName.value}');
+    var tableName=table['schema']['name'];
     if (table['view'] == 'custom') {
-      if (tableName == 'schema') {
-        await Token.removeToken();
-        Token.setToken(MainController.tableData.value[index]['api_key']);
-      }
-      if (tableName == 'fields') {
-        DB.parentItem={
-          'parent_id':MainController.tableData.value[index]['_id'],
-          'parent_table':MainController.tableData.value[index]['name']
-        };
-      }
       pageInateFunction();
-      // await Token.removeName();
-      // await Token.setName(MainController.tableData.value[index]['name'].toString());
-      // print('table>>1>>${table['table-name']}');
-      // await MainController.goToTablePage(table,loadData: false);
+
     } else {
-      var items = await DB('${table['table-name']}').parent(parentId: MainController.tableData.value[index]['_id'], parentTable: MainController.tableInfo['table-name']).getRecords();
+      var items = await DB('${table['name']}').parent(parentId: MainController.tableData.value[index]['_id'], parentTable: MainController.tableInfo['name']).getRecords();
       DB.parentItem = {
         'parent_id': MainController.tableData.value[index]['_id'],
-        'parent_table': MainController.tableInfo['table-name']
+        'parent_table': MainController.tableInfo['name']
       };
-      await MainController.goToTablePage(table, tableFields: MainController.getInfoTable(table['table-name']), tableData: items);
+      print('HelperController.relationFunction>>>${table}');
+      print('getInfoTable 5>>${table['name']}');
+
+      await MainController.goToTablePage(table, tableFields: MainController.getInfoTable(table['name']), tableData: items);
     }
   }
 
   static tablePageFunction({var table=null}) async {
     print('HelperController.tablePageFunction>>${MainController.tableName.value}');
+    print('getInfoTable 6>>${MainController.tableName.value}');
+
     var tabeleInfo=MainController.getInfoTable(MainController.tableName.value);
     // String tableName =  tabeleInfo['table-name'];
     await pageInateFunction();
@@ -187,15 +184,17 @@ class HelperController extends GetxController {
   }
 
   static editFunction(String tableName,{ var request = null, var id = null}) async {
+    print('getInfoTable 7>>${MainController.tableName.value}');
+
     var table =MainController.getInfoTable(MainController.tableName.value);
-    tableName=table['table-name'];
+    tableName=table['name'];
     if(table['view']=='custom'){
 
     }
     else{
-      await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${id}').updateRecord(request);
+      await DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${id}').updateRecord(request);
       if (ViewController.isClickedBtn.value == false) {
-        await MainController.goToTablePage(MainController.tableInfo['table-name']);
+        await MainController.goToTablePage(MainController.tableInfo['name']);
       }
     }
 
@@ -209,8 +208,10 @@ class HelperController extends GetxController {
   }
 
   static deleteFunction(var id) async {
+    print('getInfoTable 8>>${MainController.tableName.value}');
+
     var table =MainController.getInfoTable(MainController.tableName.value);
-    var tableName=table['table-name'];
+    var tableName=table['name'];
     if(table['view']=='custom'){
 
     }else {
@@ -225,9 +226,11 @@ class HelperController extends GetxController {
   }
 
   static pageInateFunction() async {
+    print('getInfoTable 9>>${MainController.tableName.value}');
+
     var table =MainController.getInfoTable(MainController.tableName.value);
     MainController.tableInfo=table;
-    var tableName=table['table-name'];
+    var tableName=table['name'];
     if(table['view']=='custom'){
       MainController.endIndex.value = 0;
       MainController.startIndex.value = 0;

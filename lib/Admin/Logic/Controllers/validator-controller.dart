@@ -136,11 +136,11 @@ class ValidatorController extends GetxController {
     String tableName = '';
     if(tableData == null){
       column = MainController.tableInfo['columns'][indexColumn];
-      tableName = MainController.tableInfo['table-name'];
+      tableName = MainController.tableInfo['name'];
     }
     else{
       column= tableData['columns'][indexColumn];
-      tableName = tableData['table-name'];
+      tableName = tableData['name'];
     }
 
     String name = column['name'];

@@ -676,7 +676,7 @@ class ViewController extends GetxController {
       checkBoxTitle: '',
       onChange: (text) async {
 
-        await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
+        await DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
 
       },
       index: indexRow,
@@ -1917,9 +1917,9 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-
-    var type = column['sourceItems'];
-    var tableName = column['sourceTable'];
+    print('ViewController.itemsList>>>${column}');
+    var type = column['source_items'];
+    var tableName = column['source_table'];
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
       print('dataModel g>>>${dataModel} ${column['name']}');

@@ -63,11 +63,11 @@ class _MenuBoxState extends State<MenuBox>{
                                         onTap: ()async {
                                           MainController.selectedSubItem.value = j;
                                           DB.parentItem={};
-                                          MainController.tableName.value=MainController.SubMenuList[j]['name'];
+                                          MainController.tableName.value=MainController.SubMenuList[j]['schema']['name'];
                                           await MainController.loadData();
                                           await MainController.goToTablePage(MainController.SubMenuList[j]);
                                         },
-                                        child: Txt('${MainController.SubMenuList[j]['name']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
+                                        child: Txt('${MainController.SubMenuList[j]['schema']['name']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
                                           color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
                                     ),
                                     SizedBox(height: 20,)

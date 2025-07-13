@@ -91,10 +91,12 @@ class DB {
     print('DB.paginate');
     MainController.endIndex.value = 0;
     MainController.startIndex.value = 0;
+    print('getInfoTable 11>>${this.tableName}');
+
     int countShowRow =
-    await MainController.getInfoTable('${this.tableName}')['countShowRow'];
+    int.parse(await MainController.getInfoTable('${this.tableName}')['schema']['countShowRow']);
     int currentPage =
-    await MainController.getInfoTable('${this.tableName}')['currentPage'];
+    int.parse(await MainController.getInfoTable('${this.tableName}')['schema']['currentPage']);
     int perPage = countShowRow != null ? countShowRow : 10;
     int s = (currentPage - 1) * perPage;
     var getRecord = await getRecords();
@@ -109,8 +111,10 @@ class DB {
 
   infoPage() async {
     print('DB.infoPage');
-    int countShowRow =
-    await MainController.getInfoTable('${this.tableName}')['countShowRow'];
+    print('getInfoTable 12>>${this.tableName}');
+
+    int countShowRow =int.parse(
+    await MainController.getInfoTable('${this.tableName}')['schema']['countShowRow']);
     int perPage = countShowRow != null ? countShowRow : 10;
     List<Map<String, dynamic>> items = await getRecords();
     int totalItems = items.length;
@@ -128,8 +132,8 @@ class DB {
     Box box;
     List<Map<String, dynamic>> data = [];
     int index = MainController.SubMenuList.indexWhere(
-            (element) => element['table-name'] == '${this.tableName}');
-    if (MainController.SubMenuList[index]['online'] == true ) {
+            (element) => element['schema']['name'] == '${this.tableName}');
+    if (MainController.SubMenuList[index]['schema']['online'] == true ) {
       if(this.whereList.length==0 && this.orWhereList.length==0) {
         await ConncetServerController.getRecordGeneral('${tableName}');
         if (ConncetServerController.getRecordRes.isNotEmpty) {
@@ -139,7 +143,7 @@ class DB {
       }
     } else {
       var tableInfo = MainController.SubMenuList[index];
-      box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
       data = await getDataTypeOfField(box.values.toList());
     }
     if (index != -1) {
@@ -575,7 +579,7 @@ class DB {
     Box box;
     Map<String, dynamic> data = {};
     int index = MainController.SubMenuList.indexWhere(
-            (element) => element['table-name'] == '${this.tableName}');
+            (element) => element['name'] == '${this.tableName}');
     if (MainController.SubMenuList[index]['online'] == true ) {
       if(this.whereList.length==0 && this.orWhereList.length==0) {
         // await ConncetServerController.getRecordGeneral('${tableName}');
@@ -586,7 +590,7 @@ class DB {
       }
     } else {
       var tableInfo = MainController.SubMenuList[index];
-      box = await Hive.openBox<DataModel>('${tableInfo['table-name']}');
+      box = await Hive.openBox<DataModel>('${tableInfo['name']}');
       data = (await getDataTypeOfField(box.values.toList())).first;
     }
     if (index != -1) {
@@ -1311,7 +1315,7 @@ class DB {
         } else {
           if (relations['relations'].length != 0) {
             for (var relation in relations['relations']) {
-              DB(relation['table-name'])
+              DB(relation['name'])
                   .where('parent_id', '\$eq', data['_id'])
                   .deleteRecord();
             }

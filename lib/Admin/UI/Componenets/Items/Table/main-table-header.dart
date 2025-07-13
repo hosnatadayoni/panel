@@ -89,7 +89,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                             });
                             Future.delayed(Duration.zero , ()async{
                               ViewController.request={};
-                              // MainController.tableName.value=MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
+                              // MainController.tableName.value=MainController.SubMenuList[MainController.selectedSubItem.value]['name'];
                               print('_MainTableHeaderState.build>>>${MainController.tableName.value}');
                               HelperController.createPageFunction(MainController.tableName.value);
                               //   await Get.to(() => MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']);
