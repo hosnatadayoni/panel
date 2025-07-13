@@ -1,13 +1,14 @@
 [
   {
-    "title": "product",
+    "title": "item",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "product",
+    "table-name": "item",
     "currentPage": 1,
     "countShowRow": 10,
     "online": true,
     "relations": [],
+    "view": "defult",
     "columns": [
       {
         "name": "title",
@@ -18,45 +19,23 @@
     ]
   },
   {
-    "title": "category",
+    "title": "subItem",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "category",
+    "table-name": "subItem",
     "currentPage": 1,
     "countShowRow": 10,
     "online": true,
     "relations": [],
+    "view": "defult",
     "columns": [
       {
-        "name": "product",
-        "title": "product",
+        "name": "item",
+        "title": "item",
         "type": "select",
         "type_filed": "string",
         "sourceItems": "table",
-        "sourceTable": "product",
-        "items": [
-          "title"
-        ]
-      }
-    ]
-  },
-  {
-    "title": "category2",
-    "tooltip": "",
-    "main-menu": true,
-    "table-name": "category2",
-    "currentPage": 1,
-    "countShowRow": 10,
-    "online": false,
-    "relations": [],
-    "columns": [
-      {
-        "name": "product",
-        "title": "product",
-        "type": "select",
-        "type_filed": "string",
-        "sourceItems": "table",
-        "sourceTable": "product",
+        "sourceTable": "item",
         "items": [
           "title"
         ]

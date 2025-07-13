@@ -103,15 +103,18 @@ class HelperController extends GetxController {
 
   static createFunction(String tableName,{bool loadData = true, var tableFields = null, var tableData = null}) async {
     var table =MainController.getInfoTable(MainController.tableName.value);
-    print('HelperController.createFunction>>>${ MainController.tableName.value}');
     if (table['view'] == 'custom') {
 
 
     }
     else {
+      print('HelperController.createFunction>>>${table['view'] }');
+
       Map<String, dynamic> parent = await DB.parentItem;
       if (parent.length == 0) {
-        await DB('${MainController.tableInfo['name']}').storeRecord(ViewController.request);
+        print('HelperController.createFunction>>>2${table['view'] }');
+
+        await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
       } else {
         await DB('${MainController.tableInfo['table-name']}')
             .parent(
@@ -146,6 +149,7 @@ class HelperController extends GetxController {
       // print('table>>1>>${table['table-name']}');
       // await MainController.goToTablePage(table,loadData: false);
     } else {
+      print('DB.getRecords relationFunction');
       var items = await DB('${table['table-name']}').parent(parentId: MainController.tableData.value[index]['_id'], parentTable: MainController.tableInfo['table-name']).getRecords();
       DB.parentItem = {
         'parent_id': MainController.tableData.value[index]['_id'],
@@ -155,36 +159,7 @@ class HelperController extends GetxController {
     }
   }
 
-  static tablePageFunction({var table=null}) async {
-    print('HelperController.tablePageFunction>>${MainController.tableName.value}');
-    var tabeleInfo=MainController.getInfoTable(MainController.tableName.value);
-    // String tableName =  tabeleInfo['table-name'];
-    await pageInateFunction();
-    // if (tableName == 'project') {
-    //   await ConncetServerController.listProject();
-    //   MainController.tableData.value = ConncetServerController.listProjectRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //
-    // }
-    // if (tableName == 'schema') {
-    //   print('table>>3>>${table}');
-    //   await ConncetServerController.listSchema();
-    //   MainController.tableData.value = ConncetServerController.listSchemaRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    //   print('HelperController.tablePageFunction>>>${tabeleInfo}');
-    // }
-    // if (tableName == 'fields') {
-    //   Map<String, dynamic> parent = await DB.parentItem;
-    //   if (parent.length != 0) {
-    //     await ConncetServerController.listField({'name':parent['parent_table']});
-    //   }
-    //   MainController.tableData.value = ConncetServerController.listFieldsRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    // }
-    Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-  }
+
 
   static editFunction(String tableName,{ var request = null, var id = null}) async {
     var table =MainController.getInfoTable(MainController.tableName.value);
@@ -214,6 +189,7 @@ class HelperController extends GetxController {
     if(table['view']=='custom'){
 
     }else {
+      print('HelperController.deleteFunction');
       DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
       pageInateFunction();
       // MainController.tableData.value =
@@ -233,6 +209,7 @@ class HelperController extends GetxController {
       MainController.startIndex.value = 0;
 
     }else {
+      print('DB.paginate pageInateFunction');
       MainController.tableData.value= await DB('${MainController.tableName.value}').paginate();
     MainController.allData.value= MainController.tableData.value;
     }

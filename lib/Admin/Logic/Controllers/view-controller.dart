@@ -1283,6 +1283,7 @@ class ViewController extends GetxController {
 
 
     if (column['sourceItems'] != 'custom') {
+      print('DB.getRecords genarateEditFormMuiltiSelectBox');
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
@@ -1808,8 +1809,8 @@ class ViewController extends GetxController {
     if (sourceItem != 'custom') {
       if (selectedId != '') {
         List<dynamic> itemSelect = [];
-        var object =
-        (await DB(tableName).where('_id', '\$eq', selectedId).getRecords());
+        print('DB.getRecords getTitleSelectedItem');
+        var object = await DB(tableName).where('_id', '\$eq', selectedId).getRecords();
         if (object.length == 0) {
           selectedTitle = '${AppController.of(Get.context!)!.value('Uncertain')}';
         } else {
@@ -1845,6 +1846,7 @@ class ViewController extends GetxController {
     var sourceItem = column['sourceItems'];
     for (var i = 0; i < selectedId.length; i++) {
       if (sourceItem != 'custom') {
+        print('DB.getRecords getTitleMultiSelectedItem');
         var object = await DB(tableName).where('_id', '\$eq', selectedId[i]).getRecords();
         if (object.length != 0) {
           var objectItem = object.first;
@@ -1925,6 +1927,7 @@ class ViewController extends GetxController {
       print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
         print('tableName f>>>${tableName}');
+        print('DB.getRecords itemsList');
         // Future.delayed(Duration.zero, () async {
           List<dynamic> data = await DB('${tableName}').getRecords();
 

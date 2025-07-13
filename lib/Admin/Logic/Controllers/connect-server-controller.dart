@@ -73,6 +73,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           getRecordRes=[];
+          MainController.tableData.value=[];
           getRecordRes=response!.data['data']['data'];
           MainController.tableData.value=response.data['data']['data'];
           print('ConncetServerController.getRecordGeneral>>${MainController.tableData.value}');

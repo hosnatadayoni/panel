@@ -2,21 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/dataController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-color.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-date.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-multiSelect.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-radio-button.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu-item.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/boxes.dart';
@@ -24,19 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:excel/excel.dart' as exl;
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import '../../UI/Views/dashboard.dart';
 import '../../UI/Views/set-token-page.dart';
 import '../../UI/Views/table-page.dart';
-import 'connect-server-controller.dart';
 import 'helper-controller.dart';
-import 'package:intl/intl.dart';
 // import 'dart:html' as html;
 
 class MainController extends GetxController {
@@ -1363,13 +1347,13 @@ class MainController extends GetxController {
         (element) => element['table-name'] == '${tableName}');
     if (index != -1) {
       var tableInfo = MainController.SubMenuList[index];
-
       return tableInfo;
     }
     return null;
   }
   static getStatusTable(String tableName) {
     var infoTable=getInfoTable(tableName);
+    print('MainController.getStatusTable>>>>>${tableName}>${infoTable}');
     if(infoTable!=null){
       return infoTable['online'];
     }
@@ -1541,7 +1525,7 @@ class MainController extends GetxController {
   }
 
   static createMultiSelectTable(String tableName) {
-    var getDataTable = ViewCustomController.getDataTable(tableName);
+    var getDataTable = getInfoTable(tableName);
     List<dynamic> columnList = MainController.getColumnsTable(tableName);
     for (var column in columnList) {
       if (column['type'] == 'multiSelect' && column['sourceItems'] == 'table') {
@@ -1582,22 +1566,10 @@ class MainController extends GetxController {
     }
   }
 
-  static multiSelectStore(String tableName, var id) async {
-    var getDataTable = ViewCustomController.getDataTable(tableName);
-    for (var item in getDataTable['columns']) {
-      if (item['type'] == 'multiSelect') {
-        if (item['sourceItems'] != 'custom' && item['sourceTable'] != null) {
-          if (ViewController.requestMultiSelect.length != 0) if (ViewController.requestMultiSelect.containsKey(item['sourceTable']))
-            for (var data in ViewController.requestMultiSelect[item['sourceTable']]) {
-             await DB(tableName + "_" + item['title'] + "_" + item['sourceTable']).storeRecord({'${tableName}_id': id, '${item['sourceTable']}_id': data});
-            }
-        }
-      }
-    }
-  }
+
 
   static addParentForRelations (String tableName) {
-    var getDataTable = ViewCustomController.getDataTable(tableName);
+    var getDataTable = getInfoTable(tableName);
     if (getDataTable['relations'].length != 0) {
       for (var relate in getDataTable['relations']) {
         var index = SubMenuList.indexWhere(
@@ -1623,9 +1595,9 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> loadData({var tableData, var tableDataItems}) async {
+  static Future<void> loadData({var tableData=null, var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
-      if (tableData == null) {
+      if (tableData == null || tableData.length==0) {
         tableInfo = SubMenuList[MainController.selectedSubItem.value];
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
@@ -1638,11 +1610,14 @@ class MainController extends GetxController {
           MainController.tableData.value = tableDataItems;
           MainController.allData.value=MainController.tableData.value;
         } else {
+          print('MainController.loadData>>>${tableInfo}>>${tableData==null}');
+
+
           // if (tableInfo['status'] == "online")
           //   await ConncetServerController.getRecordGeneral('${tableInfo['table-name']}');
           // else
-            MainController.tableData.value = (await DB('${tableInfo['table-name']}').paginate());
-
+            MainController.tableData.value = await DB('${tableInfo['table-name']}').paginate();
+          print('DB.paginate loadData>>${MainController.tableData.value }');
             MainController.allData.value=MainController.tableData.value;
         }
       }
@@ -1651,7 +1626,7 @@ class MainController extends GetxController {
         tableInfo = SubMenuList[0];
       }
     }
-    if (tableData == null) {
+    if (tableData == null || tableData.length==0) {
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is-show-store'] == null) {
           MainController.tableInfo['columns'][j]['is-show-store'] = true;
@@ -1779,10 +1754,11 @@ class MainController extends GetxController {
     if (table['view'] == 'custom') {
       HelperController.pageInateFunction();
       Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-      // HelperController.tablePageFunction(table: table);
     } else {
-      if(loadData==true)
-      await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
+      if(loadData==true) {
+        await MainController.loadData(
+            tableData: tableFields, tableDataItems: tableData);
+      }
       ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }

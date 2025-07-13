@@ -8,7 +8,6 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class TableBox extends StatefulWidget {
@@ -181,10 +180,9 @@ class _TableBoxState extends State<TableBox> {
                                     if(value=='refresh'){
                                       await DB(
                                           '${MainController.tableInfo['table-name']}')
-                                          .where('id', '\$eq',
-                                          '${MainController.tableData.value[i]['id']}')
-                                          .updateRecord(MainController
-                                          .tableData.value[i]);
+                                          // .where('id', '\$eq',
+                                          // '${MainController.tableData.value[i]['_id']}')
+                                          .storeRecord(MainController.tableData.value[i]);
                                     }
                                     if(value=='remove'){
                                       showDialog(
@@ -249,16 +247,10 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
-                                                              HelperController.deleteFunction(
-                                                                  MainController
-                                                                      .tableData
-                                                                      .value[i]['_id']);
-                                                              // setState(() {
-                                                              //   DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
-                                                              // });
-                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
-                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
-                                                              // Navigator.pop(context);
+                                                                  print(
+                                                              '_TableBoxState.build>>${MainController.tableData.value[i]['_id']}');
+                                                                  HelperController.deleteFunction(MainController.tableData.value[i]['_id']);
+
                                                             },
                                                             child:
                                                             Container(
