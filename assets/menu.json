@@ -140,101 +140,33 @@
         "sourceTable": null,
         "items": [
           {
-            "title": "معمولی",
-            "value": "1",
+            "title": "string",
+            "value": "string",
             "is_selected": true
           },
           {
-            "title": "Number int",
-            "value": "2",
-            "is_selected": false
-          },
-          {
-            "title": "Number double",
-            "value": "3",
+            "title": "Number",
+            "value": "Number",
             "is_selected": false
           },
           {
             "title": "checkbox",
-            "value": "4",
-            "default_value": false,
+            "value": "checkbox",
             "is_selected": false
           },
           {
             "title": "radiobutton",
-            "value": "5",
-            "sourceItems": "custom",
-            "sourceTable": null,
-            "items": [
-              {
-                "title": "test 1",
-                "value": "1",
-                "is_selected": true
-              },
-              {
-                "title": "test 2",
-                "value": "2",
-                "is_selected": false
-              },
-              {
-                "title": "test 3",
-                "value": "3",
-                "is_selected": false
-              },
-              {
-                "title": "test 4",
-                "value": "4",
-                "is_selected": false
-              }
-            ],
+            "value": "radiobutton",
             "is_selected": false
           },
           {
-            "title": "نوع",
-            "value": "6",
-            "sourceItems": "custom",
-            "sourceTable": null,
-            "items": [
-              {
-                "title": "معمولی",
-                "value": "1",
-                "is_selected": true
-              },
-              {
-                "title": "ویژه",
-                "value": "2",
-                "is_selected": false
-              }
-            ],
+            "title": "select",
+            "value": "select",
             "is_selected": false
           },
           {
             "title": "multiSelect",
-            "value": "7",
-            "sourceItems": "custom",
-            "sourceTable": null,
-            "items": [
-              {
-                "title": "انتخاب نشده",
-                "value": "-1"
-              },
-              {
-                "title": "test 1",
-                "value": "1"
-              },
-              {
-                "title": "test 2",
-                "value": "2"
-              },
-              {
-                "title": "test 3",
-                "value": "3"
-              },
-              {
-                "title": "test 4",
-                "value": "4"
-              }
-            ],
+            "value": "multiSelect",
             "is_selected": false
           }
         ],
@@ -250,18 +182,13 @@
         "sourceTable": null,
         "items": [
           {
-            "title": "معمولی",
-            "value": "1",
+            "title": "string",
+            "value": "string",
             "is_selected": true
           },
           {
-            "title": "Number int",
-            "value": "2",
-            "is_selected": false
-          },
-          {
-            "title": "Number double",
-            "value": "3",
+            "title": "Number",
+            "value": "Number",
             "is_selected": false
           }
         ],
@@ -311,7 +238,10 @@
       {
         "name": "source_table",
         "title": "source_table",
-        "type": "string",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "schema",
+        "items": ["name"],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false

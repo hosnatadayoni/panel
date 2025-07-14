@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -1919,8 +1920,7 @@ class ViewController extends GetxController {
     if (type != 'custom') {
       print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        print('tableName f>>>${tableName}');
-        List<dynamic> data = await DB('${tableName}').getRecords();
+        List<dynamic> data = await HelperController.itemsListFunction(tableName);
         print('ViewController.itemsList>>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
