@@ -4,7 +4,6 @@ import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Views/create.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,26 +21,35 @@ class MainTableHeader extends StatefulWidget {
 
 class _MainTableHeaderState extends State<MainTableHeader> {
   String? fileExelPath;
+
   @override
   Widget build(BuildContext context) {
     Rx<bool> isHoverBtn = false.obs;
     return Container(
-      padding: EdgeInsets.only(right: 10 , left: 25),
+      padding: EdgeInsets.only(right: 10, left: 25),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Txt('${MainController.selectedSubItem.value != -1 ? MainController.tableInfo['title']:''}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,)),
+          Expanded(
+              child: Txt(
+                '${MainController.selectedSubItem.value != -1 ? MainController.tableInfo['schema']['title'] != null ? MainController.tableInfo['schema']['title'] : '' : ''}',
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: MainController.isLightMode.value == true
+                    ? whiteColor
+                    : primaryDark,
+              )),
           Row(
             children: [
               MouseRegion(
-                onEnter:(_){
+                onEnter: (_) {
                   isHoverBtn.value = true;
                 },
-                onExit: (_){
+                onExit: (_) {
                   isHoverBtn.value = false;
                 },
                 child: InkWell(
-                  onTap: (){
+                  onTap: () {
                     MainController.isClickedItem.value = false;
                     MainController.selectedItem.value = -1;
                     MainController.selectedSubItem.value = -1;
@@ -50,48 +58,66 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        border: Border.all(color: colorBtn , width: 1),
+                        border: Border.all(color: colorBtn, width: 1),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: isHoverBtn.value == true ? colorBtn : Colors.transparent
-                    ),
+                        color: isHoverBtn.value == true
+                            ? colorBtn
+                            : Colors.transparent),
                     child: Row(
                       children: [
-                        Icon(Icons.arrow_back , color: isHoverBtn.value == true ? whiteColor:colorBtn),
-                        SizedBox(width: 10,),
-                        Txt('${AppController.of(context)!.value('back')}' , fontSize: 16, fontWeight: FontWeight.w400,color: isHoverBtn.value == true ? whiteColor : colorBtn,),
+                        Icon(Icons.arrow_back,
+                            color: isHoverBtn.value == true
+                                ? whiteColor
+                                : colorBtn),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Txt(
+                          '${AppController.of(context)!.value('back')}',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color:
+                          isHoverBtn.value == true ? whiteColor : colorBtn,
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               PopupMenuTheme(
                 data: PopupMenuThemeData(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(width: borderSize , color: itemColor34),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(width: borderSize, color: itemColor34),
                   ),
-                  color:MainController.isLightMode.value == true? background:whiteColor,
+                  color: MainController.isLightMode.value == true
+                      ? background
+                      : whiteColor,
                 ),
                 child: PopupMenuButton(
                   elevation: 0,
                   offset: Offset(0, 55),
                   onSelected: (value) {
-                    setState(() {
-                    });
+                    setState(() {});
                   },
                   itemBuilder: (BuildContext context) {
                     return <PopupMenuEntry>[
                       PopupMenuItem(
                           onTap: () {
-                            setState(()  {
+                            setState(() {
                               ViewController.isClickedBtn.value = false;
                               ViewController.isClickedEditBtn.value = false;
                             });
-                            Future.delayed(Duration.zero , ()async{
-                              ViewController.request={};
+                            Future.delayed(Duration.zero, () async {
+                              ViewController.request = {};
                               // MainController.tableName.value=MainController.SubMenuList[MainController.selectedSubItem.value]['name'];
-                              print('_MainTableHeaderState.build>>>${MainController.tableName.value}');
-                              HelperController.createPageFunction(MainController.tableName.value);
+                              print(
+                                  '_MainTableHeaderState.build>>>${MainController.tableName.value}');
+                              HelperController.createPageFunction(
+                                  MainController.tableName.value);
                               //   await Get.to(() => MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']);
                             });
                           },
@@ -99,57 +125,104 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           child: Container(
                             child: Row(
                               children: [
-                                Icon(Icons.add, color: MainController.isLightMode.value == false ? color3:whiteColor, size: 15,),
-                                SizedBox(width: 5,),
-                                Txt('${AppController.of(context)!.value('create')}' , color: MainController.isLightMode.value == false ? color3:whiteColor)
+                                Icon(
+                                  Icons.add,
+                                  color:
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Txt('${AppController.of(context)!.value('create')}',
+                                    color: MainController.isLightMode.value ==
+                                        false
+                                        ? color3
+                                        : whiteColor)
                               ],
                             ),
-                          )
-                      ),
+                          )),
                       PopupMenuItem(
-                          onTap: ()async{
+                          onTap: () async {
                             await MainController.createExel(fileExelPath);
                           },
                           value: 'Export Excel',
                           child: Container(
                             child: Row(
                               children: [
-                                FaIcon(FontAwesomeIcons.fileExcel , size: 15 , color: MainController.isLightMode.value == false ? color3:whiteColor,),
-                                SizedBox(width: 10,),
-                                Txt('${AppController.of(context)!.value('excel output')}' , color: MainController.isLightMode.value == false ? color3:whiteColor)
+                                FaIcon(
+                                  FontAwesomeIcons.fileExcel,
+                                  size: 15,
+                                  color:
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Txt('${AppController.of(context)!.value('excel output')}',
+                                    color: MainController.isLightMode.value ==
+                                        false
+                                        ? color3
+                                        : whiteColor)
                               ],
                             ),
-                          )
-                      ),
+                          )),
                       PopupMenuItem(
-                          onTap: ()async{
+                          onTap: () async {
                             await MainController.readExcelFile(fileExelPath);
                           },
                           value: 'Import Excel',
                           child: Container(
                             child: Row(
                               children: [
-                                FaIcon(FontAwesomeIcons.fileExcel , size: 15 , color: MainController.isLightMode.value == false ? color3:whiteColor,),
-                                SizedBox(width: 10,),
-                                Txt('${AppController.of(context)!.value('excel input')}' , color: MainController.isLightMode.value == false ? color3:whiteColor)
+                                FaIcon(
+                                  FontAwesomeIcons.fileExcel,
+                                  size: 15,
+                                  color:
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Txt('${AppController.of(context)!.value('excel input')}',
+                                    color: MainController.isLightMode.value ==
+                                        false
+                                        ? color3
+                                        : whiteColor)
                               ],
                             ),
-                          )
-                      ),
+                          )),
                     ];
                   },
-                  child:  Container(
+                  child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: colorBtn , width: 1),
+                      border: Border.all(color: colorBtn, width: 1),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: colorBtn,
                     ),
                     child: Row(
                       children: [
-                        Txt('${AppController.of(context)!.value('operation')}' , fontSize: 16, fontWeight: FontWeight.w400,color: whiteColor,),
-                        SizedBox(width: 10,),
-                        Icon(Icons.arrow_drop_down_sharp , size: 20, color: whiteColor,),
+                        Txt(
+                          '${AppController.of(context)!.value('operation')}',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: whiteColor,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.arrow_drop_down_sharp,
+                          size: 20,
+                          color: whiteColor,
+                        ),
                       ],
                     ),
                   ),

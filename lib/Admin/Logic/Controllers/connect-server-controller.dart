@@ -12,7 +12,7 @@ class ConncetServerController extends GetxController {
   static Map<String, dynamic>updateRecordRes={};
   static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
-  static List<dynamic>getRecordRes=[];
+  static RxList<dynamic> getRecordRes=[].obs;
 
   static listSchemaByField() async {
     var response = await RestApi.post(listSchemaUrl,);
@@ -21,6 +21,11 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
 
           MainController.SubMenuList=response!.data['data'];
+          for (var name in MainController.tableNames()) {
+            MainController.addsyncField('${name}');
+            MainController.createMultiSelectTable('${name}');
+            MainController.addParentForRelations('${name}');
+          }
           // storeRecordRes={};
           // storeRecordRes=response!.data['data'];
         },printResponse: true);
@@ -63,8 +68,8 @@ class ConncetServerController extends GetxController {
   static getRecordGeneral(var tableName) async {
     var info=await MainController.getInfoTable(tableName);
 
-    var perPage=info['countShowRow'];
-    var currentPage=info['currentPage'];
+    var perPage=info['schema']['countShowRow'];
+    var currentPage=info['schema']['currentPage'];
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()})
@@ -72,9 +77,9 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          getRecordRes=[];
-          MainController.tableData.value=[];
-          getRecordRes=response!.data['data']['data'];
+          getRecordRes.value=[];
+          // MainController.tableData.value=[];
+          getRecordRes.value=response!.data['data']['data'];
           MainController.tableData.value=response.data['data']['data'];
           print('ConncetServerController.getRecordGeneral>>${MainController.tableData.value}');
         },printResponse: true);

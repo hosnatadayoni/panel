@@ -66,6 +66,7 @@ class _MenuBoxState extends State<MenuBox>{
                                           MainController.tableName.value=MainController.SubMenuList[j]['schema']['name'];
 
                                           await MainController.goToTablePage(MainController.SubMenuList[j]);
+
                                         },
                                         child: Txt('${MainController.SubMenuList[j]['schema']['name']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
                                           color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
