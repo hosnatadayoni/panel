@@ -39,61 +39,62 @@
         "title": "name",
         "tooltip": "",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
-      }, {
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
         "name": "title",
         "title": "title",
         "tooltip": "",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "tooltip",
         "title": "tooltip",
         "tooltip": "",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "main_menu",
         "title": "main_menu",
         "main-menu": true,
         "type": "checkbox",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "currentPage",
         "title": "currentPage",
         "currentPage": 1,
         "type": "Number int",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "countShowRow",
         "title": "countShowRow",
         "countShowRow": 10,
         "type": "Number int",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "online",
         "title": "online",
         "type": "checkbox",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       }
     ],
     "relations": [
@@ -119,116 +120,260 @@
         "name": "title",
         "title": "title",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "name",
         "title": "name",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "type",
         "title": "type",
-        "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "معمولی",
+            "value": "1",
+            "is_selected": true
+          },
+          {
+            "title": "Number int",
+            "value": "2",
+            "is_selected": false
+          },
+          {
+            "title": "Number double",
+            "value": "3",
+            "is_selected": false
+          },
+          {
+            "title": "checkbox",
+            "value": "4",
+            "default_value": false,
+            "is_selected": false
+          },
+          {
+            "title": "radiobutton",
+            "value": "5",
+            "sourceItems": "custom",
+            "sourceTable": null,
+            "items": [
+              {
+                "title": "test 1",
+                "value": "1",
+                "is_selected": true
+              },
+              {
+                "title": "test 2",
+                "value": "2",
+                "is_selected": false
+              },
+              {
+                "title": "test 3",
+                "value": "3",
+                "is_selected": false
+              },
+              {
+                "title": "test 4",
+                "value": "4",
+                "is_selected": false
+              }
+            ],
+            "is_selected": false
+          },
+          {
+            "title": "نوع",
+            "value": "6",
+            "sourceItems": "custom",
+            "sourceTable": null,
+            "items": [
+              {
+                "title": "معمولی",
+                "value": "1",
+                "is_selected": true
+              },
+              {
+                "title": "ویژه",
+                "value": "2",
+                "is_selected": false
+              }
+            ],
+            "is_selected": false
+          },
+          {
+            "title": "multiSelect",
+            "value": "7",
+            "sourceItems": "custom",
+            "sourceTable": null,
+            "items": [
+              {
+                "title": "انتخاب نشده",
+                "value": "-1"
+              },
+              {
+                "title": "test 1",
+                "value": "1"
+              },
+              {
+                "title": "test 2",
+                "value": "2"
+              },
+              {
+                "title": "test 3",
+                "value": "3"
+              },
+              {
+                "title": "test 4",
+                "value": "4"
+              }
+            ],
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "type_field",
         "title": "type_field",
-        "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "معمولی",
+            "value": "1",
+            "is_selected": true
+          },
+          {
+            "title": "Number int",
+            "value": "2",
+            "is_selected": false
+          },
+          {
+            "title": "Number double",
+            "value": "3",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "items",
         "title": "items",
-        "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "title",
+            "value": "title",
+            "is_selected": true
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "source_items",
         "title": "source_items",
-        "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "type": "select",
+        "items": [
+          {
+            "title": "table",
+            "value": "table",
+            "is_selected": true
+          },
+          {
+            "title": "custom",
+            "value": "custom",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "source_table",
         "title": "source_table",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "parent_id",
         "title": "parent_id",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":false,
-        "is-show-edit":false
+        "is-show-table": true,
+        "is-show-store": false,
+        "is-show-edit": false
       },
       {
         "name": "parent_slug",
         "title": "parent_slug",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":false
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       },
       {
         "name": "is-show-table",
         "title": "is-show-table",
         "type": "checkbox",
         "default_value": false,
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "is-show-store",
         "title": "is-show-store",
         "type": "checkbox",
         "default_value": false,
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "is-show-edit",
         "title": "is-show-edit",
         "type": "checkbox",
         "default_value": false,
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "filters",
         "title": "filters",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "validators",
         "title": "validators",
         "type": "string",
-        "is-show-table":true,
-        "is-show-store":true,
-        "is-show-edit":true
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       }
     ]
   }
