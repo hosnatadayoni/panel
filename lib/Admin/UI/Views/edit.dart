@@ -25,7 +25,7 @@ class _EditPageState extends State<EditPage> {
 
   addWidget()async{
     Future.delayed(Duration.zero, () async {
-      _future.value = await ViewController.generateStoreFormView(MainController.tableInfo['columns']);
+      _future.value = await ViewController.generateEditFormView(widget.data);
     });
   }
   @override
@@ -147,16 +147,24 @@ class _EditPageState extends State<EditPage> {
                               fontWeight: FontWeight.w400,
                             ),
                                 onClick: () async {
-                                  // Map<String,dynamic> parent=await DB.parentItem;
-                                  // if(parent.length==0) {
-                                  print('_EditPageState.build>>>${ViewController.request}');
-                                  await DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${widget.data!['_id']}')
-                                      .updateRecords(ViewController.request);
-                                  // }
-                                  // else{
-                                  //   await DB('${MainController.tableInfo['name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).where('_id', '\$eq', '${widget.data!['_id']}')
-                                  //       .updateRecords(ViewController.request);
-                                  // }
+                                  print('_EditPageState.build>>>${ViewController.request}>>>${widget.data!['_id']}');
+                                  if(ViewController.request.length!=0) {
+                                    await DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${widget.data!['_id']}').updateRecords(ViewController.request);
+                                  }
+                                  else{
+                                    await MainController.loadData();
+                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
+                                  }
+                                  // // Map<String,dynamic> parent=await DB.parentItem;
+                                  // // if(parent.length==0) {
+                                  // print('_EditPageState.build>>>${ViewController.request}');
+                                  // await DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${widget.data!['_id']}')
+                                  //     .updateRecords(ViewController.request);
+                                  // // }
+                                  // // else{
+                                  // //   await DB('${MainController.tableInfo['name']}').parent(parentTable: '${parent['parent_table']}',parentId:'${parent['parent_id']}' ).where('_id', '\$eq', '${widget.data!['_id']}')
+                                  // //       .updateRecords(ViewController.request);
+                                  // // }
                                   if (ViewController.isClickedBtn.value == false) {
                                     await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                                   }

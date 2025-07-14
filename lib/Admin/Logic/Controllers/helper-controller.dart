@@ -150,39 +150,6 @@ class HelperController extends GetxController {
     }
   }
 
-  static tablePageFunction({var table=null}) async {
-    print('HelperController.tablePageFunction>>${MainController.tableName.value}');
-    print('getInfoTable 6>>${MainController.tableName.value}');
-
-    var tabeleInfo=MainController.getInfoTable(MainController.tableName.value);
-    // String tableName =  tabeleInfo['table-name'];
-    await pageInateFunction();
-    // if (tableName == 'project') {
-    //   await ConncetServerController.listProject();
-    //   MainController.tableData.value = ConncetServerController.listProjectRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //
-    // }
-    // if (tableName == 'schema') {
-    //   print('table>>3>>${table}');
-    //   await ConncetServerController.listSchema();
-    //   MainController.tableData.value = ConncetServerController.listSchemaRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    //   print('HelperController.tablePageFunction>>>${tabeleInfo}');
-    // }
-    // if (tableName == 'fields') {
-    //   Map<String, dynamic> parent = await DB.parentItem;
-    //   if (parent.length != 0) {
-    //     await ConncetServerController.listField({'name':parent['parent_table']});
-    //   }
-    //   MainController.tableData.value = ConncetServerController.listFieldsRes;
-    //   MainController.allData.value=MainController.tableData.value;
-    //   MainController.tableInfo=tabeleInfo;
-    // }
-    Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-  }
-
   static editFunction(String tableName,{ var request = null, var id = null}) async {
     print('getInfoTable 7>>${MainController.tableName.value}');
 
