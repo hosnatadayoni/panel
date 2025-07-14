@@ -2,7 +2,6 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
@@ -143,15 +142,15 @@ class _TableBoxState extends State<TableBox> {
                                   onSelected: (String value) async {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
                                     var relation = MainController.tableInfo['relations']
-                                        .firstWhere((item) => item['table-name'] == value, orElse: () => null);
+                                        .firstWhere((item) => item['name'] == value, orElse: () => null);
                                     if(relation!=null){
                                       MainController.selectedItem
                                           .value = MainController
                                           .SubMenuList
                                           .indexWhere((element) =>
                                       element[
-                                      'table-name'] ==
-                                          relation['table-name']);
+                                      'name'] ==
+                                          relation['name']);
                                       MainController
                                           .tableName.value =
                                       relation['name'];
@@ -179,10 +178,11 @@ class _TableBoxState extends State<TableBox> {
                                     }
                                     if(value=='refresh'){
                                       await DB(
-                                          '${MainController.tableInfo['table-name']}')
-                                          // .where('id', '\$eq',
-                                          // '${MainController.tableData.value[i]['_id']}')
-                                          .storeRecord(MainController.tableData.value[i]);
+                                          '${MainController.tableInfo['name']}')
+                                          .where('id', '\$eq',
+                                          '${MainController.tableData.value[i]['id']}')
+                                          .updateRecord(MainController
+                                          .tableData.value[i]);
                                     }
                                     if(value=='remove'){
                                       showDialog(
@@ -247,10 +247,16 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
-                                                                  print(
-                                                              '_TableBoxState.build>>${MainController.tableData.value[i]['_id']}');
-                                                                  HelperController.deleteFunction(MainController.tableData.value[i]['_id']);
-
+                                                              HelperController.deleteFunction(
+                                                                  MainController
+                                                                      .tableData
+                                                                      .value[i]['_id']);
+                                                              // setState(() {
+                                                              //   DB('${MainController.tableInfo['name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                              // });
+                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['name']}').paginate();
+                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['name']}').infoPage();
+                                                              // Navigator.pop(context);
                                                             },
                                                             child:
                                                             Container(
@@ -369,7 +375,7 @@ class _TableBoxState extends State<TableBox> {
                                       if (MainController.tableInfo['relations'].length != 0)
                                         for (var item in MainController.tableInfo['relations'])
                                           PopupMenuItem<String>(
-                                              value: item['table-name'].toString(),
+                                              value: item['name'].toString(),
                                               child: Container(
                                                 child: Txt(
                                                   item['title'],
