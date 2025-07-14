@@ -1659,6 +1659,7 @@ class MainController extends GetxController {
         // if(tableInfo['status']=="online")
         // await ConncetServerController.getRecordGeneral('${tableInfo['name']}');
         // else
+        print('tableInfo[schema][name]>>>${tableInfo['schema']['name']}');
         MainController.tableData.value =
             (await DB('${tableInfo['schema']['name']}').paginate());
         MainController.allData.value = MainController.tableData.value;

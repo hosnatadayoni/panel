@@ -95,10 +95,10 @@ class DB {
 
     int countShowRow = int.parse(
         await MainController.getInfoTable('${this.tableName}')['schema']
-            ['countShowRow']);
+            ['countShowRow'].toString());
     int currentPage = int.parse(
         await MainController.getInfoTable('${this.tableName}')['schema']
-            ['currentPage']);
+            ['currentPage'].toString());
     int perPage = countShowRow != null ? countShowRow : 10;
     int s = (currentPage - 1) * perPage;
     var getRecord = await getRecords();
@@ -117,7 +117,7 @@ class DB {
 
     int countShowRow = int.parse(
         await MainController.getInfoTable('${this.tableName}')['schema']
-            ['countShowRow']);
+            ['countShowRow'].toString());
     int perPage = countShowRow != null ? countShowRow : 10;
     List<Map<String, dynamic>> items = await getRecords();
     int totalItems = items.length;
