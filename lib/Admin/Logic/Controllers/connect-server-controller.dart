@@ -23,7 +23,6 @@ class ConncetServerController extends GetxController {
           MainController.SubMenuList=response!.data['data'];
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
-            MainController.createMultiSelectTable('${name}');
             MainController.addParentForRelations('${name}');
           }
           // storeRecordRes={};
@@ -65,11 +64,11 @@ class ConncetServerController extends GetxController {
     // AppController.finishLoading('get-records');
   }
 
-  static getRecordGeneral(var tableName) async {
+  static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
     var info=await MainController.getInfoTable(tableName);
 
-    var perPage=info['schema']['countShowRow'];
-    var currentPage=info['schema']['currentPage'];
+    var perPage=perpage??info['schema']['countShowRow'];
+    var currentPage=page??info['schema']['currentPage'];
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()})
@@ -80,8 +79,8 @@ class ConncetServerController extends GetxController {
           getRecordRes.value=[];
           // MainController.tableData.value=[];
           getRecordRes.value=response!.data['data']['data'];
-          MainController.tableData.value=response.data['data']['data'];
-          print('ConncetServerController.getRecordGeneral>>${MainController.tableData.value}');
+          MainController.totalItems.value=response!.data['data']['count'];
+          // MainController.tableData.value=response.data['data']['data'];
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }

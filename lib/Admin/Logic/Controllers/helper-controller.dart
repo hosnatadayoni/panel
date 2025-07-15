@@ -23,7 +23,6 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    print('customData.id4>>>${customData.id}');
     if (tableName == 'order3') {
       if (OrderItem.orderItemsList.length != 0) {
         // for (var key in OrderItem.orderItemsList.keys) {
@@ -91,10 +90,7 @@ class HelperController extends GetxController {
 //end delete
 
   static createPageFunction(String tableName) async {
-    print('getInfoTable 2>>$tableName');
-
     var table = MainController.getInfoTable(tableName);
-    print('HelperController.createPageFunction>>${table}');
     if (table['schema']['view'] == 'custom') {
     } else {
       await Get.to(() => CreatePage(tableName));
@@ -105,18 +101,14 @@ class HelperController extends GetxController {
       {bool loadData = true,
         var tableFields = null,
         var tableData = null}) async {
-    print('getInfoTable 3>>${MainController.tableName.value}');
 
     var table = MainController.getInfoTable(MainController.tableName.value);
-    print(
-        'HelperController.createFunction>>>${MainController.tableName.value}');
     if (table['schema']['view'] == 'custom') {
     } else {
       Map<String, dynamic> parent = await DB.parentItem;
       if (parent.length == 0) {
         await DB('${MainController.tableInfo['schema']['name']}')
             .storeRecord(ViewController.request);
-        print('ViewController.request e>>>${ViewController.request}');
       } else {
         await DB('${MainController.tableInfo['schema']['name']}')
             .parent(
@@ -131,8 +123,6 @@ class HelperController extends GetxController {
   }
 
   static relationFunction({var table = null, var index}) async {
-    print('getInfoTable 4>>${MainController.tableName.value}');
-
     table = MainController.getInfoTable('${MainController.tableName.value}');
     var tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
@@ -147,8 +137,6 @@ class HelperController extends GetxController {
         'parent_id': MainController.tableData.value[index]['_id'],
         'parent_table': MainController.tableInfo['schema']['name']
       };
-      print('HelperController.relationFunction>>>${table}');
-      print('getInfoTable 5>>${table['schema']['name']}');
 
       await MainController.goToTablePage(table,
           tableFields: MainController.getInfoTable(table['schema']['name']),
@@ -157,10 +145,6 @@ class HelperController extends GetxController {
   }
 
   static tablePageFunction({var table = null}) async {
-    print(
-        'HelperController.tablePageFunction>>${MainController.tableName.value}');
-    print('getInfoTable 6>>${MainController.tableName.value}');
-
     var tabeleInfo =
     MainController.getInfoTable(MainController.tableName.value);
     // String tableName =  tabeleInfo['table-name'];
@@ -194,7 +178,6 @@ class HelperController extends GetxController {
 
   static editFunction(String tableName,
       {var request = null, var id = null}) async {
-    print('getInfoTable 7>>${MainController.tableName.value}');
 
     var table = MainController.getInfoTable(MainController.tableName.value);
     tableName = table['schema']['name'];
@@ -217,7 +200,6 @@ class HelperController extends GetxController {
   }
 
   static deleteFunction(var id) async {
-    print('getInfoTable 8>>${MainController.tableName.value}');
 
     var table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table['schema']['name'];
@@ -233,8 +215,6 @@ class HelperController extends GetxController {
   }
 
   static pageInateFunction() async {
-    print('getInfoTable 9>>${MainController.tableName.value}');
-
     var table = MainController.getInfoTable(MainController.tableName.value);
     MainController.tableInfo = table;
     var tableName = table['schema']['name'];
@@ -257,8 +237,6 @@ class HelperController extends GetxController {
     var endByCondition = end >= totalItems ? totalItems : end;
     MainController.endIndex.value = int.parse(endByCondition.toString());
     List<dynamic> list = listItems.skip(s).take(perPage).toList();
-    print(
-        'HelperController.pageInateItems>>${totalItems}>>${end}>${s}>>${perPage}');
     MainController.tableData.value = list;
     MainController.allData.value = list;
   }

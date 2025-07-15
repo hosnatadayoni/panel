@@ -603,7 +603,7 @@ class ViewController extends GetxController {
     var size = MediaQuery.of(Get.context!).size;
     String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];
-    var dataModel = MainController.tableData.value[indexRow]['${name}'];
+    var dataModel = MainController.tableData[indexRow]['${name}'];
     String type = '';
     if (table == null) {
       type = MainController.tableInfo['columns'][indexColumn]['type'];
@@ -620,8 +620,8 @@ class ViewController extends GetxController {
       child = generateColor(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'select' || type == 'radiobutton') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-      '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
+      child = Txt(MainController.tableData[indexRow]['${name}']!=null?
+      '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -629,8 +629,8 @@ class ViewController extends GetxController {
       );
     }
     else if (type == 'multiSelect') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-      '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
+      child = Txt(MainController.tableData[indexRow]['${name}']!=null?
+      '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -1871,7 +1871,6 @@ class ViewController extends GetxController {
 
   static String itemsShowSelectItem(var listItems, var column) {
     var items=column['items'];
-    print('ViewController.itemsShowSelectItem >>${listItems} >>${listItems.runtimeType}');
     List<dynamic> a = [];
     if (listItems is List) {
       if (listItems.length == 0) {
@@ -1918,18 +1917,14 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-    print('ViewController.itemsList>>>${column}');
     var type = column['source_items'];
     var tableName = column['source_table'];
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
-      print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        print('tableName f>>>${tableName}');
         // Future.delayed(Duration.zero, () async {
         List<dynamic> data = await DB('${tableName}').getRecords();
         data.removeWhere((element) => element['sync']!=null);
-        print('ViewController.itemsList> c>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
@@ -1937,7 +1932,6 @@ class ViewController extends GetxController {
             a.add(dropDownListItems[i][field]);
           }
         }
-        // });
       }
       else {
         if(dataModel[column['name']]==null){

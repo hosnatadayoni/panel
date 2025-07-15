@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/connection-controller.dart';
+import 'package:finance/Admin/Public/enums.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
@@ -49,7 +50,6 @@ class DB {
   }
 
   getDataTypeOfFieldItem(DataModel data) async {
-    print('DB.getDataTypeOfFieldItem>>$data');
     var type;
     List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
 
@@ -112,32 +112,35 @@ class DB {
     // MainController.tableData.value =[];
     MainController.endIndex.value = 0;
     MainController.startIndex.value = 0;
-    int countShowRow =
-    await MainController.getInfoTable('${this.tableName}')['schema']['countShowRow'];
-    int currentPage =
-    await MainController.getInfoTable('${this.tableName}')['schema']['currentPage'];
+    var infoTable= await MainController.getInfoTable('${this.tableName}')['schema'];
+    int countShowRow = infoTable['countShowRow'];
+    int currentPage = infoTable['currentPage'];
     int perPage = countShowRow != null ? countShowRow : 10;
     int s = (currentPage - 1) * perPage;
-    print('DB.getRecords paginate');
     List<Map<String, dynamic>> getRecord = await getRecords();
     var totalItems = getRecord.length;
-    MainController.totalItems.value = totalItems;
+    // MainController.totalItems.value = totalItems;
     var end = s + perPage;
     MainController.startIndex.value = s;
     var endBycondition = end >= totalItems ? totalItems : end;
     MainController.endIndex.value = endBycondition;
-    var data = getRecord.skip(s).take(perPage).toList();
+    var data=[];
+    if(infoTable['online']==true){
+      data=getRecord;
+    }
+    else {
+      MainController.totalItems.value=totalItems;
+      data = getRecord.skip(s).take(perPage).toList();
+    }
+    print('DB.paginate>>$data');
     return data;
   }
 
   infoPage() async {
-    print('DB.infoPage');
     int countShowRow = await MainController.getInfoTable('${this.tableName}')['schema']['countShowRow'];
     int perPage = countShowRow != null ? countShowRow : 10;
-    // List<Map<String, dynamic>> items = await getRecords();
     int totalItems = MainController.totalItems.value;
     int totalPage = (totalItems / perPage).ceil();
-
     return totalPage;
   }
 
@@ -146,7 +149,6 @@ class DB {
   getRecords() async {
     AppController.startLoading('get-records');
     await ConnectionController.checkConnectivity();
-    print('checkConnectivity>>${ConnectionController.checkConnection.value}');
     List<Map<String, dynamic>> dataItems = [];
     Box box;
     List<Map<String, dynamic>> data = [];
@@ -156,11 +158,8 @@ class DB {
     if (MainController.SubMenuList[index]['schema']['online'] == true ) {
       if(this.whereList.length==0 && this.orWhereList.length==0) {
         await ConncetServerController.getRecordGeneral('${tableName}');
-        print('DB.getRecords getRecordRes>>${ConncetServerController.getRecordRes}>>>${ConncetServerController.getRecordRes.isNotEmpty}');
         if (ConncetServerController.getRecordRes.isNotEmpty) {
           data = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-          print('DB.getRecords isNotEmpty');
-          print('DB.getRecords isEmpty');
           var tableInfo = MainController.SubMenuList[index];
           box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
           var boxList=box.values.toList();
@@ -174,7 +173,6 @@ class DB {
           var tableInfo = MainController.SubMenuList[index];
           box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
           data=(await getDataTypeOfFieldList(box.values.toList()));
-          print('DB.getRecords offline>>>${data}');
         }
 
 
@@ -182,7 +180,6 @@ class DB {
         var tableInfo = MainController.SubMenuList[index];
         box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
         data.addAll(await getDataTypeOfFieldList(box.values.toList()));
-        print('DB.getRecords offline>>>${data}');
       }
     }
     else {
@@ -407,15 +404,12 @@ class DB {
             }
 
           } else {
-            print('DB.whereList data>>>${data}>>>');
             if(data.length!=0){
               for (var d in data) {
                 bool flag = true;
                 for (int j = 1; j <= whereList.length; j++) {
                   if (whereList[j]!.fieldName != '_id')
                     whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
-                  print('DB.whereList >>>>>${whereList[j]}>>${whereList[j]!.fieldName}>>${whereList[j]!.value}>>>${d['${whereList[j]!.fieldName}']}');
-
                   if (d['${whereList[j]!.fieldName}'] != null) {
                     if (whereList[j]!.value != '') {
                       if (whereList[j]!.oprator == '\$eq' ||
@@ -1072,8 +1066,9 @@ class DB {
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     ViewController.isClickedBtn.value = true;
     var Id = Uuid().v4();
-    print('DB.storeRecord$request');
+
     Map<String, dynamic> newRequest = Map.from(request);
+    print('DB.storeRecord request>>>${newRequest}>>>>${request}');
     List<dynamic> columns = MainController.getColumnsList('${this.tableName}');
     for (var column in columns) {
       if (!newRequest.keys.contains(column)) {
@@ -1103,7 +1098,6 @@ class DB {
           DataModel customData = await HelperController.beforeStore(newData)['data'];
           if(customData.data.keys.contains('_id')){
             customData.data['_id']=null;
-            print('DB. customData>>${customData.data} ');
 
           }
           Map<String, dynamic> setRecord = {
@@ -1114,47 +1108,54 @@ class DB {
             await ConncetServerController.storeRecordGeneral(setRecord);
             Box box = await Hive.openBox<DataModel>('${this.tableName}');
             if (ConncetServerController.storeRecordRes.isNotEmpty) {
-              if (newRequest.containsKey('_id')) {
+              if (request.containsKey('_id')) {
                 var tableDataIndex = box.values.toList().indexWhere((
-                    element) => element.id == newRequest['_id']);
+                    element) => element.id == request['_id']);
                 if (tableDataIndex != -1) {
-                  print('DB.storeRecord>>>${tableDataIndex}');
-                  box.deleteAt(tableDataIndex);
+                  await box.deleteAt(tableDataIndex);
+                  // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
+
                 }else{
                   DataModel recordStored = DataModel(
                       id: '${ConncetServerController.storeRecordRes['_id']}',
                       data: ConncetServerController.storeRecordRes);
                   await box.add(recordStored);
-
+                  // MainController.renderData(operation.store,recordStored.data);
                 }
               }else{
                 DataModel recordStored = DataModel(
                     id: '${ConncetServerController.storeRecordRes['_id']}',
                     data: ConncetServerController.storeRecordRes);
                 await box.add(recordStored);
-
+                // MainController.renderData(operation.store,recordStored.data);
               }
             }
             else{
-              var c=customData.data['sync']='false';
+              customData.data['sync']='false';
 
               if (request.containsKey('_id')) {
                 if( box.values.toList().indexWhere((element) => element.id == request['_id'])==-1){
                   await box.add(customData);
+                  // MainController.renderData(operation.store,customData.data);
+
                 }
               }else{
+                print('DB.storeRecord customData is>>${customData}>>>${customData.data}');
                 await box.add(customData);
+                // MainController.renderData(operation.store,customData.data);
               }
-              print('DB.storeRecord offline');
             }
           } else {
             await box.add(customData);
+            // MainController.renderData(operation.store,customData.data);
+
           }
           var afterData = await HelperController.afterStore(
               this.tableName!, newRequest, customData);
           if (afterData['status'] == false) {
             showSnackbar(snackTypes.error, afterData['message']);
           }
+          // MainController.renderData(operation.store,data);
           await MainController.loadData(
               tableData: MainController.getInfoTable(this.tableName!));
           ViewController.isClickedBtn.value = false;
@@ -1192,20 +1193,16 @@ class DB {
         a[key] = value['value'];
       } else {
         a[key] = value['_id'];
-        print('DB.updateRecord select >>>${a[key]}');
       }
     }
   }
 
   updateRecords(Map<String, dynamic> request) async {
     AppController.startLoading('update-records');
-    List<dynamic> allData = [];
     List<dynamic> records = await getRecords();
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    allData = box.values.toList();
     Map<String, dynamic> a = {};
-    print('DB.updateRecords>>>${records}');
 
     List<Map<String, dynamic>> toAdd = [];
 
@@ -1236,7 +1233,6 @@ class DB {
             a[key] = value['value'];
           } else {
             a[key] = value['_id'];
-            print('DB.updateRecord select >>>${a[key]}');
           }
         }
         if (request.containsKey(key)) {
@@ -1263,8 +1259,8 @@ class DB {
         } else {
           var customUpdate =
           await HelperController.beforeUpdate(record)['data'];
-          var allDataIndex = allData.indexWhere((element) => element.id == a['_id']);
-          allData[allDataIndex] = customUpdate;
+          var allDataIndex = records.indexWhere((element) => element['_id'] == a['_id']);
+          // records[allDataIndex] = customUpdate;
           if (MainController.getStatusTable(this.tableName!) == true) {
             await ConncetServerController.setDatabaseme(customUpdate.data);
             Map<String, dynamic> setRecord = {
@@ -1375,10 +1371,10 @@ class DB {
     AppController.startLoading('delete-record');
     List<dynamic> records = await getRecords();
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
+    var boxList=box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
-    print('DB.deleteRecord relations>>>${records}>>${relations}');
     for (var data in records) {
-      var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['_id']);
+      var tableDataIndex = boxList.indexWhere((element) => element.id == data['_id']);
       // var before = await HelperController.beforeDelete(tableDataIndex);
       //
       // if (before['status'] == false) {
@@ -1392,7 +1388,7 @@ class DB {
           'record_id': data['_id']
         });
         if (ConncetServerController.deleteRecordRes == true) {
-          if (relations['schema']['relations'].length != 0) {
+          if (relations['schema']['relations']!=null && relations['schema']['relations'].length != 0) {
             for (var relation in relations['schema']['relations']) {
               DB(relation['schema']['name'])
                   .where('parent_id', '\$eq', data['_id'])
@@ -1402,7 +1398,8 @@ class DB {
           if (tableDataIndex != -1) {
             box.deleteAt(tableDataIndex);
           }
-          await MainController.loadData();
+          MainController.renderData(operation.delete,data);
+          // await MainController.loadData();
         } else {
           showSnackbar(snackTypes.error, 'error');
         }
@@ -1416,9 +1413,7 @@ class DB {
                   'parent_id', '\$eq', data['_id']).deleteRecord();
             }
           }
-          await MainController.loadData();
-
-
+          MainController.renderData(operation.delete,data);
         }
       }
       // DataModel item = box.values.toList()[tableDataIndex];

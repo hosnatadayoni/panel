@@ -64,7 +64,7 @@ class _MenuBoxState extends State<MenuBox>{
                                           MainController.selectedSubItem.value = j;
                                           DB.parentItem={};
                                           MainController.tableName.value=MainController.SubMenuList[j]['schema']['name'];
-
+                                          MainController.SubMenuList[j]['schema']['currentPage']=1;
                                           await MainController.goToTablePage(MainController.SubMenuList[j]);
 
                                         },

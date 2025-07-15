@@ -177,12 +177,12 @@ class _TableBoxState extends State<TableBox> {
                                       });
                                     }
                                     if(value=='refresh'){
+                                      print('_TableBoxState.build>>>${MainController.tableData.value[i]}');
                                       await DB(
                                           '${MainController.tableInfo['schema']['name']}')
-                                          .where('id', '\$eq',
-                                          '${MainController.tableData.value[i]['id']}')
-                                          .updateRecord(MainController
-                                          .tableData.value[i]);
+                                          // .where('id', '\$eq',
+                                          // '${MainController.tableData.value[i]['id']}')
+                                          .storeRecord(MainController.tableData.value[i]);
                                     }
                                     if(value=='remove'){
                                       showDialog(
