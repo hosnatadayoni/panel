@@ -78,7 +78,7 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           getRecordRes.value=[];
           // MainController.tableData.value=[];
-          getRecordRes.value=response!.data['data']['data'];
+          getRecordRes.value=response!.data['data']['data']!=null?response!.data['data']['data']:[];
           MainController.totalItems.value=response!.data['data']['count'];
           // MainController.tableData.value=response.data['data']['data'];
         },printResponse: true);

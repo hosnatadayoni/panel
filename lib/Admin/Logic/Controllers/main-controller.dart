@@ -1046,8 +1046,12 @@ class MainController extends GetxController {
         {
 
             if (dataRowExcel[name] != null) {
-
-               if (type == 'checkbox') {
+              if (type == 'select' || type == 'radiobutton') {
+                dataExlJson[name]=null;
+              } if (type == 'multiSelect' ) {
+                dataExlJson[name]=null;
+              }
+               else if (type == 'checkbox') {
                 dataExlJson[name] = dataRowExcel[name];
               } else if (type == 'file') {
                 if (dataRowExcel[name] != null) {
