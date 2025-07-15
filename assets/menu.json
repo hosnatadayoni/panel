@@ -199,16 +199,10 @@
       {
         "name": "items",
         "title": "items",
-        "type": "select",
+        "type": "multiSelect",
         "sourceItems": "custom",
         "sourceTable": null,
-        "items": [
-          {
-            "title": "title",
-            "value": "title",
-            "is_selected": true
-          }
-        ],
+        "items": [],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -238,7 +232,7 @@
       {
         "name": "source_table",
         "title": "source_table",
-        "type": "multiSelect",
+        "type": "select",
         "sourceItems": "table",
         "sourceTable": "schema",
         "items": ["name"],

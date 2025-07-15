@@ -359,6 +359,7 @@ class HelperController extends GetxController {
 
   static Future<List> itemsListFunction(
       String tableName) async {
+    print('items list function');
     var table = MainController.getInfoTable(tableName);
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'schema') {

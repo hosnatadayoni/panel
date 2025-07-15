@@ -1,19 +1,27 @@
 
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Form/form-multiSelect.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+
+import '../../Logic/Controllers/selectFieldController.dart';
 
 class CretePageField extends StatefulWidget {
   String tableName;
@@ -24,18 +32,61 @@ class CretePageField extends StatefulWidget {
 }
 
 class _CretePageFieldState extends State<CretePageField> {
-  List<dynamic> items = [];
+  RxMap<String, RxList<dynamic>> selectItems = <String, RxList<dynamic>>{}.obs;
+  RxMap<String, Widget> selectWidgets = <String, Widget>{}.obs;
+
+  //select custom
+  RxList<dynamic> sourceItem=[].obs;
+  RxList<dynamic> sourceTable=[].obs;
+  Rx<String> initailValue=''.obs;
+  Rx<String> initailValueSourceTable=''.obs;
+  Rx<String> hintText = ''.obs;
+  Rx<bool> isSeletedSelectBox = false.obs;
+  //end selectcustom
+
+  //multiSelect custom
+  RxList<dynamic> sourceTableItems=[].obs;
+  List<dynamic> selectedId = [];
+  Rx<String> hintTxt = RxString('');
+  RxList<dynamic> selectedItemsList =[].obs;
+  Rx<bool> isSelectedItem = false.obs;
+  //end multi select custom
+
+
+  Future<void> loadItems() async {
+    for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
+      final column = MainController.tableInfo['columns'][j];
+      if(column['type'] == 'select'){
+        var items = await ViewController.itemsList(column);
+        selectItems[column['name']] = items.obs;
+        selectWidgets[column['name']] = ViewController.generateStoreFormSelectBox(
+            column,
+            items,
+            '',
+            '',
+            false.obs
+        );
+        if(column['name'] == 'source_table'){
+          sourceTable.value = items;
+        }
+        else if(column['name'] == 'source_items'){
+          sourceItem.value = await ViewController.itemsList(column);
+        }
+      }
+      else if(column['type'] == 'multiSelect'){
+        sourceTableItems.value = await ViewController.itemsList(column);
+      }
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    loadItems();
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-
-    Future<void> loadItems() async {
-      for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-        items = await ViewController.itemsList(MainController.tableInfo['columns'][j]);
-      }
-    }
-
     return Scaffold(
       body: Container(
           width: size.width,
@@ -194,21 +245,461 @@ class _CretePageFieldState extends State<CretePageField> {
                                       MainController.tableInfo['columns'][j]['type'] == 'email' ||
                                       MainController.tableInfo['columns'][j]['type'] == 'mobile')
                                     ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], MainController.tableInfo['columns'][j]['type'], '')
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'checkbox')
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'checkbox')
                                   ViewController.generateFormCheckBox(MainController.tableInfo['columns'][j], false.obs)
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'date')
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'date')
                                       ViewController.generateFormDateBox(MainController.tableInfo['columns'][j], Jalali.now(), false.obs)
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'color')
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'color')
                                       ViewController.generateFormColorBox(MainController.tableInfo['columns'][j], Colors.blue, false.obs)
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'file')
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'file')
                                       ViewController.generateFileBox('', MainController.tableInfo['columns'][j], false.obs)
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'time')
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'time')
                                       ViewController.generateFormTimeBox(MainController.tableInfo['columns'][j], TimeOfDay.now(), false.obs)
-                                 else if(MainController.tableInfo['columns'][j]['type'] == 'select')
-                                   if(MainController.tableInfo['columns'][j]['name'] == 'type' ||
-                                       MainController.tableInfo['columns'][j]['name'] == 'type_field')
-                                     ViewController.generateStoreFormSelectBox(MainController.tableInfo['columns'][j] , items , '','' , false.obs)
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'select')
+                                            MainController.tableInfo['columns'][j]['name'] == 'type' ||
+                                            MainController.tableInfo['columns'][j]['name'] == 'type_field'? selectWidgets[MainController.tableInfo['columns'][j]['name']] ?? Container():
+                                            MainController.tableInfo['columns'][j]['name'] == 'source_items' ? Obx((){
+                                              return sourceItem.value.length != 0
+                                                  ? new Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Obx(() {
+                                                    return Txt(
+                                                      '${MainController.tableInfo['columns'][j]['title']}',
+                                                      color: MainController.isLightMode.value == true
+                                                          ? whiteColor
+                                                          : color2,
+                                                    );
+                                                  }),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  MainController.tableInfo['columns'][j]['sourceItems'] != 'custom' ?
+                                                  Obx((){
+                                                    return SelectBox(
+                                                        name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                        column: MainController.tableInfo['columns'][j],
+                                                        items: [
+                                                          DropdownMenuItem(
+                                                              child: Obx(() {
+                                                                return Txt(
+                                                                  '${AppController.of(Get.context!)!.value('not selected')}',
+                                                                  color: MainController.isLightMode.value == true
+                                                                      ? whiteColor
+                                                                      : primaryDark,
+                                                                );
+                                                              }),
+                                                              value: ''),
+                                                          for (var item in sourceItem.value)
+                                                            DropdownMenuItem(
+                                                                child: Obx(() {
+                                                                  return Txt(
+                                                                    '${ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j])}',
+                                                                    color:
+                                                                    MainController.isLightMode.value == true
+                                                                        ? whiteColor
+                                                                        : primaryDark,
+                                                                  );
+                                                                }),
+                                                                value: item['title'].toString()),
+                                                        ],
+                                                        initalValue: initailValue.value == '' || initailValue.value == null ?"":initailValue.value,
+                                                        onChanged: (value) async {
+                                                          SelectFieldController.sourceItem.value = value!;
+                                                          // initailValue.value = value;
+                                                          if (value != '') {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                          } else {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                          }
+                                                        },
+                                                        hintText: hintText.value,
+                                                        isSeleted: isSeletedSelectBox,
+                                                        selectedValue: '');
+                                                  })
+                                                  : Obx((){
+                                                    return SelectBox(
+                                                        name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                        column: MainController.tableInfo['columns'][j],
+                                                        items: [
+                                                          for (var item in sourceItem.value)
+                                                            DropdownMenuItem(
+                                                                child: Obx(() {
+                                                                  return Txt(
+                                                                    '${item['title']}',
+                                                                    color:
+                                                                    MainController.isLightMode.value == true
+                                                                        ? whiteColor
+                                                                        : primaryDark,
+                                                                  );
+                                                                }),
+                                                                value: item['title']),
+                                                        ],
+                                                        initalValue: initailValue.value == '' || initailValue.value == null
+                                                            ? sourceItem.value.first['value']
+                                                            : initailValue.value,
+                                                        onChanged: (value) async {
+                                                          SelectFieldController.sourceItem.value = value!;
+                                                          initailValue.value = value;
+                                                          for (var item in sourceItem.value) {
+                                                            if (item['title'] == value) {
+                                                              if (item['value'] == '') {
+                                                                value = null;
+                                                              }
+                                                            }
+                                                          }
+                                                          if (value != '') {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                          } else {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                          }
+                                                        },
+                                                        hintText: hintText.value,
+                                                        isSeleted: isSeletedSelectBox,
+                                                        selectedValue: '');
+                                                  }),
+                                                ],
+                                              ) : Container();
+                                            }):
+                                            MainController.tableInfo['columns'][j]['name'] == 'source_table' ? SelectFieldController.sourceItem.value == 'custom' ? Container() : Obx((){
+                                              return sourceTable.value.length != 0
+                                                  ? new Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Obx(() {
+                                                    return Txt(
+                                                      '${MainController.tableInfo['columns'][j]['title']}',
+                                                      color: MainController.isLightMode.value == true
+                                                          ? whiteColor
+                                                          : color2,
+                                                    );
+                                                  }),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  MainController.tableInfo['columns'][j]['sourceItems'] != 'custom' ?
+                                                  SelectBox(
+                                                      name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                      column: MainController.tableInfo['columns'][j],
+                                                      items: [
+                                                        DropdownMenuItem(
+                                                            child: Obx(() {
+                                                              return Txt(
+                                                                '${AppController.of(Get.context!)!.value('not selected')}',
+                                                                color: MainController.isLightMode.value == true
+                                                                    ? whiteColor
+                                                                    : primaryDark,
+                                                              );
+                                                            }),
+                                                            value: ''),
+                                                        for (var item in sourceTable.value)
+                                                          DropdownMenuItem(
+                                                              child: Obx(() {
+                                                                return Txt(
+                                                                  '${ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j])}',
+                                                                  color:
+                                                                  MainController.isLightMode.value == true
+                                                                      ? whiteColor
+                                                                      : primaryDark,
+                                                                );
+                                                              }),
+                                                              value: item['title'].toString()),
+                                                      ],
+                                                      initalValue: initailValueSourceTable.value == '' || initailValueSourceTable.value == null ?"":initailValueSourceTable.value,
+                                                      onChanged: (value) async {
+                                                        initailValueSourceTable.value =  value!;
+                                                        SelectFieldController.sourceSelected.value = value!;
+                                                        if(SelectFieldController.sourceSelected.value != ''){
+                                                          await ConncetServerController.listField({'name': SelectFieldController.sourceSelected.value});
+                                                          for(var data in MainController.allData.value){
+                                                            if(!sourceTableItems.contains(data['title'])){
+                                                              sourceTableItems.add(data['title']);
+                                                            }
+                                                          }
+                                                        }
+                                                        else{
+                                                          sourceTableItems.value = [];
+                                                        }
 
+                                                        if (value != '') {
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                        } else {
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                        }
+                                                      },
+                                                      hintText: hintText.value,
+                                                      isSeleted: isSeletedSelectBox,
+                                                      selectedValue: '')
+                                                      : SelectBox(
+                                                      name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                      column: MainController.tableInfo['columns'][j],
+                                                      items: [
+                                                        for (var item in sourceTable.value)
+                                                          DropdownMenuItem(
+                                                              child: Obx(() {
+                                                                return Txt(
+                                                                  '${item['title']}',
+                                                                  color:
+                                                                  MainController.isLightMode.value == true
+                                                                      ? whiteColor
+                                                                      : primaryDark,
+                                                                );
+                                                              }),
+                                                              value: item['title']),
+                                                      ],
+                                                      initalValue: initailValueSourceTable.value == '' || initailValueSourceTable.value == null
+                                                          ? sourceTable.value.first['value']
+                                                          : initailValueSourceTable.value,
+                                                      onChanged: (value) async {
+                                                        for (var item in sourceTable.value) {
+                                                          if (item['title'] == value) {
+                                                            if (item['value'] == '') {
+                                                              value = null;
+                                                            }
+                                                          }
+                                                        }
+                                                        initailValueSourceTable.value =  value!;
+                                                        SelectFieldController.sourceSelected.value = value!;
+                                                        if(SelectFieldController.sourceSelected.value != ''){
+                                                          await ConncetServerController.listField({'name': SelectFieldController.sourceSelected.value});
+                                                          for(var data in MainController.allData.value){
+                                                            if(!sourceTableItems.contains(data['title'])){
+                                                              sourceTableItems.add(data['title']);
+                                                            }
+                                                          }
+                                                        }
+                                                        else{
+                                                          sourceTableItems.value = [];
+                                                        }
+                                                        if (value != '') {
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                        } else {
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                        }
+                                                      },
+                                                      hintText: hintText.value,
+                                                      isSeleted: isSeletedSelectBox,
+                                                      selectedValue: ''),
+                                                ],
+                                              ) : Container();
+                                            }) :
+                                            Container()
+                                  else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
+                                                SelectFieldController.sourceItem.value == 'custom'?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
+                                            Obx((){
+                                              return  sourceTableItems.value.length != 0
+                                                  ? MainController.tableInfo['columns'][j]['sourceItems'] != 'custom'
+                                                  ? Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Obx(() {
+                                                    return Txt(
+                                                      '${MainController.tableInfo['columns'][j]['title']}',
+                                                      color: MainController.isLightMode.value == true
+                                                          ? whiteColor
+                                                          : color2,
+                                                    );
+                                                  }),
+                                                  Obx(() {
+                                                    return MultiSelectDropdown(
+                                                      items: [
+                                                        for (var item in sourceTableItems.value)
+                                                          DropdownMenuItem(
+                                                              value: item,
+                                                              child: Obx(() {
+                                                                return Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      height: 100,
+                                                                      child: SizedBox(
+                                                                          width: 50,
+                                                                          height: 50,
+                                                                          child: Obx(() {
+                                                                            return Checkbox(
+                                                                                activeColor: colorBtn,
+                                                                                // value: selectedItemsList.any(
+                                                                                //         (map) =>
+                                                                                //         mapEquals(map, item)),
+                                                                                value:selectedItemsList.contains(item),
+                                                                                onChanged: (isChecked) {
+                                                                                  if (isChecked != null) {
+                                                                                    hintTxt.value = '';
+                                                                                    // if (!selectedItemsList.any(
+                                                                                    //         (map) =>
+                                                                                    //         mapEquals(
+                                                                                    //             map, item))) {
+                                                                                    if(!selectedItemsList.contains(item)){
+                                                                                      selectedId = [];
+                                                                                      // ViewController.requestMultiSelect = item;
+                                                                                      selectedItemsList
+                                                                                          .add(item);
+
+                                                                                    } else {
+                                                                                      selectedId = [];
+                                                                                      // ViewController.requestMultiSelect
+                                                                                      //     .removeWhere((key,
+                                                                                      //     value) =>
+                                                                                      // value == ['_id']);
+                                                                                      // var index =
+                                                                                      // selectedItemsList
+                                                                                      //     .indexWhere(
+                                                                                      //         (map) =>
+                                                                                      //         mapEquals(
+                                                                                      //             map,
+                                                                                      //             item));
+                                                                                      //
+                                                                                      // selectedItemsList
+                                                                                      //     .removeAt(index);
+                                                                                      if(selectedItemsList.contains(item)){
+                                                                                        selectedItemsList.remove(item);
+                                                                                      }
+
+                                                                                    }
+                                                                                    if (item['_id'] == '') {}
+                                                                                    if (selectedItemsList
+                                                                                        .value.length ==
+                                                                                        0) {
+                                                                                      isSelectedItem.value =
+                                                                                      false;
+                                                                                    } else {
+                                                                                      isSelectedItem.value =
+                                                                                      true;
+                                                                                    }
+                                                                                    for (var r
+                                                                                    in selectedItemsList)
+                                                                                      hintTxt.value = hintTxt
+                                                                                          .value +
+                                                                                          ViewController.itemsShowSelectItem(r,
+                                                                                              MainController.tableInfo['columns'][j]);
+
+                                                                                    for (var r
+                                                                                    in selectedItemsList)
+                                                                                      // selectedId.add(r['_id']);
+                                                                                      selectedId.add(item);
+
+                                                                                    ViewController.request[MainController.tableInfo['columns'][j]['name']]= selectedId;
+                                                                                  }
+                                                                                });
+                                                                          })),
+                                                                    ),
+                                                                    Txt(
+                                                                        ViewController.itemsShowSelectItem(
+                                                                            item, MainController.tableInfo['columns'][j]),
+                                                                        color: MainController.isLightMode.value
+                                                                            ? whiteColor
+                                                                            : primaryDark),
+                                                                  ],
+                                                                );
+                                                              }))
+                                                      ],
+                                                      hintText: hintTxt.value != '' && hintTxt.value != null
+                                                          ? hintTxt.value
+                                                          : '${AppController.of(Get.context!)!.value('choice')}',
+                                                      selectedItems: selectedItemsList,
+                                                      isSelectedItem: isSelectedItem,
+                                                      column: MainController.tableInfo['columns'][j],
+                                                    );
+                                                  }),
+                                                ],
+                                              )
+                                                  : Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Obx(() {
+                                                    return Txt(
+                                                      '${MainController.tableInfo['columns'][j]['title']}',
+                                                      color: MainController.isLightMode.value == true
+                                                          ? whiteColor
+                                                          : color2,
+                                                    );
+                                                  }),
+                                                  Obx(() {
+                                                    return MultiSelectDropdown(
+                                                      items: [
+                                                        for (var item in sourceTableItems.value)
+                                                          DropdownMenuItem(
+                                                              value: item,
+                                                              child: Obx(() {
+                                                                return Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      height: 100,
+                                                                      child: SizedBox(
+                                                                          width: 50,
+                                                                          height: 50,
+                                                                          child: Obx(() {
+                                                                            return Checkbox(
+                                                                                activeColor: colorBtn,
+                                                                                // value: selectedItemsList.any((map) =>
+                                                                                //     mapEquals(map, item)),
+                                                                                value: selectedItemsList.contains(item),
+                                                                                onChanged: (isChecked) {
+                                                                                  if (isChecked != null) {
+
+
+                                                                                    hintTxt.value = '';
+                                                                                    // if (!selectedItemsList.any((map) =>
+                                                                                    //     mapEquals(map, item))) {
+                                                                                    if(!selectedItemsList.contains(item)){
+                                                                                      selectedId = [];
+                                                                                      // ViewController.requestMultiSelect = item;
+                                                                                      selectedItemsList.add(item);
+
+                                                                                    } else {
+                                                                                      selectedId = [];
+                                                                                      // ViewController.requestMultiSelect.removeWhere((key,
+                                                                                      //     value) => value == ['value']);
+                                                                                      // var index = selectedItemsList
+                                                                                      //     .indexWhere((map) =>
+                                                                                      //     mapEquals(map, item));
+                                                                                      // selectedItemsList.removeAt(index);
+                                                                                      if(selectedItemsList.contains(item)){
+                                                                                        selectedItemsList.remove(item);
+                                                                                      }
+                                                                                    }
+
+                                                                                    if (selectedItemsList.value.length ==
+                                                                                        0) {
+                                                                                      isSelectedItem.value = false;
+                                                                                    } else {
+                                                                                      isSelectedItem.value = true;
+                                                                                    }
+                                                                                    for (var r in selectedItemsList)
+                                                                                       // hintTxt.value = hintTxt.value + r['title'];
+                                                                                       hintTxt.value = hintTxt.value + r;
+
+
+                                                                                    // for (var r in selectedItemsList)
+                                                                                    //   selectedId.add(r['value']);
+                                                                                    selectedId.add(item);
+
+                                                                                    ViewController
+                                                                                        .request[MainController.tableInfo['columns'][j]['name']] =
+                                                                                        selectedId;
+                                                                                  }
+                                                                                });
+                                                                          })),
+                                                                    ),
+                                                                    Txt(item,
+                                                                        color: MainController.isLightMode.value
+                                                                            ? whiteColor
+                                                                            : primaryDark),
+                                                                  ],
+                                                                );
+                                                              }))
+                                                      ],
+                                                      hintText: hintTxt.value != '' && hintTxt.value != null
+                                                          ? hintTxt.value
+                                                          : '${AppController.of(Get.context!)!.value('choice')}',
+                                                      selectedItems: selectedItemsList,
+                                                      isSelectedItem: isSelectedItem,
+                                                      column: MainController.tableInfo['columns'][j],
+                                                    );
+                                                  }),
+                                                ],
+                                              )
+                                                  : Container();
+                                            })
 
 
                               ],
