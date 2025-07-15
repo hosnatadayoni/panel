@@ -777,7 +777,8 @@ class MainController extends GetxController {
         List<int> bytes = result.files.first.bytes as List<int>;
         excel = exl.Excel.decodeBytes(bytes);
       }
-    } else {
+    }
+    else {
       filePath = await FilePicker.platform.pickFiles(
           type: FileType.custom, allowedExtensions: ['xlsx']).then((result) {
         return result?.files.single.path;
@@ -785,6 +786,7 @@ class MainController extends GetxController {
       if (filePath != null) {
         var bytes = File(filePath!).readAsBytesSync();
         excel = exl.Excel.decodeBytes(bytes);
+
       }
     }
     List<Map<String, dynamic>> rowdetail = [];
@@ -797,8 +799,10 @@ class MainController extends GetxController {
     if (excel != null && excel.tables != null) {
       for (var table in excel.tables.keys) {
         for (var row in excel.tables[table]!.rows) {
+          print('MainController.readExcelFile row>>${row}');
           if (counter == 0) {
             for (var cell in row) {
+              print('MainController.readExcelFile cell 1>>${cell}');
               excelColumns.add(cell?.value.toString());
             }
           } else {
@@ -806,6 +810,8 @@ class MainController extends GetxController {
             Map<String, dynamic> rowDataTest = {};
             int counterColumn = 0;
             for (var cell in row) {
+              print('MainController.readExcelFile cell 2>>${cell}');
+
               var columnName = excelColumns[counterColumn];
               var columnType = MainController.tableInfo['columns'].firstWhere(
                       (col) => col['name'] == columnName,
@@ -909,6 +915,7 @@ class MainController extends GetxController {
       }
     }
 
+    print('MainController.readExcelFile counter>>${counter}');
     var columnPrime = getColumnPrime();
 
     for (var data in rowdetail) {
@@ -930,18 +937,18 @@ class MainController extends GetxController {
       // print('isValidatorList>>>${isValidatorList}');
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
-      if (findIndexRecord != -1) {
-        DataModel k = DataModel(
-            data: excelJson,
-            id: MainController.tableData.value[findIndexRecord]['_id']);
-        print('MainController.readExcelFile>>${MainController.tableData.value[findIndexRecord]['_id']}');
-        await DB('${MainController.tableInfo['schema']['name']}')
-            .where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}')
-            .updateRecords(k.data);
-      } else {
-        await DB('${MainController.tableInfo['schema']['name']}')
-            .storeRecord(excelJson);
-      }
+      // if (findIndexRecord != -1) {
+      //   DataModel k = DataModel(
+      //       data: excelJson,
+      //       id: MainController.tableData.value[findIndexRecord]['_id']);
+      //   print('MainController.readExcelFile>>${MainController.tableData.value[findIndexRecord]['_id']}');
+      //   await DB('${MainController.tableInfo['schema']['name']}')
+      //       .where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}')
+      //       .updateRecords(k.data);
+      // } else {
+      //   await DB('${MainController.tableInfo['schema']['name']}')
+      //       .storeRecord(excelJson);
+      // }
     }
     //read all record of excel
     //if this record is column prime or id prime

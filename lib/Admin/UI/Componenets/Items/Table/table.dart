@@ -56,9 +56,7 @@ class _TableBoxState extends State<TableBox> {
                   defaultColumnWidth: FixedColumnWidth(
                       (MainController.tableInfo['columns'].length > 8
                           ? 200.0
-                          : size.width /
-                          (MainController.tableInfo['columns'].length +
-                              1))),
+                          : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
