@@ -66,7 +66,6 @@ class ConncetServerController extends GetxController {
 
   static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
     var info=await MainController.getInfoTable(tableName);
-
     var perPage=perpage??info['schema']['countShowRow'];
     var currentPage=page??info['schema']['currentPage'];
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
@@ -77,10 +76,9 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           getRecordRes.value=[];
-          // MainController.tableData.value=[];
-          getRecordRes.value=response!.data['data']['data']!=null?response!.data['data']['data']:[];
-          MainController.totalItems.value=response!.data['data']['count'];
-          // MainController.tableData.value=response.data['data']['data'];
+          getRecordRes.value=response!.data['data']['data']!=null?response.data['data']['data']:[];
+          MainController.totalItems.value=response.data['data']['count'];
+
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }

@@ -104,6 +104,8 @@ class HelperController extends GetxController {
 
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['schema']['view'] == 'custom') {
+      await MainController.loadData(
+          tableData: MainController.getInfoTable(''));
     } else {
       Map<String, dynamic> parent = await DB.parentItem;
       if (parent.length == 0) {
@@ -116,6 +118,8 @@ class HelperController extends GetxController {
             parentId: '${parent['parent_id']}')
             .storeRecord(ViewController.request);
       }
+      await MainController.loadData(
+          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
       if (ViewController.isClickedBtn.value == false) {
         MainController.goToTablePage(table, loadData: false);
       }
@@ -176,7 +180,7 @@ class HelperController extends GetxController {
         Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
   }
 
-  static editFunction(String tableName,
+  static editFunction (String tableName,
       {var request = null, var id = null}) async {
 
     var table = MainController.getInfoTable(MainController.tableName.value);
@@ -186,6 +190,8 @@ class HelperController extends GetxController {
       await DB('${MainController.tableInfo['schema']['name']}')
           .where('_id', '\$eq', '${id}')
           .updateRecord(request);
+      await MainController.loadData(
+          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
       if (ViewController.isClickedBtn.value == false) {
         await MainController.goToTablePage(
             MainController.tableInfo['schema']['name']);

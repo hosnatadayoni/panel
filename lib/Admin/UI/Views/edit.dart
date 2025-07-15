@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
@@ -149,7 +150,7 @@ class _EditPageState extends State<EditPage> {
                                 onClick: () async {
                                   print('_EditPageState.build>>>${ViewController.request}>>>${widget.data!['_id']}');
                                   if(ViewController.request.length!=0) {
-                                    await DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${widget.data!['_id']}').updateRecords(ViewController.request);
+                                    HelperController.editFunction('${MainController.tableInfo['schema']['name']}',id:'${widget.data!['_id']}' ,request:ViewController.request );
                                   }
                                   else{
                                     await MainController.loadData();

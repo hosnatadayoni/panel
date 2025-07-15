@@ -133,7 +133,6 @@ class DB {
       MainController.totalItems.value=totalItems;
       data = getRecord.skip(s).take(perPage).toList();
     }
-    print('DB.paginate>>$data');
     return data;
   }
 
@@ -1137,7 +1136,6 @@ class DB {
               }
               else {
                 customData.data['sync'] = 'false';
-
                 if (request.containsKey('_id')) {
                   if (box.values.toList().indexWhere((element) =>
                   element.id == request['_id']) == -1) {
@@ -1164,8 +1162,7 @@ class DB {
               showSnackbar(snackTypes.error, afterData['message']);
             }
             // MainController.renderData(operation.store,data);
-            // await MainController.loadData(
-            //     tableData: MainController.getInfoTable(this.tableName!));
+
             ViewController.isClickedBtn.value = false;
             request = {};
             newRequest = {};
@@ -1184,7 +1181,7 @@ class DB {
 
   convertFormatUpdate(var value,var key,var a){
     if (value is List) {
-      var sourceItem = MainController.getDetailsOfField('${this.tableName}', key)['sourceItems'];
+      var sourceItem = MainController.getDetailsOfField('${this.tableName}', key)['source_items'];
       if (sourceItem == 'custom') {
         List<String> idList = [];
         for (int i = 0; i < value.length; i++) {
@@ -1201,7 +1198,7 @@ class DB {
     }
     if (value is Map) {
       var sourceItem = MainController.getDetailsOfField(
-          '${this.tableName}', key)['sourceItems'];
+          '${this.tableName}', key)['source_items'];
       if (sourceItem == 'custom') {
         a[key] = value['value'];
       } else {
@@ -1224,7 +1221,7 @@ class DB {
       a.forEach((key, value) {
         if (value is List) {
           var sourceItem = MainController.getDetailsOfField(
-              '${this.tableName}', key)['sourceItems'];
+              '${this.tableName}', key)['source_items'];
           if (sourceItem == 'custom') {
             List<String> idList = [];
             for (int i = 0; i < value.length; i++) {
@@ -1241,7 +1238,7 @@ class DB {
         }
         if (value is Map) {
           var sourceItem = MainController.getDetailsOfField(
-              '${this.tableName}', key)['sourceItems'];
+              '${this.tableName}', key)['source_items'];
           if (sourceItem == 'custom') {
             a[key] = value['value'];
           } else {
@@ -1302,8 +1299,7 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-            await MainController.loadData(
-                tableData: MainController.getInfoTable(this.tableName!));
+
             ViewController.isClickedEditBtn.value = false;
           }
         } else {

@@ -405,7 +405,7 @@ class ViewController extends GetxController {
           print('ViewController.generateStoreFormView>>${items}');
 
           if (items.length != 0) {
-            if (column['sourceItems'] != 'custom') {
+            if (column['source_items'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
 
                 selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name]['_id']);
@@ -457,7 +457,7 @@ class ViewController extends GetxController {
           Map<String, dynamic> selectedItem = <String, dynamic>{};
           var items = await ViewController.itemsList(column);
           if (items.length != 0) {
-            if (column['sourceItems'] != 'custom') {
+            if (column['source_items'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items
                     .firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
@@ -519,7 +519,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
           List<dynamic> multiSelectedItemList = [];
           if (items.length != 0) {
-            if (column['sourceTable'] != null) {
+            if (column['source_table'] != null) {
               for (var selectedItem in items) {
                 multiSelectedItemList.add(itemsShowSelectItem(selectedItem, column));
               }
@@ -879,7 +879,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['sourceItems'] != 'custom'
+        column['source_items'] != 'custom'
             ? SelectBox(
             name: '${column['title']}',
             column: column,
@@ -1078,7 +1078,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['sourceItems'] != 'custom' ?
+        column['source_items'] != 'custom' ?
         SelectBox(
             name: '${column['title']}',
             column: column,
@@ -1192,7 +1192,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['sourceItems'] != 'custom' ?
+        column['source_items'] != 'custom' ?
         RadioButton(
           name: '',
           radioButtonItems: [
@@ -1283,8 +1283,8 @@ class ViewController extends GetxController {
     List<dynamic> selectedId = [];
 
 
-    if (column['sourceItems'] != 'custom') {
-      items = await DB('${column['sourceTable']}').getRecords();
+    if (column['source_items'] != 'custom') {
+      items = await DB('${column['source_table']}').getRecords();
 
       if (selectedItemsList.length != 0) {
         for (var selectedItem in selectedItemsList) {
@@ -1485,7 +1485,7 @@ class ViewController extends GetxController {
     items = await itemsList(column);
     List<dynamic> selectedId = [];
     return items.length != 0
-        ? column['sourceItems'] != 'custom'
+        ? column['source_items'] != 'custom'
         ? new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -39,9 +39,9 @@ class General{
            for (var column in columnList) {
              Box box2;
              if (column['name'] == cloumnName) {
-               if (column['sourceItems'] == 'table') {
+               if (column['source_items'] == 'table') {
                  box2 =
-                 await Hive.openBox<DataModel>('${column['sourceTable']}');
+                 await Hive.openBox<DataModel>('${column['source_table']}');
                  dataBox = box2.values.toList();
                  if (dataBox.length != 0) {
                    for (int i = 0; i < dataBox.length; i++) {
@@ -76,9 +76,9 @@ class General{
              for (var column in columnList) {
                Box box2;
                if (column['name'] == cloumnName)
-                 if (column['sourceItems'] == 'table') {
+                 if (column['source_items'] == 'table') {
                    box2 =
-                   (await Hive.openBox<DataModel>('${column['sourceTable']}'));
+                   (await Hive.openBox<DataModel>('${column['source_table']}'));
                    dataBox = box2.values.toList();
                    if (dataBox.length != 0)
                      for (var i = 0; i < dataBox.length; i++) {

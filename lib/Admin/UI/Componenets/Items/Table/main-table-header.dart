@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/excel-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
@@ -146,7 +147,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           )),
                       PopupMenuItem(
                           onTap: () async {
-                            await MainController.createExel(fileExelPath);
+                            await ExcelController.createExel(fileExelPath);
                           },
                           value: 'Export Excel',
                           child: Container(
@@ -173,7 +174,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           )),
                       PopupMenuItem(
                           onTap: () async {
-                            await MainController.readExcelFile(fileExelPath);
+                            await ExcelController.readExcelFile(fileExelPath);
                           },
                           value: 'Import Excel',
                           child: Container(
