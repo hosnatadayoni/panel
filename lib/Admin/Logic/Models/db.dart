@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/connection-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Admin/Public/enums.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -1068,103 +1069,115 @@ class DB {
     var Id = Uuid().v4();
 
     Map<String, dynamic> newRequest = Map.from(request);
-    print('DB.storeRecord request>>>${newRequest}>>>>${request}');
-    List<dynamic> columns = MainController.getColumnsList('${this.tableName}');
-    for (var column in columns) {
-      if (!newRequest.keys.contains(column)) {
-        newRequest.addAll({'${column}': null});
+    if(ValidatorController.validateByType(newRequest, '${this.tableName}')==true) {
+      print('DB.storeRecord request>>>${newRequest}>>>>${request}');
+      List<dynamic> columns = MainController.getColumnsList(
+          '${this.tableName}');
+      for (var column in columns) {
+        if (!newRequest.keys.contains(column)) {
+          newRequest.addAll({'${column}': null});
+        }
       }
-    }
-    if (parentItem != {}) {
-      newRequest.addAll(parentItem);
-    }
-    newRequest.addAll({
-      "sync": "false",
-      "server error": "Dont sync this record!",
-    });
+      if (parentItem != {}) {
+        newRequest.addAll(parentItem);
+      }
+      newRequest.addAll({
+        "sync": "false",
+        "server error": "Dont sync this record!",
+      });
 
-    DataModel newData = DataModel(id: newRequest.keys.contains('_id')?request['_id'].toString():'${Id}', data: newRequest);
-    var beforValidate = HelperController.beforeStoreValidation(newData);
-    if (beforValidate['status'] == false) {
-      showSnackbar(snackTypes.error, beforValidate['message']);
-    } else {
-      if (await RecordController.validate(this.tableName!, newData,
-          MainController.getInfoTable(this.tableName!)) ==
-          false) {
-        var before = await HelperController.beforeStore(newData);
-        if (before['status'] == false) {
-          showSnackbar(snackTypes.error, before['message']);
-        } else {
-          DataModel customData = await HelperController.beforeStore(newData)['data'];
-          if(customData.data.keys.contains('_id')){
-            customData.data['_id']=null;
+      DataModel newData = DataModel(id: newRequest.keys.contains('_id')
+          ? request['_id'].toString()
+          : '${Id}', data: newRequest);
+      var beforValidate = HelperController.beforeStoreValidation(newData);
+      if (beforValidate['status'] == false) {
+        showSnackbar(snackTypes.error, beforValidate['message']);
+      } else {
+        if (await RecordController.validate(this.tableName!, newData,
+            MainController.getInfoTable(this.tableName!)) ==
+            false) {
+          var before = await HelperController.beforeStore(newData);
+          if (before['status'] == false) {
+            showSnackbar(snackTypes.error, before['message']);
+          } else {
+            DataModel customData = await HelperController.beforeStore(
+                newData)['data'];
+            if (customData.data.keys.contains('_id')) {
+              customData.data['_id'] = null;
+            }
+            Map<String, dynamic> setRecord = {
+              "table_name": '${this.tableName}',
+              "record": json.encode(customData.data).toString(),
+            };
+            if (MainController.getStatusTable(this.tableName!) == true) {
+              await ConncetServerController.storeRecordGeneral(setRecord);
+              Box box = await Hive.openBox<DataModel>('${this.tableName}');
+              if (ConncetServerController.storeRecordRes.isNotEmpty) {
+                if (request.containsKey('_id')) {
+                  var tableDataIndex = box.values.toList().indexWhere((
+                      element) => element.id == request['_id']);
+                  if (tableDataIndex != -1) {
+                    await box.deleteAt(tableDataIndex);
+                    // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
 
-          }
-          Map<String, dynamic> setRecord = {
-            "table_name": '${this.tableName}',
-            "record": json.encode(customData.data).toString(),
-          };
-          if (MainController.getStatusTable(this.tableName!) == true) {
-            await ConncetServerController.storeRecordGeneral(setRecord);
-            Box box = await Hive.openBox<DataModel>('${this.tableName}');
-            if (ConncetServerController.storeRecordRes.isNotEmpty) {
-              if (request.containsKey('_id')) {
-                var tableDataIndex = box.values.toList().indexWhere((
-                    element) => element.id == request['_id']);
-                if (tableDataIndex != -1) {
-                  await box.deleteAt(tableDataIndex);
-                  // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
-
-                }else{
+                  } else {
+                    DataModel recordStored = DataModel(
+                        id: '${ConncetServerController.storeRecordRes['_id']}',
+                        data: ConncetServerController.storeRecordRes);
+                    await box.add(recordStored);
+                    // MainController.renderData(operation.store,recordStored.data);
+                  }
+                } else {
                   DataModel recordStored = DataModel(
                       id: '${ConncetServerController.storeRecordRes['_id']}',
                       data: ConncetServerController.storeRecordRes);
                   await box.add(recordStored);
                   // MainController.renderData(operation.store,recordStored.data);
                 }
-              }else{
-                DataModel recordStored = DataModel(
-                    id: '${ConncetServerController.storeRecordRes['_id']}',
-                    data: ConncetServerController.storeRecordRes);
-                await box.add(recordStored);
-                // MainController.renderData(operation.store,recordStored.data);
               }
-            }
-            else{
-              customData.data['sync']='false';
+              else {
+                customData.data['sync'] = 'false';
 
-              if (request.containsKey('_id')) {
-                if( box.values.toList().indexWhere((element) => element.id == request['_id'])==-1){
+                if (request.containsKey('_id')) {
+                  if (box.values.toList().indexWhere((element) =>
+                  element.id == request['_id']) == -1) {
+                    await box.add(customData);
+                    // MainController.renderData(operation.store,customData.data);
+
+                  }
+                } else {
+                  print(
+                      'DB.storeRecord customData is>>${customData}>>>${customData
+                          .data}');
                   await box.add(customData);
                   // MainController.renderData(operation.store,customData.data);
-
                 }
-              }else{
-                print('DB.storeRecord customData is>>${customData}>>>${customData.data}');
-                await box.add(customData);
-                // MainController.renderData(operation.store,customData.data);
               }
-            }
-          } else {
-            await box.add(customData);
-            // MainController.renderData(operation.store,customData.data);
+            } else {
+              await box.add(customData);
+              // MainController.renderData(operation.store,customData.data);
 
+            }
+            var afterData = await HelperController.afterStore(
+                this.tableName!, newRequest, customData);
+            if (afterData['status'] == false) {
+              showSnackbar(snackTypes.error, afterData['message']);
+            }
+            // MainController.renderData(operation.store,data);
+            // await MainController.loadData(
+            //     tableData: MainController.getInfoTable(this.tableName!));
+            ViewController.isClickedBtn.value = false;
+            request = {};
+            newRequest = {};
           }
-          var afterData = await HelperController.afterStore(
-              this.tableName!, newRequest, customData);
-          if (afterData['status'] == false) {
-            showSnackbar(snackTypes.error, afterData['message']);
-          }
-          // MainController.renderData(operation.store,data);
-          // await MainController.loadData(
-          //     tableData: MainController.getInfoTable(this.tableName!));
-          ViewController.isClickedBtn.value = false;
-          request = {};
-          newRequest = {};
+        } else {
+          showSnackbar(snackTypes.error,
+              "${AppController.of(Get.context!)!.value('error')}");
         }
-      } else {
-        showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
       }
+    }
+    else{
+      showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
     }
     AppController.finishLoading('store-record');
   }
@@ -1245,55 +1258,63 @@ class DB {
     }
 
     final record = DataModel(id: a['_id'], data: a);
-
-    var beforeValidate = await HelperController.beforeUpdateValidation(record);
-    if (beforeValidate['status'] == false) {
-      showSnackbar(snackTypes.error, beforeValidate['message']);
-    } else {
-      var validate = await RecordController.validate(this.tableName!, record,
-          MainController.getInfoTable(this.tableName!));
-      if (validate == false) {
-        var before = await HelperController.beforeUpdate(record);
-        if (before['status'] == false) {
-          showSnackbar(snackTypes.error, before['messsage']);
-        } else {
-          var customUpdate =
-          await HelperController.beforeUpdate(record)['data'];
-          var allDataIndex = records.indexWhere((element) => element['_id'] == a['_id']);
-          // records[allDataIndex] = customUpdate;
-          if (MainController.getStatusTable(this.tableName!) == true) {
-            await ConncetServerController.setDatabaseme(customUpdate.data);
-            Map<String, dynamic> setRecord = {
-              "table_name": '${this.tableName}',
-              "record": json.encode(customUpdate.data).toString(),
-              "record_id": customUpdate.id
-            };
-            await ConncetServerController.updateRecordGeneral(setRecord);
-            if (ConncetServerController.updateRecordRes.isNotEmpty) {
-              DataModel record = DataModel(
-                  id: ConncetServerController.updateRecordRes['_id'],
-                  data: ConncetServerController.updateRecordRes);
-              await box.putAt(allDataIndex, record);
-            }else{
+    if(ValidatorController.validateByType(a, '${this.tableName}')==true) {
+      var beforeValidate = await HelperController.beforeUpdateValidation(
+          record);
+      if (beforeValidate['status'] == false) {
+        showSnackbar(snackTypes.error, beforeValidate['message']);
+      } else {
+        var validate = await RecordController.validate(this.tableName!, record,
+            MainController.getInfoTable(this.tableName!));
+        if (validate == false) {
+          var before = await HelperController.beforeUpdate(record);
+          if (before['status'] == false) {
+            showSnackbar(snackTypes.error, before['messsage']);
+          } else {
+            var customUpdate =
+            await HelperController.beforeUpdate(record)['data'];
+            var allDataIndex = records.indexWhere((element) =>
+            element['_id'] == a['_id']);
+            // records[allDataIndex] = customUpdate;
+            if (MainController.getStatusTable(this.tableName!) == true) {
+              await ConncetServerController.setDatabaseme(customUpdate.data);
+              Map<String, dynamic> setRecord = {
+                "table_name": '${this.tableName}',
+                "record": json.encode(customUpdate.data).toString(),
+                "record_id": customUpdate.id
+              };
+              await ConncetServerController.updateRecordGeneral(setRecord);
+              if (ConncetServerController.updateRecordRes.isNotEmpty) {
+                DataModel record = DataModel(
+                    id: ConncetServerController.updateRecordRes['_id'],
+                    data: ConncetServerController.updateRecordRes);
+                await box.putAt(allDataIndex, record);
+              } else {
+                await box.putAt(allDataIndex, customUpdate);
+              }
+            } else {
               await box.putAt(allDataIndex, customUpdate);
             }
-          } else {
-            await box.putAt(allDataIndex, customUpdate);
-          }
 
-          MainController.isClickedItem.value = true;
-          var after =
-          await HelperController.afterUpdate(this.tableName!, customUpdate);
-          if (after['status'] == false) {
-            showSnackbar(snackTypes.error, after['message']);
+            MainController.isClickedItem.value = true;
+            var after =
+            await HelperController.afterUpdate(this.tableName!, customUpdate);
+            if (after['status'] == false) {
+              showSnackbar(snackTypes.error, after['message']);
+            }
+            await MainController.loadData(
+                tableData: MainController.getInfoTable(this.tableName!));
+            ViewController.isClickedEditBtn.value = false;
           }
-          await MainController.loadData(tableData: MainController.getInfoTable(this.tableName!));
-          ViewController.isClickedEditBtn.value = false;
+        } else {
+          showSnackbar(snackTypes.error,
+              '${AppController.of(Get.context!)!.value(
+                  'The operation encountered an error.')}');
         }
-      } else {
-        showSnackbar(snackTypes.error,
-            '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
       }
+    }
+    else{
+    showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
     }
     AppController.finishLoading('update-records');
   }

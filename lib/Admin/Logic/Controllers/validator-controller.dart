@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/general.dart';
@@ -153,28 +155,34 @@ class ValidatorController extends GetxController {
     }
     if(column['type'] == 'Number double' || column['type'] == 'Number int'){
       var number;
-      if(dataJson[name] != null){
-        // if(dataJson[name].runtimeType == 'double'){
-        //   print('ffffffffff>>>${dataJson[name]} ${name}');
-        //   number = dataJson[name];
-        // }
-        // else if(dataJson[name].runtimeType == 'String'){
-        //   number = num.tryParse(dataJson[name]);
-        // }
+      if(dataJson[name] != null) {
         number = dataJson[name];
-        if(number != null){
-          number = await General(tableName).withFormat(column['type'],number,column['name']);
-          if(minValidator != null && maxValidator != null){
-            if(number < minValidator['value'] || number > maxValidator['value']){
+        if(column['type'] == 'Number double'){
+          if(!(number is double)){
+            return false;
+          }
+        }
+        else{
+          if(!(number is int)){
+            return false;
+
+          }
+        }
+
+
+          number = await General(tableName).withFormat(
+              column['type'], number, column['name']);
+          if (minValidator != null && maxValidator != null) {
+            if (number < minValidator['value'] ||
+                number > maxValidator['value']) {
               return false;
             }
-            else{
+            else {
               return true;
             }
           }
-
         }
-      }
+
     }
     else if (column['type'] == 'file') {
       bool isContains= false;
@@ -219,7 +227,44 @@ class ValidatorController extends GetxController {
 
     return true;
   }
-
+  static validateByType(Map<String,dynamic> request,String tableName){
+    var columns=MainController.getColumnsTable(tableName);
+    for(var key in request.keys){
+      if(key!='_id'){
+       for(var column in columns){
+         if(column['name']==key){
+           if(column['type']=='Number int'){
+             print('ValidatorController.validateByType>>${request[key] }>>${request[key] is int}');
+              if(request[key] is int ==false){
+               return false;
+             }
+           }
+           if(column['type']=='Number double'){
+             if(request[key] is double ==false){
+               return false;
+             }
+           }
+           if(column['type']=='multiSelect'){
+             if(request[key] is List==false){
+               return false;
+             }
+           }
+           if(column['type']=='select' || column['type']=='radioButton' || column['type']=='string' ){
+             if(request[key] is String==false){
+               return false;
+             }
+           }
+           if(column['type']=='checkBox'){
+             if(request[key] is Bool==false){
+               return false;
+             }
+           }
+         }
+       }
+      }
+    }
+    return true;
+  }
 }
 
 // class ValidatorController extends GetxController {

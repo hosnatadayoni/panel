@@ -737,7 +737,7 @@ class MainController extends GetxController {
   //
   // }
 
-  static Future<void> readExcelFile(String? fileExelPath) async {
+  static Future<void>  readExcelFile(String? fileExelPath) async {
     String? filePath;
     FilePickerResult? result;
     // if (filePath != null) {
@@ -937,18 +937,18 @@ class MainController extends GetxController {
       // print('isValidatorList>>>${isValidatorList}');
       // print('findIndexRecord excel>>>${findIndexRecord}');
 
-      // if (findIndexRecord != -1) {
-      //   DataModel k = DataModel(
-      //       data: excelJson,
-      //       id: MainController.tableData.value[findIndexRecord]['_id']);
-      //   print('MainController.readExcelFile>>${MainController.tableData.value[findIndexRecord]['_id']}');
-      //   await DB('${MainController.tableInfo['schema']['name']}')
-      //       .where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}')
-      //       .updateRecords(k.data);
-      // } else {
-      //   await DB('${MainController.tableInfo['schema']['name']}')
-      //       .storeRecord(excelJson);
-      // }
+      if (findIndexRecord != -1) {
+        DataModel k = DataModel(
+            data: excelJson,
+            id: MainController.tableData.value[findIndexRecord]['_id']);
+        print('MainController.readExcelFile>>${MainController.tableData.value[findIndexRecord]['_id']}');
+        await DB('${MainController.tableInfo['schema']['name']}')
+            .where('_id', '\$eq', '${MainController.tableData.value[findIndexRecord]['_id']}')
+            .updateRecords(k.data);
+      } else {
+        await DB('${MainController.tableInfo['schema']['name']}')
+            .storeRecord(excelJson);
+      }
     }
     //read all record of excel
     //if this record is column prime or id prime
@@ -1233,12 +1233,9 @@ class MainController extends GetxController {
   }
 
   static List<dynamic> getColumnsTable(String tableName) {
-    int index = MainController.SubMenuList.indexWhere(
-            (element) => element['schema']['name'] == '${tableName}');
-    if (index != -1) {
-      var tableInfo = MainController.SubMenuList[index];
-
-      return tableInfo['columns'];
+    var infoTable = getInfoTable(tableName);
+    if (infoTable != null) {
+      return infoTable['columns'];
     }
     return [];
   }

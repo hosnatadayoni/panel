@@ -138,10 +138,12 @@ class AppController extends GetxController {
 
 
   static getAlertSuccess(){
-    return AppController.of(Get.context!)!.value('The operation accomplished.');
+    return 'Success';
+    // return AppController.of(Get.context!)!.value('The operation accomplished.');
   }
   static getAlertError(){
-    return AppController.of(Get.context!)!.value('The operation encountered an error!');
+    return 'Error';
+    // return AppController.of(Get.context!)!.value('The operation encountered an error!');
   }
   static responceHelper(var data,bool status){
     Map<String,dynamic> result=<String,dynamic>{};
