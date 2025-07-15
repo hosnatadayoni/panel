@@ -189,6 +189,8 @@ class HelperController extends GetxController {
       }
       if(tableName=='project'){
         await ConncetServerController.deleteProject(item['api_key']);
+      }   if(tableName=='schema'){
+        await ConncetServerController.deleteSchema({'name':item['name']});
       }
       pageInateFunction();
     }else {
