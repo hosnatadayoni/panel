@@ -1156,8 +1156,8 @@ class DB {
             showSnackbar(snackTypes.error, afterData['message']);
           }
           // MainController.renderData(operation.store,data);
-          await MainController.loadData(
-              tableData: MainController.getInfoTable(this.tableName!));
+          // await MainController.loadData(
+          //     tableData: MainController.getInfoTable(this.tableName!));
           ViewController.isClickedBtn.value = false;
           request = {};
           newRequest = {};
