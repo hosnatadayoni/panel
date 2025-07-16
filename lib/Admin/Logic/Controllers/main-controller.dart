@@ -274,6 +274,25 @@ class MainController extends GetxController {
     }
   }
 
+  static setRelations(String tableName){
+    var index = SubMenuList.indexWhere((element) => element['schema']['name'] == tableName);
+    var items = SubMenuList[index];
+    print('MainController.setRelations>>>${index}>>${SubMenuList[index]}');
+
+    if(items['schema']['relations']!=null && items['schema']['relations'].length!=0) {
+      var relates=[];
+
+      for (var relations in items['schema']['relations']) {
+        var index = SubMenuList.indexWhere((element) =>element['schema']['_id']== relations);
+        if (index != -1) {
+          relates.add(SubMenuList[index]['schema']['name']);
+        }
+      }
+      SubMenuList[index]['relations']=relates;
+    }
+    print('MainController.changeRelations>>${SubMenuList[index]['relations']}');
+    return items['relations'];
+  }
   static addsyncField(String tableName){
     var index = SubMenuList.indexWhere((element) => element['schema']['name'] == tableName);
     var items = SubMenuList[index];
@@ -334,10 +353,10 @@ class MainController extends GetxController {
 
   static addParentForRelations(String tableName) {
     var getDataTable = MainController.getDataTable(tableName);
-    if (getDataTable['schema']['relation'].length != 0) {
-      for (var relate in getDataTable['schema']['relation']) {
+    if (getDataTable['schema']['relations'].length != 0) {
+      for (var relate in getDataTable['schema']['relations']) {
         var index = SubMenuList.indexWhere(
-                (element) => element['name'] == relate['name']);
+                (element) => element['schema']['_id'] == relate);
         var items = SubMenuList[index];
         items['columns'].add({
           'name': 'parent_table',
