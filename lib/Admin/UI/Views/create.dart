@@ -190,8 +190,6 @@ class _CreatePageState extends State<CreatePage> {
                                               onExit: (_) {},
                                               child: InkWell(
                                                 onTap: () async {
-                                                  print(
-                                                      '_CreatePageState.build>>>${ViewController.request}');
                                                   HelperController
                                                       .createFunction(
                                                           widget.tableName);
@@ -200,9 +198,7 @@ class _CreatePageState extends State<CreatePage> {
                                                   padding: EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
+                                                        BorderRadius.all(Radius.circular(10)),
                                                     color: colorBtn,
                                                   ),
                                                   child: Txt(
