@@ -1231,7 +1231,13 @@ class DB {
           } else {
             List<String> idList = [];
             for (int i = 0; i < value.length; i++) {
-              idList.add(value[i]['_id']);
+              if(value[i] is Map){
+                idList.add(value[i]['_id']);
+              }else{
+                idList.add(value[i]);
+
+              }
+
             }
             a[key] = idList;
           }
@@ -1268,11 +1274,8 @@ class DB {
           if (before['status'] == false) {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
-            var customUpdate =
-            await HelperController.beforeUpdate(record)['data'];
-            var allDataIndex = records.indexWhere((element) =>
-            element['_id'] == a['_id']);
-            // records[allDataIndex] = customUpdate;
+            var customUpdate = await HelperController.beforeUpdate(record)['data'];
+            var allDataIndex = records.indexWhere((element) => element['_id'] == a['_id']);
             if (MainController.getStatusTable(this.tableName!) == true) {
               await ConncetServerController.setDatabaseme(customUpdate.data);
               Map<String, dynamic> setRecord = {
@@ -1286,11 +1289,16 @@ class DB {
                     id: ConncetServerController.updateRecordRes['_id'],
                     data: ConncetServerController.updateRecordRes);
                 await box.putAt(allDataIndex, record);
+                MainController.renderData(operation.update, record.data);
               } else {
                 await box.putAt(allDataIndex, customUpdate);
+                MainController.renderData(operation.update, customUpdate.data);
+
               }
             } else {
               await box.putAt(allDataIndex, customUpdate);
+              MainController.renderData(operation.update, customUpdate.data);
+
             }
 
             MainController.isClickedItem.value = true;
@@ -1299,7 +1307,6 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-
             ViewController.isClickedEditBtn.value = false;
           }
         } else {

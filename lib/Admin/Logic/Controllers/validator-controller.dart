@@ -230,37 +230,41 @@ class ValidatorController extends GetxController {
   static validateByType(Map<String,dynamic> request,String tableName){
     var columns=MainController.getColumnsTable(tableName);
     for(var key in request.keys){
-      if(key!='_id'){
-       for(var column in columns){
-         if(column['name']==key){
-           if(column['type']=='Number int'){
-             print('ValidatorController.validateByType>>${request[key] }>>${request[key] is int}');
-              if(request[key] is int ==false){
-               return false;
-             }
-           }
-           if(column['type']=='Number double'){
-             if(request[key] is double ==false){
-               return false;
-             }
-           }
-           if(column['type']=='multiSelect'){
-             if(request[key] is List==false){
-               return false;
-             }
-           }
-           if(column['type']=='select' || column['type']=='radioButton' || column['type']=='string' ){
-             if(request[key] is String==false){
-               return false;
-             }
-           }
-           if(column['type']=='checkBox'){
-             if(request[key] is Bool==false){
-               return false;
-             }
-           }
-         }
-       }
+      if(key!='_id') {
+        if (request[key] != null) {
+          for (var column in columns) {
+            if (column['name'] == key) {
+              if (column['type'] == 'Number int') {
+                print(
+                    'ValidatorController.validateByType>>${request[key] }>>${request[key] is int}');
+                if (request[key] is int == false) {
+                  return false;
+                }
+              }
+              if (column['type'] == 'Number double') {
+                if (request[key] is double == false) {
+                  return false;
+                }
+              }
+              if (column['type'] == 'multiSelect') {
+                if (request[key] is List == false) {
+                  return false;
+                }
+              }
+              if (column['type'] == 'select' ||
+                  column['type'] == 'radioButton') {
+                if (request[key] is String == false) {
+                  return false;
+                }
+              }
+              if (column['type'] == 'checkBox') {
+                if (request[key] is Bool == false) {
+                  return false;
+                }
+              }
+            }
+          }
+        }
       }
     }
     return true;

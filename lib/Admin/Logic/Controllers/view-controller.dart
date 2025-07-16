@@ -460,7 +460,7 @@ class ViewController extends GetxController {
             if (column['source_items'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items
-                    .firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
+                    .firstWhere((element) => element['_id'] == dataModel[name]['_id']);
               selectBox = await generateFormRadioButton(
                   column,
                   items,

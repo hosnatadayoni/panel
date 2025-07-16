@@ -1,12 +1,10 @@
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/order-item.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Views/create.dart';
 import '../../UI/Views/table-page.dart';
-import '../Helpers/token-methods.dart';
 import '../Models/dataModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
@@ -23,37 +21,8 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
-    if (tableName == 'order3') {
-      if (OrderItem.orderItemsList.length != 0) {
-        // for (var key in OrderItem.orderItemsList.keys) {
-        //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
-        // }
-        for (var list in OrderItem.orderItemsList.values) {
-          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
-          await DB('itemsOrder2')
-              .parent(parentTable: 'order3', parentId: customData.id!)
-              .storeRecord(list);
-        }
-      }
-    }
-    if (tableName == 'itemsOrder') {
-      // await DB('itemsOrder').parent(parentTable: 'order3',parentId: customData.id!).storeRecord(list);
-    }
-
-    // if (tableName == 'fields') {
-    //   Map<String, dynamic> parent = await DB.parentItem;
-    //   await ConncetServerController.createField({
-    //     'table': '${parent['parent_id']}',
-    //     'name': '${customData.data['name']}',
-    //     'title': '${customData.data['title']}',
-    //     'typeField': '${customData.data['type_filed']}',
-    //     'sourceItems': '${customData.data['sourceItems']}',
-    //     'sourceTable': '${customData.data['sourceTable']}'
-    //   });
-    // }
     return AppController.responceHelper(customData, true);
   }
-
   //end store
 
   //update
@@ -188,19 +157,17 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
     } else {
       await DB('${MainController.tableInfo['schema']['name']}')
-          .where('_id', '\$eq', '${id}')
-          .updateRecord(request);
-      await MainController.loadData(
-          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
-      if (ViewController.isClickedBtn.value == false) {
-        await MainController.goToTablePage(
-            MainController.tableInfo['schema']['name']);
-      }
+          .where('_id', '\$eq', '${id}').updateRecords(request);
+      // await MainController.loadData(
+      //     tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
+      // if (ViewController.isClickedBtn.value == false) {
+        // await MainController.goToTablePage(
+        //     MainController.tableInfo['schema']['name']);
+      // }
     }
   }
 
   static editPageFunction(var data) async {
-    OrderItem.orderItemsList = {};
 
     await Get.to(() => EditPage(data: data));
   }

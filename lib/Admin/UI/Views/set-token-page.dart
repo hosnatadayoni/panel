@@ -93,8 +93,8 @@ class SetTokenPage extends StatelessWidget {
                                 print('SetTokenPage.build>>>${token}');
                                 if(token!=null && token!.trim().length!=0) {
                                   await Token.setToken(token!);
-                                  await MainController.loadJson();
-                                  await MainController.loadData();
+                                  // await MainController.loadJson();
+                                  // await MainController.loadData();
                                   Get.to(() => DashboardPage());
                                 }
                                 else{

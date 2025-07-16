@@ -263,9 +263,9 @@ class MainController extends GetxController {
   }
 
   static Future<void> loadJson() async {
-    ConncetServerController.listSchemaByField();
-    String jsonFileString;
-    jsonFileString = await rootBundle.loadString('assets/menu.json');
+    await ConncetServerController.listSchemaByField();
+    // String jsonFileString;
+    // jsonFileString = await rootBundle.loadString('assets/menu.json');
     // SubMenuList = json.decode(jsonFileString);
 
     for (var name in tableNames()) {
@@ -538,7 +538,7 @@ class MainController extends GetxController {
     var token = await Token.getToken();
     if (token != null) {
       apiKey.value = token;
-      ConncetServerController.listSchemaByField();
+      // ConncetServerController.listSchemaByField();
 
       Get.to(() => DashboardPage());
     } else {

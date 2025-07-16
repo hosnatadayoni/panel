@@ -5,6 +5,7 @@ import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
 import '../Models/db.dart';
+import 'app-controller.dart';
 
 class ConncetServerController extends GetxController {
 
@@ -15,6 +16,7 @@ class ConncetServerController extends GetxController {
   static RxList<dynamic> getRecordRes=[].obs;
 
   static listSchemaByField() async {
+    AppController.finishLoading('list-schema');
     var response = await RestApi.post(listSchemaUrl,);
     RestApi.responseHandler(
         response: response,
@@ -28,6 +30,7 @@ class ConncetServerController extends GetxController {
           // storeRecordRes={};
           // storeRecordRes=response!.data['data'];
         },printResponse: true);
+    AppController.finishLoading('list-schema');
   }
 
   static listField(var json) async {
