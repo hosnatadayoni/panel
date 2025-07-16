@@ -70,6 +70,18 @@
         "is-show-edit":true
       },
       {
+        "name": "relations",
+        "title": "relations",
+        "main-menu": true,
+        "type": "multiSelect",
+        "sourceItems": "",
+        "sourceTable": "schema",
+        "items":["name","title"],
+        "is-show-table":true,
+        "is-show-store":true,
+        "is-show-edit":true
+      },
+      {
         "name": "currentPage",
         "title": "currentPage",
         "currentPage": 1,
