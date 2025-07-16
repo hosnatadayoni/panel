@@ -52,7 +52,10 @@ class _CretePageFieldState extends State<CretePageField> {
   Rx<bool> isSelectedItem = false.obs;
   //end multi select custom
 
-
+  Rx<String> sourceItem2 = ''.obs;
+   Rx<String> sourceSelected = ''.obs;
+   Rx<String> selectedType = ''.obs;
+  RxList<dynamic> typeItems=[].obs;
   Future<void> loadItems() async {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
@@ -71,6 +74,9 @@ class _CretePageFieldState extends State<CretePageField> {
         }
         else if(column['name'] == 'source_items'){
           sourceItem.value = await ViewController.itemsList(column);
+        }
+        else if(column['name'] == 'type'){
+          typeItems.value = await ViewController.itemsList(column);
         }
       }
       else if(column['type'] == 'multiSelect'){
@@ -256,9 +262,112 @@ class _CretePageFieldState extends State<CretePageField> {
                                   else if(MainController.tableInfo['columns'][j]['type'] == 'time')
                                       ViewController.generateFormTimeBox(MainController.tableInfo['columns'][j], TimeOfDay.now(), false.obs)
                                   else if(MainController.tableInfo['columns'][j]['type'] == 'select')
-                                            MainController.tableInfo['columns'][j]['name'] == 'type' ||
-                                            MainController.tableInfo['columns'][j]['name'] == 'type_field'? selectWidgets[MainController.tableInfo['columns'][j]['name']] ?? Container():
-                                            MainController.tableInfo['columns'][j]['name'] == 'source_items' ? Obx((){
+                                            MainController.tableInfo['columns'][j]['name'] == 'type' ? Obx((){
+                                              return typeItems.value.length != 0
+                                                  ? new Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Obx(() {
+                                                    return Txt(
+                                                      '${MainController.tableInfo['columns'][j]['title']}',
+                                                      color: MainController.isLightMode.value == true
+                                                          ? whiteColor
+                                                          : color2,
+                                                    );
+                                                  }),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  MainController.tableInfo['columns'][j]['sourceItems'] != 'custom' ?
+                                                  Obx((){
+                                                    return SelectBox(
+                                                        name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                        column: MainController.tableInfo['columns'][j],
+                                                        items: [
+                                                          DropdownMenuItem(
+                                                              child: Obx(() {
+                                                                return Txt(
+                                                                  '${AppController.of(Get.context!)!.value('not selected')}',
+                                                                  color: MainController.isLightMode.value == true
+                                                                      ? whiteColor
+                                                                      : primaryDark,
+                                                                );
+                                                              }),
+                                                              value: ''),
+                                                          for (var item in typeItems.value)
+                                                            DropdownMenuItem(
+                                                                child: Obx(() {
+                                                                  return Txt(
+                                                                    '${ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j])}',
+                                                                    color:
+                                                                    MainController.isLightMode.value == true
+                                                                        ? whiteColor
+                                                                        : primaryDark,
+                                                                  );
+                                                                }),
+                                                                value: item['title'].toString()),
+                                                        ],
+                                                        initalValue: initailValue.value == '' || initailValue.value == null ?"":initailValue.value,
+                                                        onChanged: (value) async {
+                                                          sourceItem2.value = value!;
+                                                          // initailValue.value = value;
+                                                          if (value != '') {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                          } else {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                          }
+                                                        },
+                                                        hintText: hintText.value,
+                                                        isSeleted: isSeletedSelectBox,
+                                                        selectedValue: '');
+                                                  })
+                                                      : Obx((){
+                                                    return SelectBox(
+                                                        name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                        column: MainController.tableInfo['columns'][j],
+                                                        items: [
+                                                          for (var item in typeItems.value)
+                                                            DropdownMenuItem(
+                                                                child: Obx(() {
+                                                                  return Txt(
+                                                                    '${item['title']}',
+                                                                    color:
+                                                                    MainController.isLightMode.value == true
+                                                                        ? whiteColor
+                                                                        : primaryDark,
+                                                                  );
+                                                                }),
+                                                                value: item['title']),
+                                                        ],
+                                                        initalValue: initailValue.value == '' || initailValue.value == null
+                                                            ? sourceItem.value.first['value']
+                                                            : initailValue.value,
+                                                        onChanged: (value) async {
+                                                          // sourceItem2.value = value!;
+                                                          selectedType.value = value!;
+                                                          initailValue.value = value;
+                                                          for (var item in typeItems.value) {
+                                                            if (item['title'] == value) {
+                                                              if (item['value'] == '') {
+                                                                value = null;
+                                                              }
+                                                            }
+                                                          }
+                                                          if (value != '') {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                          } else {
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                          }
+                                                        },
+                                                        hintText: hintText.value,
+                                                        isSeleted: isSeletedSelectBox,
+                                                        selectedValue: '');
+                                                  }),
+                                                ],
+                                              ) : Container();
+                                            }):
+                                            MainController.tableInfo['columns'][j]['name'] == 'type_field'? selectedType.value != 'multiSelect' ?  selectWidgets[MainController.tableInfo['columns'][j]['name']] ?? Container(): Container():
+                                            MainController.tableInfo['columns'][j]['name'] == 'source_items' ? selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == ''? Obx((){
                                               return sourceItem.value.length != 0
                                                   ? new Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +414,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                         ],
                                                         initalValue: initailValue.value == '' || initailValue.value == null ?"":initailValue.value,
                                                         onChanged: (value) async {
-                                                          SelectFieldController.sourceItem.value = value!;
+                                                          sourceItem2.value = value!;
                                                           // initailValue.value = value;
                                                           if (value != '') {
                                                             ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
@@ -339,7 +448,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                             ? sourceItem.value.first['value']
                                                             : initailValue.value,
                                                         onChanged: (value) async {
-                                                          SelectFieldController.sourceItem.value = value!;
+                                                          sourceItem2.value = value!;
                                                           initailValue.value = value;
                                                           for (var item in sourceItem.value) {
                                                             if (item['title'] == value) {
@@ -360,8 +469,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                   }),
                                                 ],
                                               ) : Container();
-                                            }):
-                                            MainController.tableInfo['columns'][j]['name'] == 'source_table' ? SelectFieldController.sourceItem.value == 'custom' ? Container() : Obx((){
+                                            }) : Container():
+                                            MainController.tableInfo['columns'][j]['name'] == 'source_table' ? sourceItem2.value == 'custom' ? Container() :selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
                                               return sourceTable.value.length != 0
                                                   ? new Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,9 +517,9 @@ class _CretePageFieldState extends State<CretePageField> {
                                                       initalValue: initailValueSourceTable.value == '' || initailValueSourceTable.value == null ?"":initailValueSourceTable.value,
                                                       onChanged: (value) async {
                                                         initailValueSourceTable.value =  value!;
-                                                        SelectFieldController.sourceSelected.value = value!;
-                                                        if(SelectFieldController.sourceSelected.value != ''){
-                                                          await ConncetServerController.listField({'name': SelectFieldController.sourceSelected.value});
+                                                        sourceSelected.value = value!;
+                                                        if(sourceSelected.value != ''){
+                                                          await ConncetServerController.listField({'name': sourceSelected.value});
                                                           for(var data in MainController.allData.value){
                                                             if(!sourceTableItems.contains(data['title'])){
                                                               sourceTableItems.add(data['title']);
@@ -459,9 +568,9 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           }
                                                         }
                                                         initailValueSourceTable.value =  value!;
-                                                        SelectFieldController.sourceSelected.value = value!;
-                                                        if(SelectFieldController.sourceSelected.value != ''){
-                                                          await ConncetServerController.listField({'name': SelectFieldController.sourceSelected.value});
+                                                        sourceSelected.value = value!;
+                                                        if(sourceSelected.value != ''){
+                                                          await ConncetServerController.listField({'name': sourceSelected.value});
                                                           for(var data in MainController.allData.value){
                                                             if(!sourceTableItems.contains(data['title'])){
                                                               sourceTableItems.add(data['title']);
@@ -482,11 +591,11 @@ class _CretePageFieldState extends State<CretePageField> {
                                                       selectedValue: ''),
                                                 ],
                                               ) : Container();
-                                            }) :
+                                            }) :Container() :
                                             Container()
                                   else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
-                                                SelectFieldController.sourceItem.value == 'custom'?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
-                                            Obx((){
+                                                sourceItem2.value == 'custom'?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
+                                                selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
                                               return  sourceTableItems.value.length != 0
                                                   ? MainController.tableInfo['columns'][j]['sourceItems'] != 'custom'
                                                   ? Column(
@@ -572,12 +681,15 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                           ViewController.itemsShowSelectItem(r,
                                                                                               MainController.tableInfo['columns'][j]);
 
-                                                                                    for (var r
-                                                                                    in selectedItemsList)
-                                                                                      // selectedId.add(r['_id']);
-                                                                                      selectedId.add(item);
 
+                                                                                    // for (var r
+                                                                                    // in selectedItemsList)
+                                                                                    //   selectedId.add(r['_id']);
+                                                                                      selectedId.add(item);
+                                                                                    print('hintTxt.value e>>>${hintTxt.value}');
                                                                                     ViewController.request[MainController.tableInfo['columns'][j]['name']]= selectedId;
+                                                                                    ViewController.request[MainController.tableInfo['columns'][j]['name']]= selectedItemsList;
+
                                                                                   }
                                                                                 });
                                                                           })),
@@ -664,11 +776,9 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                     } else {
                                                                                       isSelectedItem.value = true;
                                                                                     }
-                                                                                    for (var r in selectedItemsList)
+                                                                                    // for (var r in selectedItemsList)
                                                                                        // hintTxt.value = hintTxt.value + r['title'];
-                                                                                       hintTxt.value = hintTxt.value + r;
-
-
+                                                                                    hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
                                                                                     // for (var r in selectedItemsList)
                                                                                     //   selectedId.add(r['value']);
                                                                                     selectedId.add(item);
@@ -676,6 +786,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                     ViewController
                                                                                         .request[MainController.tableInfo['columns'][j]['name']] =
                                                                                         selectedId;
+                                                                                    ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
                                                                                   }
                                                                                 });
                                                                           })),
@@ -699,7 +810,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                 ],
                                               )
                                                   : Container();
-                                            })
+                                            }) : Container()
 
 
                               ],

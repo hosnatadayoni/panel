@@ -1870,9 +1870,9 @@ class ViewController extends GetxController {
     var items=column['items'];
     List<dynamic> a = [];
     if (listItems is List) {
-    if (listItems.length == 0) {
-      return "${AppController.of(Get.context!)!.value('not selected')}";
-    }
+      if (listItems.length == 0) {
+        return "${AppController.of(Get.context!)!.value('not selected')}";
+      }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
           a.add(listItems[i]);
@@ -1886,11 +1886,11 @@ class ViewController extends GetxController {
             a.add(empty.join('%'));
           }
           else{
-              a.add(listItems[i]['title']);
+            a.add(listItems[i]['title']);
           }
         }
+      }
     }
-  }
     else {
       if (listItems is String) {
         a.add(listItems);
@@ -1902,7 +1902,7 @@ class ViewController extends GetxController {
         if(column['sourceItems']=='table') {
           List<dynamic> empty = [];
           for (var field in items) {
-           empty.add(listItems[field]);
+            empty.add(listItems[field]);
           }
           a.add(empty.join('%'));
         } else{
@@ -1917,6 +1917,7 @@ class ViewController extends GetxController {
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
+    print('type of sourceItems>>>${type}');
     if (type != 'custom') {
       print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
@@ -1957,6 +1958,7 @@ class ViewController extends GetxController {
         }
       }
       dropDownListItems = itemss;
+      print('dropDownListItems>>>${dropDownListItems}');
     }
     return dropDownListItems;
   }

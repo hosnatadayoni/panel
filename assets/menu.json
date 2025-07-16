@@ -65,6 +65,7 @@
         "name": "main_menu",
         "title": "main_menu",
         "main-menu": true,
+        "default_value": false,
         "type": "checkbox",
         "is-show-table": true,
         "is-show-store": true,
@@ -92,6 +93,18 @@
         "name": "online",
         "title": "online",
         "type": "checkbox",
+        "default_value": true,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "relations",
+        "title": "relations",
+        "type": "multiSelect",
+        "sourceItems": "table",
+        "sourceTable": "schema",
+        "items": ["name"],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -145,13 +158,14 @@
             "is_selected": true
           },
           {
-            "title": "Number",
-            "value": "Number",
+            "title": "Number int",
+            "value": "Number int",
             "is_selected": false
           },
           {
             "title": "checkbox",
             "value": "checkbox",
+            "default_value": false,
             "is_selected": false
           },
           {
@@ -187,8 +201,8 @@
             "is_selected": true
           },
           {
-            "title": "Number",
-            "value": "Number",
+            "title": "number",
+            "value": "number",
             "is_selected": false
           }
         ],
@@ -215,6 +229,10 @@
         "type": "select",
         "items": [
           {
+            "title": "انتخاب نشده",
+            "value": null,
+            "is_selected": true
+          }, {
             "title": "table",
             "value": "table",
             "is_selected": true
@@ -298,6 +316,42 @@
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
+      }
+    ]
+  },
+  {
+    "title": "validators",
+    "tooltip": "",
+    "main-menu": false,
+    "table-name": "validators",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "relations": [
+      {
+        "title": "fields",
+        "table-name": "fields"
+      }
+    ],
+    "online": true,
+    "view": "custom",
+    "columns": [
+      {
+        "name": "required",
+        "title": "required",
+        "type": "checkbox",
+        "default_value": false,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "message",
+        "title": "message",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       }
     ]
   }

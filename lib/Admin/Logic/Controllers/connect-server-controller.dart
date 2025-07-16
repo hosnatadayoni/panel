@@ -69,7 +69,20 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       listSchemaRes=response!.data['data'];
-    }, printResponse: true);
+      // for(var schema in listSchemaRes){
+      //   if(schema['relations']!=null && schema['relations'].length!=0){
+      //     var rels=[];
+      //     for(var rel in schema['relations']){
+      //       var index;
+      //       index =listSchemaRes.indexWhere((element) => element['_id']==rel);
+      //           if(index!=-1){
+      //             listSchemaRes[index]['relations'].add( listSchemaRes[index]['name']);
+      //
+      //           }
+      //     }
+      //   }
+      // }
+        }, printResponse: true);
   }
 
   static createField(Map<String, dynamic> json) async {

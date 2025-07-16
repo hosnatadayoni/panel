@@ -5,6 +5,7 @@ import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Logic/Models/order-item.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:finance/AdminCustom/UI/Views/creteField.dart';
+import 'package:finance/AdminCustom/UI/Views/editField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -188,8 +189,20 @@ class HelperController extends GetxController {
 
   static editPageFunction(var data) async {
     OrderItem.orderItemsList = {};
+    var table = MainController.getInfoTable(MainController.tableName.value);
+    if (table['view'] == 'custom') {
+      if (table['table-name'] == 'project' ||
+          table['table-name'] == 'schema') {
+        await Get.to(() => EditPage(data: data));
+      }
+      else if(table['table-name'] == 'fields'){
+        await Get.to(() => EditFieldPage(data: data));
+      }
 
-    await Get.to(() => EditPage(data: data));
+    } else {
+      await Get.to(() => EditPage(data: data));
+    }
+
   }
 
   static deleteFunction(var item) async {
