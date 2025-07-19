@@ -152,27 +152,28 @@ class HelperController extends GetxController {
 
   static relationFunction({var table = null, var index}) async {
     table = MainController.getInfoTable('${MainController.tableName.value}');
-
     var tableName=table['table-name'];
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
         await Token.removeToken();
         Token.setToken(MainController.tableData.value[index]['api_key']);
+
+
       }
-      if (tableName == 'fields') {
+     else if (tableName == 'fields') {
+        print('HelperController.relationFunction>>${MainController.tableData.value[index]}');
         DB.parentItem={
           'parent_id':MainController.tableData.value[index]['_id'],
           'parent_table':MainController.tableData.value[index]['name']
         };
       }
-      if (tableName == 'filters') {
+      else if (tableName == 'filters') {
         DB.parentItem={
           'parent_id':MainController.tableData.value[index]['_id'],
           'parent_table':MainController.tableData.value[index]['name']
         };
       }
-      if (tableName == 'validators') {
-        print('HelperController.relationFunction>>>${MainController.tableData.value[index]}');
+      else if (tableName == 'validators') {
         DB.parentItem={
           'parent_id':MainController.tableData.value[index]['_id'],
           'parent_table':MainController.tableData.value[index]['name']

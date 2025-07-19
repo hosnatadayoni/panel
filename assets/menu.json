@@ -71,7 +71,6 @@
       {
         "name": "main_menu",
         "title": "main_menu",
-        "main-menu": true,
         "default_value": false,
         "type": "checkbox",
         "is-show-table": true,
@@ -119,13 +118,14 @@
     ],
     "relations": [
       {
-        "title": "fields",
-        "table-name": "fields"
-      } ,
-      {
         "title": "filters",
         "table-name": "filters"
+      },
+      {
+        "title": "fields",
+        "table-name": "fields"
       }
+
     ]
   },
   {
