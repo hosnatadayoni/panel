@@ -34,7 +34,6 @@ class _TableBoxState extends State<TableBox> {
 
   @override
   Widget build(BuildContext context) {
-    print('_TableBoxState.build table info is>>${MainController.tableInfo}');
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
