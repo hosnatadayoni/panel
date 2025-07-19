@@ -17,6 +17,14 @@ const String updateRecordUrl=baseApiUrl+'/general/updateRecord';
 const String deleteRecordUrl=baseApiUrl+'/general/deleteRecord';
 const String getRecordsUrl=baseApiUrl+'/general/getRecords';
 const String filterRecordsUrl=baseApiUrl+'/general/filterRecord';
+const String createFilterSchemaUrl=baseApiUrl+'/general/createFilterSchema';
+const String deleteFilterUrl=baseApiUrl+'/general/deleteFilter';
+const String listFiltersUrl=baseApiUrl+'/general/listFilters';
+
+
+const String deleteValidateUrl=baseApiUrl+'/general/deleteValidate';
+const String listValidateUrl=baseApiUrl+'/general/listValidate';
+const String createValidateFieldsUrl=baseApiUrl+'/general/createValidateFields';
 
 // const String storeUrl='https://maahsi.com/api/v2/set/database';
 

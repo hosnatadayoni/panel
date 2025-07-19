@@ -36,9 +36,11 @@ class _TableBoxState extends State<TableBox> {
   @override
   Widget build(BuildContext context) {
     print('_TableBoxState.build table info is>>${MainController.tableInfo}');
+
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
+      print('MainController.selectedItem.value table page>>>${MainController.selectedItem.value}');
       return Container(
           color: MainController.isLightMode.value == true
               ? background
@@ -147,22 +149,21 @@ class _TableBoxState extends State<TableBox> {
                                     var relation = MainController.tableInfo['relations']
                                         .firstWhere((item) => item['table-name'] == value, orElse: () => null);
                                     if(relation!=null){
-                                      MainController.selectedItem
-                                          .value = MainController
-                                          .SubMenuList
-                                          .indexWhere((element) =>
-                                      element[
-                                      'table-name'] ==
-                                          relation['table-name']);
+                                      // MainController.selectedItem.value = MainController.SubMenuList.indexWhere((element) =>
+                                      // element[
+                                      // 'table-name'] ==
+                                      //     relation['table-name']);
                                       MainController
                                           .tableName.value =
                                       relation['table-name'];
                                       print(
                                           '_TableBoxState.build>>${MainController.tableName.value}');
+
                                       HelperController
                                           .relationFunction(
                                           table: relation,
                                           index: i);
+
                                     }
                                     if(value=='edit'){
                                       setState(() {

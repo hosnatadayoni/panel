@@ -1,6 +1,6 @@
 [
   {
-    "title": "ایجاد پروژه",
+    "title": "project",
     "tooltip": "",
     "main-menu": true,
     "table-name": "project",
@@ -14,6 +14,13 @@
         "name": "name",
         "title": "name",
         "type": "string"
+      }, {
+        "name": "api_key",
+        "title": "api_key",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": false,
+        "is-show-edit": false
       }
     ],
     "relations": [
@@ -114,6 +121,78 @@
       {
         "title": "fields",
         "table-name": "fields"
+      } ,
+      {
+        "title": "filters",
+        "table-name": "filters"
+      }
+    ]
+  },
+  {
+    "title": "filters",
+    "tooltip": "",
+    "main-menu": false,
+    "table-name": "filters",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "online": true,
+    "view": "custom",
+    "relations": [],
+    "columns": [
+      {
+        "name": "column",
+        "title": "column",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items":[],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "operator",
+        "title": "operator",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "==",
+            "value": "$eq",
+            "is_selected": true
+          },
+          {
+            "title": "<=",
+            "value": "$lte",
+            "is_selected": false
+          },
+          {
+            "title": ">=",
+            "value": "$gte",
+            "default_value": false,
+            "is_selected": false
+          },
+          {
+            "title": "!=",
+            "value": "$ne",
+            "is_selected": false
+          },
+          {
+            "title": ">",
+            "value": "$gt",
+            "is_selected": false
+          },
+          {
+            "title": "<",
+            "value": "$lt",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       }
     ]
   },
@@ -125,7 +204,12 @@
     "currentPage": 1,
     "countShowRow": 10,
     "location-data": 0,
-    "relations": [],
+    "relations": [
+      {
+        "title": "validators",
+        "table-name": "validators"
+      }
+    ],
     "online": true,
     "view": "custom",
     "columns": [
@@ -133,6 +217,9 @@
         "name": "title",
         "title": "title",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -141,6 +228,9 @@
         "name": "name",
         "title": "name",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false
@@ -152,6 +242,11 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
           {
             "title": "string",
             "value": "string",
@@ -184,6 +279,9 @@
             "is_selected": false
           }
         ],
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false
@@ -195,6 +293,11 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
           {
             "title": "string",
             "value": "string",
@@ -211,17 +314,6 @@
         "is-show-edit": false
       },
       {
-        "name": "items",
-        "title": "items",
-        "type": "multiSelect",
-        "sourceItems": "custom",
-        "sourceTable": null,
-        "items": [],
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
         "name": "source_items",
         "title": "source_items",
         "sourceItems": "custom",
@@ -230,7 +322,7 @@
         "items": [
           {
             "title": "انتخاب نشده",
-            "value": null,
+            "value": "",
             "is_selected": true
           }, {
             "title": "table",
@@ -259,20 +351,15 @@
         "is-show-edit": false
       },
       {
-        "name": "parent_id",
-        "title": "parent_id",
-        "type": "string",
-        "is-show-table": true,
-        "is-show-store": false,
-        "is-show-edit": false
-      },
-      {
-        "name": "parent_slug",
-        "title": "parent_slug",
-        "type": "string",
+        "name": "items",
+        "title": "items",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [],
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": false
+        "is-show-edit": true
       },
       {
         "name": "is-show-table",
@@ -300,23 +387,8 @@
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
-      },
-      {
-        "name": "filters",
-        "title": "filters",
-        "type": "string",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
-        "name": "validators",
-        "title": "validators",
-        "type": "string",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
       }
+
     ]
   },
   {
@@ -327,20 +399,14 @@
     "currentPage": 1,
     "countShowRow": 10,
     "location-data": 0,
-    "relations": [
-      {
-        "title": "fields",
-        "table-name": "fields"
-      }
-    ],
     "online": true,
     "view": "custom",
+    "relations": [],
     "columns": [
       {
-        "name": "required",
-        "title": "required",
-        "type": "checkbox",
-        "default_value": false,
+        "name": "type",
+        "title": "type",
+        "type": "string",
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true

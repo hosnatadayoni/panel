@@ -38,126 +38,132 @@ class _EditFieldPageState extends State<EditFieldPage> {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'multiSelect') {
-          await ConncetServerController.listField({'name': widget.data['source_table']});
-          for(var data in MainController.allData){
-            if(!itemsList.contains(data['title'])){
-              itemsList.add(data['title']);
+        if(widget.data['source_items'] == 'table'){
+          if(widget.data['items'].length != 0){
+            await ConncetServerController.listField({'name': widget.data['source_table']});
+            for(var data in ConncetServerController.listFieldsRes){
+              if(!itemsList.contains(data['title'])){
+                itemsList.add(data['title']);
+              }
             }
-          }
-          if (column['sourceTable'] != null) {
-            for (var item in widget.data['items']) {
-              selectedItemsList.add(
-                  ViewController.itemsShowSelectItem(item, column));
+            if (column['sourceTable'] != null) {
+              for (var item in widget.data['items']) {
+                selectedItemsList.add(
+                    ViewController.itemsShowSelectItem(item, column));
+              }
+            } else {
+              for (var item in widget.data['items']) {
+                selectedItemsList.add(item);
+              }
             }
-          } else {
-            for (var item in widget.data['items']) {
-              selectedItemsList.add(item);
-            }
-          }
-          hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
-          multiSelectWidget.value =
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() {
-                      return Txt(
-                        '${column['title']}',
-                        color: MainController.isLightMode.value == true
-                            ? whiteColor
-                            : color2,
-                      );
-                    }),
-                    Obx(() {
-                      return MultiSelectDropdown(
-                        items: [
-                          for (var item in itemsList)
-                            DropdownMenuItem(
-                                value: item,
-                                child: Obx(() {
-                                  return Row(
-                                    children: [
-                                      Container(
-                                        height: 100,
-                                        child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: Obx(() {
-                                              return Checkbox(
-                                                  activeColor: colorBtn,
-                                                  // value: selectedItemsList.any((map) =>
-                                                  //     mapEquals(map, item)),
-                                                  value: selectedItemsList.contains(item),
-                                                  onChanged: (isChecked) {
-                                                    if (isChecked != null) {
-                                                      hintTxt.value = '';
-                                                      // if (!selectedItemsList.any((map) =>
-                                                      //     mapEquals(map, item))) {
-                                                      //   selectedId = [];
-                                                      //   requestMultiSelect = item;
-                                                      //   selectedItemsList.add(item);
-                                                      //
-                                                      // }
-                                                    if(!selectedItemsList.contains(item)){
-                                                      selectedId = [];
-                                                      selectedItemsList.add(item);
-                                                    }
-                                                      else {
-                                                        selectedId = [];
-                                                        // requestMultiSelect.removeWhere((key,
-                                                        //     value) => value == ['value']);
-                                                        // var index = selectedItemsList
-                                                        //     .indexWhere((map) =>
-                                                        //     mapEquals(map, item));
+            // hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
+            hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+            multiSelectWidget.value =
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(() {
+                        return Txt(
+                          '${column['title']}',
+                          color: MainController.isLightMode.value == true
+                              ? whiteColor
+                              : color2,
+                        );
+                      }),
+                      Obx(() {
+                        return MultiSelectDropdown(
+                          items: [
+                            for (var item in itemsList)
+                              DropdownMenuItem(
+                                  value: item,
+                                  child: Obx(() {
+                                    return Row(
+                                      children: [
+                                        Container(
+                                          height: 100,
+                                          child: SizedBox(
+                                              width: 50,
+                                              height: 50,
+                                              child: Obx(() {
+                                                return Checkbox(
+                                                    activeColor: colorBtn,
+                                                    // value: selectedItemsList.any((map) =>
+                                                    //     mapEquals(map, item)),
+                                                    value: selectedItemsList.contains(item),
+                                                    onChanged: (isChecked) {
+                                                      if (isChecked != null) {
+                                                        hintTxt.value = '';
+                                                        // if (!selectedItemsList.any((map) =>
+                                                        //     mapEquals(map, item))) {
+                                                        //   selectedId = [];
+                                                        //   requestMultiSelect = item;
+                                                        //   selectedItemsList.add(item);
                                                         //
-                                                        // selectedItemsList.removeAt(index);
-                                                        if(selectedItemsList.contains(item)){
-                                                          selectedItemsList.remove(item);
+                                                        // }
+                                                        if(!selectedItemsList.contains(item)){
+                                                          selectedId = [];
+                                                          selectedItemsList.add(item);
+                                                        }
+                                                        else {
+                                                          selectedId = [];
+                                                          // requestMultiSelect.removeWhere((key,
+                                                          //     value) => value == ['value']);
+                                                          // var index = selectedItemsList
+                                                          //     .indexWhere((map) =>
+                                                          //     mapEquals(map, item));
+                                                          //
+                                                          // selectedItemsList.removeAt(index);
+                                                          if(selectedItemsList.contains(item)){
+                                                            selectedItemsList.remove(item);
+                                                          }
+
                                                         }
 
-                                                      }
-
-                                                      if (selectedItemsList.value.length ==
-                                                          0) {
-                                                        isSelectedItem.value = false;
-                                                      } else {
-                                                        isSelectedItem.value = true;
-                                                      }
-                                                      for (var r in selectedItemsList)
+                                                        if (selectedItemsList.value.length ==
+                                                            0) {
+                                                          isSelectedItem.value = false;
+                                                        } else {
+                                                          isSelectedItem.value = true;
+                                                        }
+                                                        // for (var r in selectedItemsList)
                                                         // hintTxt.value = hintTxt.value + r['title'];
-                                                        hintTxt.value = hintTxt.value + ',' + r;
+                                                        // hintTxt.value = hintTxt.value + ',' + r;
+                                                        hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+                                                        for (var r in selectedItemsList)
+                                                          // selectedId.add(r['value']);
+                                                          selectedId.add(r);
 
-                                                      for (var r in selectedItemsList)
-                                                        // selectedId.add(r['value']);
-                                                        selectedId.add(r);
+                                                        ViewController
+                                                            .request[column['name']] =
+                                                            selectedId;
+                                                        ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
+                                                      }
+                                                    });
+                                              })),
+                                        ),
+                                        Txt(item,
+                                            color: MainController.isLightMode.value
+                                                ? whiteColor
+                                                : primaryDark),
+                                      ],
+                                    );
+                                  }))
+                          ],
+                          hintText: hintTxt.value != '' && hintTxt.value != null
+                              ? hintTxt.value
+                              : '${AppController.of(Get.context!)!.value('choice')}',
+                          selectedItems: selectedItemsList,
+                          isSelectedItem: isSelectedItem,
+                          column: column,
+                        );
+                      }),
+                    ],
+                  ),
+                );
+          }
 
-                                                      ViewController
-                                                          .request[column['name']] =
-                                                          selectedId;
-                                                      ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
-                                                    }
-                                                  });
-                                            })),
-                                      ),
-                                      Txt(item,
-                                          color: MainController.isLightMode.value
-                                              ? whiteColor
-                                              : primaryDark),
-                                    ],
-                                  );
-                                }))
-                        ],
-                        hintText: hintTxt.value != '' && hintTxt.value != null
-                            ? hintTxt.value
-                            : '${AppController.of(Get.context!)!.value('choice')}',
-                        selectedItems: selectedItemsList,
-                        isSelectedItem: isSelectedItem,
-                        column: column,
-                      );
-                    }),
-                  ],
-                ),
-              );
+        }
       }
     }
   }
@@ -237,12 +243,12 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                         : ''}') : Container()
                               else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
                                   widget.data['source_items'] ==
-                                      'custom' || widget.data['source_items'] == '' || widget.data['source_items'] == null ||
-                                      widget.data['source_items'] == [] ? ViewController
-                                      .generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],'string', '') :
-                                  Obx((){
+                                      'custom' ? ViewController
+                                      .generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}') :
+                                  widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton' ?
+                                  widget.data['items'].length == 0 ? Container() :Obx((){
                                     return multiSelectWidget.value;
-                                  })
+                                  }) : Container()
                         ],
                       ),
                       if (MainController.selectedSubItem.value != -1)

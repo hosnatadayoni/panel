@@ -615,21 +615,33 @@ class ViewController extends GetxController {
       child = generateColor(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'select' || type == 'radiobutton') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+        onDoubleTap: (){
+          MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
+        },
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'multiSelect') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+        onDoubleTap: (){
+            MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+            '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
+        },
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'file') {
@@ -696,11 +708,16 @@ class ViewController extends GetxController {
 
     return Center(
       child: dataModel != null
-          ? Container(
+          ? InkWell(
+        onDoubleTap: (){
+          MainController.copyClipboard(dataModel);
+        },
+            child: Container(
         width: 50,
         height: 50,
         color: Color(int.parse('${dataModel}')),
-      )
+      ),
+          )
           : Container(),
     );
   }
@@ -718,12 +735,17 @@ class ViewController extends GetxController {
 
     return Obx(() {
       return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
+          child: Txt(
+            '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     });
@@ -741,12 +763,17 @@ class ViewController extends GetxController {
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
     return Obx(() {
       return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
+          child: Txt(
+            '${dataModel != null ? dataModel : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     });

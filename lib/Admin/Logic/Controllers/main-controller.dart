@@ -1784,4 +1784,9 @@ class MainController extends GetxController {
     }
   }
 
+  static copyClipboard(String text) async {
+    await Clipboard.setData(ClipboardData(text:text));
+    showSnackbar(snackTypes.info, "کپی شد");
+  }
+
 }

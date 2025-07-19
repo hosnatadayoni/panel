@@ -15,6 +15,8 @@ class ConncetServerController extends GetxController {
   static List<dynamic> listProjectRes = [];
   static List<dynamic> listSchemaRes = [];
   static List<dynamic> listFieldsRes = [];
+  static List<dynamic> listFiltersRes = [];
+  static List<dynamic> listValidateRes = [];
 
   static bool deleteRecordRes = false;
   static List<dynamic> getRecordRes = [];
@@ -113,6 +115,49 @@ class ConncetServerController extends GetxController {
       listFieldsRes=response!.data['data'];
     }, printResponse: true);
   }
+
+  static deleteValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteValidateUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listValidate(Map<String, dynamic> json) async {
+    var s = await Token.getToken();
+    var response = await RestApi.post(listValidateUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listValidateRes=response!.data['data'];
+    }, printResponse: true);
+  }
+  static createValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createValidateFieldsUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
+  static deleteFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteFilterUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFiltersUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listFiltersRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+  static createFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createFilterSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
 
 
 
