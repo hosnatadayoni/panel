@@ -152,6 +152,7 @@ class HelperController extends GetxController {
 
   static relationFunction({var table = null, var index}) async {
     table = MainController.getInfoTable('${MainController.tableName.value}');
+
     var tableName=table['table-name'];
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
@@ -265,7 +266,7 @@ class HelperController extends GetxController {
   }
 
   static pageInateFunction() async {
-    var table =MainController.getInfoTable(MainController.tableName.value);
+    var table = MainController.getInfoTable(MainController.tableName.value);
     print('HelperController.pageInateFunction>>${table}');
     MainController.tableInfo=table;
     var tableName=table['table-name'];
