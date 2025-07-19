@@ -98,7 +98,7 @@ class ConncetServerController extends GetxController {
         'type':type,
       });
     for(Where item in wheres.values){
-      l.add({'column':'${item.fieldName}','operation': "${item.oprator!=null?item.oprator:"\$eq"}",'value': "${item.value}"});
+      l.add({'column':'${item.fieldName}','operation': "${item.operator!=null?item.operator:"\$eq"}",'value': "${item.value}"});
       }
     body.addAll({
         'filter':json.encode(l),

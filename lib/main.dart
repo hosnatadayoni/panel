@@ -23,14 +23,6 @@ void main()async {
 
   Hive.registerAdapter(DataModelAdapter());
 
-  // var a = await DB('table').getRecord();
-  // var a= await DB('itemsOrder2').parent(parentTable: 'order2',parentId:'77756a94-a90f-4806-abc3-7b1ea690bf17' ).where('_id','\$eq','e71c7ae3-0b0a-43ec-8260-b5d38d89a469').updateRecords(
-  //     {'title':'maryam'});
-  // print('main>>>${a}');
-  // var box=await Hive.openBox<DataModel>('category');
-  // box.clear();
-  // await Token.setToken('3ba7fd50-69c5-4293-8aa8-77e752a967ae');
-  // ConncetServerController.createProject();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {

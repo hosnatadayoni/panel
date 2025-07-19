@@ -70,17 +70,17 @@ class DB {
     return e;
   }
 
-  where(String? fieldName, String? oprator, var value) {
+  where(String? fieldName, String? operator, var value) {
     counter++;
-    Where l = Where(fieldName, oprator, value);
+    Where l = Where(fieldName, operator, value);
     w.add(l);
     this.whereList[counter] = l;
     return this;
   }
 
-  orWhere(String? fieldName, String? oprator, var value) {
+  orWhere(String? fieldName, String? operator, var value) {
     counter++;
-    Where l = Where(fieldName, oprator, value);
+    Where l = Where(fieldName, operator, value);
     w.add(l);
     this.orWhereList[counter] = l;
 
@@ -208,8 +208,8 @@ class DB {
               for (int j = 1; j <= orWhereList.length; j++) {
                 if (d['${orWhereList[j]!.fieldName}'] != null) {
                   if (orWhereList[j]!.value != '') {
-                    if (orWhereList[j]!.oprator == '\$eq' ||
-                        orWhereList[j]!.oprator == null) {
+                    if (orWhereList[j]!.operator == '\$eq' ||
+                        orWhereList[j]!.operator == null) {
                       if (d['${orWhereList[j]!.fieldName}'] is List) {
                         if (d['${orWhereList[j]!.fieldName}']
                             .contains(orWhereList[j]!.value) &&
@@ -251,7 +251,7 @@ class DB {
                             flag = false;
                         }
                       }
-                    } else if (orWhereList[j]!.oprator == '\$gte') {
+                    } else if (orWhereList[j]!.operator == '\$gte') {
                       if (MainController.getTypeOfField(
                           this.tableName!, orWhereList[j]!.fieldName!) ==
                           'Date') {
@@ -284,7 +284,7 @@ class DB {
                         } else
                           flag = false;
                       }
-                    } else if (orWhereList[j]!.oprator == '\$lte') {
+                    } else if (orWhereList[j]!.operator == '\$lte') {
                       if (MainController.getTypeOfField(
                           this.tableName!, orWhereList[j]!.fieldName!) ==
                           'Date') {
@@ -317,7 +317,7 @@ class DB {
                         } else
                           flag = false;
                       }
-                    } else if (orWhereList[j]!.oprator == '\$nq') {
+                    } else if (orWhereList[j]!.operator == '\$nq') {
                       if (MainController.getTypeOfField(
                           this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
@@ -338,7 +338,7 @@ class DB {
                         } else
                           flag = false;
                       }
-                    } else if (orWhereList[j]!.oprator == '\$lt') {
+                    } else if (orWhereList[j]!.operator == '\$lt') {
                       if (MainController.getTypeOfField(
                           this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
@@ -359,7 +359,7 @@ class DB {
                         } else
                           flag = false;
                       }
-                    } else if (orWhereList[j]!.oprator == '\$gt') {
+                    } else if (orWhereList[j]!.operator == '\$gt') {
                       if (MainController.getTypeOfField(
                           this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
@@ -412,8 +412,8 @@ class DB {
                     whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
                   if (d['${whereList[j]!.fieldName}'] != null) {
                     if (whereList[j]!.value != '') {
-                      if (whereList[j]!.oprator == '\$eq' ||
-                          whereList[j]!.oprator == null) {
+                      if (whereList[j]!.operator == '\$eq' ||
+                          whereList[j]!.operator == null) {
                         if (d['${whereList[j]!.fieldName}'] is List) {
                           if (d['${whereList[j]!.fieldName}']
                               .contains(whereList[j]!.value) &&
@@ -455,7 +455,7 @@ class DB {
                               flag = false;
                           }
                         }
-                      } else if (whereList[j]!.oprator == '\$gte') {
+                      } else if (whereList[j]!.operator == '\$gte') {
                         if (MainController.getTypeOfField(
                             this.tableName!, whereList[j]!.fieldName!) ==
                             'Date') {
@@ -488,7 +488,7 @@ class DB {
                           } else
                             flag = false;
                         }
-                      } else if (whereList[j]!.oprator == '\$lte') {
+                      } else if (whereList[j]!.operator == '\$lte') {
                         if (MainController.getTypeOfField(
                             this.tableName!, whereList[j]!.fieldName!) ==
                             'Date') {
@@ -521,7 +521,7 @@ class DB {
                           } else
                             flag = false;
                         }
-                      } else if (whereList[j]!.oprator == '\$nq') {
+                      } else if (whereList[j]!.operator == '\$nq') {
                         if (MainController.getTypeOfField(
                             this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
@@ -542,7 +542,7 @@ class DB {
                           } else
                             flag = false;
                         }
-                      } else if (whereList[j]!.oprator == '\$lt') {
+                      } else if (whereList[j]!.operator == '\$lt') {
                         if (MainController.getTypeOfField(
                             this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
@@ -563,7 +563,7 @@ class DB {
                           } else
                             flag = false;
                         }
-                      } else if (whereList[j]!.oprator == '\$gt') {
+                      } else if (whereList[j]!.operator == '\$gt') {
                         if (MainController.getTypeOfField(
                             this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
@@ -1454,12 +1454,12 @@ class DB {
 
 class Where {
   String? fieldName;
-  String? oprator;
+  String? operator;
   var value;
 
-  Where(String? fieldName, String? oprator, var value) {
+  Where(String? fieldName, String? operator, var value) {
     this.value = value;
-    this.oprator = oprator;
+    this.operator = operator;
     this.fieldName = fieldName;
     this;
   }

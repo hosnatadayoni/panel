@@ -14,10 +14,12 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
+import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -39,6 +41,11 @@ class ViewController extends GetxController {
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
   static RxInt totalPage=0.obs;
+
+  static copyClipboard(String text) async {
+    await Clipboard.setData(ClipboardData(text:text));
+    showSnackbar(snackTypes.info, "کپی شد");
+  }
 
   static Future<Widget> generateFilterView(
       Map<String, dynamic> filterInfo) async {
@@ -146,18 +153,18 @@ class ViewController extends GetxController {
                     onChanged: (value) async {
 
                       if (value != 'true') {
-                        ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                        ViewController.request['${column['name']}${filterInfo['operator']}']=
                         {
                           'value': false,
                           'column': '${column['name']}',
-                          'oprator': '${filterInfo['oprator']}',
+                          'operator': '${filterInfo['operator']}',
                         };
                       } else {
-                        ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                        ViewController.request['${column['name']}${filterInfo['operator']}']=
                         {
                           'value': true,
                           'column': '${column['name']}',
-                          'oprator': '${filterInfo['oprator']}',
+                          'operator': '${filterInfo['operator']}',
                         };
                       }
                     },
@@ -199,11 +206,11 @@ class ViewController extends GetxController {
                     isSeletedDate: false.obs,
                     onDateChanged: (date) {
                       // dataJson[columnName] =  date;
-                      ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                      ViewController.request['${column['name']}${filterInfo['operator']}']=
                       {
                         'value': date,
                         'column': '${column['name']}',
-                        'oprator': '${filterInfo['oprator']}',
+                        'operator': '${filterInfo['operator']}',
                       };
                     },
                     column: column,
@@ -620,21 +627,34 @@ class ViewController extends GetxController {
       child = generateColor(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'select' || type == 'radiobutton') {
-      child = Txt(MainController.tableData[indexRow]['${name}']!=null?
-      '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+         onDoubleTap: () async {
+           await copyClipboard( MainController.tableData[indexRow]['${name}']!=null?
+           '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'');
+         },
+        child: Txt(MainController.tableData[indexRow]['${name}']!=null?
+        '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'multiSelect') {
-      child = Txt(MainController.tableData[indexRow]['${name}']!=null?
-      '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+        onDoubleTap: () async {
+          await copyClipboard( MainController.tableData[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'');
+
+        },
+        child: Txt(MainController.tableData[indexRow]['${name}']!=null?
+        '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'file') {
@@ -697,14 +717,19 @@ class ViewController extends GetxController {
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
-    return Center(
-      child: dataModel != null
-          ? Container(
-        width: 50,
-        height: 50,
-        color: Color(int.parse('${dataModel}')),
-      )
-          : Container(),
+    return InkWell(
+      onDoubleTap: () async {
+        await copyClipboard('${dataModel}');
+      },
+      child: Center(
+        child: dataModel != null
+            ? Container(
+          width: 50,
+          height: 50,
+          color: Color(int.parse('${dataModel}')),
+        )
+            : Container(),
+      ),
     );
   }
 
@@ -743,13 +768,18 @@ class ViewController extends GetxController {
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
     return Obx(() {
-      return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
+      return InkWell(
+        onDoubleTap: () async {
+          await copyClipboard('${dataModel != null ? dataModel : ''}');
+        },
+        child: Center(
+          child: Txt(
+            '${dataModel != null ? dataModel : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     });
@@ -826,33 +856,33 @@ class ViewController extends GetxController {
             onChange: (text) {
               if (text != null && text != '') {
                 if (column['type'] == 'Number int') {
-                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                  ViewController.request['${column['name']}${filterInfo['operator']}']=
                   {
                     'value': '${int.parse('${text}')}',
                     'column': '${column['name']}',
-                    'oprator': '${filterInfo['oprator']}',
+                    'operator': '${filterInfo['operator']}',
                   };
                 } else if (column['type'] == 'Number double') {
-                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                  ViewController.request['${column['name']}${filterInfo['operator']}']=
                   {
                     'value': '${double.parse('${text}')}',
                     'column': '${column['name']}',
-                    'oprator': '${filterInfo['oprator']}',
+                    'operator': '${filterInfo['operator']}',
                   };
                 } else {
-                  ViewController.request['${column['name']} ${filterInfo['oprator']}']=
+                  ViewController.request['${column['name']} ${filterInfo['operator']}']=
                   {
                     'value': '${text}',
                     'column': '${column['name']}',
-                    'oprator': '${filterInfo['oprator']}',
+                    'operator': '${filterInfo['operator']}',
                   };
                 }
               } else {
-                ViewController.request['${column['name']} ${filterInfo['oprator']}']=
+                ViewController.request['${column['name']} ${filterInfo['operator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'oprator': '${filterInfo['oprator']}',
+                  'operator': '${filterInfo['operator']}',
                 };
               }
             },
@@ -913,20 +943,20 @@ class ViewController extends GetxController {
             onChanged: (value) async {
               if (value != '') {
                 // selectedValue=value!;
-                ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                ViewController.request['${column['name']}${filterInfo['operator']}']=
                 {
                   'value': value,
                   'column': '${column['name']}',
-                  'oprator': '${filterInfo['oprator']}',
+                  'operator': '${filterInfo['operator']}',
 
                 };
                 // ViewController.request[column['name']] = value;
               } else {
-                ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                ViewController.request['${column['name']}${filterInfo['operator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'oprator': '${filterInfo['oprator']}',
+                  'operator': '${filterInfo['operator']}',
                 };
                 // ViewController.request[column['name']] = '';
               }
@@ -964,18 +994,18 @@ class ViewController extends GetxController {
                 }
               }
               if (value != '') {
-                ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                ViewController.request['${column['name']}${filterInfo['operator']}']=
                 {
                   'value': value,
                   'column': '${column['name']}',
-                  'oprator': '${filterInfo['oprator']}',
+                  'operator': '${filterInfo['operator']}',
                 };
               } else {
-                ViewController.request['${column['name']}${filterInfo['oprator']}']=
+                ViewController.request['${column['name']}${filterInfo['operator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'oprator': '${filterInfo['oprator']}',
+                  'operator': '${filterInfo['operator']}',
                 };
               }
             },
@@ -1006,11 +1036,11 @@ class ViewController extends GetxController {
           selectedTime: selectedTime,
           isSeletedTime: isSeletedTime,
           onTimeChanged: (time) {
-            ViewController.request['${column['name']}${filterInfo['oprator']}']=
+            ViewController.request['${column['name']}${filterInfo['operator']}']=
             {
               'value': time,
               'column': '${column['name']}',
-              'oprator': '${filterInfo['oprator']}',
+              'operator': '${filterInfo['operator']}',
             };
           },
         ),
@@ -1043,11 +1073,11 @@ class ViewController extends GetxController {
                   '0x${colorChanged.value.toRadixString(16).padLeft(8, '0')}';
               // dataJson[columnName] = hexColor;
 
-              ViewController.request['${column['name']}${filterInfo['oprator']}']=
+              ViewController.request['${column['name']}${filterInfo['operator']}']=
               {
                 'value': hexColor,
                 'column': '${column['name']}',
-                'oprator': '${filterInfo['oprator']}',
+                'operator': '${filterInfo['operator']}',
               };
             },
             column: column,

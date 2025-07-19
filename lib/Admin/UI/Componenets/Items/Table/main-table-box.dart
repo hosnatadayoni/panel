@@ -106,13 +106,13 @@ class _MainTableBoxState extends State<MainTableBox> {
                         var a= DB('${MainController.tableInfo['schema']['name']}');
                         for(var filter in ViewController.request.values){
                           var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
-                          if(w[indexFilter]['oprator']!=null){
+                          if(w[indexFilter]['operator']!=null){
 
-                            opration=w[indexFilter]['oprator'];
+                            opration=w[indexFilter]['operator'];
                           }
                           if(filter['value']!='' && filter['value']!=null){
 
-                            d=a.where('${filter['column']}','${filter['oprator']}',filter['value']);
+                            d=a.where('${filter['column']}','${filter['operator']}',filter['value']);
                           }
                         }
                         if(d!=null){
