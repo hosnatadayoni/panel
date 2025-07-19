@@ -22,7 +22,8 @@ void main()async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(DataModelAdapter());
-
+  // var box=await Hive.openBox<DataModel>('product');
+  // box.clear();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {

@@ -22,7 +22,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
 
-          MainController.SubMenuList=response!.data['data'];
+          MainController.SubMenuList.value=response!.data['data'];
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
             print('ConncetServerController.listSchemaByField>${name}');

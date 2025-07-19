@@ -70,26 +70,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                     ],
                   ),
                 ),
-
-              // Container(
-              //   color: Colors.blue,
-              //   child: FutureBuilder<Widget>(
-              //     future: ViewController.generateFilterView(filter , context),
-              //     builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.waiting) {
-              //         return CircularProgressIndicator();
-              //       } else if (snapshot.hasError) {
-              //         return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-              //       } else {
-              //         return Wrap(
-              //           children: [
-              //             snapshot.data ?? Container()
-              //           ],
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
               if(MainController.tableInfo['schema']['filters']!=null &&MainController.tableInfo['schema']['filters'].length!=0)
                 Container(
                   margin: EdgeInsets.only(left: 5),

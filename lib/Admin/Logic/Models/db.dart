@@ -153,7 +153,9 @@ class DB {
     Box box;
     List<Map<String, dynamic>> data = [];
     ConncetServerController.getRecordRes.value=[];
+    print('DB.getRecords>>>${this.tableName}>>>${MainController.SubMenuList}');
     int index = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == '${this.tableName}');
+
     data=[];
     if (MainController.SubMenuList[index]['schema']['online'] == true ) {
       if(this.whereList.length==0 && this.orWhereList.length==0) {

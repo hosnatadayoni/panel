@@ -139,8 +139,8 @@ class _TableBoxState extends State<TableBox> {
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
-                                    var relation = MainController.tableInfo['schema']['relation']
-                                        .firstWhere((item) => item['name'] == value, orElse: () => null);
+                                    var relation = MainController.tableInfo['schema']['relation']!=null ?MainController.tableInfo['schema']['relation']
+                                        .firstWhere((item) => item['name'] == value, orElse: () => null):null;
                                     if(relation!=null){
                                       MainController.selectedItem
                                           .value = MainController
@@ -370,7 +370,7 @@ class _TableBoxState extends State<TableBox> {
                                               ],
                                             ),
                                           )),
-                                      if (MainController.tableInfo['schema']['relation'].length != 0)
+                                      if (MainController.tableInfo['schema']['relation']!=null&& MainController.tableInfo['schema']['relation'].length != 0)
                                         for (var item in MainController.tableInfo['schema']['relation'])
                                           PopupMenuItem<String>(
                                               value: item['name'].toString(),

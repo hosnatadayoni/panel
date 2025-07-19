@@ -303,6 +303,7 @@ class ViewController extends GetxController {
         if (type == 'select') {
 
           List<dynamic> items = await itemsList(column);
+          print('ViewController.generateStoreFormView>>$items');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
 
@@ -1911,7 +1912,7 @@ class ViewController extends GetxController {
           a.add(listItems[i]);
         }
         else {
-          if(column['sourceItems']=='table') {
+          if(column['source_items']=='table') {
             List<dynamic> empty = [];
             for (var field in items) {
               empty.add(listItems[i][field]);
@@ -1932,7 +1933,7 @@ class ViewController extends GetxController {
         if (listItems['_id'] == '') {
           return "${AppController.of(Get.context!)!.value('not selected')}";
         }
-        if(column['sourceItems']=='table') {
+        if(column['source_items']=='table') {
           List<dynamic> empty = [];
           for (var field in items) {
             empty.add(listItems[field]);
@@ -1947,6 +1948,7 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
+    print('ViewController.itemsList>>>$column');
     var type = column['source_items'];
     var tableName = column['source_table'];
     List<dynamic> dropDownListItems = [];

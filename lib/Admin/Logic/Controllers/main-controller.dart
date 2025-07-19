@@ -83,7 +83,7 @@ class MainController extends GetxController {
 
   static Rx<int> selectedItemList = 0.obs;
 
-  static List<dynamic> SubMenuList = [];
+  static RxList<dynamic> SubMenuList = [].obs;
   static dynamic tableInfo = null;
   DataModel? dataModel;
   static var allColumn;
@@ -323,6 +323,7 @@ class MainController extends GetxController {
   static List<dynamic> tableNames() {
     var list = [];
     for (var table in SubMenuList) {
+      print('MainController.tableNames>>${table}');
       list.add(table['schema']['name']);
     }
     return list;
@@ -353,7 +354,7 @@ class MainController extends GetxController {
 
   static addParentForRelations(String tableName) {
     var getDataTable = MainController.getDataTable(tableName);
-    if (getDataTable['schema']['relations'].length != 0) {
+    if (getDataTable['schema']['relations']!=null  && getDataTable['schema']['relations'].length != 0) {
       for (var relate in getDataTable['schema']['relations']) {
         var index = SubMenuList.indexWhere(
                 (element) => element['schema']['_id'] == relate);
