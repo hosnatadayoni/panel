@@ -244,7 +244,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                         : ''}') : Container()
                               else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
                                   widget.data['source_items'] ==
-                                      'custom' ? ViewController
+                                      'custom' && (widget.data['type']  == 'select' ||widget.data['type'] == 'multiSelect'  || widget.data['type'] == 'radiobutton') ? ViewController
                                       .generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}') :
                                   widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton' ?
                                   widget.data['items'].length == 0 ? Container() :Obx((){

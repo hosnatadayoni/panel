@@ -104,7 +104,7 @@ class HelperController extends GetxController {
           }
           print('HelperController.createPageFunction>>>${ MainController.tableInfo}');
         }
-
+        await Get.to(() => CreatePage(tableName));
       }
       else if(table['table-name'] == 'fields'){
         await Get.to(() => CretePageField(tableName));

@@ -97,6 +97,9 @@ class _CretePageFieldState extends State<CretePageField> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+    if(selectedType.value != 'select' || selectedType.value != 'multiSelect' || selectedType.value != 'radiobutton'){
+       print('sourceItem2.value a>>>${sourceItem2.value}');
+    }
     return Scaffold(
       body: Container(
           width: size.width,
@@ -614,7 +617,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                             }) :Container() :
                                             Container()
                                   else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
-                                                sourceItem2.value == 'custom'?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
+                                                sourceItem2.value == 'custom' && (selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton')?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
                                                 selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
                                               return  sourceTableItems.value.length != 0
                                                   ? MainController.tableInfo['columns'][j]['sourceItems'] != 'custom'
