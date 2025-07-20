@@ -356,8 +356,7 @@ class MainController extends GetxController {
     var getDataTable = MainController.getDataTable(tableName);
     if (getDataTable['schema']['relations']!=null  && getDataTable['schema']['relations'].length != 0) {
       for (var relate in getDataTable['schema']['relations']) {
-        var index = SubMenuList.indexWhere(
-                (element) => element['schema']['_id'] == relate);
+        var index = SubMenuList.indexWhere((element) => element['schema']['_id'] == relate);
         var items = SubMenuList[index];
         items['columns'].add({
           'name': 'parent_table',
