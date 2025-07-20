@@ -1571,7 +1571,7 @@ class MainController extends GetxController {
           SubMenuList.add(table);
         } else {
           showSnackbar(snackTypes.error,
-              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+              "${AppController.of(Get.context!)!.value('Ability to create multiselect columns for')} ${tableName} ${AppController.of(Get.context!)!.value('does not exist')} ");
         }
       }
     }
@@ -1777,12 +1777,16 @@ class MainController extends GetxController {
 
       // HelperController.tablePageFunction(table: table);
     } else {
-      print('MainController.goToTablePage');
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
       ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
       await Get.to(() => TablePage());
     }
+  }
+
+  static copyClipboard(var text) async {
+    await Clipboard.setData(ClipboardData(text:text.toString()));
+    showSnackbar(snackTypes.info, "${AppController.of(Get.context!)!.value('copied')}");
   }
 
 }

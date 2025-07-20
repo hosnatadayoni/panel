@@ -8,6 +8,7 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class TableBox extends StatefulWidget {
@@ -97,7 +98,9 @@ class _TableBoxState extends State<TableBox> {
                                           : color2)))
                     ]),
                     if (MainController.tableData.value.length != 0)
-                      for (var i = 0; i < MainController.tableData.value.length;i++)
+                      for (var i = 0;
+                          i < MainController.tableData.value.length;
+                          i++)
                         TableRow(children: [
                           for (var j = 0;
                               j < MainController.tableInfo['columns'].length;
@@ -143,9 +146,21 @@ class _TableBoxState extends State<TableBox> {
                                     var relation = MainController.tableInfo['relations']
                                         .firstWhere((item) => item['table-name'] == value, orElse: () => null);
                                     if(relation!=null){
-                                      MainController.tableName.value = relation['table-name'];
-                                      print('_TableBoxState.build>>${MainController.tableName.value}');
-                                      HelperController.relationFunction(table: relation, index: i);
+                                      // MainController.selectedItem.value = MainController.SubMenuList.indexWhere((element) =>
+                                      // element[
+                                      // 'table-name'] ==
+                                      //     relation['table-name']);
+                                      MainController
+                                          .tableName.value =
+                                      relation['table-name'];
+                                      print(
+                                          '_TableBoxState.build>>${MainController.tableName.value}');
+
+                                      HelperController
+                                          .relationFunction(
+                                          table: relation,
+                                          index: i);
+
                                     }
                                     if(value=='edit'){
                                       setState(() {
@@ -156,7 +171,10 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
-                                        HelperController.editPageFunction(MainController.tableData.value[i]);
+                                        HelperController
+                                            .editPageFunction(
+                                            MainController.tableData
+                                                .value[i]);
                                       });
                                     }
                                     if(value=='refresh'){

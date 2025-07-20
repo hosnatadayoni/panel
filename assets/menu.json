@@ -71,6 +71,7 @@
       {
         "name": "main_menu",
         "title": "main_menu",
+        "main-menu": true,
         "default_value": false,
         "type": "checkbox",
         "is-show-table": true,
@@ -80,6 +81,7 @@
       {
         "name": "currentPage",
         "title": "currentPage",
+        "default_value": 1,
         "type": "Number int",
         "is-show-table": true,
         "is-show-store": true,
@@ -88,6 +90,7 @@
       {
         "name": "countShowRow",
         "title": "countShowRow",
+        "default_value": 10,
         "type": "Number int",
         "is-show-table": true,
         "is-show-store": true,
@@ -102,7 +105,7 @@
         "items": [],
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": true
+        "is-show-edit": false
       },
       {
         "name": "online",
@@ -116,14 +119,13 @@
     ],
     "relations": [
       {
-        "title": "filters",
-        "table-name": "filters"
-      },
-      {
         "title": "fields",
         "table-name": "fields"
+      } ,
+      {
+        "title": "filters",
+        "table-name": "filters"
       }
-
     ]
   },
   {
@@ -144,7 +146,7 @@
         "type": "select",
         "sourceItems": "custom",
         "sourceTable": null,
-        "items":[],
+        "items":["name"],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -190,7 +192,7 @@
         ],
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": false
+        "is-show-edit": true
       }
     ]
   },
@@ -215,6 +217,9 @@
         "name": "title",
         "title": "title",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -223,6 +228,9 @@
         "name": "name",
         "title": "name",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false
@@ -234,6 +242,11 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
           {
             "title": "string",
             "value": "string",
@@ -266,6 +279,9 @@
             "is_selected": false
           }
         ],
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false
@@ -277,6 +293,11 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
           {
             "title": "string",
             "value": "string",
@@ -293,17 +314,6 @@
         "is-show-edit": false
       },
       {
-        "name": "items",
-        "title": "items",
-        "type": "multiSelect",
-        "sourceItems": "custom",
-        "sourceTable": null,
-        "items": [],
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
         "name": "source_items",
         "title": "source_items",
         "sourceItems": "custom",
@@ -312,7 +322,7 @@
         "items": [
           {
             "title": "انتخاب نشده",
-            "value": null,
+            "value": "",
             "is_selected": true
           }, {
             "title": "table",
@@ -339,6 +349,17 @@
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": false
+      },
+      {
+        "name": "items",
+        "title": "items",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
       },
       {
         "name": "is_show_table",
@@ -396,7 +417,7 @@
         "type": "string",
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": false
+        "is-show-edit": true
       }
     ]
   }

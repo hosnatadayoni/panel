@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -284,7 +285,9 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextField(_fbKey, column, type, '');
+          print('ViewController.generateStoreFormView>>${column['title']}');
+          var init=column.containsKey('default_value')?column['default_value']:'';
+          textField = generateFormTextField(_fbKey, column, type, init);
           children.add(SizedBox(
             height: 20,
           ));
@@ -386,6 +389,7 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+          print('dataModel[{name}]>>>${name}>>>${dataModel['${name}']}>>>${dataModel['${name}'].runtimeType}');
           textField = generateFormTextField(_fbKey, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
@@ -614,21 +618,33 @@ class ViewController extends GetxController {
       child = generateColor(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'select' || type == 'radiobutton') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+        onDoubleTap: (){
+          MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
+        },
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'multiSelect') {
-      child = Txt(MainController.tableData.value[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: MainController.isLightMode.value == true ? whiteColor : color2,
-        textAlign: TextAlign.center,
+      child = InkWell(
+        onDoubleTap: (){
+            MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+            '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
+        },
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: MainController.isLightMode.value == true ? whiteColor : color2,
+          textAlign: TextAlign.center,
+        ),
       );
     }
     else if (type == 'file') {
@@ -695,11 +711,16 @@ class ViewController extends GetxController {
 
     return Center(
       child: dataModel != null
-          ? Container(
+          ? InkWell(
+        onDoubleTap: (){
+          MainController.copyClipboard(dataModel);
+        },
+            child: Container(
         width: 50,
         height: 50,
         color: Color(int.parse('${dataModel}')),
-      )
+      ),
+          )
           : Container(),
     );
   }
@@ -717,12 +738,17 @@ class ViewController extends GetxController {
 
     return Obx(() {
       return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
+          child: Txt(
+            '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     });
@@ -740,18 +766,33 @@ class ViewController extends GetxController {
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
     return Obx(() {
       return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
+          child: Txt(
+            '${dataModel != null ? dataModel : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     });
   }
 
-  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, String initValue) {
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, var initValue) {
+    if(initValue.toString()!='') {
+      if (column['type'] == 'Number int') {
+        ViewController.request[column['name']] = int.parse('${initValue.toString()}');
+      } else if (column['type'] == 'Number double') {
+        ViewController.request[column['name']] = double.parse('${initValue.toString()}');
+      } else {
+        ViewController.request[column['name']] = initValue.toString();
+      }
+    }
+
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -771,7 +812,7 @@ class ViewController extends GetxController {
           hint: '${column['title']}',
           lable: '',
           column: column,
-          initValue: initValue,
+          initValue: initValue.toString(),
           onChange: (text) {
             // dataJson[columnName] = text;
             if (text != null && text != '') {
@@ -1280,7 +1321,6 @@ class ViewController extends GetxController {
 
 
     if (column['sourceItems'] != 'custom') {
-      print('getRecords 1');
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
@@ -1804,8 +1844,6 @@ class ViewController extends GetxController {
     String selectedTitle = '';
     var sourceItem = column['sourceItems'];
     if (sourceItem != 'custom') {
-      print('getRecords 2');
-
       if (selectedId != '') {
         List<dynamic> itemSelect = [];
         var object =
@@ -1845,8 +1883,6 @@ class ViewController extends GetxController {
     var sourceItem = column['sourceItems'];
     for (var i = 0; i < selectedId.length; i++) {
       if (sourceItem != 'custom') {
-        print('getRecords 3');
-
         var object = await DB(tableName).where('_id', '\$eq', selectedId[i]).getRecords();
         if (object.length != 0) {
           var objectItem = object.first;
@@ -1874,9 +1910,9 @@ class ViewController extends GetxController {
     var items=column['items'];
     List<dynamic> a = [];
     if (listItems is List) {
-    if (listItems.length == 0) {
-      return "${AppController.of(Get.context!)!.value('not selected')}";
-    }
+      if (listItems.length == 0) {
+        return "${AppController.of(Get.context!)!.value('not selected')}";
+      }
       for (int i = 0; i < listItems.length; i++) {
         if(listItems[i] is String){
           a.add(listItems[i]);
@@ -1890,11 +1926,11 @@ class ViewController extends GetxController {
             a.add(empty.join('%'));
           }
           else{
-              a.add(listItems[i]['title']);
+            a.add(listItems[i]['title']);
           }
         }
+      }
     }
-  }
     else {
       if (listItems is String) {
         a.add(listItems);
@@ -1906,7 +1942,7 @@ class ViewController extends GetxController {
         if(column['sourceItems']=='table') {
           List<dynamic> empty = [];
           for (var field in items) {
-           empty.add(listItems[field]);
+            empty.add(listItems[field]);
           }
           a.add(empty.join('%'));
         } else{
@@ -1921,11 +1957,11 @@ class ViewController extends GetxController {
     var type = column['sourceItems'];
     var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
+    print('type of sourceItems>>>${type}');
     if (type != 'custom') {
       print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        print('tableName f>>>${tableName}');
-        List<dynamic> data = await DB('${tableName}').getRecords();
+        List<dynamic> data = await HelperController.itemsListFunction(tableName);
         print('ViewController.itemsList>>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
@@ -1962,6 +1998,7 @@ class ViewController extends GetxController {
         }
       }
       dropDownListItems = itemss;
+      print('dropDownListItems>>>${dropDownListItems}');
     }
     return dropDownListItems;
   }
@@ -1973,8 +2010,6 @@ class ViewController extends GetxController {
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
       if (dataModel==null || dataModel.isEmpty ) {
-        print('getRecords 14');
-
         List<dynamic> data = await DB(tableName).getRecords();
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
@@ -1987,8 +2022,6 @@ class ViewController extends GetxController {
       }
       else {
         if(dataModel[column['name']]==null){
-          print('getRecords 5');
-
           List<dynamic> data = await DB(tableName).getRecords();
           dropDownListItems = data;
           for (int i = 0; i < dropDownListItems.length; i++) {
@@ -2000,8 +2033,6 @@ class ViewController extends GetxController {
           }
         }
         else{
-          print('getRecords 6');
-
           for (var item in dataModel[column['name']])
             dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
 

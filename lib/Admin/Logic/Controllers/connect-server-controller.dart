@@ -15,7 +15,6 @@ class ConncetServerController extends GetxController {
   static List<dynamic> listProjectRes = [];
   static List<dynamic> listSchemaRes = [];
   static List<dynamic> listFieldsRes = [];
-
   static List<dynamic> listFiltersRes = [];
   static List<dynamic> listValidateRes = [];
 
@@ -50,7 +49,6 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {}, printResponse: true);
   }
-
   static createSchema(Map<String, dynamic> json) async {
     var response = await RestApi.post(createSchemaUrl, body: json);
     RestApi.responseHandler(
@@ -73,49 +71,20 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       listSchemaRes=response!.data['data'];
-    }, printResponse: true);
-  }
-
-  static deleteFilter(Map<String, dynamic> json) async {
-    var response = await RestApi.post(deleteFilterUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {}, printResponse: true);
-  }
-  static listFilter(Map<String, dynamic> json) async {
-    var response = await RestApi.post(listFiltersUrl, body:json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-      listFiltersRes=response!.data['data'];
-    }, printResponse: true);
-  }
-
-  static createFilter(Map<String, dynamic> json) async {
-    var response = await RestApi.post(createFilterSchemaUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-
-    }, printResponse: true);
-  }
-
-  static deleteValidate(Map<String, dynamic> json) async {
-    var response = await RestApi.post(deleteValidateUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {}, printResponse: true);
-  }
-  static listValidate(Map<String, dynamic> json) async {
-    var s = await Token.getToken();
-    var response = await RestApi.post(listValidateUrl, body:json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-      listValidateRes=response!.data['data'];
-    }, printResponse: true);
-  }
-  static createValidate(Map<String, dynamic> json) async {
-    var response = await RestApi.post(createValidateFieldsUrl, body: json);
-    RestApi.responseHandler(
-        response: response, successCallback: () async {
-
-    }, printResponse: true);
+      // for(var schema in listSchemaRes){
+      //   if(schema['relations']!=null && schema['relations'].length!=0){
+      //     var rels=[];
+      //     for(var rel in schema['relations']){
+      //       var index;
+      //       index =listSchemaRes.indexWhere((element) => element['_id']==rel);
+      //           if(index!=-1){
+      //             listSchemaRes[index]['relations'].add( listSchemaRes[index]['name']);
+      //
+      //           }
+      //     }
+      //   }
+      // }
+        }, printResponse: true);
   }
 
   static createField(Map<String, dynamic> json) async {
@@ -146,6 +115,49 @@ class ConncetServerController extends GetxController {
       listFieldsRes=response!.data['data'];
     }, printResponse: true);
   }
+
+  static deleteValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteValidateUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listValidate(Map<String, dynamic> json) async {
+    var s = await Token.getToken();
+    var response = await RestApi.post(listValidateUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listValidateRes=response!.data['data'];
+    }, printResponse: true);
+  }
+  static createValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createValidateFieldsUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
+  static deleteFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteFilterUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFiltersUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listFiltersRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+  static createFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createFilterSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
 
 
 
