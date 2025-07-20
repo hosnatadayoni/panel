@@ -269,7 +269,7 @@ class MainController extends GetxController {
     // SubMenuList = json.decode(jsonFileString);
 
     for (var name in tableNames()) {
-      addsyncField('${name}');
+      // addsyncField('${name}');
       addParentForRelations('${name}');
     }
   }
@@ -283,7 +283,7 @@ class MainController extends GetxController {
       var relates=[];
 
       for (var relations in items['schema']['relations']) {
-        var index = SubMenuList.indexWhere((element) =>element['schema']['_id']== relations);
+        var index = SubMenuList.indexWhere((element) =>element['schema']['name']== relations);
         if (index != -1) {
           relates.add(SubMenuList[index]['schema']['name']);
         }
@@ -356,7 +356,7 @@ class MainController extends GetxController {
     var getDataTable = MainController.getDataTable(tableName);
     if (getDataTable['schema']['relations']!=null  && getDataTable['schema']['relations'].length != 0) {
       for (var relate in getDataTable['schema']['relations']) {
-        var index = SubMenuList.indexWhere((element) => element['schema']['_id'] == relate);
+        var index = SubMenuList.indexWhere((element) => element['schema']['name'] == relate);
         var items = SubMenuList[index];
         items['columns'].add({
           'name': 'parent_table',

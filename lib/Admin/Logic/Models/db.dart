@@ -153,7 +153,6 @@ class DB {
     Box box;
     List<Map<String, dynamic>> data = [];
     ConncetServerController.getRecordRes.value=[];
-    print('DB.getRecords>>>${this.tableName}>>>${MainController.SubMenuList}');
     int index = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == '${this.tableName}');
 
     data=[];
@@ -1416,7 +1415,10 @@ class DB {
         if (ConncetServerController.deleteRecordRes == true) {
           if (relations['schema']['relations']!=null && relations['schema']['relations'].length != 0) {
             for (var relation in relations['schema']['relations']) {
-              DB(relation['schema']['name'])
+              // DB(relation['schema']['name'])
+              //     .where('parent_id', '\$eq', data['_id'])
+              //     .deleteRecord();
+              DB(relation)
                   .where('parent_id', '\$eq', data['_id'])
                   .deleteRecord();
             }
@@ -1435,7 +1437,7 @@ class DB {
           box.deleteAt(tableDataIndex);
           if (relations['schema']['relations'].length != 0) {
             for (var relation in relations['schema']['relations']) {
-              DB(relation['schema']['name']).where(
+              DB(relation).where(
                   'parent_id', '\$eq', data['_id']).deleteRecord();
             }
           }

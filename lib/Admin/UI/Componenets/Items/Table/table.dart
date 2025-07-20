@@ -139,19 +139,12 @@ class _TableBoxState extends State<TableBox> {
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
-                                    var relation = MainController.tableInfo['schema']['relation']!=null ?MainController.tableInfo['schema']['relation']
-                                        .firstWhere((item) => item['name'] == value, orElse: () => null):null;
+                                    var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
+                                        .firstWhere((item) => item == value, orElse: () => null):null;
                                     if(relation!=null){
-                                      MainController.selectedItem
-                                          .value = MainController
-                                          .SubMenuList
-                                          .indexWhere((element) =>
-                                      element[
-                                      'name'] ==
-                                          relation['name']);
                                       MainController
                                           .tableName.value =
-                                      relation['name'];
+                                      relation;
                                       print(
                                           '_TableBoxState.build>>${MainController.tableName.value}');
                                       HelperController
@@ -370,13 +363,13 @@ class _TableBoxState extends State<TableBox> {
                                               ],
                                             ),
                                           )),
-                                      if (MainController.tableInfo['schema']['relation']!=null&& MainController.tableInfo['schema']['relation'].length != 0)
-                                        for (var item in MainController.tableInfo['schema']['relation'])
+                                      if (MainController.tableInfo['schema']['relations']!=null&& MainController.tableInfo['schema']['relations'].length != 0)
+                                        for (var item in MainController.tableInfo['schema']['relations'])
                                           PopupMenuItem<String>(
-                                              value: item['name'].toString(),
+                                              value: item.toString(),
                                               child: Container(
                                                 child: Txt(
-                                                  item['title'],
+                                                  item,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: whiteColor,

@@ -10,7 +10,7 @@ import 'app-controller.dart';
 class ConncetServerController extends GetxController {
 
   static Map<String, dynamic>storeRecordRes={};
-  static Map<String, dynamic>updateRecordRes={};
+  static Map<String, dynamic> updateRecordRes={};
   static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
   static RxList<dynamic> getRecordRes=[].obs;
@@ -64,7 +64,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           updateRecordRes={};
-          updateRecordRes=response!.data['data'];
+          updateRecordRes=response!.data['data']!=null &&response!.data['data'].length!=0? response!.data['data'].first:[];
         },printResponse: true);
     // AppController.finishLoading('update-records');
     // AppController.finishLoading('get-records');
