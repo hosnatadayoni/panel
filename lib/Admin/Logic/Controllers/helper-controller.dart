@@ -294,7 +294,7 @@ class HelperController extends GetxController {
     OrderItem.orderItemsList = {};
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['view'] == 'custom') {
-      if (table['table-name'] == 'project') {
+      if (table['table-name'] == 'project' || table['table-name'] == 'validators' || table['table-name'] == 'filters'  ) {
         await Get.to(() => EditPage(data: data));
       }
        if(table['table-name'] == 'fields'){
