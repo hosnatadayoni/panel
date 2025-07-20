@@ -1571,7 +1571,7 @@ class MainController extends GetxController {
           SubMenuList.add(table);
         } else {
           showSnackbar(snackTypes.error,
-              "امکان ایجاد ستون multiselect برای ${tableName} وجود ندارد. ");
+              "${AppController.of(Get.context!)!.value('Ability to create multiselect columns for')} ${tableName} ${AppController.of(Get.context!)!.value('does not exist')} ");
         }
       }
     }
@@ -1784,9 +1784,9 @@ class MainController extends GetxController {
     }
   }
 
-  static copyClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text:text));
-    showSnackbar(snackTypes.info, "کپی شد");
+  static copyClipboard(var text) async {
+    await Clipboard.setData(ClipboardData(text:text.toString()));
+    showSnackbar(snackTypes.info, "${AppController.of(Get.context!)!.value('copied')}");
   }
 
 }

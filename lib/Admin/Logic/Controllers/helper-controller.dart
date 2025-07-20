@@ -1,14 +1,20 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Logic/Models/order-item.dart';
+import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
+import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
+import 'package:finance/Admin/boxes.dart';
 import 'package:finance/AdminCustom/UI/Views/creteField.dart';
 import 'package:finance/AdminCustom/UI/Views/editField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:uuid/uuid.dart';
 import '../../UI/Views/create.dart';
 import '../../UI/Views/table-page.dart';
 import '../Helpers/token-methods.dart';
@@ -66,9 +72,22 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(tableName);
     print('HelperController.createPageFunction>>${table}');
     if (table['view'] == 'custom') {
-      if (table['table-name'] == 'project' ||
-          table['table-name'] == 'schema' || table['table-name'] == 'validators') {
+      if (table['table-name'] == 'project' || table['table-name'] == 'validators') {
         await Get.to(() => CreatePage(tableName));
+      }
+      if( table['table-name'] == 'schema'){
+        await ConncetServerController.listSchema();
+        var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='schema');
+        if(index!=-1){
+          for(var field in ConncetServerController.listSchemaRes) {
+            print('HelperController.createPageFunction222${ MainController.tableInfo['columns']}');
+            MainController.tableInfo['columns'][6]['items']
+                .add({"title": field['name'], "value": field['name']});
+          }
+          print('HelperController.createPageFunction>>>${  MainController.tableInfo['columns'][6]}');
+        }
+        await Get.to(() => CreatePage(tableName));
+
       }
       if( table['table-name'] == 'filters'){
         Map<String, dynamic> parent = await DB.parentItem;
@@ -103,13 +122,33 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'project') {
-        await ConncetServerController.createProject(ViewController.request);
-        MainController.goToTablePage(table, loadData: false);
+        var Id = Uuid().v4();
+        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        if (await RecordController.validate(table['table-name'], newData,
+            ViewCustomController.getDataTable(table['table-name'])) ==
+            false) {
+          await ConncetServerController.createProject(ViewController.request);
+          MainController.goToTablePage(table, loadData: false);
+        }
+        else {
+          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
+        }
+        ViewController.isClickedBtn.value=true;
       }
 
       if (table['table-name'] == 'schema') {
-        await ConncetServerController.createSchema(ViewController.request);
-        MainController.goToTablePage(table, loadData: false);
+        var Id = Uuid().v4();
+        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        if (await RecordController.validate(table['table-name'], newData,
+            ViewCustomController.getDataTable(table['table-name'])) ==
+            false) {
+          await ConncetServerController.createSchema(ViewController.request);
+          MainController.goToTablePage(table, loadData: false);
+        }
+        else {
+          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
+        }
+        ViewController.isClickedBtn.value=true;
       }
 
       if (table['table-name'] == 'fields') {
@@ -117,8 +156,22 @@ class HelperController extends GetxController {
         if (parent.length != 0) {
           ViewController.request.addAll({'table': parent['parent_id']});
         }
-        await ConncetServerController.createField(ViewController.request);
-        MainController.goToTablePage(table, loadData: false);
+        if(ViewController.request['name'] != null){
+          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        }
+        var Id = Uuid().v4();
+        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        if (await RecordController.validate(table['table-name'], newData,
+            ViewCustomController.getDataTable(table['table-name'])) ==
+            false) {
+          await ConncetServerController.createField(ViewController.request);
+          MainController.goToTablePage(table, loadData: false);
+        }
+        else {
+
+          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
+        }
+        ViewController.isClickedBtn.value=true;
       }
 
       if (table['table-name'] == 'filters') {
@@ -238,41 +291,63 @@ class HelperController extends GetxController {
     }
   }
 
-  // static editPageFunction(var data) async {
-  //   OrderItem.orderItemsList = {};
-  //   var table = MainController.getInfoTable(MainController.tableName.value);
-  //   if (table['view'] == 'custom') {
-  //     if (table['table-name'] == 'project' ||
-  //         table['table-name'] == 'schema') {
-  //       await Get.to(() => EditPage(data: data));
-  //     }
-  //     else if(table['table-name'] == 'fields'){
-  //       await Get.to(() => EditFieldPage(data: data));
-  //     }
-  //
-  //   } else {
-  //     await Get.to(() => EditPage(data: data));
-  //   }
-  //
-  // }
   static editPageFunction(var data) async {
-    var table =MainController.getInfoTable(MainController.tableName.value);
-    var tableName=table['table-name'];
-    if(table['view']=='custom'){
-      if(tableName!='filters' && tableName!='validators' ){
+    OrderItem.orderItemsList = {};
+    var table = MainController.getInfoTable(MainController.tableName.value);
+    if (table['view'] == 'custom') {
+      if (table['table-name'] == 'project') {
         await Get.to(() => EditPage(data: data));
       }
-    }else{
+       if(table['table-name'] == 'fields'){
+        await Get.to(() => EditFieldPage(data: data));
+      }
+      if( table['table-name'] == 'schema') {
+        // await ConncetServerController.listSchema();
+        // var index = MainController.SubMenuList.indexWhere((
+        //     element) => element['table-name'] == 'schema');
+        // if (index != -1) {
+        //   for (var field in ConncetServerController.listSchemaRes) {
+        //     print('HelperController.createPageFunction222${ MainController
+        //         .tableInfo['columns']}');
+        //     MainController.tableInfo['columns'][6]['items']
+        //         .add({"title": field['name'], "value": field['_id']});
+        //   }
+        //   print('HelperController.createPageFunction>>>${ MainController
+        //       .tableInfo['columns'][6]}');
+        // }
+        await Get.to(() => EditPage(data: data));
+      }
+
+      } else {
       await Get.to(() => EditPage(data: data));
     }
+
   }
+  // static editPageFunction(var data) async {
+  //   var table =MainController.getInfoTable(MainController.tableName.value);
+  //   var tableName=table['table-name'];
+  //   if(table['view']=='custom'){
+  //     if(tableName!='filters' && tableName!='validators' ){
+  //       await Get.to(() => EditPage(data: data));
+  //     }
+  //   }else{
+  //     await Get.to(() => EditPage(data: data));
+  //   }
+  // }
 
   static deleteFunction(var item) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table['table-name'];
     if (table['view'] == 'custom') {
-      if (tableName == 'fields') {
-        await ConncetServerController.deleteField({'id': item['_id']});
+      if(tableName=='fields'){
+        var index=ConncetServerController.listFiltersRes.indexWhere((element) => element['column']==item['name']);
+
+        print('HelperController.deleteFunction>>${index}>>${ConncetServerController.listFiltersRes}>>');
+        if(index!=-1){
+          await ConncetServerController.deleteFilter({'id':ConncetServerController.listFiltersRes[index]['_id']});
+        }
+        await ConncetServerController.deleteField({'id':item['_id']});
+
       }
       if (tableName == 'project') {
         await ConncetServerController.deleteProject(item['api_key']);
@@ -470,5 +545,23 @@ class HelperController extends GetxController {
       return await DB('${tableName}').getRecords();
     }
     return [];
+  }
+
+  static backFunction() async {
+    var index=MainController.SubMenuList.indexWhere((element) => element['relations'].any((element) => element['table-name']==MainController.tableName.value));
+    print('HelperController.backFunction>>$index');
+    if(index!=-1){
+      MainController.selectedSubItem.value = index;
+      DB.parentItem={};
+      MainController.tableName.value=MainController.SubMenuList[index]['table-name'];
+      await MainController.goToTablePage(MainController.SubMenuList[index]);
+
+
+    }else{
+      MainController.isClickedItem.value = false;
+      MainController.selectedItem.value = -1;
+      MainController.selectedSubItem.value = -1;
+      Get.to(() => DashboardPage());
+    }
   }
 }

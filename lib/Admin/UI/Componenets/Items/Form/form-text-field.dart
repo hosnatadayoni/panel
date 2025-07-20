@@ -42,8 +42,9 @@ class FormTextField extends StatefulWidget {
 class _FormTextFieldState extends State<FormTextField> {
   final textFieldKey = GlobalKey<FormBuilderFieldState>();
   var txt = null;
-  final FocusNode _focusNode = FocusNode();
   String? _errorText;
+  final FocusNode _focusNode = FocusNode();
+
   // var value;
   final TextEditingController _formConroller = TextEditingController();
   // Rx<dynamic> text = ''.obs;
@@ -52,18 +53,21 @@ class _FormTextFieldState extends State<FormTextField> {
   @override
   void initState() {
     super.initState();
+
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
 
-       if(widget.isValidate==true)
-        _validateInput();
+        if(widget.isValidate==true) {
+          _validateInput();
+        }
 
         if(widget.updateChange!=null){
           widget.updateChange!();
         }
       }
-    });
-  }
+  });
+        }
+
   void _validateInput() {
     // value = widget.fbKey?.currentState?.fields['${widget.name}']?.value;
      if(widget.column != null){
@@ -157,6 +161,14 @@ class _FormTextFieldState extends State<FormTextField> {
   }
   @override
   Widget build(BuildContext context) {
+
+    if (ViewController.isClickedBtn.value==true) {
+      if(widget.isValidate==true)
+        _validateInput();
+      if(widget.updateChange!=null){
+        widget.updateChange!();
+      }
+    }
     return  Obx((){
       if(ViewController.isClickedBtn.value){
         if(widget.column  != null){
@@ -241,7 +253,7 @@ class _FormTextFieldState extends State<FormTextField> {
             key: widget.fbKey,
             child: FormBuilderTextField(
               key: textFieldKey,
-              focusNode: _focusNode,
+              // focusNode: _focusNode,
               controller: widget.initValue == null ? _formConroller : null,
               obscureText: widget.isPassword == true  && UserController.isVisibility.value == false? true : false,
               keyboardType:widget.isLongTxt == true?TextInputType.multiline:widget.isNumberInt! || widget.isNumberDouble!?TextInputType.number:TextInputType.text,
@@ -281,6 +293,7 @@ class _FormTextFieldState extends State<FormTextField> {
                 // ViewController.request[widget.column['name']] = value;
                 if(widget.onChange!=null)
                   this.widget.onChange!(value);
+                _validateInput();
               },
               onEditingComplete: (){
               },
@@ -318,9 +331,9 @@ class _FormTextFieldState extends State<FormTextField> {
       );
     });
   }
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _focusNode.dispose();
+  //   super.dispose();
+  // }
 }

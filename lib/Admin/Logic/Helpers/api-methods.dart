@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
 
 enum requestTypes{
@@ -77,7 +80,7 @@ class RestApi {
       if(isConnected)
         showSnackbar(snackTypes.error, 'Server Error');
       else
-        showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
+        showSnackbar(snackTypes.error, '${AppController.of(Get.context!)!.value('Check the Internet connection.')}');
       // if(ModalRoute.of(Get.Get.context!)!.settings.name!='/networkError')
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }

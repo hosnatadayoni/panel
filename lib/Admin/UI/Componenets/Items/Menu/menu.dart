@@ -106,7 +106,6 @@ class _MenuBoxState extends State<MenuBox>{
                                   child: InkWell(
                                       onTap: (){
                                         MainController.selectedItem.value = i;
-                                        print('MainController.selectedItem.value menu>>>${MainController.selectedItem.value}');
                                         if(MainController.selectedItem.value == 0){
                                           Get.to(() => DashboardPage());
                                           MainController.isClickedItem.value =false;

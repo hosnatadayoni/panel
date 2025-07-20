@@ -285,7 +285,9 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextField(_fbKey, column, type, '');
+          print('ViewController.generateStoreFormView>>${column['title']}');
+          var init=column.containsKey('default_value')?column['default_value']:'';
+          textField = generateFormTextField(_fbKey, column, type, init);
           children.add(SizedBox(
             height: 20,
           ));
@@ -387,6 +389,7 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+          print('dataModel[{name}]>>>${name}>>>${dataModel['${name}']}>>>${dataModel['${name}'].runtimeType}');
           textField = generateFormTextField(_fbKey, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
@@ -779,7 +782,17 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, String initValue) {
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, var initValue) {
+    if(initValue.toString()!='') {
+      if (column['type'] == 'Number int') {
+        ViewController.request[column['name']] = int.parse('${initValue.toString()}');
+      } else if (column['type'] == 'Number double') {
+        ViewController.request[column['name']] = double.parse('${initValue.toString()}');
+      } else {
+        ViewController.request[column['name']] = initValue.toString();
+      }
+    }
+
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -799,7 +812,7 @@ class ViewController extends GetxController {
           hint: '${column['title']}',
           lable: '',
           column: column,
-          initValue: initValue,
+          initValue: initValue.toString(),
           onChange: (text) {
             // dataJson[columnName] = text;
             if (text != null && text != '') {

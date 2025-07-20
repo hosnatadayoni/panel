@@ -41,10 +41,11 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                 },
                 child: InkWell(
                   onTap: (){
-                    MainController.isClickedItem.value = false;
-                    MainController.selectedItem.value = -1;
-                    MainController.selectedSubItem.value = -1;
-                    Get.to(() => DashboardPage());
+                    // MainController.isClickedItem.value = false;
+                    // MainController.selectedItem.value = -1;
+                    // MainController.selectedSubItem.value = -1;
+                    // Get.to(() => DashboardPage());
+                    HelperController.backFunction();
                   },
                   child: Container(
                     padding: EdgeInsets.all(10),
