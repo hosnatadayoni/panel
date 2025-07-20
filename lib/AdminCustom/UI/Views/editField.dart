@@ -39,7 +39,6 @@ class _EditFieldPageState extends State<EditFieldPage> {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'multiSelect') {
         if(widget.data['source_items'] == 'table'){
-          print('ssssss>>>${widget.data['source_table']}');
           if(widget.data['items'].length != 0){
             await ConncetServerController.listField({'name': widget.data['source_table']});
             for(var data in ConncetServerController.listFieldsRes){

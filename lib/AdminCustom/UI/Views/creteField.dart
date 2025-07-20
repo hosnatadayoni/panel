@@ -36,7 +36,7 @@ class _CretePageFieldState extends State<CretePageField> {
   RxMap<String, Widget> selectWidgets = <String, Widget>{}.obs;
 
   //select custom
-  RxList<dynamic> sourceItem=[].obs;
+  RxList<dynamic> sourceItemList=[].obs;
   RxList<dynamic> sourceTable=[].obs;
   Rx<String> initailValueType=''.obs;
   Rx<String> initailValueSourceItems=''.obs;
@@ -53,7 +53,7 @@ class _CretePageFieldState extends State<CretePageField> {
   Rx<bool> isSelectedItem = false.obs;
   //end multi select custom
 
-  Rx<String> sourceItem2 = ''.obs;
+  Rx<String> sourceItem = ''.obs;
    Rx<String> sourceSelected = ''.obs;
    Rx<String> selectedType = ''.obs;
   RxList<dynamic> typeItems=[].obs;
@@ -74,7 +74,7 @@ class _CretePageFieldState extends State<CretePageField> {
           sourceTable.value = items;
         }
         else if(column['name'] == 'source_items'){
-          sourceItem.value = await ViewController.itemsList(column);
+          sourceItemList.value = await ViewController.itemsList(column);
         }
         else if(column['name'] == 'type'){
           typeItems.value = await ViewController.itemsList(column);
@@ -84,7 +84,6 @@ class _CretePageFieldState extends State<CretePageField> {
         if(column['name'] == 'source_table'){
           sourceTableItems.value = await ViewController.itemsList(column);
         }
-
       }
     }
   }
@@ -97,9 +96,6 @@ class _CretePageFieldState extends State<CretePageField> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    if(selectedType.value != 'select' || selectedType.value != 'multiSelect' || selectedType.value != 'radiobutton'){
-       print('sourceItem2.value a>>>${sourceItem2.value}');
-    }
     return Scaffold(
       body: Container(
           width: size.width,
@@ -315,7 +311,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                         ],
                                                         initalValue: initailValueType.value == '' || initailValueType.value == null ?"":initailValueType.value,
                                                         onChanged: (value) async {
-                                                          sourceItem2.value = value!;
+                                                          sourceItem.value = value!;
                                                           // initailValue.value = value;
                                                           if (value != '') {
                                                             ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
@@ -380,7 +376,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                             }):
                                             MainController.tableInfo['columns'][j]['name'] == 'type_field'? selectedType.value != 'multiSelect' ?  Column(children: [selectWidgets[MainController.tableInfo['columns'][j]['name']] ?? Container() , SizedBox(height: 20,)],): Container():
                                             MainController.tableInfo['columns'][j]['name'] == 'source_items' ? selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == ''? Obx((){
-                                              return sourceItem.value.length != 0
+                                              return sourceItemList.value.length != 0
                                                   ? new Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
@@ -411,7 +407,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                 );
                                                               }),
                                                               value: ''),
-                                                          for (var item in sourceItem.value)
+                                                          for (var item in sourceItemList.value)
                                                             DropdownMenuItem(
                                                                 child: Obx(() {
                                                                   return Txt(
@@ -426,7 +422,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                         ],
                                                         initalValue: initailValueSourceItems.value == '' || initailValueSourceItems.value == null ?"":initailValueSourceItems.value,
                                                         onChanged: (value) async {
-                                                          sourceItem2.value = value!;
+                                                          sourceItem.value = value!;
                                                           // initailValue.value = value;
                                                           if (value != '') {
                                                             ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
@@ -443,7 +439,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                         name: '${MainController.tableInfo['columns'][j]['title']}',
                                                         column: MainController.tableInfo['columns'][j],
                                                         items: [
-                                                          for (var item in sourceItem)
+                                                          for (var item in sourceItemList)
                                                             DropdownMenuItem(
                                                                 child: Obx(() {
                                                                   return Txt(
@@ -457,12 +453,12 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                 value: item['value']),
                                                         ],
                                                         initalValue: initailValueSourceItems.value == '' || initailValueSourceItems.value == null
-                                                            ? sourceItem.first['value']
+                                                            ? sourceItemList.first['value']
                                                             : initailValueSourceItems.value,
                                                         onChanged: (value) async {
-                                                          sourceItem2.value = value!;
+                                                          sourceItem.value = value!;
                                                           initailValueSourceItems.value = value;
-                                                          for (var item in sourceItem.value) {
+                                                          for (var item in sourceItemList.value) {
                                                             if (item['title'] == value) {
                                                               if (item['value'] == '') {
                                                                 value = null;
@@ -485,7 +481,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                 ],
                                               ) : Container();
                                             }) : Container():
-                                            MainController.tableInfo['columns'][j]['name'] == 'source_table' ? sourceItem2.value == 'custom' ? Container() :selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
+                                            MainController.tableInfo['columns'][j]['name'] == 'source_table' ? sourceItem.value == 'custom' ? Container() :selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
                                               return sourceTable.value.length != 0
                                                   ? new Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -617,7 +613,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                             }) :Container() :
                                             Container()
                                   else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
-                                                sourceItem2.value == 'custom' && (selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton')?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
+                                                sourceItem.value == 'custom' && (selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton')?ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j], 'string', '') :
                                                 selectedType.value == 'select' ||selectedType.value == 'multiSelect'  || selectedType.value == 'radiobutton' ||selectedType.value == '' ? Obx((){
                                               return  sourceTableItems.value.length != 0
                                                   ? MainController.tableInfo['columns'][j]['sourceItems'] != 'custom'
