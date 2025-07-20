@@ -122,6 +122,9 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'project') {
+        if(ViewController.request['name'] != null){
+          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        }
         var Id = Uuid().v4();
         DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
@@ -137,6 +140,9 @@ class HelperController extends GetxController {
       }
 
       if (table['table-name'] == 'schema') {
+        if(ViewController.request['name'] != null){
+          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        }
         var Id = Uuid().v4();
         DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
@@ -269,8 +275,20 @@ class HelperController extends GetxController {
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
         request.addAll({'id': id});
-        await ConncetServerController.updateSchema(request);
-        await MainController.goToTablePage(table);
+        if(request['name'] != null){
+          request['name'] = request['name'].trim().replaceAll(' ', '_');
+        }
+        final record = DataModel(id: request['_id'], data: request);
+        var validate = await RecordController.validate(tableName, record,
+            ViewCustomController.getDataTable(tableName));
+        if (validate == false){
+          await ConncetServerController.updateSchema(request);
+          await MainController.goToTablePage(table);
+        }
+        else {
+          showSnackbar(snackTypes.error,
+              '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
+        }
       }
       if (tableName == 'fields') {
         var req = {

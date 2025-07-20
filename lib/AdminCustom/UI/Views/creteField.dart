@@ -320,7 +320,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           }
                                                         },
                                                         hintText: hintText.value,
-                                                        isSeleted: isSeletedSelectBox,
+                                                        isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                         selectedValue: '');
                                                   })
                                                       : Obx((){
@@ -345,6 +346,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                             ? typeItems.value.first['value']
                                                             : initailValueType.value,
                                                         onChanged: (value) async {
+                                                          print('value qyuu>>>${value}');
                                                           // sourceItem2.value = value!;
                                                           selectedType.value = value!;
                                                           initailValueType.value = value;
@@ -365,7 +367,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           }
                                                         },
                                                         hintText: hintText.value,
-                                                        isSeleted: isSeletedSelectBox,
+                                                        isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                         selectedValue: '');
                                                   }),
                                                   SizedBox(
@@ -431,7 +433,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           }
                                                         },
                                                         hintText: hintText.value,
-                                                        isSeleted: isSeletedSelectBox,
+                                                        isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                         selectedValue: '');
                                                   })
                                                   : Obx((){
@@ -472,7 +475,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           }
                                                         },
                                                         hintText: hintText.value,
-                                                        isSeleted: isSeletedSelectBox,
+                                                        isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                         selectedValue: '');
                                                   }),
                                                   SizedBox(
@@ -549,7 +553,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                          }
                                                        },
                                                        hintText: hintText.value,
-                                                       isSeleted: isSeletedSelectBox,
+                                                       isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                           ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                        selectedValue: '');
                                                  })
                                                       : Obx((){
@@ -602,7 +607,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                               }
                                                             },
                                                             hintText: hintText.value,
-                                                            isSeleted: isSeletedSelectBox,
+                                                            isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                                ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                             selectedValue: '');
                                                   }),
                                                   SizedBox(
@@ -726,7 +732,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           ? hintTxt.value
                                                           : '${AppController.of(Get.context!)!.value('choice')}',
                                                       selectedItems: selectedItemsList,
-                                                      isSelectedItem: isSelectedItem,
+                                                      isSelectedItem: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ||
+                                                          ViewController.request[MainController.tableInfo['columns'][j]['name']] == null? false.obs : true.obs,
                                                       column: MainController.tableInfo['columns'][j],
                                                     );
                                                   }),
