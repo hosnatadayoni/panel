@@ -156,10 +156,7 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
-                                        HelperController
-                                            .editPageFunction(
-                                            MainController.tableData
-                                                .value[i]);
+                                        HelperController.editPageFunction(MainController.tableData.value[i]);
                                       });
                                     }
                                     if(value=='refresh'){

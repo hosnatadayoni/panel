@@ -1777,6 +1777,7 @@ class MainController extends GetxController {
 
       // HelperController.tablePageFunction(table: table);
     } else {
+      print('MainController.goToTablePage');
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
       ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();

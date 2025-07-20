@@ -80,7 +80,6 @@
       {
         "name": "currentPage",
         "title": "currentPage",
-        "currentPage": 1,
         "type": "Number int",
         "is-show-table": true,
         "is-show-store": true,
@@ -89,8 +88,18 @@
       {
         "name": "countShowRow",
         "title": "countShowRow",
-        "countShowRow": 10,
         "type": "Number int",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "relations",
+        "title": "relations",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -100,17 +109,6 @@
         "title": "online",
         "type": "checkbox",
         "default_value": true,
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
-        "name": "relations",
-        "title": "relations",
-        "type": "multiSelect",
-        "sourceItems": "table",
-        "sourceTable": "schema",
-        "items": ["name"],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -343,8 +341,8 @@
         "is-show-edit": false
       },
       {
-        "name": "is-show-table",
-        "title": "is-show-table",
+        "name": "is_show_table",
+        "title": "is_show_table",
         "type": "checkbox",
         "default_value": false,
         "is-show-table": true,
@@ -352,8 +350,8 @@
         "is-show-edit": true
       },
       {
-        "name": "is-show-store",
-        "title": "is-show-store",
+        "name": "is_show_store",
+        "title": "is_show_store",
         "type": "checkbox",
         "default_value": false,
         "is-show-table": true,
@@ -361,8 +359,8 @@
         "is-show-edit": true
       },
       {
-        "name": "is-show-edit",
-        "title": "is-show-edit",
+        "name": "is_show_edit",
+        "title": "is_show_edit",
         "type": "checkbox",
         "default_value": false,
         "is-show-table": true,

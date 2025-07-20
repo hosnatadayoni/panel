@@ -1280,6 +1280,7 @@ class ViewController extends GetxController {
 
 
     if (column['sourceItems'] != 'custom') {
+      print('getRecords 1');
       items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
@@ -1803,6 +1804,8 @@ class ViewController extends GetxController {
     String selectedTitle = '';
     var sourceItem = column['sourceItems'];
     if (sourceItem != 'custom') {
+      print('getRecords 2');
+
       if (selectedId != '') {
         List<dynamic> itemSelect = [];
         var object =
@@ -1842,6 +1845,8 @@ class ViewController extends GetxController {
     var sourceItem = column['sourceItems'];
     for (var i = 0; i < selectedId.length; i++) {
       if (sourceItem != 'custom') {
+        print('getRecords 3');
+
         var object = await DB(tableName).where('_id', '\$eq', selectedId[i]).getRecords();
         if (object.length != 0) {
           var objectItem = object.first;
@@ -1968,6 +1973,8 @@ class ViewController extends GetxController {
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
       if (dataModel==null || dataModel.isEmpty ) {
+        print('getRecords 14');
+
         List<dynamic> data = await DB(tableName).getRecords();
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
@@ -1980,6 +1987,8 @@ class ViewController extends GetxController {
       }
       else {
         if(dataModel[column['name']]==null){
+          print('getRecords 5');
+
           List<dynamic> data = await DB(tableName).getRecords();
           dropDownListItems = data;
           for (int i = 0; i < dropDownListItems.length; i++) {
@@ -1991,6 +2000,8 @@ class ViewController extends GetxController {
           }
         }
         else{
+          print('getRecords 6');
+
           for (var item in dataModel[column['name']])
             dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
 

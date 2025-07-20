@@ -88,6 +88,7 @@ class DB {
   }
 
   paginate() async {
+    print('DB.paginate');
     MainController.endIndex.value = 0;
     MainController.startIndex.value = 0;
     int countShowRow =
@@ -107,6 +108,7 @@ class DB {
   }
 
   infoPage() async {
+    print('DB.infoPage');
     int countShowRow =
         await MainController.getInfoTable('${this.tableName}')['countShowRow'];
     int perPage = countShowRow != null ? countShowRow : 10;
@@ -146,6 +148,7 @@ class DB {
   }
 
   getRecords({bool withFormat = true}) async {
+    print('DB.getRecords');
     List<Map<String, dynamic>> dataItems = [];
     Box box;
     List<Map<String, dynamic>> data = [];
