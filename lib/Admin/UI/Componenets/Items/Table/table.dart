@@ -68,7 +68,7 @@ class _TableBoxState extends State<TableBox> {
                       i < MainController.tableInfo['columns'].length;
                       i++)
                         if (MainController.tableInfo['columns'][i]
-                        ['is-show-table'] ==
+                        ['is_show_table'] ==
                             true)
                           Center(
                               child: Container(
@@ -102,7 +102,7 @@ class _TableBoxState extends State<TableBox> {
                           j < MainController.tableInfo['columns'].length;
                           j++)
                             if (MainController.tableInfo['columns'][j]
-                            ['is-show-table'] ==
+                            ['is_show_table'] ==
                                 true)
                               FutureBuilder<Widget>(
                                 future: ViewController.generateDataColumn(j, i),
@@ -147,10 +147,7 @@ class _TableBoxState extends State<TableBox> {
                                       relation;
                                       print(
                                           '_TableBoxState.build>>${MainController.tableName.value}');
-                                      HelperController
-                                          .relationFunction(
-                                          table: relation,
-                                          index: i);
+                                      HelperController.relationFunction(table: relation, index: i);
                                     }
                                     if(value=='edit'){
                                       setState(() {

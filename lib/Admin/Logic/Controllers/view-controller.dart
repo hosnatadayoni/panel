@@ -67,7 +67,7 @@ class ViewController extends GetxController {
     var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
-      if (columns[j]['is-show-store'] == true) {
+      if (columns[j]['is_show_store'] == true) {
         var column = columns[j];
         var type = column['type'];
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
@@ -271,7 +271,7 @@ class ViewController extends GetxController {
     var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
-      if (columns[j]['is-show-store'] == true) {
+      if (columns[j]['is_show_store'] == true) {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
@@ -377,7 +377,7 @@ class ViewController extends GetxController {
     var fileBox;
     var timeBox;
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      if (MainController.tableInfo['columns'][j]['is-show-edit'] == true) {
+      if (MainController.tableInfo['columns'][j]['is_show_edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
         var name = column['title'];

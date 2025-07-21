@@ -305,17 +305,17 @@ class MainController extends GetxController {
       'name': 'sync',
       'title': 'sync',
       'type': 'string',
-      'is-show-table': true,
-      'is-show-edit': false,
-      'is-show-store': false,
+      'is_show_table': true,
+      'is_show_edit': false,
+      'is_show_store': false,
     });
     items['columns'].add({
       'name': 'server error',
       'title': 'server error',
       'type': 'string',
-      'is-show-table': true,
-      'is-show-edit': false,
-      'is-show-store': false,
+      'is_show_table': true,
+      'is_show_edit': false,
+      'is_show_store': false,
     });
   }
 
@@ -362,17 +362,17 @@ class MainController extends GetxController {
           'name': 'parent_table',
           'title': 'parent_table',
           'type': 'string',
-          'is-show-table': false,
-          'is-show-edit': false,
-          'is-show-store': false,
+          'is_show_table': false,
+          'is_show_edit': false,
+          'is_show_store': false,
         });
         items['columns'].add({
           'name': 'parent_id',
           'title': 'parent_id',
           'type': 'string',
-          'is-show-table': false,
-          'is-show-edit': false,
-          'is-show-store': false,
+          'is_show_table': false,
+          'is_show_edit': false,
+          'is_show_store': false,
         });
       }
     }
@@ -411,14 +411,14 @@ class MainController extends GetxController {
     }
     if (tableData == null || tableData.length == 0) {
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-        if (MainController.tableInfo['columns'][j]['is-show-store'] == null) {
-          MainController.tableInfo['columns'][j]['is-show-store'] = true;
+        if (MainController.tableInfo['columns'][j]['is_show_store'] == null) {
+          MainController.tableInfo['columns'][j]['is_show_store'] = true;
         }
-        if (MainController.tableInfo['columns'][j]['is-show-table'] == null) {
-          MainController.tableInfo['columns'][j]['is-show-table'] = true;
+        if (MainController.tableInfo['columns'][j]['is_show_table'] == null) {
+          MainController.tableInfo['columns'][j]['is_show_table'] = true;
         }
-        if (MainController.tableInfo['columns'][j]['is-show-edit'] == null) {
-          MainController.tableInfo['columns'][j]['is-show-edit'] = true;
+        if (MainController.tableInfo['columns'][j]['is_show_edit'] == null) {
+          MainController.tableInfo['columns'][j]['is_show_edit'] = true;
         }
         if (MainController.tableInfo['columns'][j]['is-show-excel'] == null) {
           MainController.tableInfo['columns'][j]['is-show-excel'] = true;
@@ -426,14 +426,14 @@ class MainController extends GetxController {
       }
     } else {
       for (var j = 0; j < tableData['columns'].length; j++) {
-        if (tableData['columns'][j]['is-show-store'] == null) {
-          tableData['columns'][j]['is-show-store'] = true;
+        if (tableData['columns'][j]['is_show_store'] == null) {
+          tableData['columns'][j]['is_show_store'] = true;
         }
-        if (tableData['columns'][j]['is-show-table'] == null) {
-          tableData['columns'][j]['is-show-table'] = true;
+        if (tableData['columns'][j]['is_show_table'] == null) {
+          tableData['columns'][j]['is_show_table'] = true;
         }
-        if (tableData['columns'][j]['is-show-edit'] == null) {
-          tableData['columns'][j]['is-show-edit'] = true;
+        if (tableData['columns'][j]['is_show_edit'] == null) {
+          tableData['columns'][j]['is_show_edit'] = true;
         }
         if (tableData['columns'][j]['is-show-excel'] == null) {
           tableData['columns'][j]['is-show-excel'] = true;

@@ -101,15 +101,17 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
       pageInateFunction();
     } else {
-      var items = await DB('${table['schema']['name']}')
-          .parent(
-          parentId: MainController.tableData.value[index]['_id'],
-          parentTable: MainController.tableInfo['schema']['name'])
-          .getRecords();
       DB.parentItem = {
-        'parent_id': MainController.tableData.value[index]['_id'],
+        'parent_id': MainController.tableData[index]['_id'],
         'parent_table': MainController.tableInfo['schema']['name']
       };
+      var items = await DB('${table['schema']['name']}')
+          .parent(
+          parentId: MainController.tableData[index]['_id'],
+          parentTable: MainController.tableInfo['schema']['name'])
+          .getRecords();
+
+      print('HelperController.relationFunction>>>${DB.parentItem}>>');
 
       await MainController.goToTablePage(table,
           tableFields: MainController.getInfoTable(table['schema']['name']),

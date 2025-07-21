@@ -21,7 +21,7 @@ class ValidatorController extends GetxController {
     var type = column['type'];
     String name = column['name'];
 
-    if(column['is-show-store'] == true){
+    if(column['is_show_store'] == true){
       if(column['type']=='multiSelect'){
         if(dataJson[name] != null){
           // List<dynamic> items = await ViewController.itemsList(column);
@@ -280,7 +280,7 @@ class ValidatorController extends GetxController {
 //     var type = column['type'];
 //     String name = column['name'];
 //
-//     if(column['is-show-store'] == true){
+//     if(column['is_show_store'] == true){
 //       if(column['type']=='multiSelect'){
 //         if(dataJson[name] != null){
 //           print('dataJson[name] multi select 123>>>${dataJson[name]}');

@@ -144,8 +144,6 @@ class DB {
     return totalPage;
   }
 
-
-
   getRecords() async {
     AppController.startLoading('get-records');
     await ConnectionController.checkConnectivity();
@@ -157,10 +155,26 @@ class DB {
 
     data=[];
     if (MainController.SubMenuList[index]['schema']['online'] == true ) {
+      if (parentItem.length != 0) {
+
+       where('parent_id', '\$eq', parentItem['parent_id']);
+        print('DB.getRecords where list is>>>${this.whereList}');
+      }else {
+        where('parent_id', '\$eq', null);
+        print('DB.getRecords where list is2>>>${this.whereList}');
+        // await ConncetServerController.getRecordGeneral('${tableName}');
+        // dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+        // for(var s in dataItems){
+        //   print(s['parent_id']);
+        //   print(s['parent_id'].runtimeType);
+        // }
+      }
       if(this.whereList.length==0 && this.orWhereList.length==0) {
-        await ConncetServerController.getRecordGeneral('${tableName}');
-        if (ConncetServerController.getRecordRes.isNotEmpty) {
-          data = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+       List< Map<String, dynamic>> dataItems=[];
+       await ConncetServerController.getRecordGeneral('${tableName}');
+       dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+        if (dataItems.isNotEmpty) {
+          data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
           box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
           var boxList=box.values.toList();
@@ -189,11 +203,11 @@ class DB {
       data = await getDataTypeOfFieldList(box.values.toList());
     }
     if (index != -1) {
-      if (parentItem.length != 0) {
-        data = data
-            .where((element) => element['parent_id'] == parentItem['parent_id'])
-            .toList();
-      }
+      // if (parentItem.length != 0) {
+      //   data = data
+      //       .where((element) => element['parent_id'] == parentItem['parent_id'])
+      //       .toList();
+      // }
       if (this.orWhereList.length != 0) {
         if (MainController.SubMenuList[index]['schema']['online'] == true) {
           await ConncetServerController.filterRecordGeneral(
@@ -396,7 +410,7 @@ class DB {
 
       } else {
         if (this.whereList.length != 0) {
-
+          print('DB.getRecords whereList>>${this.whereList.length}');
           if (MainController.SubMenuList[index]['schema']['online'] == true && ConnectionController.checkConnection.value==true) {
             await ConncetServerController.filterRecordGeneral(
                 this.whereList, this.tableName!, '\$and');
@@ -1050,8 +1064,7 @@ class DB {
   //     return data;
   //   }
   // }
-
-  parent({String parentTable = "", String parentId = ""}) {
+  parent ({String parentTable = "", String parentId = ""}) {
     parentItem = <String, dynamic>{};
     if (parentTable != "" && parentId != "") {
       var json = {'parent_table': parentTable, 'parent_id': parentId};
