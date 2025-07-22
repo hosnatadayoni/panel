@@ -17,6 +17,7 @@ const String updateRecordUrl=baseApiUrl+'/general/updateRecord';
 const String deleteRecordUrl=baseApiUrl+'/general/deleteRecord';
 const String getRecordsUrl=baseApiUrl+'/general/getRecords';
 const String filterRecordsUrl=baseApiUrl+'/general/filterRecord';
+const String uploadFileUrl=baseApiUrl+'/record/uploadFile';
 
 // const String storeUrl='https://maahsi.com/api/v2/set/database';
 

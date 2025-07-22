@@ -64,7 +64,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           updateRecordRes={};
-          updateRecordRes=response!.data['data']!=null &&response!.data['data'].length!=0? response!.data['data'].first:[];
+          updateRecordRes=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
         },printResponse: true);
     // AppController.finishLoading('update-records');
     // AppController.finishLoading('get-records');
@@ -119,7 +119,7 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          filterRecordRes=response!.data['data']['data']!=null?response!.data['data']['data'].cast<Map<String, dynamic>>():[];
+          filterRecordRes=response!.data['data']['data']!=null?response.data['data']['data'].cast<Map<String, dynamic>>():[];
           MainController.totalItems.value=response.data['data']['count'];
         },printResponse: true);
   }

@@ -54,10 +54,10 @@ class _TableBoxState extends State<TableBox> {
 
                   //defaultColumnWidth: FixedColumnWidth(200),
                   // defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
-                  // defaultColumnWidth: FixedColumnWidth(
-                  //     (MainController.tableInfo['columns'].length > 8
-                  //         ? 200.0
-                  //         : size.width / 7)),
+                  defaultColumnWidth: FixedColumnWidth(
+                      (MainController.tableInfo['columns'].length > 8
+                          ? 200.0
+                          : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
@@ -94,9 +94,9 @@ class _TableBoxState extends State<TableBox> {
                                       ? whiteColor
                                       : color2)))
                     ]),
-                    if (MainController.tableData.value.length != 0)
+                    if (MainController.tableData.length != 0)
                       for (var i = 0;
-                      i < MainController.tableData.value.length;
+                      i < MainController.tableData.length;
                       i++)
                         TableRow(children: [
                           for (var j = 0;

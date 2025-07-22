@@ -37,7 +37,7 @@ class _DateBoxState extends State<DateBox> {
               InkWell(
                   onTap: ()async {
                     Jalali? picked = await showPersianDatePicker(
-                      context: context!,
+                      context: context,
                       initialDate: dateSelected == null ? widget.selectedDate!:dateSelected,
                       firstDate: Jalali(1385 , 8),
                       lastDate: Jalali(1450 , 9),

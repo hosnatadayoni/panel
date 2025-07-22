@@ -149,7 +149,7 @@ class _TooltipWidgetState extends State<TooltipWidget> {
               },
               child: KeyedSubtree(
                 key: _btnKey,
-                child: widget.btn!,
+                child: widget.btn,
               ),
             ),
           ),

@@ -191,7 +191,7 @@ class ExcelController extends GetxController {
         return result?.files.single.path;
       });
       if (filePath != null) {
-        var bytes = File(filePath!).readAsBytesSync();
+        var bytes = File(filePath).readAsBytesSync();
         excel = exl.Excel.decodeBytes(bytes);
 
       }

@@ -380,7 +380,7 @@ class ViewController extends GetxController {
       if (MainController.tableInfo['columns'][j]['is_show_edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
-        var name = column['title'];
+        var name = column['name'];
         var maxValidator;
         var minValidator;
         List<dynamic> items = [];
@@ -716,7 +716,7 @@ class ViewController extends GetxController {
     } else {
       name = tableData['columns'][indexColumn]['name'];
     }
-    var dataModel = MainController.tableData.value[indexRow]['${name}'];
+    var dataModel = MainController.tableData[indexRow]['${name}'];
 
     return InkWell(
       onDoubleTap: () async {
