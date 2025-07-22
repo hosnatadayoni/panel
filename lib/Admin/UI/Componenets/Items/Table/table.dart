@@ -35,9 +35,12 @@ class _TableBoxState extends State<TableBox> {
 
   @override
   Widget build(BuildContext context) {
+    print('_TableBoxState.build table info is>>${MainController.tableInfo}');
+
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
+      print('MainController.selectedItem.value table page>>>${MainController.selectedItem.value}');
       return Container(
           color: MainController.isLightMode.value == true
               ? background

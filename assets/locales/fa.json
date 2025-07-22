@@ -63,5 +63,8 @@
   "Check the Internet connection.": "اتصال اینترنت را بررسی کنید.",
   "Enter the token": "توکن را وارد کنید",
   "refresh": "به روز رسانی",
-  "Uncertain": "نامشخص"
+  "Uncertain": "نامشخص",
+  "Ability to create multiselect columns for": "امکان ایجاد ستون multiselect برای",
+  "does not exist": "وجود ندارد.",
+  "copied": "کپی شد"
 }

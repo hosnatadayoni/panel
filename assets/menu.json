@@ -46,6 +46,9 @@
         "title": "name",
         "tooltip": "",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -55,6 +58,9 @@
         "title": "title",
         "tooltip": "",
         "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -146,7 +152,7 @@
         "type": "select",
         "sourceItems": "custom",
         "sourceTable": null,
-        "items":["name"],
+        "items":[],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -192,7 +198,7 @@
         ],
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": true
+        "is-show-edit": false
       }
     ]
   },
@@ -218,7 +224,7 @@
         "title": "title",
         "type": "string",
         "validators": [
-          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
         ],
         "is-show-table": true,
         "is-show-store": true,
@@ -229,7 +235,7 @@
         "title": "name",
         "type": "string",
         "validators": [
-          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
         ],
         "is-show-table": true,
         "is-show-store": true,
@@ -387,8 +393,23 @@
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
+      },
+      {
+        "name": "parent_table",
+        "title": "parent_table",
+        "type": "string",
+        "is-show-table": false,
+        "is-show-store": false,
+        "is-show-edit": false
+      },
+      {
+        "name": "parent_id",
+        "title": "parent_id",
+        "type": "string",
+        "is-show-table": false,
+        "is-show-store": false,
+        "is-show-edit": false
       }
-
     ]
   },
   {
@@ -417,7 +438,7 @@
         "type": "string",
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": true
+        "is-show-edit": false
       }
     ]
   }

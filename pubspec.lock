@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  chunked_uploader:
+    dependency: "direct main"
+    description:
+      name: chunked_uploader
+      sha256: e3b11ac2d624498a01026d952b8d34ed11bc5032e90dcf5370920731c8f6f920
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   clock:
     dependency: transitive
     description:
@@ -237,18 +245,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
+      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.8.0+1"
-  dio_web_adapter:
-    dependency: transitive
-    description:
-      name: dio_web_adapter
-      sha256: "0a2e95fc6bdeb623bb623fc41e90e6924e9a3bbd65089f9221f83c185366b479"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
+    version: "4.0.6"
   equatable:
     dependency: transitive
     description:
@@ -1098,6 +1098,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   url_launcher:
     dependency: "direct main"
     description:
