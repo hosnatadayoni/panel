@@ -612,7 +612,8 @@ class ViewController extends GetxController {
     }
     var child;
     if (type == 'checkbox') {
-      child = generateCheckBox(indexColumn, indexRow, tableData: table);
+      child = ViewController.generateCheckBox(indexColumn, indexRow, tableData: table);
+
     }
     else if (type == 'color') {
       child = generateColor(indexColumn, indexRow, tableData: table);
@@ -682,15 +683,15 @@ class ViewController extends GetxController {
     if (dataModel == null) {
       dataModel = false;
     }
-
     dataModel='${dataModel}'=='true'?true:false;
     return CheckBox(
       defaultValue: dataModel,
       checkBoxTitle: '',
       onChange: (text) async {
-
-        await DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
-
+        // await DB('${MainController.tableInfo['table-name']}').
+        // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
+        // .updateRecords({'${name}':'${text}'});
+        HelperController.customCheckbox(name , indexColumn , indexRow , text);
       },
       index: indexRow,
       column: tableData == null

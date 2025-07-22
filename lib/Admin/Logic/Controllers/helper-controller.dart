@@ -11,6 +11,7 @@ import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:finance/Admin/boxes.dart';
 import 'package:finance/AdminCustom/UI/Views/creteField.dart';
 import 'package:finance/AdminCustom/UI/Views/editField.dart';
+import 'package:finance/AdminCustom/UI/Views/editSchema.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -77,6 +78,7 @@ class HelperController extends GetxController {
       }
       if( table['table-name'] == 'schema'){
         await ConncetServerController.listSchema();
+        MainController.tableInfo['columns'][6]['items'] = [];
         var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='schema');
         if(index!=-1){
           for(var field in ConncetServerController.listSchemaRes) {
@@ -289,6 +291,7 @@ class HelperController extends GetxController {
           showSnackbar(snackTypes.error,
               '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
         }
+        print('request schema page>>>${request}');
       }
       if (tableName == 'fields') {
         var req = {
@@ -333,7 +336,18 @@ class HelperController extends GetxController {
         //   print('HelperController.createPageFunction>>>${ MainController
         //       .tableInfo['columns'][6]}');
         // }
-        await Get.to(() => EditPage(data: data));
+        await ConncetServerController.listSchema();
+        MainController.tableInfo['columns'][6]['items'] = [];
+        var index = MainController.SubMenuList.indexWhere((
+            element) => element['table-name'] == 'schema');
+        if (index != -1) {
+          for (var field in ConncetServerController.listSchemaRes) {
+            print('HelperController.createPageFunction222${ MainController
+                .tableInfo['columns']}');
+            MainController.tableInfo['columns'][6]['items'].add({"title": field['name'], "value": field['name']});
+            }
+          }
+        await Get.to(() => EditSchemaPage(data: data));
       }
 
       } else {
@@ -580,6 +594,27 @@ class HelperController extends GetxController {
       MainController.selectedItem.value = -1;
       MainController.selectedSubItem.value = -1;
       Get.to(() => DashboardPage());
+    }
+  }
+
+  static customCheckbox(String name , int indexColumn , int indexRow , var text) async {
+    var table = MainController.getInfoTable(MainController.tableName.value);
+    if(table['view'] == 'custom'){
+      if(table['table-name'] == 'schema'){
+          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
+          await ConncetServerController.updateSchema({"${name}" : text});
+      }
+      if(table['table-name'] == 'fields'){
+          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
+          print("field>>>>checkbox>>>${MainController.tableData.value[indexRow]}");
+          await ConncetServerController.updateField({"${name}" : text});
+      }
+
+    }
+    else{
+      await DB('${MainController.tableInfo['table-name']}').
+      where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
+      .updateRecords({'${name}':'${text}'});
     }
   }
 }
