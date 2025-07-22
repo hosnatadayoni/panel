@@ -173,7 +173,7 @@ class _TableBoxState extends State<TableBox> {
                                             .isClickedBtn.value = false;
                                         ViewController.isClickedEditBtn
                                             .value = false;
-                                        ViewController.request = {};
+                                        ViewController.request.value = {};
                                         HelperController
                                             .editPageFunction(
                                             MainController.tableData

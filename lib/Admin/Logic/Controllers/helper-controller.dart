@@ -270,35 +270,32 @@ class HelperController extends GetxController {
         Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
   }
 
-  static editFunction(String tableName,
-      {var request = null, var id = null}) async {
+  static editFunction(String tableName, {var request = null, var id = null}) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     tableName = table['table-name'];
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
-        request.addAll({'id': id});
+
         if(request['name'] != null){
           request['name'] = request['name'].trim().replaceAll(' ', '_');
         }
-        final record = DataModel(id: request['_id'], data: request);
+        final record = DataModel(id: id, data: request);
         var validate = await RecordController.validate(tableName, record,
             ViewCustomController.getDataTable(tableName));
+        print('request schema page>>>${request}>>$validate');
+
         if (validate == false){
-          await ConncetServerController.updateSchema(request);
+          await ConncetServerController.updateSchema(request,id);
           await MainController.goToTablePage(table);
         }
         else {
           showSnackbar(snackTypes.error,
               '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
         }
-        print('request schema page>>>${request}');
       }
       if (tableName == 'fields') {
-        var req = {
-          'id': id,
-          'field': json.encode(request).toString(),
-        };
-        await ConncetServerController.updateField(req);
+        print('HelperController.editFunction request>>$request');
+        await ConncetServerController.updateField(request,id);
         await MainController.goToTablePage(table);
       }
     } else {
@@ -597,23 +594,20 @@ class HelperController extends GetxController {
     }
   }
 
-  static customCheckbox(String name , int indexColumn , int indexRow , var text) async {
+  static checkboxFunctuin(String name , int indexRow , var text) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if(table['view'] == 'custom'){
       if(table['table-name'] == 'schema'){
-          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          await ConncetServerController.updateSchema({"${name}" : text});
+          await ConncetServerController.updateSchema({"${name}" : text},MainController.tableData[indexRow]['_id']);
       }
       if(table['table-name'] == 'fields'){
-          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          print("field>>>>checkbox>>>${MainController.tableData.value[indexRow]}");
-          await ConncetServerController.updateField({"${name}" : text});
+          await ConncetServerController.updateField({"${name}" : text},MainController.tableData[indexRow]['_id']);
       }
 
     }
     else{
       await DB('${MainController.tableInfo['table-name']}').
-      where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
+      where('_id', '\$eq', '${MainController.tableData[indexRow]['_id']}')
       .updateRecords({'${name}':'${text}'});
     }
   }

@@ -181,21 +181,14 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
                                                                     value: selectedItemsList.contains(item['value']),
                                                                     onChanged: (isChecked) {
                                                                       if (isChecked != null) {
-
                                                                         hintTxt.value = '';
-                                                                        // if (!selectedItemsList.any((element) => element['value']==item['value'])) {
-                                                                        // requestMultiSelect = item;
                                                                         if(!selectedItemsList.contains(item['value'])){
                                                                           selectedItemsList.add(item['value']);
                                                                           // selectedItemId.add(item['value']);
                                                                         } else {
-                                                                          // requestMultiSelect.removeWhere((key, value) => value == ['_id']);
-                                                                          // selectedItemsList.removeWhere( (element) => element['value']==item['value']);
-                                                                          // selectedItemId.remove(item['value']);
                                                                           if(selectedItemsList.contains(item['value'])){
                                                                             selectedItemsList.remove(item['value']);
                                                                           }
-
                                                                         }
                                                                         if (selectedItemsList.value.length ==
                                                                             0) {
@@ -203,13 +196,7 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
                                                                         } else {
                                                                           isSelectedItem.value = true;
                                                                         }
-                                                                        // for (var r in selectedItemsList)
-                                                                        //   hintTxt.value = hintTxt.value + ViewController.itemsShowSelectItem(r, MainController.tableInfo['columns'][j]);
-                                                                        hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
-                                                                        // ViewController.request[MainController.tableInfo['columns'][j]['name']]= selectedItemId;
-                                                                        // ViewController
-                                                                        //     .request[MainController.tableInfo['columns'][j]['name']] =
-                                                                        //     selectedId;
+                                                                       hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
                                                                         ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
                                                                       }
                                                                     });
@@ -286,15 +273,9 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
                                 InkWell(
                                   onTap: () async {
                                     print(
-                                        '_EditPageSate.build>>>${ViewController
-                                            .request}>>>${MainController
-                                            .tableName.value}');
-                                    HelperController.editFunction(
-                                        MainController.tableName.value,
-                                        request: ViewController.request,
-                                        id: widget.data!['_id']);
-                                    if (ViewController.isClickedBtn.value ==
-                                        false) {}
+                                        '_EditPageSate.build>>>${ViewController.request}>>>${MainController.tableName.value}');
+                                    HelperController.editFunction(MainController.tableName.value, request: ViewController.request, id: widget.data!['_id']);
+
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(10),

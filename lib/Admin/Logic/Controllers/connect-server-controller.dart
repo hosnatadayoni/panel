@@ -55,8 +55,12 @@ class ConncetServerController extends GetxController {
         response: response, successCallback: () async {
     }, printResponse: true);
   }
-  static updateSchema(Map<String, dynamic> json) async {
-    var response = await RestApi.post(updateSchemaUrl, body: json);
+  static updateSchema(Map<String, dynamic> request,var id) async {
+    var body= {
+      'id': id,
+      'column': json.encode(request).toString(),
+    };
+    var response = await RestApi.post(updateSchemaUrl, body: body);
     RestApi.responseHandler(
         response: response, successCallback: () async {}, printResponse: true);
   }
@@ -94,8 +98,12 @@ class ConncetServerController extends GetxController {
 
     }, printResponse: true);
   }
-  static updateField(Map<String, dynamic> json) async {
-    var response = await RestApi.post(updateFieldUrl, body: json);
+  static updateField(Map<String, dynamic> request,var id) async {
+    var body= {
+      'id': id,
+      'field': json.encode(request).toString(),
+    };
+    var response = await RestApi.post(updateFieldUrl, body: body);
     RestApi.responseHandler(
         response: response, successCallback: () async {
 

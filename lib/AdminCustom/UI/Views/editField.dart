@@ -39,6 +39,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'multiSelect') {
         if(widget.data['source_items'] == 'table'){
+          print('ssssss>>>${widget.data['source_table']}');
           if(widget.data['items'].length != 0){
             await ConncetServerController.listField({'name': widget.data['source_table']});
             for(var data in ConncetServerController.listFieldsRes){
@@ -167,7 +168,6 @@ class _EditFieldPageState extends State<EditFieldPage> {
       }
     }
   }
-
   @override
   void initState() {
     super.initState();
@@ -233,19 +233,13 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                 ViewController.generateFormTextField(
                                     GlobalKey(),
                                     MainController.tableInfo['columns'][j],
-                                    MainController
-                                        .tableInfo['columns'][j]['type'],
-                                    '${widget.data['${MainController
-                                        .tableInfo['columns'][j]['name']}'] !=
-                                        null
-                                        ? widget.data['${MainController
-                                        .tableInfo['columns'][j]['name']}']
-                                        : ''}') : Container()
-                              else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
-                                  widget.data['source_items'] ==
-                                      'custom' && (widget.data['type']  == 'select' ||widget.data['type'] == 'multiSelect'  || widget.data['type'] == 'radiobutton') ? ViewController
-                                      .generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}') :
-                                  widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton' ?
+                                    MainController.tableInfo['columns'][j]['type'],
+                                    '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}') : Container()
+                                else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
+                                  widget.data['type']  == 'select' ||widget.data['type'] == 'multiSelect'  || widget.data['type'] == 'radiobutton'?
+                                  widget.data['source_items'] == 'custom'?
+                                  ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}')
+                                 :
                                   widget.data['items'].length == 0 ? Container() :Obx((){
                                     return multiSelectWidget.value;
                                   }) : Container()
@@ -301,16 +295,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    print(
-                                        '_EditPageSate.build>>>${ViewController
-                                            .request}>>>${MainController
-                                            .tableName.value}');
-                                    HelperController.editFunction(
-                                        MainController.tableName.value,
-                                        request: ViewController.request,
-                                        id: widget.data!['_id']);
-                                    if (ViewController.isClickedBtn.value ==
-                                        false) {}
+                                    print('_EditFieldPageState.build>>${ViewController.request.value}');
+                                    HelperController.editFunction(MainController.tableName.value, request: ViewController.request.value, id: widget.data!['_id']);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(10),

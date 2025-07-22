@@ -124,14 +124,6 @@ import 'package:super_tooltip/super_tooltip.dart';
 //   }
 // }
 
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/myDivider.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/tooltip.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:popover/popover.dart';
-import 'package:super_tooltip/super_tooltip.dart';
 
 import 'btn.dart';
 enum d {
