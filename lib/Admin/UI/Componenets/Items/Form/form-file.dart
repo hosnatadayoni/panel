@@ -15,10 +15,11 @@ class FormFile extends StatefulWidget {
   var selectedFilesTxt;
   var column;
   Rx<bool>? isSeletedFile = false.obs;
+  var file;
 
 
 
-  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column , this.isSeletedFile});
+  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column , this.isSeletedFile , this.file});
 
   @override
   State<FormFile> createState() => _FormFileState();
@@ -58,12 +59,15 @@ class _FormFileState extends State<FormFile> {
             children: [
               InkWell(
                 onTap: () async {
+                  print('selected file');
                   var picked = await FilePicker.platform.pickFiles(
                     allowMultiple: true,
                     type: FileType.custom,
                     allowedExtensions: widget.column['isPictureSelected'] != null && widget.column['isPictureSelected'] == true ? ['jpg', 'png']:['jpg', 'pdf', 'doc' , 'png'],
                   );
+                  print('picked>>>${picked}');
                   if (picked != null) {
+
                     setState(() {
                       widget.isSeletedFile!.value = true;
                     });
@@ -197,9 +201,11 @@ class _FormFileState extends State<FormFile> {
                 onTap: () async {
                   var picked = await FilePicker.platform.pickFiles(
                     allowMultiple: true,
+                    withReadStream: true,
                     type: FileType.custom,
                     allowedExtensions: widget.column['isPictureSelected'] != null && widget.column['isPictureSelected'] == true ? ['jpg', 'png']:['jpg', 'pdf', 'doc' , 'png'],
                   );
+                  print('picked custom>>>${picked}');
                   if (picked != null) {
                     setState(() {
                       widget.isSeletedFile!.value = true;
@@ -299,6 +305,7 @@ class _FormFileState extends State<FormFile> {
                           selectedFiles = widget.selectedFilesTxt;
                         }
                       }
+                      MainController.upload(file);
 
                     }
                     if (widget.onChanged != null) {

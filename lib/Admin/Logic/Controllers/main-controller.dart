@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:chunked_uploader/chunked_uploader.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
+import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -1787,6 +1791,74 @@ class MainController extends GetxController {
   static copyClipboard(var text) async {
     await Clipboard.setData(ClipboardData(text:text.toString()));
     showSnackbar(snackTypes.info, "${AppController.of(Get.context!)!.value('copied')}");
+  }
+
+  static upload(var file) async {
+    AppController.isLoading.value = true;
+    int chunkSize = 500000000;
+    int totalChunks = (file.size / chunkSize).ceil();
+    int currentChunkIndex = 0;
+
+    // for (int i = 0; i < totalChunks; i++) {
+    //   int start = i * chunkSize;
+    //   int end = (i + 1) * chunkSize;
+    //   end = end > file.size ? file.size : end;
+    //   currentChunk = i;
+    //
+    // }
+
+    ChunkedUploader chunkedUploader = ChunkedUploader(
+      Dio(
+        BaseOptions(
+          baseUrl: uploadFileUrl,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Connection': 'Keep-Alive',
+            "authorization": await Token.getToken() ?? '',
+          },
+          validateStatus: (status) => true,
+        ),
+      ),
+    );
+
+    try {
+      final response = await chunkedUploader.upload(
+        fileKey: "file",
+        method: "POST",
+        maxChunkSize: chunkSize,
+        path: file.path,
+        fileDataStream: file.readStream,
+        fileName: file.name,
+        fileSize: file.size,
+        data: {
+          'table_name': MainController.tableName.value,
+          'api_key': await Token.getToken(),
+          'data': file.readStream,
+          'name': file.name,
+          'currentChunkIndex': currentChunkIndex,
+          'totalChunks': totalChunks,
+        },
+        onUploadProgress: (progress) {
+          print('progress>>>$progress%');
+          currentChunkIndex = ((progress / 100) * totalChunks).floor();
+          print('currentChunkIndex>>>$currentChunkIndex');
+        },
+      );
+      print('response chunck>>>${response}');
+      if (response?.statusCode == 200) {
+        print('Upload successful: ${response?.data}');
+        return response;
+      } else {
+        print('Upload failed with status: ${response?.statusCode}');
+        throw Exception('Upload failed');
+      }
+    }catch (e) {
+      print('Upload error: $e');
+      throw e;
+    }
+    finally {
+      AppController.isLoading.value = false;
+    }
   }
 
 }

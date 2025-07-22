@@ -338,6 +338,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         } else if (type == 'file') {
+
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -691,7 +692,7 @@ class ViewController extends GetxController {
         // await DB('${MainController.tableInfo['table-name']}').
         // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
         // .updateRecords({'${name}':'${text}'});
-        HelperController.customCheckbox(name , indexColumn , indexRow , text);
+        HelperController.checkboxFunctuin(name ,  indexRow , text);
       },
       index: indexRow,
       column: tableData == null
@@ -1800,6 +1801,7 @@ class ViewController extends GetxController {
         FormFile(
           columnName: column['title'],
           onChanged: (selecetdFiles) {
+            print('selecetdFiles>>>${selecetdFiles}');
             // dataJson[columnName] = selecetdFiles;
             ViewController.request[column['name']] = selecetdFiles;
           },

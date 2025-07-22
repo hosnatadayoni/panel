@@ -284,7 +284,7 @@ class HelperController extends GetxController {
         var validate = await RecordController.validate(tableName, record,
             ViewCustomController.getDataTable(tableName));
         if (validate == false){
-          await ConncetServerController.updateSchema(request);
+          await ConncetServerController.updateSchema(request,id);
           await MainController.goToTablePage(table);
         }
         else {
@@ -294,11 +294,14 @@ class HelperController extends GetxController {
         print('request schema page>>>${request}');
       }
       if (tableName == 'fields') {
-        var req = {
-          'id': id,
-          'field': json.encode(request).toString(),
-        };
-        await ConncetServerController.updateField(req);
+        // var req = {
+        //   'id': id,
+        //   'field': json.encode(request).toString(),
+        // };
+        // await ConncetServerController.updateField(req);
+        print('HelperController.editFunction request>>$request');
+        await ConncetServerController.updateField(request,id);
+        print('req field page>>>${request}');
         await MainController.goToTablePage(table);
       }
     } else {
@@ -597,24 +600,29 @@ class HelperController extends GetxController {
     }
   }
 
-  static customCheckbox(String name , int indexColumn , int indexRow , var text) async {
+  static checkboxFunctuin(String name , int indexRow , var text) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if(table['view'] == 'custom'){
       if(table['table-name'] == 'schema'){
-          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          await ConncetServerController.updateSchema({"${name}" : text});
+          // MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
+          // await ConncetServerController.updateSchema({"${name}" : text});
+        await ConncetServerController.updateSchema({"${name}" : text},MainController.tableData[indexRow]['_id']);
       }
       if(table['table-name'] == 'fields'){
-          MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          print("field>>>>checkbox>>>${MainController.tableData.value[indexRow]}");
-          await ConncetServerController.updateField({"${name}" : text});
+          // MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
+          // print("field>>>>checkbox>>>${MainController.tableData.value[indexRow]}");
+          // await ConncetServerController.updateField({"${name}" : text});
+        await ConncetServerController.updateField({"${name}" : text},MainController.tableData[indexRow]['_id']);
       }
 
     }
     else{
+      // await DB('${MainController.tableInfo['table-name']}').
+      // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
+      // .updateRecords({'${name}':'${text}'});
       await DB('${MainController.tableInfo['table-name']}').
-      where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
-      .updateRecords({'${name}':'${text}'});
+      where('_id', '\$eq', '${MainController.tableData[indexRow]['_id']}')
+          .updateRecords({'${name}':'${text}'});
     }
   }
 }
