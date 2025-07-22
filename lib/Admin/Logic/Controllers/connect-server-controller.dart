@@ -25,7 +25,7 @@ class ConncetServerController extends GetxController {
           MainController.SubMenuList.value=response!.data['data'];
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
-            print('ConncetServerController.listSchemaByField>${name}');
+
             MainController.setRelations('${name}');
 
             MainController.addParentForRelations('${name}');

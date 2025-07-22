@@ -51,12 +51,13 @@ class _TableBoxState extends State<TableBox> {
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
                 child: Table(
+
                   //defaultColumnWidth: FixedColumnWidth(200),
                   // defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
-                  defaultColumnWidth: FixedColumnWidth(
-                      (MainController.tableInfo['columns'].length > 8
-                          ? 200.0
-                          : size.width / 7)),
+                  // defaultColumnWidth: FixedColumnWidth(
+                  //     (MainController.tableInfo['columns'].length > 8
+                  //         ? 200.0
+                  //         : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
