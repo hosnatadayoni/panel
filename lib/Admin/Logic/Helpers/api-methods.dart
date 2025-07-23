@@ -60,7 +60,7 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
+      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -127,7 +127,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }
-      else if(e is DioError && e.type==DioErrorType.connectTimeout) {
+      else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -185,8 +185,8 @@ class RestApi {
     }catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -228,8 +228,8 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -269,8 +269,8 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -315,4 +315,5 @@ class RestApi {
     return false;
   }
 }
+
 
