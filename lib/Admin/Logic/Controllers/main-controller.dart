@@ -46,6 +46,7 @@ class MainController extends GetxController {
   static Rx<bool> isClickedItem = false.obs;
   //get all data for search
   static RxList<dynamic> allData=[].obs;
+  static Rx<double> progress = 0.0.obs;
 
   //dehdar remove this section read icon of json
   static List<Item> items = [
@@ -1798,15 +1799,7 @@ class MainController extends GetxController {
     int chunkSize = 500000000;
     int totalChunks = (file.size / chunkSize).ceil();
     int currentChunkIndex = 0;
-
-    // for (int i = 0; i < totalChunks; i++) {
-    //   int start = i * chunkSize;
-    //   int end = (i + 1) * chunkSize;
-    //   end = end > file.size ? file.size : end;
-    //   currentChunk = i;
-    //
-    // }
-
+    print('uploadFileUrl>>>${uploadFileUrl}');
     ChunkedUploader chunkedUploader = ChunkedUploader(
       Dio(
         BaseOptions(
@@ -1826,7 +1819,7 @@ class MainController extends GetxController {
         fileKey: "file",
         method: "POST",
         maxChunkSize: chunkSize,
-        path: file.path,
+        path: uploadFileUrl,
         fileDataStream: file.readStream,
         fileName: file.name,
         fileSize: file.size,
@@ -1840,10 +1833,14 @@ class MainController extends GetxController {
         },
         onUploadProgress: (progress) {
           print('progress>>>$progress%');
+          MainController.progress.value = 0.0;
+          MainController.progress.value = progress;
           currentChunkIndex = ((progress / 100) * totalChunks).floor();
           print('currentChunkIndex>>>$currentChunkIndex');
         },
       );
+      print('information response>>>${MainController.tableName.value}>>>${await Token.getToken()}>>>'
+          '${await file.readStream}>>>${file.name}>>>${currentChunkIndex}>>>${totalChunks}');
       print('response chunck>>>${response}');
       if (response?.statusCode == 200) {
         print('Upload successful: ${response?.data}');

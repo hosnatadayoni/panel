@@ -292,6 +292,11 @@
             "title": "multiSelect",
             "value": "multiSelect",
             "is_selected": false
+          },
+          {
+            "title": "file",
+            "value": "file",
+            "is_selected": false
           }
         ],
         "validators": [
