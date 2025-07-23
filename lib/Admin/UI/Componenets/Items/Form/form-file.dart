@@ -42,6 +42,7 @@ class _FormFileState extends State<FormFile> {
     }
 
     return Obx((){
+      print('trggg>>>${MainController.SubMenuList[MainController.selectedSubItem.value]['view']}');
       if(ViewController.isClickedBtn.value == true || ViewController.isClickedEditBtn.value == true){
         if(inputRequired != null){
           if(widget.isSeletedFile!.value == false){
@@ -63,6 +64,7 @@ class _FormFileState extends State<FormFile> {
                     var picked = await FilePicker.platform.pickFiles(
                       allowMultiple: true,
                       type: FileType.custom,
+                      withReadStream: true,
                       allowedExtensions: widget.column['isPictureSelected'] != null && widget.column['isPictureSelected'] == true ? ['jpg', 'png']:['jpg', 'pdf', 'doc' , 'png'],
                     );
                     print('picked>>>${picked}');
@@ -166,7 +168,7 @@ class _FormFileState extends State<FormFile> {
                             selectedFiles = widget.selectedFilesTxt;
                           }
                         }
-
+                        MainController.upload(file);
                       }
                       if (widget.onChanged != null) {
                         widget.onChanged!(widget.filesSelected['${widget.columnName}']!);

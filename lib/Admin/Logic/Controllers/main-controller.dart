@@ -602,6 +602,7 @@ class MainController extends GetxController {
     print('uploadFileUrl>>>${uploadFileUrl}');
     String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['title'];
     print('tableName a>>>${tableName}');
+    print('file.readStream>>>${file.readStream}');
     ChunkedUploader chunkedUploader = ChunkedUploader(
       Dio(
         BaseOptions(
