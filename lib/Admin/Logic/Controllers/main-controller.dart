@@ -598,7 +598,8 @@ class MainController extends GetxController {
     AppController.isLoading.value = true;
     int chunkSize = 500000000;
     int totalChunks = (file.size / chunkSize).ceil();
-    int currentChunkIndex = 0;
+    print('totalChunks>>>${totalChunks}');
+    int currentChunkIndex = 1;
     print('uploadFileUrl>>>${uploadFileUrl}');
     String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['title'];
     print('tableName a>>>${tableName}');
@@ -636,14 +637,9 @@ class MainController extends GetxController {
         },
         onUploadProgress: (progress) {
           print('progress>>>$progress%');
-          // MainController.progress.value = 0.0;
-          // MainController.progress.value = progress;
-          currentChunkIndex = ((progress / 100) * totalChunks).floor();
-          print('currentChunkIndex>>>$currentChunkIndex');
+          currentChunkIndex = (((progress / 100) * totalChunks).floor()) + 1;
         },
       );
-      print('information response>>>${MainController.tableName.value}>>>${await Token.getToken()}>>>'
-          '${await file.readStream}>>>${file.name}>>>${currentChunkIndex}>>>${totalChunks}');
       print('response chunck>>>${response}');
       if (response?.statusCode == 200) {
         print('Upload successful: ${response?.data}');
