@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:chunked_uploader/chunked_uploader.dart';
+import 'package:dio/dio.dart';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/enums.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu-item.dart';
 import 'package:flutter/material.dart';
@@ -588,5 +592,69 @@ class MainController extends GetxController {
       }
     }
 
+  }
+
+  static upload(var file) async {
+    AppController.isLoading.value = true;
+    int chunkSize = 500000000;
+    int totalChunks = (file.size / chunkSize).ceil();
+    int currentChunkIndex = 0;
+    print('uploadFileUrl>>>${uploadFileUrl}');
+    ChunkedUploader chunkedUploader = ChunkedUploader(
+      Dio(
+        BaseOptions(
+          baseUrl: uploadFileUrl,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Connection': 'Keep-Alive',
+            "authorization": await Token.getToken() ?? '',
+          },
+          validateStatus: (status) => true,
+        ),
+      ),
+    );
+
+    try {
+      final response = await chunkedUploader.upload(
+        fileKey: "file",
+        method: "POST",
+        maxChunkSize: chunkSize,
+        path: uploadFileUrl,
+        fileDataStream: file.readStream,
+        fileName: file.name,
+        fileSize: file.size,
+        data: {
+          'table_name': MainController.tableName.value,
+          'api_key': await Token.getToken(),
+          'data': file.readStream,
+          'name': file.name,
+          'currentChunkIndex': currentChunkIndex,
+          'totalChunks': totalChunks,
+        },
+        onUploadProgress: (progress) {
+          print('progress>>>$progress%');
+          // MainController.progress.value = 0.0;
+          // MainController.progress.value = progress;
+          currentChunkIndex = ((progress / 100) * totalChunks).floor();
+          print('currentChunkIndex>>>$currentChunkIndex');
+        },
+      );
+      print('information response>>>${MainController.tableName.value}>>>${await Token.getToken()}>>>'
+          '${await file.readStream}>>>${file.name}>>>${currentChunkIndex}>>>${totalChunks}');
+      print('response chunck>>>${response}');
+      if (response?.statusCode == 200) {
+        print('Upload successful: ${response?.data}');
+        return response;
+      } else {
+        print('Upload failed with status: ${response?.statusCode}');
+        throw Exception('Upload failed');
+      }
+    }catch (e) {
+      print('Upload error: $e');
+      throw e;
+    }
+    finally {
+      AppController.isLoading.value = false;
+    }
   }
 }
