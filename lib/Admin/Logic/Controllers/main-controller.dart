@@ -600,6 +600,8 @@ class MainController extends GetxController {
     int totalChunks = (file.size / chunkSize).ceil();
     int currentChunkIndex = 0;
     print('uploadFileUrl>>>${uploadFileUrl}');
+    String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['title'];
+    print('tableName a>>>${tableName}');
     ChunkedUploader chunkedUploader = ChunkedUploader(
       Dio(
         BaseOptions(
@@ -624,7 +626,7 @@ class MainController extends GetxController {
         fileName: file.name,
         fileSize: file.size,
         data: {
-          'table_name': MainController.tableName.value,
+          'table_name': tableName,
           'api_key': await Token.getToken(),
           'data': file.readStream,
           'name': file.name,
