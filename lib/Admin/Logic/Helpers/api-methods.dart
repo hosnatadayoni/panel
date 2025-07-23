@@ -60,7 +60,7 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -127,7 +127,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }
-      else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+      else if(e is DioError && e.type==DioErrorType.connectTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -185,7 +185,7 @@ class RestApi {
     }catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -228,7 +228,7 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
@@ -269,7 +269,7 @@ class RestApi {
     } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
-      }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
+      }else if(e is DioError && e.type==DioErrorType.connectTimeout) {
         print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
