@@ -14,15 +14,19 @@ class ConnectionController extends GetxController {
     if (result == ConnectivityResult.wifi) {
       print('Connected to a wifi network');
       checkConnection.value=true;
-      print("checkConnection ${checkConnection}");
+      print("checkConnection1 ${checkConnection}");
 
     } else if (result == ConnectivityResult.mobile) {
       print('Connected to a mobile network');
       checkConnection.value=true;
-      print("checkConnection ${checkConnection}");
+      print("checkConnection2 ${checkConnection}");
+    }else if (result == ConnectivityResult.ethernet) {
+      print('Connected to a mobile network');
+      checkConnection.value=true;
+      print("checkConnection2 ${checkConnection}");
     } else {
       checkConnection.value=false;
-      print("checkConnection ${checkConnection}");
+      print("checkConnection3 ${checkConnection}");
       // Navigator.push(Get.context!, MaterialPageRoute(builder: (context) =>  ConnectionError()));
     }
     connectivityResult = result;

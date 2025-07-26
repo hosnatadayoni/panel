@@ -410,7 +410,7 @@ class DB {
 
       } else {
         if (this.whereList.length != 0) {
-          print('DB.getRecords whereList>>${this.whereList.length}');
+          print('DB.getRecords whereList>>${MainController.SubMenuList[index]['schema']['online']}>>>${ ConnectionController.checkConnection.value}');
           if (MainController.SubMenuList[index]['schema']['online'] == true && ConnectionController.checkConnection.value==true) {
             await ConncetServerController.filterRecordGeneral(
                 this.whereList, this.tableName!, '\$and');

@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:chunked_uploader/chunked_uploader.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
@@ -16,8 +18,10 @@ import 'package:intl/intl.dart';
 import '../../UI/Views/dashboard.dart';
 import '../../UI/Views/set-token-page.dart';
 import '../../UI/Views/table-page.dart';
+import '../Helpers/api-methods.dart';
 import 'connect-server-controller.dart';
 import 'helper-controller.dart';
+
 
 class MainController extends GetxController {
   static Rx<bool> isLightMode = true.obs;
@@ -42,6 +46,7 @@ class MainController extends GetxController {
       icon: Icons.home,
     )
   ];
+
 
   //
 
@@ -185,6 +190,8 @@ class MainController extends GetxController {
       }
       if (item['name'] == name) {
         type = item['type'];
+        print('MainController.getTypeOfField>>${type}');
+
         return type;
       }
     }
@@ -594,66 +601,49 @@ class MainController extends GetxController {
 
   }
 
-  static upload(var file) async {
-    AppController.isLoading.value = true;
-    int chunkSize = 500000000;
-    int totalChunks = (file.size / chunkSize).ceil();
-    print('totalChunks>>>${totalChunks}');
-    int currentChunkIndex = 1;
-    print('uploadFileUrl>>>${uploadFileUrl}');
-    String tableName = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['title'];
-    print('tableName a>>>${tableName}');
-    print('file.readStream>>>${file.readStream}');
-    ChunkedUploader chunkedUploader = ChunkedUploader(
-      Dio(
-        BaseOptions(
-          baseUrl: uploadFileUrl,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Connection': 'Keep-Alive',
-            "authorization": await Token.getToken() ?? '',
-          },
-          validateStatus: (status) => true,
-        ),
-      ),
-    );
+  static Future<void> uploadFileInChunks(var picked,var column,  {int chunkSize = 512 * 1024}) async {
+    if(picked==null)
+      return;
 
+    print('MainController.uploadFileInChunks>>${column}');
+    final path = picked!.files.single.path!;
+    final file = File(path);
+    final totalLength = await file.length();
+    final raf = file.openSync(mode: FileMode.read);
+    int offset = 0;
+    int chunkIndex = 1;
     try {
-      final response = await chunkedUploader.upload(
-        fileKey: "file",
-        method: "POST",
-        maxChunkSize: chunkSize,
-        path: uploadFileUrl,
-        fileDataStream: file.readStream,
-        fileName: file.name,
-        fileSize: file.size,
-        data: {
+      while (offset < totalLength) {
+        final remaining = totalLength - offset;
+        final currentChunkSize = remaining > chunkSize ? chunkSize : remaining;
+        final bytes = raf.readSync(chunkSize);
+        final String chunk =  base64Encode(bytes);
+        var body= {
           'table_name': tableName,
-          'api_key': await Token.getToken(),
-          'data': file.readStream,
-          'name': file.name,
-          'currentChunkIndex': currentChunkIndex,
-          'totalChunks': totalChunks,
-        },
-        onUploadProgress: (progress) {
-          print('progress>>>$progress%');
-          currentChunkIndex = (((progress / 100) * totalChunks).floor()) + 1;
-        },
-      );
-      print('response chunck>>>${response}');
-      if (response?.statusCode == 200) {
-        print('Upload successful: ${response?.data}');
-        return response;
-      } else {
-        print('Upload failed with status: ${response?.statusCode}');
-        throw Exception('Upload failed');
+          'data': chunk,
+          'name': file.uri.pathSegments.last,
+          'currentChunkIndex': chunkIndex,
+          'totalChunks': (totalLength/chunkSize).ceil(),
+        };
+        var response = await RestApi.post(uploadFileUrl, body: body,useToken: false);
+        RestApi.responseHandler(
+            response: response,
+            successCallback: () async {
+              ViewController.request[column['name']]=response!.data['fileName'];
+              print('Uploaded chunk $chunkIndex (${offset}-${offset + currentChunkSize - 1})');
+            },
+            errorCallback: (){
+          print('Failed to upload chunk $chunkIndex');
+
+        },printResponse: true);
+        offset += currentChunkSize;
+        chunkIndex++;
       }
-    }catch (e) {
-      print('Upload error: $e');
-      throw e;
+    } catch (e) {
+      print('Error during upload: $e');
+    } finally {
+      raf.closeSync();
     }
-    finally {
-      AppController.isLoading.value = false;
-    }
+    print('Upload finished.');
   }
 }

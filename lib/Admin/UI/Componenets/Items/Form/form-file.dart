@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
@@ -65,9 +67,13 @@ class _FormFileState extends State<FormFile> {
                       allowMultiple: true,
                       type: FileType.custom,
                       withReadStream: true,
+                      withData: true,
                       allowedExtensions: widget.column['isPictureSelected'] != null && widget.column['isPictureSelected'] == true ? ['jpg', 'png']:['jpg', 'pdf', 'doc' , 'png'],
                     );
                     print('picked>>>${picked}');
+
+                    await MainController.uploadFileInChunks(picked,widget.column);
+
                     if (picked != null) {
 
                       setState(() {
@@ -80,8 +86,10 @@ class _FormFileState extends State<FormFile> {
                         minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
                       }
 
+
                       for(var file in picked.files){
-                        var maxSize;
+                        print('_FormFileState.build>>${file.bytes}>>${file.extension}>>${file.readStream}>>}>>');
+                              var maxSize;
                         var minSize;
                         if(maxValidator != null || minValidator != null){
                           maxSize = maxValidator['value'];
@@ -168,7 +176,6 @@ class _FormFileState extends State<FormFile> {
                             selectedFiles = widget.selectedFilesTxt;
                           }
                         }
-                        MainController.upload(file);
                       }
                       if (widget.onChanged != null) {
                         widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
@@ -197,7 +204,8 @@ class _FormFileState extends State<FormFile> {
                     Expanded(child: Txt('${selectedFiles  == null?widget.filesSelected['${widget.columnName}']!.length != 0 ? widget.filesSelected['${widget.columnName}']! :'':selectedFiles }' , color: MainController.isLightMode.value ? whiteColor : primaryDark  ,));
                 })
               ],
-            ):Wrap(
+            ):
+            Wrap(
               children: [
                 InkWell(
                   onTap: () async {
@@ -207,7 +215,9 @@ class _FormFileState extends State<FormFile> {
                       type: FileType.custom,
                       allowedExtensions: widget.column['isPictureSelected'] != null && widget.column['isPictureSelected'] == true ? ['jpg', 'png']:['jpg', 'pdf', 'doc' , 'png'],
                     );
-                    print('picked custom>>>${picked}');
+
+                    await MainController.uploadFileInChunks(picked,widget.column);
+
                     if (picked != null) {
                       setState(() {
                         widget.isSeletedFile!.value = true;
@@ -307,7 +317,6 @@ class _FormFileState extends State<FormFile> {
                             selectedFiles = widget.selectedFilesTxt;
                           }
                         }
-                        MainController.upload(file);
 
                       }
                       if (widget.onChanged != null) {
