@@ -5,6 +5,7 @@ import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
+import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-color.dart';
@@ -744,18 +745,21 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
+      return  dataModel != null &&dataModel.length != 0?Column(
+        children: [
+          Center(
+            child:Img('${ dataModel}',width: 100,height: 100,isNetwork: true,),
 
-    return Obx(() {
-      return Center(
-        child: Txt(
-          '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: MainController.isLightMode.value == true ? whiteColor : color2,
-          textAlign: TextAlign.center,
-        ),
-      );
-    });
+          ),
+          Txt(
+            '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: MainController.isLightMode.value == true ? whiteColor : color2,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ):Container();
   }
 
   static Widget generateData(int indexColumn, int indexRow, {var tableData}) {

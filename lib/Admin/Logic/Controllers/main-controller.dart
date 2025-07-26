@@ -190,8 +190,6 @@ class MainController extends GetxController {
       }
       if (item['name'] == name) {
         type = item['type'];
-        print('MainController.getTypeOfField>>${type}');
-
         return type;
       }
     }
@@ -601,11 +599,11 @@ class MainController extends GetxController {
 
   }
 
-  static Future<void> uploadFileInChunks(var picked,var column,  {int chunkSize = 512 * 1024}) async {
+  static Future<String?> uploadFileInChunks(var picked,var column,  {int chunkSize = 512 * 1024}) async {
+    var filePath=null;
     if(picked==null)
-      return;
+      return null;
 
-    print('MainController.uploadFileInChunks>>${column}');
     final path = picked!.files.single.path!;
     final file = File(path);
     final totalLength = await file.length();
@@ -629,21 +627,35 @@ class MainController extends GetxController {
         RestApi.responseHandler(
             response: response,
             successCallback: () async {
-              ViewController.request[column['name']]=response!.data['fileName'];
-              print('Uploaded chunk $chunkIndex (${offset}-${offset + currentChunkSize - 1})');
+              print('MainController.uploadFileInChunks>>${response!.data['data']}');
+              filePath= response.data['data'];
             },
             errorCallback: (){
           print('Failed to upload chunk $chunkIndex');
-
+          return null;
         },printResponse: true);
         offset += currentChunkSize;
         chunkIndex++;
       }
     } catch (e) {
       print('Error during upload: $e');
+      return null;
     } finally {
       raf.closeSync();
     }
     print('Upload finished.');
+    return filePath;
+  }
+
+  static  deleteFileInChunks(String filePath) async {
+    var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,}, useToken: false);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+
+        },
+        errorCallback: () {
+
+        }, printResponse: true);
   }
 }

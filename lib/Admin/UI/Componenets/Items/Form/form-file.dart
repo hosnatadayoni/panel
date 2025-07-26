@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
@@ -11,7 +9,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class FormFile extends StatefulWidget {
-  Function(List<dynamic>)? onChanged;
+  Function(String)? onChanged;
   Map<String,  List<dynamic>> filesSelected;
   String? columnName;
   var selectedFilesTxt;
@@ -32,7 +30,7 @@ class _FormFileState extends State<FormFile> {
   String _errorMasege='';
 
   List<int> fileSizeList=[];
-
+  var filePath;
   @override
   Widget build(BuildContext context) {
     var inputRequired;
@@ -62,6 +60,7 @@ class _FormFileState extends State<FormFile> {
               children: [
                 InkWell(
                   onTap: () async {
+
                     print('selected file');
                     var picked = await FilePicker.platform.pickFiles(
                       allowMultiple: true,
@@ -72,125 +71,133 @@ class _FormFileState extends State<FormFile> {
                     );
                     print('picked>>>${picked}');
 
-                    await MainController.uploadFileInChunks(picked,widget.column);
+                    filePath= await MainController.uploadFileInChunks(picked,widget.column);
 
                     if (picked != null) {
-
                       setState(() {
-                        widget.isSeletedFile!.value = true;
-                      });
-                      var maxValidator;
-                      var minValidator;
-                      if(widget.column['validators'] != null){
-                        maxValidator  = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
-                        minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
-                      }
-
-
-                      for(var file in picked.files){
-                        print('_FormFileState.build>>${file.bytes}>>${file.extension}>>${file.readStream}>>}>>');
-                              var maxSize;
-                        var minSize;
-                        if(maxValidator != null || minValidator != null){
-                          maxSize = maxValidator['value'];
-                          minSize = minValidator['value'];
-                          fileSizeList.add(file.size);
-                          ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
-                          //check min and max
-                          if(file.size <  maxSize && file.size > minSize){
-                            bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
-                            existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
-                                existingFile['extension'] == file.extension);
-                            if(!fileExists){
-                              widget.filesSelected['${widget.columnName}']!.add({
-                                'name': file.name.substring(0, file.name.lastIndexOf('.')),
-                                'extension': file.extension,
-                                'size': file.size,
-                              });
-                            }
-                            selectedFiles = widget.filesSelected['${widget.columnName}']!;
-                            setState(() {
-                              _errorMasege = '';
-                            });
-                          }
-                          else{
-                            setState(() {
-                              // String? errorMessage;
-                              // var inputRange = widget.column['validators'].firstWhere((validator) => validator['type'] == 'range', orElse: () => null);
-                              // if(inputRange != null){
-                              //   errorMessage = inputRange['message'];
-                              // }
-                              // _errorMasege = '${errorMessage}';
-                              if(file.size <  minSize){
-                                setState(() {
-                                  _errorMasege = minValidator['message'];
-                                });
-                              }
-                              else{
-                                if(file.size > maxSize){
-                                  setState(() {
-                                    _errorMasege = maxValidator['message'];
-                                  });
-                                }
-                                else{
-                                  setState(() {
-                                    _errorMasege = '';
-                                  });
-                                }
-                              }
-                            });
-                          }
-                          if(widget.filesSelected['${widget.columnName}']!.length == 0){
-                            widget.selectedFilesTxt = [];
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                          else{
-                            widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                        }
-                        else{
-                          _errorMasege = '';
-                          fileSizeList.add(file.size);
-                          ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
-
-
-                          bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
-                          existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
-                              existingFile['extension'] == file.extension);
-                          if(!fileExists){
-                            widget.filesSelected['${widget.columnName}']!.add({
-                              'name': file.name.substring(0, file.name.lastIndexOf('.')),
-                              'extension': file.extension,
-                              'size': file.size,
-                            });
-                          }
-                          selectedFiles = widget.filesSelected['${widget.columnName}']!;
-
-                          if(widget.filesSelected['${widget.columnName}']!.length == 0){
-                            widget.selectedFilesTxt = [];
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                          else{
-                            widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                        }
-                      }
+                            widget.isSeletedFile!.value = true;
+                          });
                       if (widget.onChanged != null) {
-                        widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
-                      }
-                    }
-                    else{
-                      if(inputRequired != null){
-                        setState(() {
-                          if(widget.filesSelected['${widget.columnName}']!.length == 0){
-                            _errorMasege = inputRequired['message'];
+                            widget.onChanged!(filePath);
                           }
-
-                        });
-                      }
                     }
+                    //
+                    // }
+                    //   setState(() {
+                    //     widget.isSeletedFile!.value = true;
+                    //   });
+                    //   var maxValidator;
+                    //   var minValidator;
+                    //   if(widget.column['validators'] != null){
+                    //     maxValidator  = widget.column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
+                    //     minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+                    //   }
+                    //
+                    //
+                    //   for(var file in picked.files){
+                    //     print('_FormFileState.build>>${file.bytes}>>${file.extension}>>${file.readStream}>>}>>');
+                    //           var maxSize;
+                    //     var minSize;
+                    //     if(maxValidator != null || minValidator != null){
+                    //       maxSize = maxValidator['value'];
+                    //       minSize = minValidator['value'];
+                    //       fileSizeList.add(file.size);
+                    //       ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
+                    //       //check min and max
+                    //       if(file.size <  maxSize && file.size > minSize){
+                    //         bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
+                    //         existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
+                    //             existingFile['extension'] == file.extension);
+                    //         if(!fileExists){
+                    //           widget.filesSelected['${widget.columnName}']!.add({
+                    //             'name': file.name.substring(0, file.name.lastIndexOf('.')),
+                    //             'extension': file.extension,
+                    //             'size': file.size,
+                    //           });
+                    //         }
+                    //         selectedFiles = widget.filesSelected['${widget.columnName}']!;
+                    //         setState(() {
+                    //           _errorMasege = '';
+                    //         });
+                    //       }
+                    //       else{
+                    //         setState(() {
+                    //           // String? errorMessage;
+                    //           // var inputRange = widget.column['validators'].firstWhere((validator) => validator['type'] == 'range', orElse: () => null);
+                    //           // if(inputRange != null){
+                    //           //   errorMessage = inputRange['message'];
+                    //           // }
+                    //           // _errorMasege = '${errorMessage}';
+                    //           if(file.size <  minSize){
+                    //             setState(() {
+                    //               _errorMasege = minValidator['message'];
+                    //             });
+                    //           }
+                    //           else{
+                    //             if(file.size > maxSize){
+                    //               setState(() {
+                    //                 _errorMasege = maxValidator['message'];
+                    //               });
+                    //             }
+                    //             else{
+                    //               setState(() {
+                    //                 _errorMasege = '';
+                    //               });
+                    //             }
+                    //           }
+                    //         });
+                    //       }
+                    //       if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                    //         widget.selectedFilesTxt = [];
+                    //         selectedFiles = widget.selectedFilesTxt;
+                    //       }
+                    //       else{
+                    //         widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
+                    //         selectedFiles = widget.selectedFilesTxt;
+                    //       }
+                    //     }
+                    //     else{
+                    //       _errorMasege = '';
+                    //       fileSizeList.add(file.size);
+                    //       ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
+                    //
+                    //
+                    //       bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
+                    //       existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
+                    //           existingFile['extension'] == file.extension);
+                    //       if(!fileExists){
+                    //         widget.filesSelected['${widget.columnName}']!.add({
+                    //           'name': file.name.substring(0, file.name.lastIndexOf('.')),
+                    //           'extension': file.extension,
+                    //           'size': file.size,
+                    //         });
+                    //       }
+                    //       selectedFiles = widget.filesSelected['${widget.columnName}']!;
+                    //
+                    //       if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                    //         widget.selectedFilesTxt = [];
+                    //         selectedFiles = widget.selectedFilesTxt;
+                    //       }
+                    //       else{
+                    //         widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
+                    //         selectedFiles = widget.selectedFilesTxt;
+                    //       }
+                    //     }
+                    //   }
+                    //   if (widget.onChanged != null) {
+                    //     widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
+                    //   }
+                    // }
+                    // else{
+                    //   if(inputRequired != null){
+                    //     setState(() {
+                    //       if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                    //         _errorMasege = inputRequired['message'];
+                    //       }
+                    //
+                    //     });
+                    //   }
+                    // }
                   },
                   child: Container(
                     color: colorBtn,
@@ -202,7 +209,16 @@ class _FormFileState extends State<FormFile> {
                 Obx((){
                   return
                     Expanded(child: Txt('${selectedFiles  == null?widget.filesSelected['${widget.columnName}']!.length != 0 ? widget.filesSelected['${widget.columnName}']! :'':selectedFiles }' , color: MainController.isLightMode.value ? whiteColor : primaryDark  ,));
-                })
+                }),
+                if(widget.isSeletedFile!.value)
+                   InkWell(
+                     onTap: (){
+                       print('_FormFileState.build>>${widget.column['name']}>>${ViewController.request[widget.column['name']]}');
+                            MainController.deleteFileInChunks(ViewController.request[widget.column['name']]);
+                     },
+                     child:  Icon(Icons.delete,color: Colors.red,),
+                   )
+
               ],
             ):
             Wrap(
@@ -229,99 +245,99 @@ class _FormFileState extends State<FormFile> {
                         minValidator = widget.column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
                       }
 
-                      for(var file in picked.files){
-                        var maxSize;
-                        var minSize;
-                        if(maxValidator != null || minValidator != null){
-                          maxSize = maxValidator['value'];
-                          minSize = minValidator['value'];
-                          fileSizeList.add(file.size);
-                          ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
-                          //check min and max
-                          if(file.size <  maxSize && file.size > minSize){
-                            bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
-                            existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
-                                existingFile['extension'] == file.extension);
-                            if(!fileExists){
-                              widget.filesSelected['${widget.columnName}']!.add({
-                                'name': file.name.substring(0, file.name.lastIndexOf('.')),
-                                'extension': file.extension,
-                                'size': file.size,
-                              });
-                            }
-                            selectedFiles = widget.filesSelected['${widget.columnName}']!;
-                            setState(() {
-                              _errorMasege = '';
-                            });
-                          }
-                          else{
-                            setState(() {
-                              // String? errorMessage;
-                              // var inputRange = widget.column['validators'].firstWhere((validator) => validator['type'] == 'range', orElse: () => null);
-                              // if(inputRange != null){
-                              //   errorMessage = inputRange['message'];
-                              // }
-                              // _errorMasege = '${errorMessage}';
-                              if(file.size <  minSize){
-                                setState(() {
-                                  _errorMasege = minValidator['message'];
-                                });
-                              }
-                              else{
-                                if(file.size > maxSize){
-                                  setState(() {
-                                    _errorMasege = maxValidator['message'];
-                                  });
-                                }
-                                else{
-                                  setState(() {
-                                    _errorMasege = '';
-                                  });
-                                }
-                              }
-                            });
-                          }
-                          if(widget.filesSelected['${widget.columnName}']!.length == 0){
-                            widget.selectedFilesTxt = [];
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                          else{
-                            widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                        }
-                        else{
-                          _errorMasege = '';
-                          fileSizeList.add(file.size);
-                          ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
-
-
-                          bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
-                          existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
-                              existingFile['extension'] == file.extension);
-                          if(!fileExists){
-                            widget.filesSelected['${widget.columnName}']!.add({
-                              'name': file.name.substring(0, file.name.lastIndexOf('.')),
-                              'extension': file.extension,
-                              'size': file.size,
-                            });
-                          }
-                          selectedFiles = widget.filesSelected['${widget.columnName}']!;
-
-                          if(widget.filesSelected['${widget.columnName}']!.length == 0){
-                            widget.selectedFilesTxt = [];
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                          else{
-                            widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
-                            selectedFiles = widget.selectedFilesTxt;
-                          }
-                        }
-
-                      }
-                      if (widget.onChanged != null) {
-                        widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
-                      }
+                      // for(var file in picked.files){
+                      //   var maxSize;
+                      //   var minSize;
+                      //   if(maxValidator != null || minValidator != null){
+                      //     maxSize = maxValidator['value'];
+                      //     minSize = minValidator['value'];
+                      //     fileSizeList.add(file.size);
+                      //     ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
+                      //     //check min and max
+                      //     if(file.size <  maxSize && file.size > minSize){
+                      //       bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
+                      //       existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
+                      //           existingFile['extension'] == file.extension);
+                      //       if(!fileExists){
+                      //         widget.filesSelected['${widget.columnName}']!.add({
+                      //           'name': file.name.substring(0, file.name.lastIndexOf('.')),
+                      //           'extension': file.extension,
+                      //           'size': file.size,
+                      //         });
+                      //       }
+                      //       selectedFiles = widget.filesSelected['${widget.columnName}']!;
+                      //       setState(() {
+                      //         _errorMasege = '';
+                      //       });
+                      //     }
+                      //     else{
+                      //       setState(() {
+                      //         // String? errorMessage;
+                      //         // var inputRange = widget.column['validators'].firstWhere((validator) => validator['type'] == 'range', orElse: () => null);
+                      //         // if(inputRange != null){
+                      //         //   errorMessage = inputRange['message'];
+                      //         // }
+                      //         // _errorMasege = '${errorMessage}';
+                      //         if(file.size <  minSize){
+                      //           setState(() {
+                      //             _errorMasege = minValidator['message'];
+                      //           });
+                      //         }
+                      //         else{
+                      //           if(file.size > maxSize){
+                      //             setState(() {
+                      //               _errorMasege = maxValidator['message'];
+                      //             });
+                      //           }
+                      //           else{
+                      //             setState(() {
+                      //               _errorMasege = '';
+                      //             });
+                      //           }
+                      //         }
+                      //       });
+                      //     }
+                      //     if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                      //       widget.selectedFilesTxt = [];
+                      //       selectedFiles = widget.selectedFilesTxt;
+                      //     }
+                      //     else{
+                      //       widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
+                      //       selectedFiles = widget.selectedFilesTxt;
+                      //     }
+                      //   }
+                      //   else{
+                      //     _errorMasege = '';
+                      //     fileSizeList.add(file.size);
+                      //     ViewController.fileSizeList['${widget.column['name']}'] = fileSizeList;
+                      //
+                      //
+                      //     bool fileExists = widget.filesSelected['${widget.columnName}']!.any((existingFile) =>
+                      //     existingFile['name'] == file.name.substring(0, file.name.lastIndexOf('.')) &&
+                      //         existingFile['extension'] == file.extension);
+                      //     if(!fileExists){
+                      //       widget.filesSelected['${widget.columnName}']!.add({
+                      //         'name': file.name.substring(0, file.name.lastIndexOf('.')),
+                      //         'extension': file.extension,
+                      //         'size': file.size,
+                      //       });
+                      //     }
+                      //     selectedFiles = widget.filesSelected['${widget.columnName}']!;
+                      //
+                      //     if(widget.filesSelected['${widget.columnName}']!.length == 0){
+                      //       widget.selectedFilesTxt = [];
+                      //       selectedFiles = widget.selectedFilesTxt;
+                      //     }
+                      //     else{
+                      //       widget.selectedFilesTxt = widget.filesSelected['${widget.columnName}']!;
+                      //       selectedFiles = widget.selectedFilesTxt;
+                      //     }
+                      //   }
+                      //
+                      // }
+                      // if (widget.onChanged != null) {
+                      //   widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
+                      // }
                     }
                     else{
                       if(inputRequired != null){
