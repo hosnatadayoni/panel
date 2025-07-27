@@ -247,7 +247,7 @@ class ViewController extends GetxController {
           children.add(colorBox);
         }
 
-        else if (type == 'file') {
+        else if (type == 'file' || type == 'multifile') {
           fileBox = generateFileBox('', column, false.obs);
 
           children.add(fileBox);
@@ -348,7 +348,7 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file') {
+        } else if (type == 'file' || type == 'multifile') {
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -568,7 +568,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         }
-        else if (type == 'file') {
+        else if (type == 'file' || type == 'multifile') {
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
@@ -659,7 +659,7 @@ class ViewController extends GetxController {
         ),
       );
     }
-    else if (type == 'file') {
+    else if (type == 'file' || type == 'multifile') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else {

@@ -46,6 +46,9 @@ class MainController extends GetxController {
       icon: Icons.home,
     )
   ];
+  // static RxInt totlaChunck = 0.obs;
+  // static RxInt chunckCurrentIndex = 0.obs;
+  static RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
 
 
   //
@@ -603,6 +606,8 @@ class MainController extends GetxController {
     var filePath=null;
     if(picked==null)
       return null;
+    // MainController.chunckCurrentIndex.value = 0;
+    // MainController.totlaChunck.value = 0;
 
     final path = picked!.files.single.path!;
     final file = File(path);
@@ -611,11 +616,23 @@ class MainController extends GetxController {
     int offset = 0;
     int chunkIndex = 1;
     try {
+      for (var f in picked.files) {
+        if (!MainController.fileInfo.value.containsKey(f.name)) {
+          MainController.fileInfo.value[f.name] = [];
+        }
+      }
       while (offset < totalLength) {
         final remaining = totalLength - offset;
         final currentChunkSize = remaining > chunkSize ? chunkSize : remaining;
         final bytes = raf.readSync(chunkSize);
         final String chunk =  base64Encode(bytes);
+        // MainController.totlaChunck.value = (totalLength/chunkSize).ceil();
+        // MainController.chunckCurrentIndex.value = chunkIndex;
+
+        for (var f in picked.files) {
+          MainController.updateFileInfo(f.name, (totalLength / chunkSize).ceil(), chunkIndex);
+        }
+
         var body= {
           'table_name': tableName,
           'data': chunk,
@@ -633,7 +650,7 @@ class MainController extends GetxController {
             errorCallback: (){
           print('Failed to upload chunk $chunkIndex');
           return null;
-        },printResponse: true);
+        },printResponse: false);
         offset += currentChunkSize;
         chunkIndex++;
       }
@@ -644,7 +661,13 @@ class MainController extends GetxController {
       raf.closeSync();
     }
     print('Upload finished.');
+
     return filePath;
+  }
+
+  static void updateFileInfo(String fileName, int totalChunks, int currentChunk) {
+    fileInfo[fileName] = [totalChunks, currentChunk];
+    fileInfo.refresh();
   }
 
   static  deleteFileInChunks(String filePath) async {
