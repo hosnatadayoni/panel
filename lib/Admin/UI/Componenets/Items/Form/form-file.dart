@@ -74,8 +74,6 @@ class _FormFileState extends State<FormFile> {
 
               filePath= await MainController.uploadFileInChunks(picked,widget.column);
               print('filePath>>>${filePath}');
-              // print('MainController.chunckCurrentIndex.value>>>${MainController.chunckCurrentIndex.value}');
-              print('pppppppppp>>>${MainController.fileInfo.value}');
 
               if (picked != null) {
                 setState(() {
@@ -87,32 +85,17 @@ class _FormFileState extends State<FormFile> {
               }
             },
             child: Container(
-              height: 150,
+              padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 2,
-                  style: BorderStyle.solid,
-                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.cloud_upload_outlined,
-                    size: 50,
-                    // color: Colors.blue[700],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'برای انتخاب فایل کلیک کنید',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                    ),
-                  ),
+                  Icon(Icons.cloud_upload_outlined, size: 50,),
+                  SizedBox(width: 10),
+                  Txt('برای انتخاب فایل کلیک کنید',fontSize: 16, color: Colors.blue,),
                 ],
               ),
             ),
