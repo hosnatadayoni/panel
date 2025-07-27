@@ -1,10 +1,10 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/excel-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Views/create.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +33,13 @@ class _MainTableHeaderState extends State<MainTableHeader> {
         children: [
           Expanded(
               child: Txt(
-            '${MainController.selectedSubItem.value != -1 ? MainController.tableInfo['schema']['title'] != null ? MainController.tableInfo['schema']['title'] : '' : ''}',
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-            color: MainController.isLightMode.value == true
-                ? whiteColor
-                : primaryDark,
-          )),
+                '${MainController.selectedSubItem.value != -1 ? MainController.tableInfo['schema']['title'] != null ? MainController.tableInfo['schema']['title'] : '' : ''}',
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: MainController.isLightMode.value == true
+                    ? whiteColor
+                    : primaryDark,
+              )),
           Row(
             children: [
               MouseRegion(
@@ -78,7 +78,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color:
-                              isHoverBtn.value == true ? whiteColor : colorBtn,
+                          isHoverBtn.value == true ? whiteColor : colorBtn,
                         ),
                       ],
                     ),
@@ -129,9 +129,9 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                                 Icon(
                                   Icons.add,
                                   color:
-                                      MainController.isLightMode.value == false
-                                          ? color3
-                                          : whiteColor,
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
                                   size: 15,
                                 ),
                                 SizedBox(
@@ -139,7 +139,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                                 ),
                                 Txt('${AppController.of(context)!.value('create')}',
                                     color: MainController.isLightMode.value ==
-                                            false
+                                        false
                                         ? color3
                                         : whiteColor)
                               ],
@@ -147,7 +147,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           )),
                       PopupMenuItem(
                           onTap: () async {
-                            await MainController.createExel(fileExelPath);
+                            await ExcelController.createExel(fileExelPath);
                           },
                           value: 'Export Excel',
                           child: Container(
@@ -157,16 +157,16 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                                   FontAwesomeIcons.fileExcel,
                                   size: 15,
                                   color:
-                                      MainController.isLightMode.value == false
-                                          ? color3
-                                          : whiteColor,
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Txt('${AppController.of(context)!.value('excel output')}',
                                     color: MainController.isLightMode.value ==
-                                            false
+                                        false
                                         ? color3
                                         : whiteColor)
                               ],
@@ -174,7 +174,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                           )),
                       PopupMenuItem(
                           onTap: () async {
-                            await MainController.readExcelFile(fileExelPath);
+                            await ExcelController.readExcelFile(fileExelPath);
                           },
                           value: 'Import Excel',
                           child: Container(
@@ -184,16 +184,16 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                                   FontAwesomeIcons.fileExcel,
                                   size: 15,
                                   color:
-                                      MainController.isLightMode.value == false
-                                          ? color3
-                                          : whiteColor,
+                                  MainController.isLightMode.value == false
+                                      ? color3
+                                      : whiteColor,
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Txt('${AppController.of(context)!.value('excel input')}',
                                     color: MainController.isLightMode.value ==
-                                            false
+                                        false
                                         ? color3
                                         : whiteColor)
                               ],

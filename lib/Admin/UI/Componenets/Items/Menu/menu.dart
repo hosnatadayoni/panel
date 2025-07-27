@@ -37,48 +37,52 @@ class _MenuBoxState extends State<MenuBox>{
               width: 50,
               color: MainController.isLightMode.value == false ? primary :primaryDark,
             ),
-        Loading(loadingName: ['get-records'],getLoadedComponent: ()=>
-               Positioned(
-                // right: 50,
-                right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
-                left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for(var i=0 ; i<MainController.items.length ; i++)
-                        MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
-                        Container(
-                          width: 250,
-                          height: size.height,
-                          color: MainController.isLightMode.value == true ?background:whiteColor,
-                          padding: EdgeInsets.only(right: 20 , left: 10 , top: 10 , bottom: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 20,),
-                              for(var j=0;j<MainController.SubMenuList.length;j++)
-                                // if(MainController.SubMenuList[j]['main-menu'])
-                                  Column(children:[
-                                    InkWell(
-                                        onTap: ()async {
-                                          MainController.selectedSubItem.value = j;
-                                          DB.parentItem={};
-                                          MainController.tableName.value=MainController.SubMenuList[j]['schema']['name'];
-                                          await MainController.loadData();
-                                          await MainController.goToTablePage(MainController.SubMenuList[j]);
-                                        },
-                                        child: Txt('${MainController.SubMenuList[j]['schema']['name']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
-                                          color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
-                                    ),
-                                    SizedBox(height: 20,)
-                                  ]),
-                            ],
-                          ),
-                        ):Container(),
-                    ]
-                ),
+
+            Loading(loadingName: ['get-records'],getLoadedComponent: ()=> Positioned(
+                  // right: 50,
+                  right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+                  left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for(var i=0 ; i<MainController.items.length ; i++)
+                          MainController.selectedItem == i &&  MainController.isClickedItem.value == true?
+        Loading(loadingName: ['list-schema'],getLoadedComponent: ()=>
+                           Container(
+                              width: 250,
+                              height: size.height,
+                              color: MainController.isLightMode.value == true ?background:whiteColor,
+                              padding: EdgeInsets.only(right: 20 , left: 10 , top: 10 , bottom: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 20,),
+                                  for(var j=0;j<MainController.SubMenuList.length;j++)
+                                    if(MainController.SubMenuList[j]['schema']['main_menu']??true)
+                                      Column(children:[
+                                        InkWell(
+                                            onTap: ()async {
+                                              MainController.selectedSubItem.value = j;
+                                              DB.parentItem={};
+                                              MainController.tableName.value=MainController.SubMenuList[j]['schema']['name'];
+                                              MainController.SubMenuList[j]['schema']['currentPage']=1;
+                                              await MainController.goToTablePage(MainController.SubMenuList[j]);
+
+                                            },
+                                            child: Txt('${MainController.SubMenuList[j]['schema']['name']}' , fontSize: 16 , fontWeight: FontWeight.w400 ,
+                                              color:MainController.isLightMode.value == true && MainController.selectedSubItem.value == j ? itemColor8 :  MainController.isLightMode.value == false && MainController.selectedSubItem.value == j ? primary : MainController.isLightMode.value == false ? color1: whiteColor,)
+                                        ),
+                                        SizedBox(height: 20,)
+                                      ]),
+                                ],
+                              ),
+                            ),
+                          ):Container(),
+                      ]
+                  ),
               ),
-            ),
+               ),
+
             AnimatedContainer(
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.center,
@@ -108,7 +112,7 @@ class _MenuBoxState extends State<MenuBox>{
                                       hoverItem.value = -1;
                                     },
                                     child: InkWell(
-                                        onTap: (){
+                                        onTap: () async {
                                           MainController.selectedItem.value = i;
                                           if(MainController.selectedItem.value == 0){
                                             Get.to(() => DashboardPage());
@@ -119,7 +123,9 @@ class _MenuBoxState extends State<MenuBox>{
                                             MainController.isClickedItem.value =false;
                                           }
                                           else{
+
                                             MainController.isClickedItem.value =true;
+                                            await MainController.loadJson();
                                           }
                                           MainController.itemSelected.value = MainController.items[MainController.selectedItem.value] ;
                                           // Get.to(() => TablePage());

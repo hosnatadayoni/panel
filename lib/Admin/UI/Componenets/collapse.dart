@@ -180,39 +180,6 @@ class _MultiCollapseState extends State<MultiCollapse> {
                       }
                     },
                 );
-              return InkWell(
-                onTap: () {
-                  if (button.targetId != null) {
-                    _toggleCollapse(button.targetId!);
-                  } else if (button.targetIds != null) {
-                    _toggleAll(button.targetIds!);
-                  }
-                },
-                child: MouseRegion(
-                  onEnter: (_) => setState(() => _hoverStates[index] = true),
-                  onExit: (_) => setState(() => _hoverStates[index] = false),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      color: _hoverStates[index] ?? false
-                          ? button.colorBtnHover
-                          : button.colorBtn,
-                    ),
-                    padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
-                    // child: Txt(
-                    //   button.btnTxt ?? '',
-                    //   color: button.btnTxtColor,
-                    //   fontWeight: FontWeight.w400,
-                    // ),
-                    child: button.btnContent,
-                  ),
-                ),
-                // child: Btn(
-                //     type: button.type,
-                //     isOutline: button.isOutlineBtn,
-                //     content: button.btnContent,
-                // ),
-              );
             }
             return button;
           }).toList(),

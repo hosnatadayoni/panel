@@ -254,10 +254,10 @@ class _ButtonGroupState extends State<ButtonGroup> {
                     widget.buttons[index].HoverbackgroundColor() : getBackgroundColor(),
                     borderRadius:widget.axis == ButtonGroupAxis.horizontal ?  leftBorderRadius + rightBorderRadius : topBorderRadius + bottomBorderRadius,
                     border: Border.all(width: 1 , color: (isRadio || button.isCheckBox!)
-                        ? widget.buttons[index].backgroundColor()!
+                        ? widget.buttons[index].backgroundColor()
                         : isHover || widget.buttons[index].isActive!
-                        ? widget.buttons[index].HoverbackgroundColor()!
-                        : widget.buttons[index].backgroundColor()!,)
+                        ? widget.buttons[index].HoverbackgroundColor()
+                        : widget.buttons[index].backgroundColor(),)
                 ),
                 child:Center(child: DefaultTextStyle.merge(
                     // style: TextStyle(

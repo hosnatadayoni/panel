@@ -24,8 +24,8 @@ class _MainTableBoxState extends State<MainTableBox> {
   @override
   void initState() {
     super.initState();
-    if(MainController.tableInfo['filters'] != null){
-      _futures = MainController.tableInfo['filters']
+    if(MainController.tableInfo['schema']['filters'] != null){
+      _futures = MainController.tableInfo['schema']['filters']
           .map<Future<Widget>>((filter) => ViewController.generateFilterView(filter))
           .toList();
     }
@@ -46,7 +46,7 @@ class _MainTableBoxState extends State<MainTableBox> {
           ColumnScroll(
             children: [
               TableHeader(),
-              if(MainController.tableInfo['filters']!=null && MainController.tableInfo['filters'].length!=0)
+              if(MainController.tableInfo['schema']['filters']!=null && MainController.tableInfo['schema']['filters'].length!=0)
                 Container(
                   width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                   child: Wrap(
@@ -70,27 +70,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                     ],
                   ),
                 ),
-
-              // Container(
-              //   color: Colors.blue,
-              //   child: FutureBuilder<Widget>(
-              //     future: ViewController.generateFilterView(filter , context),
-              //     builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.waiting) {
-              //         return CircularProgressIndicator();
-              //       } else if (snapshot.hasError) {
-              //         return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-              //       } else {
-              //         return Wrap(
-              //           children: [
-              //             snapshot.data ?? Container()
-              //           ],
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
-              if(MainController.tableInfo['filters']!=null &&MainController.tableInfo['filters'].length!=0)
+              if(MainController.tableInfo['schema']['filters']!=null &&MainController.tableInfo['schema']['filters'].length!=0)
                 Container(
                   margin: EdgeInsets.only(left: 5),
                   width: 140,
@@ -98,7 +78,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-                      List<dynamic>w=MainController.tableInfo['filters'];
+                      List<dynamic>w=MainController.tableInfo['schema']['filters'];
                       String opration='\$eq';
                       if(ViewController.request.length!=0){
                         var d;
@@ -106,13 +86,13 @@ class _MainTableBoxState extends State<MainTableBox> {
                         var a= DB('${MainController.tableInfo['schema']['name']}');
                         for(var filter in ViewController.request.values){
                           var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
-                          if(w[indexFilter]['oprator']!=null){
+                          if(w[indexFilter]['operator']!=null){
 
-                            opration=w[indexFilter]['oprator'];
+                            opration=w[indexFilter]['operator'];
                           }
                           if(filter['value']!='' && filter['value']!=null){
 
-                            d=a.where('${filter['column']}','${filter['oprator']}',filter['value']);
+                            d=a.where('${filter['column']}','${filter['operator']}',filter['value']);
                           }
                         }
                         if(d!=null){

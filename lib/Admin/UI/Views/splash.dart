@@ -1,6 +1,5 @@
 
 import 'package:finance/Admin/Public/config.dart';
-import 'package:finance/Admin/Public/styles.dart';
 import 'package:flutter/material.dart';
 import '../../Logic/Controllers/main-controller.dart';
 import '../Componenets/General/img.dart';
@@ -28,7 +27,7 @@ class _SplashState extends State<Splash> {
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: infoColor,
+        backgroundColor: appColor,
         body: Column(
           children: [
             Expanded(

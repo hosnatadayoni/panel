@@ -1,65 +1,458 @@
 [
   {
-    "title": "product",
+    "title": "project",
     "tooltip": "",
     "main-menu": true,
-    "table-name": "product",
+    "table-name": "project",
     "currentPage": 1,
     "countShowRow": 10,
+    "location-data": 0,
     "online": true,
+    "view": "custom",
+    "columns": [
+      {
+        "name": "name",
+        "title": "name",
+        "type": "string"
+      }, {
+        "name": "api_key",
+        "title": "api_key",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": false,
+        "is-show-edit": false
+      }
+    ],
+    "relations": [
+      {
+        "title": "schema",
+        "table-name": "schema"
+      }
+    ]
+  },
+  {
+    "title": "schema",
+    "tooltip": "",
+    "main-menu": false,
+    "table-name": "schema",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "online": true,
+    "view": "custom",
+    "columns": [
+      {
+        "name": "name",
+        "title": "name",
+        "tooltip": "",
+        "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "title",
+        "title": "title",
+        "tooltip": "",
+        "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "tooltip",
+        "title": "tooltip",
+        "tooltip": "",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "main_menu",
+        "title": "main_menu",
+        "main-menu": true,
+        "default_value": false,
+        "type": "checkbox",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "currentPage",
+        "title": "currentPage",
+        "default_value": 1,
+        "type": "Number int",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "countShowRow",
+        "title": "countShowRow",
+        "default_value": 10,
+        "type": "Number int",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "relations",
+        "title": "relations",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "File",
+        "title": "File",
+        "type": "file",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "online",
+        "title": "online",
+        "type": "checkbox",
+        "default_value": true,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      }
+
+    ],
+    "relations": [
+      {
+        "title": "fields",
+        "table-name": "fields"
+      } ,
+      {
+        "title": "filters",
+        "table-name": "filters"
+      }
+    ]
+  },
+  {
+    "title": "filters",
+    "tooltip": "",
+    "main-menu": false,
+    "table-name": "filters",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "online": true,
+    "view": "custom",
     "relations": [],
+    "columns": [
+      {
+        "name": "column",
+        "title": "column",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items":[],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "operator",
+        "title": "operator",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "==",
+            "value": "$eq",
+            "is_selected": true
+          },
+          {
+            "title": "<=",
+            "value": "$lte",
+            "is_selected": false
+          },
+          {
+            "title": ">=",
+            "value": "$gte",
+            "default_value": false,
+            "is_selected": false
+          },
+          {
+            "title": "!=",
+            "value": "$ne",
+            "is_selected": false
+          },
+          {
+            "title": ">",
+            "value": "$gt",
+            "is_selected": false
+          },
+          {
+            "title": "<",
+            "value": "$lt",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      }
+    ]
+  },
+  {
+    "title": "fields",
+    "tooltip": "",
+    "main-menu": false,
+    "table-name": "fields",
+    "currentPage": 1,
+    "countShowRow": 10,
+    "location-data": 0,
+    "relations": [
+      {
+        "title": "validators",
+        "table-name": "validators"
+      }
+    ],
+    "online": true,
+    "view": "custom",
     "columns": [
       {
         "name": "title",
         "title": "title",
         "type": "string",
-        "type_filed": "string"
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "name",
+        "title": "name",
+        "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "type",
+        "title": "type",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
+          {
+            "title": "string",
+            "value": "string",
+            "is_selected": true
+          },
+          {
+            "title": "Number int",
+            "value": "Number int",
+            "is_selected": false
+          },
+          {
+            "title": "checkbox",
+            "value": "checkbox",
+            "default_value": false,
+            "is_selected": false
+          },
+          {
+            "title": "radiobutton",
+            "value": "radiobutton",
+            "is_selected": false
+          },
+          {
+            "title": "select",
+            "value": "select",
+            "is_selected": false
+          },
+          {
+            "title": "multiSelect",
+            "value": "multiSelect",
+            "is_selected": false
+          },
+          {
+            "title": "file",
+            "value": "file",
+            "is_selected": false
+          }
+        ],
+        "validators": [
+          {"type": "required" , "message": "انتخاب یک آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "type_field",
+        "title": "type_field",
+        "type": "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
+          {
+            "title": "string",
+            "value": "string",
+            "is_selected": true
+          },
+          {
+            "title": "number",
+            "value": "number",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "source_items",
+        "title": "source_items",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "type": "select",
+        "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          }, {
+            "title": "table",
+            "value": "table",
+            "is_selected": true
+          },
+          {
+            "title": "custom",
+            "value": "custom",
+            "is_selected": false
+          }
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "source_table",
+        "title": "source_table",
+        "type": "select",
+        "sourceItems": "table",
+        "sourceTable": "schema",
+        "items": ["name"],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
+        "name": "items",
+        "title": "items",
+        "type": "multiSelect",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "is_show_table",
+        "title": "is_show_table",
+        "type": "checkbox",
+        "default_value": false,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "is_show_store",
+        "title": "is_show_store",
+        "type": "checkbox",
+        "default_value": false,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "is_show_edit",
+        "title": "is_show_edit",
+        "type": "checkbox",
+        "default_value": false,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name": "parent_table",
+        "title": "parent_table",
+        "type": "string",
+        "is-show-table": false,
+        "is-show-store": false,
+        "is-show-edit": false
+      },
+      {
+        "name": "parent_id",
+        "title": "parent_id",
+        "type": "string",
+        "is-show-table": false,
+        "is-show-store": false,
+        "is-show-edit": false
       }
     ]
   },
   {
-    "title": "category",
+    "title": "validators",
     "tooltip": "",
-    "main-menu": true,
-    "table-name": "category",
+    "main-menu": false,
+    "table-name": "validators",
     "currentPage": 1,
     "countShowRow": 10,
+    "location-data": 0,
     "online": true,
+    "view": "custom",
     "relations": [],
     "columns": [
       {
-        "name": "product",
-        "title": "product",
-        "type": "select",
-        "type_filed": "string",
-        "sourceItems": "table",
-        "sourceTable": "product",
-        "items": [
-          "title"
-        ]
-      }
-    ]
-  },
-  {
-    "title": "category2",
-    "tooltip": "",
-    "main-menu": true,
-    "table-name": "category2",
-    "currentPage": 1,
-    "countShowRow": 10,
-    "online": false,
-    "relations": [],
-    "columns": [
+        "name": "type",
+        "title": "type",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
       {
-        "name": "product",
-        "title": "product",
-        "type": "select",
-        "type_filed": "string",
-        "sourceItems": "table",
-        "sourceTable": "product",
-        "items": [
-          "title"
-        ]
+        "name": "message",
+        "title": "message",
+        "type": "string",
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
       }
     ]
   }

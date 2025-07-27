@@ -50,8 +50,11 @@ class _TableFooterState extends State<TableFooter> {
           setState(() {
             MainController.tableInfo['schema']['currentPage'] = i;
           });
-          MainController.tableData.value= await DB('${tableSelected}').paginate();
-          MainController.allData.value= MainController.tableData.value;
+          print('_TableFooterState.box currentPage>>>${ MainController.tableInfo['schema']['currentPage']}');
+          var dataPageinate=await DB('${tableSelected}').paginate();
+          MainController.tableData.value = dataPageinate;
+          MainController.allData.value = MainController.tableData;
+          print('_TableFooterState.box>>>>>${{MainController.tableData.value}}');
         },
         child: Container(
             margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
@@ -101,11 +104,7 @@ class _TableFooterState extends State<TableFooter> {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              // Txt('${MainController.totalItems.value}',
-              //   fontSize: 16,
-              //   fontWeight: FontWeight.w400,
-              //   color: color3,),
-              Txt('${MainController.tableData.value.length}',
+              Txt('${MainController.totalItems.value}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),

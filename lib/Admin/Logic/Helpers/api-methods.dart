@@ -78,8 +78,8 @@ class RestApi {
     if(response==null){
       if(isConnected)
         showSnackbar(snackTypes.error, 'Server Error');
-      else
-        showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
+      // else
+      //   showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
       // if(ModalRoute.of(Get.Get.context!)!.settings.name!='/networkError')
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }
@@ -186,7 +186,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -229,7 +229,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -270,7 +270,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -315,4 +315,5 @@ class RestApi {
     return false;
   }
 }
+
 

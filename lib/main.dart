@@ -1,8 +1,5 @@
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,16 +19,12 @@ void main()async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(DataModelAdapter());
-
-
-  // var a = await DB('table').getRecord();
-  // var a= await DB('itemsOrder2').parent(parentTable: 'order2',parentId:'77756a94-a90f-4806-abc3-7b1ea690bf17' ).where('_id','\$eq','e71c7ae3-0b0a-43ec-8260-b5d38d89a469').updateRecords(
-  //     {'title':'maryam'});
-  // print('main>>>${a}');
-  // var box=await Hive.openBox<DataModel>('sample');
+  // var box=await Hive.openBox<DataModel>('category');
+  // var box2=await Hive.openBox<DataModel>('item');
+  // var box3=await Hive.openBox<DataModel>('subItem');
   // box.clear();
-  // await Token.setToken('3ba7fd50-69c5-4293-8aa8-77e752a967ae');
-  // ConncetServerController.createProject();
+  // box2.clear();
+  // box3.clear();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {

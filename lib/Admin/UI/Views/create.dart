@@ -4,12 +4,9 @@ import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/Admin/UI/Views/table-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
 import '../../Public/styles.dart';
 import '../Componenets/General/column-scroll.dart';
 import '../Componenets/General/txt.dart';
@@ -190,8 +187,6 @@ class _CreatePageState extends State<CreatePage> {
                                               onExit: (_) {},
                                               child: InkWell(
                                                 onTap: () async {
-                                                  print(
-                                                      '_CreatePageState.build>>>${ViewController.request}');
                                                   HelperController
                                                       .createFunction(
                                                           widget.tableName);
@@ -200,9 +195,7 @@ class _CreatePageState extends State<CreatePage> {
                                                   padding: EdgeInsets.all(10),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
+                                                        BorderRadius.all(Radius.circular(10)),
                                                     color: colorBtn,
                                                   ),
                                                   child: Txt(

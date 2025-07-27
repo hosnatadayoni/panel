@@ -1,7 +1,6 @@
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
 class CheckBoxForm extends StatefulWidget {
    String? text;

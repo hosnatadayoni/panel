@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import '../General/txt.dart';
 
@@ -46,7 +45,7 @@ class Btn extends StatelessWidget {
             child:
             Obx(
                     () {
-                  return (AppController.loadingList.value.contains(loadingTag) && loadingTag!=null)?
+                  return (AppController.loadingList.contains(loadingTag) && loadingTag!=null)?
                   Container(
                     width: 25,
                     height: 25,
