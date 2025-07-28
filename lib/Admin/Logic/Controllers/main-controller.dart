@@ -602,81 +602,76 @@ class MainController extends GetxController {
 
   }
 
-  static Future<String?> uploadFileInChunks(var picked,var column,  RxMap<String, List<dynamic>> fileInfo,  {int chunkSize = 512 * 1024}) async {
-    var filePath=null;
-    if(picked==null)
+  static Future<String?> uploadFileInChunks(var  singleFile,var column,  RxMap<String, List<dynamic>> fileInfo,  {int chunkSize = 512 * 1024}) async {
+    var filePath = null;
+    if (singleFile == null)
       return null;
     // MainController.chunckCurrentIndex.value = 0;
     // MainController.totlaChunck.value = 0;
 
-    final path = picked!.files.single.path!;
-    final file = File(path);
-    final totalLength = await file.length();
-    final raf = file.openSync(mode: FileMode.read);
-    int offset = 0;
-    int chunkIndex = 1;
-    String? chunkName;
-    try {
-      for (var f in picked.files) {
-        if (!fileInfo.value.containsKey(f.name)) {
-          fileInfo.value[f.name] = [];
-        }
-      }
-      while (offset < totalLength) {
-        final remaining = totalLength - offset;
-        final currentChunkSize = remaining > chunkSize ? chunkSize : remaining;
-        final bytes = raf.readSync(chunkSize);
-        final String chunk =  base64Encode(bytes);
-        // MainController.totlaChunck.value = (totalLength/chunkSize).ceil();
-        // MainController.chunckCurrentIndex.value = chunkIndex;
-
-        for (var f in picked.files) {
-          MainController.updateFileInfo(f.name, (totalLength / chunkSize).ceil(), chunkIndex , fileInfo);
-        }
-
-        var body= {
-          'table_name': tableName,
-          'data': chunk,
-          'name': file.uri.pathSegments.last,
-          'currentChunkIndex': chunkIndex,
-          'totalChunks': (totalLength/chunkSize).ceil(),
-        };
-        var response = await RestApi.post(uploadFileUrl, body: body,useToken: false);
-        RestApi.responseHandler(
-            response: response,
-            successCallback: () async {
-              print('MainController.uploadFileInChunks>>${response!.data['data']}');
-              filePath= response.data['data'];
-              chunkName = filePath; // ذخیره نام چانک پس از اتمام آپلود
-              // به‌روزرسانی fileInfo برای نمایش نام چانک
-              if (chunkName != null) {
-                for (var f in picked.files) {
-                  fileInfo[f.name] = [
-                    (totalLength / chunkSize).ceil(),
-                    chunkIndex,
-                    chunkName, // اضافه کردن نام چانک به لیست
-                  ];
+      final path = singleFile.path!;
+      final file = File(path);
+      final totalLength = await file.length();
+      final raf = file.openSync(mode: FileMode.read);
+      int offset = 0;
+      int chunkIndex = 1;
+      String? chunkName;
+      try {
+          if (!fileInfo.containsKey(singleFile.name)) {
+            fileInfo[singleFile.name] = [];
+          }
+        while (offset < totalLength) {
+          final remaining = totalLength - offset;
+          final currentChunkSize = remaining > chunkSize
+              ? chunkSize
+              : remaining;
+          final bytes = raf.readSync(chunkSize);
+          final String chunk = base64Encode(bytes);
+            MainController.updateFileInfo(
+                singleFile.name, (totalLength / chunkSize).ceil(), chunkIndex, fileInfo);
+          var body = {
+            'table_name': tableName,
+            'data': chunk,
+            'name': file.uri.pathSegments.last,
+            'currentChunkIndex': chunkIndex,
+            'totalChunks': (totalLength / chunkSize).ceil(),
+          };
+          var response = await RestApi.post(
+              uploadFileUrl, body: body, useToken: false);
+          RestApi.responseHandler(
+              response: response,
+              successCallback: () async {
+                print('MainController.uploadFileInChunks>>${response!
+                    .data['data']}');
+                filePath = response.data['data'];
+                chunkName = filePath;
+                if (chunkName != null) {
+                    fileInfo[singleFile.name] = [
+                      (totalLength / chunkSize).ceil(),
+                      chunkIndex,
+                      chunkName,
+                    ];
+                  fileInfo.refresh();
                 }
-                fileInfo.refresh();
-              }
-            },
-            errorCallback: (){
-          print('Failed to upload chunk $chunkIndex');
-          return null;
-        },printResponse: false);
-        offset += currentChunkSize;
-        chunkIndex++;
+              },
+              errorCallback: () {
+                print('Failed to upload chunk $chunkIndex');
+                return null;
+              }, printResponse: false);
+          offset += currentChunkSize;
+          chunkIndex++;
+        }
+      } catch (e) {
+        print('Error during upload: $e');
+        return null;
+      } finally {
+        raf.closeSync();
       }
-    } catch (e) {
-      print('Error during upload: $e');
-      return null;
-    } finally {
-      raf.closeSync();
-    }
-    print('Upload finished.');
+      print('Upload finished.');
 
-    return filePath;
-  }
+      return filePath;
+    }
+
 
   static void updateFileInfo(
       String fileName,
