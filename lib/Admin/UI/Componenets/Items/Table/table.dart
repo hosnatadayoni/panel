@@ -174,7 +174,7 @@ class _TableBoxState extends State<TableBox> {
                                             .isClickedBtn.value = false;
                                         ViewController.isClickedEditBtn
                                             .value = false;
-                                        ViewController.request.value = {};
+                                        ViewController.request = {};
                                         HelperController
                                             .editPageFunction(
                                             MainController.tableData
@@ -253,12 +253,6 @@ class _TableBoxState extends State<TableBox> {
                                                             onTap:
                                                                 () async {
                                                               HelperController.deleteFunction(MainController.tableData.value[i]);
-                                                              // setState(() {
-                                                              //   DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
-                                                              // });
-                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
-                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
-                                                              // Navigator.pop(context);
                                                             },
                                                             child:
                                                             Container(
@@ -377,26 +371,6 @@ class _TableBoxState extends State<TableBox> {
                                       if (MainController.tableInfo['relations'].length != 0)
                                         for (var item in MainController.tableInfo['relations'])
                                           PopupMenuItem<String>(
-
-                                            // onTap: (){
-                                            //   print('_TableBoxState.build');
-                                            //     MainController.selectedItem
-                                            //       .value = MainController
-                                            //       .SubMenuList
-                                            //       .indexWhere((element) =>
-                                            //   element[
-                                            //   'table-name'] ==
-                                            //       item['table-name']);
-                                            //   MainController
-                                            //       .tableName.value =
-                                            //   item['table-name'];
-                                            //   print(
-                                            //       '_TableBoxState.build>>${MainController.tableName.value}');
-                                            //   HelperController
-                                            //       .relationFunction(
-                                            //       table: item,
-                                            //       index: i);
-                                            // },
                                               value: item['table-name'].toString(),
                                               child: Container(
                                                 child: Txt(

@@ -295,8 +295,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    print('_EditFieldPageState.build>>${ViewController.request.value}');
-                                    HelperController.editFunction(MainController.tableName.value, request: ViewController.request.value, id: widget.data!['_id']);
+                                    print('_EditFieldPageState.build>>${ViewController.request}');
+                                    HelperController.editFunction(MainController.tableName.value, request: ViewController.request, id: widget.data!['_id']);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(10),

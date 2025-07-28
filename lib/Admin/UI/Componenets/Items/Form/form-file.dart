@@ -167,7 +167,7 @@ class _FormFileState extends State<FormFile> {
                             selectedFiles = widget.selectedFilesTxt;
                           }
                         }
-                        MainController.upload(file);
+                        // MainController.upload(file);
                       }
                       if (widget.onChanged != null) {
                         widget.onChanged!(widget.filesSelected['${widget.columnName}']!);
@@ -306,7 +306,7 @@ class _FormFileState extends State<FormFile> {
                             selectedFiles = widget.selectedFilesTxt;
                           }
                         }
-                        MainController.upload(file);
+                        // MainController.upload(file);
 
                       }
                       if (widget.onChanged != null) {

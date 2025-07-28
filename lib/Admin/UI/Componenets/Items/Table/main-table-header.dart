@@ -96,7 +96,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               ViewController.isClickedEditBtn.value = false;
                             });
                             Future.delayed(Duration.zero , ()async{
-                              ViewController.request.value={};
+                              ViewController.request={};
                               // MainController.tableName.value=MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
                               print('_MainTableHeaderState.build>>>${MainController.tableName.value}');
                               HelperController.createPageFunction(MainController.tableName.value);

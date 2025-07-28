@@ -114,22 +114,6 @@
         "is-show-edit": false
       },
       {
-        "name": "File",
-        "title": "File",
-        "type": "file",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
-        "name": "multiFile",
-        "title": "multiFile",
-        "type": "multifile",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
         "name": "online",
         "title": "online",
         "type": "checkbox",
