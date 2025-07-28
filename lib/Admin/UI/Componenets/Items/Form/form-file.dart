@@ -85,9 +85,10 @@ class _FormFileState extends State<FormFile> {
               }
             },
             child: Container(
+              width: 280,
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: MainController.isLightMode.value == true ? whiteColor : color2,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -95,7 +96,7 @@ class _FormFileState extends State<FormFile> {
                 children: [
                   Icon(Icons.cloud_upload_outlined, size: 50,),
                   SizedBox(width: 10),
-                  Txt('برای انتخاب فایل کلیک کنید',fontSize: 16, color: Colors.blue,),
+                  Txt('برای انتخاب فایل کلیک کنید',fontSize: 16, color: blackColor,),
                 ],
               ),
             ),
@@ -205,6 +206,8 @@ class _FormFileState extends State<FormFile> {
                                                           await MainController.deleteFileInChunks(filePath);
                                                           setState(() {
                                                             fileNameList.removeAt(i);
+                                                            Navigator.pop(
+                                                                context);
                                                           });
                                                         },
                                                         child:
