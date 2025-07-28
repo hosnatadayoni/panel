@@ -25,7 +25,6 @@ class Header extends StatelessWidget {
         left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
         child: Container(
           padding: EdgeInsets.all(15),
-          // color: MainController.isLightMode.value == true? background:whiteColor,
           color: MainController.isLightMode.value == false ? color6 :color9,
           width: size.width > 800 ? MainController.isClickedItem.value == true ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
           height: 60,
@@ -43,45 +42,6 @@ class Header extends StatelessWidget {
                 //   Get.to(() => DashboardPage());
                 // },
                   child: Txt('${AppController.of(context)!.value('management panel')}' , fontSize: 20 , fontWeight: FontWeight.w500 , color: MainController.isLightMode.value == true? whiteColor : color3)),
-              // InkWell(
-              //   onTap: (){
-              //   },
-              //   child: MouseRegion(
-              //     onEnter:(_){
-              //       isHoverMenu.value = true;
-              //     },
-              //     onExit: (_){
-              //       isHoverMenu.value = false;
-              //     },
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         Txt('logout' , fontSize: 20 , fontWeight: FontWeight.w500, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,),
-              //         Stack(
-              //           children: [
-              //             Container(
-              //                 width: 40,
-              //                 height: 40,
-              //                 child: Icon(CupertinoIcons.bell_fill, size: 25, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,)),
-              //             Positioned(
-              //               left: 1,
-              //               child: Container(
-              //                 width: 20,
-              //                 height: 20,
-              //                 decoration: BoxDecoration(
-              //                   color: redColor,
-              //                   shape: BoxShape.circle,
-              //                 ),
-              //                 child: Txt('1' , color: whiteColor, textAlign: TextAlign.center,),
-              //               ),
-              //             )
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               Row(
                 children: [
                   Stack(
