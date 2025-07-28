@@ -247,7 +247,7 @@ class ViewController extends GetxController {
           children.add(colorBox);
         }
 
-        else if (type == 'file' || type == 'multifile') {
+        else if (type == 'file' || type == 'multiFile') {
           fileBox = generateFileBox('', column, false.obs);
 
           children.add(fileBox);
@@ -276,6 +276,7 @@ class ViewController extends GetxController {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
+        print('type 2>>>${type}');
 
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
@@ -348,7 +349,7 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file' || type == 'multifile') {
+        } else if (type == 'file' || type == 'multiFile') {
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -568,7 +569,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         }
-        else if (type == 'file' || type == 'multifile') {
+        else if (type == 'file' || type == 'multiFile') {
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
@@ -659,7 +660,7 @@ class ViewController extends GetxController {
         ),
       );
     }
-    else if (type == 'file' || type == 'multifile') {
+    else if (type == 'file' || type == 'multiFile') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else {

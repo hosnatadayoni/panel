@@ -56,11 +56,11 @@ class _FormFileState extends State<FormFile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if(widget.column['type'] == 'multifile' ||( widget.column['type'] == 'file' && fileNameList.length == 0))
+          if(widget.column['type'] == 'multiFile' ||( widget.column['type'] == 'file' && fileNameList.length == 0))
             InkWell(
             onTap: () async {
               var picked = await FilePicker.platform.pickFiles(
-                allowMultiple: widget.column['type'] == 'multifile' ? true: false,
+                allowMultiple: widget.column['type'] == 'multiFile' ? true: false,
                 type: FileType.custom,
                 withReadStream: true,
                 withData: true,
