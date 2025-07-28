@@ -62,7 +62,7 @@ class _FormFileState extends State<FormFile> {
                   onTap: () async {
 
                     print('selected file');
-                    var picked = await FilePicker.platform.pickFiles(
+                    FilePickerResult? picked = await FilePicker.platform.pickFiles(
                       allowMultiple: true,
                       type: FileType.custom,
                       withReadStream: true,
@@ -94,7 +94,8 @@ class _FormFileState extends State<FormFile> {
                     //   }
                     //
                     //
-                    //   for(var file in picked.files){
+
+
                     //     print('_FormFileState.build>>${file.bytes}>>${file.extension}>>${file.readStream}>>}>>');
                     //           var maxSize;
                     //     var minSize;
