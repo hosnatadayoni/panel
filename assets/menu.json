@@ -308,8 +308,8 @@
           }
           ,
           {
-            "title": "multifile",
-            "value": "multifile",
+            "title": "multiFile",
+            "value": "multiFile",
             "is_selected": false
           }
         ],

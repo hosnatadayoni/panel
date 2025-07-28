@@ -615,6 +615,7 @@ class MainController extends GetxController {
     final raf = file.openSync(mode: FileMode.read);
     int offset = 0;
     int chunkIndex = 1;
+    String? chunkName;
     try {
       for (var f in picked.files) {
         if (!fileInfo.value.containsKey(f.name)) {
@@ -646,6 +647,18 @@ class MainController extends GetxController {
             successCallback: () async {
               print('MainController.uploadFileInChunks>>${response!.data['data']}');
               filePath= response.data['data'];
+              chunkName = filePath; // ذخیره نام چانک پس از اتمام آپلود
+              // به‌روزرسانی fileInfo برای نمایش نام چانک
+              if (chunkName != null) {
+                for (var f in picked.files) {
+                  fileInfo[f.name] = [
+                    (totalLength / chunkSize).ceil(),
+                    chunkIndex,
+                    chunkName, // اضافه کردن نام چانک به لیست
+                  ];
+                }
+                fileInfo.refresh();
+              }
             },
             errorCallback: (){
           print('Failed to upload chunk $chunkIndex');
@@ -665,11 +678,21 @@ class MainController extends GetxController {
     return filePath;
   }
 
-  static void updateFileInfo(String fileName, int totalChunks, int currentChunk , RxMap<String, List<dynamic>> fileInfo) {
-    fileInfo[fileName] = [totalChunks, currentChunk];
+  static void updateFileInfo(
+      String fileName,
+      int totalChunks,
+      int currentChunk,
+      RxMap<String, List<dynamic>> fileInfo,
+      ) {
+    // اگر قبلاً نام چانک ذخیره شده، آن را حفظ کنید
+    dynamic existingChunkName = fileInfo[fileName]!.length > 2 ? fileInfo[fileName]![2] : null;
+    fileInfo[fileName] = [
+      totalChunks,
+      currentChunk,
+      existingChunkName, // حفظ نام چانک اگر وجود دارد
+    ];
     fileInfo.refresh();
   }
-
   static  deleteFileInChunks(String filePath) async {
     var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,}, useToken: false);
     RestApi.responseHandler(

@@ -276,7 +276,6 @@ class ViewController extends GetxController {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
-        print('type 2>>>${type}');
 
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
@@ -1769,9 +1768,8 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFileBox(String selecetdFiles, var column,
+  static Widget generateFileBox(var selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
-    print('ViewController.request[column[name]]>>>${ViewController.request[column['name']]}');
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -1814,11 +1812,10 @@ class ViewController extends GetxController {
               filesSelectedList.add(selecetdFiles);
               ViewController.request[column['name']] = filesSelectedList;
             }
-            print('kkkkkkkkf>>>${ViewController.request[column['name']]}');
 
           },
           filesSelected: selectedFilesMap,
-          selectedFilesTxt: selecetdFiles,
+          selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
           isSeletedFile: isSeletedFile,
           column: column,
           fileInfo: fileInfo,

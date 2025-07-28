@@ -31,7 +31,7 @@ class _FormFileState extends State<FormFile> {
   String _errorMasege='';
 
   List<int> fileSizeList=[];
-  var filePath;
+  Rx<String> filePath = ''.obs;
   List<String> fileNameList=[];
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,6 @@ class _FormFileState extends State<FormFile> {
         widget.filesSelected['${widget.columnName}']=[];
       }
     }
-
     return Obx((){
       // print('bbbbbbbbb>>>${MainController.chunckCurrentIndex.value}');
       print('pppppppppps>>>${widget.fileInfo.value}');
@@ -73,7 +72,7 @@ class _FormFileState extends State<FormFile> {
                 }
               }
 
-              filePath= await MainController.uploadFileInChunks(picked,widget.column , widget.fileInfo);
+              filePath.value!= await MainController.uploadFileInChunks(picked,widget.column , widget.fileInfo);
               print('filePath>>>${filePath}');
 
               if (picked != null) {
@@ -81,24 +80,25 @@ class _FormFileState extends State<FormFile> {
                   widget.isSeletedFile!.value = true;
                 });
                 if (widget.onChanged != null) {
-                  widget.onChanged!(filePath);
+                  widget.onChanged!(filePath.value);
                 }
               }
             },
-            child: Container(
-              width: 280,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: MainController.isLightMode.value == true ? whiteColor : color2,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(Icons.cloud_upload_outlined, size: 50,),
-                  SizedBox(width: 10),
-                  Txt('برای انتخاب فایل کلیک کنید',fontSize: 16, color: blackColor,),
-                ],
+            child: IntrinsicWidth(
+              child: Container(
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: MainController.isLightMode.value == true ? background : whiteColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.cloud_upload_outlined, size: 40,color: MainController.isLightMode.value == true ? whiteColor : blackColor,),
+                    SizedBox(width: 10),
+                    Txt('${AppController.of(context)!.value('Select file')}',fontSize: 16, color: MainController.isLightMode.value == true ? whiteColor : blackColor,),
+                  ],
+                ),
               ),
             ),
           ),
@@ -120,11 +120,13 @@ class _FormFileState extends State<FormFile> {
                       var fileData = widget.fileInfo[fileNameList[i]];
                       var totalChunks = fileData?[0] ?? 1;
                       var currentChunk = fileData?[1] ?? 0;
+                      var chunkName = fileData!.length > 2 ? fileData[2] : fileNameList[i];
                       var progressValue = totalChunks > 0 ? currentChunk / totalChunks : 0;
                       print('fileData>>>${fileData}');
                       print('totalChunks>>>${totalChunks}');
                       print('currentChunk>>>${currentChunk}');
                       print('progressValue>>>${progressValue}');
+                      print('chunkName>>>${chunkName}');
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -132,7 +134,9 @@ class _FormFileState extends State<FormFile> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Txt(
-                                '${fileNameList[i]}',
+                                totalChunks == currentChunk
+                                    ? '${chunkName !=null? chunkName:fileNameList[i]}'
+                                    : '${fileNameList[i]}',
                                 fontSize: 16,
                                 color: totalChunks== currentChunk ? Colors.white : Colors.grey,
                               ),
@@ -204,7 +208,7 @@ class _FormFileState extends State<FormFile> {
                                                         onTap:
                                                             () async {
 
-                                                          await MainController.deleteFileInChunks(filePath);
+                                                          await MainController.deleteFileInChunks(chunkName);
                                                           setState(() {
                                                             fileNameList.removeAt(i);
                                                             Navigator.pop(
