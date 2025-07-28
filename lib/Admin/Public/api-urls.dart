@@ -26,6 +26,9 @@ const String deleteValidateUrl=baseApiUrl+'/admin/deleteValidate';
 const String listValidateUrl=baseApiUrl+'/admin/listValidate';
 const String createValidateFieldsUrl=baseApiUrl+'/admin/createValidateFields';
 
+const String uploadFileUrl=baseApiUrl+'/record/uploadFile';
+
+
 // const String storeUrl='https://maahsi.com/api/v2/set/database';
 
 

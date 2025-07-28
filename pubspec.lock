@@ -157,10 +157,10 @@ packages:
     dependency: "direct main"
     description:
       name: chunked_uploader
-      sha256: e3b11ac2d624498a01026d952b8d34ed11bc5032e90dcf5370920731c8f6f920
+      sha256: "0c2c36c28b4a2d597aeea99f8d3358fa14365997123ca220fd3b28aab9705add"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "1.1.0"
   clock:
     dependency: transitive
     description:
@@ -245,10 +245,18 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "5.8.0+1"
+  dio_web_adapter:
+    dependency: transitive
+    description:
+      name: dio_web_adapter
+      sha256: "0a2e95fc6bdeb623bb623fc41e90e6924e9a3bbd65089f9221f83c185366b479"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   equatable:
     dependency: transitive
     description:

@@ -32,7 +32,7 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedBtn = false.obs;
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
-  static RxMap<String, dynamic> request =<String, dynamic>{}.obs;
+  static Map<String, dynamic> request = {};
   static List<Map<String, dynamic>> requestFilter = [];
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
@@ -338,6 +338,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         } else if (type == 'file') {
+
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -691,7 +692,7 @@ class ViewController extends GetxController {
         // await DB('${MainController.tableInfo['table-name']}').
         // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
         // .updateRecords({'${name}':'${text}'});
-        HelperController.checkboxFunctuin(name  , indexRow , text);
+        HelperController.checkboxFunctuin(name ,  indexRow , text);
       },
       index: indexRow,
       column: tableData == null
@@ -786,11 +787,11 @@ class ViewController extends GetxController {
   static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, var initValue) {
     if(initValue.toString()!='') {
       if (column['type'] == 'Number int') {
-        ViewController.request.value[column['name']] = int.parse('${initValue.toString()}');
+        ViewController.request[column['name']] = int.parse('${initValue.toString()}');
       } else if (column['type'] == 'Number double') {
-        ViewController.request.value[column['name']] = double.parse('${initValue.toString()}');
+        ViewController.request[column['name']] = double.parse('${initValue.toString()}');
       } else {
-        ViewController.request.value[column['name']] = initValue.toString();
+        ViewController.request[column['name']] = initValue.toString();
       }
     }
 
@@ -815,17 +816,18 @@ class ViewController extends GetxController {
           column: column,
           initValue: initValue.toString(),
           onChange: (text) {
+            // dataJson[columnName] = text;
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
-                ViewController.request[column['name']] = int.parse('${text}');
+                ViewController.request[column['name']]= int.parse('${text}');
               } else if (column['type'] == 'Number double') {
                 ViewController.request[column['name']]= double.parse('${text}');
               } else {
-                ViewController.request[column['name']] = text;
-                print('ViewController.generateFormTextField>>>${ViewController.request}');
+                ViewController.request[column['name']]= text;
               }
             } else {
-              ViewController.request[column['name']] = '';
+              ViewController.request[column['name']]= '';
+
             }
           },
           isMobile: type == 'mobile' ? true : false,
@@ -1799,6 +1801,7 @@ class ViewController extends GetxController {
         FormFile(
           columnName: column['title'],
           onChanged: (selecetdFiles) {
+            print('selecetdFiles>>>${selecetdFiles}');
             // dataJson[columnName] = selecetdFiles;
             ViewController.request[column['name']] = selecetdFiles;
           },
