@@ -1770,17 +1770,25 @@ class ViewController extends GetxController {
 
   static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
+    print('ViewController.request[column[name]]>>>${ViewController.request[column['name']]}');
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
-    List<dynamic> filesSelectedList;
-    if (ViewController.request[column['name']] != null) {
-      filesSelectedList = ViewController.request[column['name']];
-      for (var data in filesSelectedList) {
-        selectedFilesMap['${column['name']}']!.add(data);
-      }
-    }
+    List<dynamic> filesSelectedList=[];
+    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+
+    // if (ViewController.request[column['name']] != null) {
+    //   filesSelectedList = ViewController.request[column['name']];
+    //   for (var data in filesSelectedList) {
+    //     selectedFilesMap['${column['name']}']!.add(data);
+    //   }
+    // }
+    // else{
+    //
+    //   print('filesSelectedList>>>${filesSelectedList}');
+    // }
+
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1798,12 +1806,21 @@ class ViewController extends GetxController {
           columnName: column['title'],
           onChanged: (selecetdFiles) {
             // dataJson[columnName] = selecetdFiles;
-            ViewController.request[column['name']] = selecetdFiles;
+            if(column['type'] == 'file'){
+              ViewController.request[column['name']] = selecetdFiles;
+            }
+            else{
+              filesSelectedList.add(selecetdFiles);
+              ViewController.request[column['name']] = filesSelectedList;
+            }
+            print('kkkkkkkkf>>>${ViewController.request[column['name']]}');
+
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt: selecetdFiles,
           isSeletedFile: isSeletedFile,
           column: column,
+          fileInfo: fileInfo,
         ),
       ],
     );

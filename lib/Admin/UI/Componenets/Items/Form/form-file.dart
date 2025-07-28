@@ -16,10 +16,11 @@ class FormFile extends StatefulWidget {
   var column;
   Rx<bool>? isSeletedFile = false.obs;
   var file;
+  RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
 
 
 
-  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column , this.isSeletedFile , this.file});
+  FormFile({this.onChanged ,required this.filesSelected , this.columnName , this.selectedFilesTxt , this.column , this.isSeletedFile , this.file , required this.fileInfo});
 
   @override
   State<FormFile> createState() => _FormFileState();
@@ -44,7 +45,7 @@ class _FormFileState extends State<FormFile> {
 
     return Obx((){
       // print('bbbbbbbbb>>>${MainController.chunckCurrentIndex.value}');
-      print('pppppppppps>>>${MainController.fileInfo.value}');
+      print('pppppppppps>>>${widget.fileInfo.value}');
       if(ViewController.isClickedBtn.value == true || ViewController.isClickedEditBtn.value == true){
         if(inputRequired != null){
           if(widget.isSeletedFile!.value == false){
@@ -72,7 +73,7 @@ class _FormFileState extends State<FormFile> {
                 }
               }
 
-              filePath= await MainController.uploadFileInChunks(picked,widget.column);
+              filePath= await MainController.uploadFileInChunks(picked,widget.column , widget.fileInfo);
               print('filePath>>>${filePath}');
 
               if (picked != null) {
@@ -116,7 +117,7 @@ class _FormFileState extends State<FormFile> {
                     ),
                     SizedBox(width: 5,),
                     Obx((){
-                      var fileData = MainController.fileInfo[fileNameList[i]];
+                      var fileData = widget.fileInfo[fileNameList[i]];
                       var totalChunks = fileData?[0] ?? 1;
                       var currentChunk = fileData?[1] ?? 0;
                       var progressValue = totalChunks > 0 ? currentChunk / totalChunks : 0;

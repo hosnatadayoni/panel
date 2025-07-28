@@ -48,7 +48,7 @@ class MainController extends GetxController {
   ];
   // static RxInt totlaChunck = 0.obs;
   // static RxInt chunckCurrentIndex = 0.obs;
-  static RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+  // static RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
 
 
   //
@@ -602,7 +602,7 @@ class MainController extends GetxController {
 
   }
 
-  static Future<String?> uploadFileInChunks(var picked,var column,  {int chunkSize = 512 * 1024}) async {
+  static Future<String?> uploadFileInChunks(var picked,var column,  RxMap<String, List<dynamic>> fileInfo,  {int chunkSize = 512 * 1024}) async {
     var filePath=null;
     if(picked==null)
       return null;
@@ -617,8 +617,8 @@ class MainController extends GetxController {
     int chunkIndex = 1;
     try {
       for (var f in picked.files) {
-        if (!MainController.fileInfo.value.containsKey(f.name)) {
-          MainController.fileInfo.value[f.name] = [];
+        if (!fileInfo.value.containsKey(f.name)) {
+          fileInfo.value[f.name] = [];
         }
       }
       while (offset < totalLength) {
@@ -630,7 +630,7 @@ class MainController extends GetxController {
         // MainController.chunckCurrentIndex.value = chunkIndex;
 
         for (var f in picked.files) {
-          MainController.updateFileInfo(f.name, (totalLength / chunkSize).ceil(), chunkIndex);
+          MainController.updateFileInfo(f.name, (totalLength / chunkSize).ceil(), chunkIndex , fileInfo);
         }
 
         var body= {
@@ -665,7 +665,7 @@ class MainController extends GetxController {
     return filePath;
   }
 
-  static void updateFileInfo(String fileName, int totalChunks, int currentChunk) {
+  static void updateFileInfo(String fileName, int totalChunks, int currentChunk , RxMap<String, List<dynamic>> fileInfo) {
     fileInfo[fileName] = [totalChunks, currentChunk];
     fileInfo.refresh();
   }
