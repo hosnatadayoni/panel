@@ -4,6 +4,7 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -245,12 +246,6 @@ class ViewController extends GetxController {
           colorBox = generateFormColorBoxFilter(column,filterInfo, Colors.blue, false.obs);
 
           children.add(colorBox);
-        }
-
-        else if (type == 'file' || type == 'multiFile') {
-          fileBox = generateFileBox('', column, false.obs);
-
-          children.add(fileBox);
         }
       }
     }
@@ -568,8 +563,18 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         }
-        else if (type == 'file' || type == 'multiFile') {
+        else if (type == 'file') {
           fileBox = generateFileBox(
+              '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
+              column,
+              dataModel[name] == null ? false.obs : true.obs);
+          children.add(SizedBox(
+            height: 20,
+          ));
+          children.add(fileBox);
+        }
+        else if (type == 'multiFile') {
+          fileBox = generateMultiFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
               dataModel[name] == null ? false.obs : true.obs);
@@ -659,8 +664,11 @@ class ViewController extends GetxController {
         ),
       );
     }
-    else if (type == 'file' || type == 'multiFile') {
+    else if (type == 'file' ) {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
+    }
+    else if (type == 'multiFile' ) {
+      child = generateCellMultiFileBox(indexColumn, indexRow, tableData: table);
     }
     else {
       child = generateData(indexColumn, indexRow, tableData: table);
@@ -735,9 +743,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateCellFileBox(int indexColumn, int indexRow,
-      {var tableData}) {
-    // DataModel dataModel = MainController.tableData.value[indexRow];
+  static Widget generateCellFileBox(int indexColumn, int indexRow, {var tableData}) {
     String name;
     if (tableData == null) {
       name = MainController.tableInfo['columns'][indexColumn]['name'];
@@ -748,16 +754,40 @@ class ViewController extends GetxController {
       return  dataModel != null &&dataModel.length != 0?Column(
         children: [
           Center(
-            child:Img('${ dataModel}',width: 100,height: 100,isNetwork: true,),
+            child:Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
 
           ),
-          Txt(
-            '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: MainController.isLightMode.value == true ? whiteColor : color2,
-            textAlign: TextAlign.center,
+          // Txt(
+          //   '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
+          //   fontSize: 14,
+          //   fontWeight: FontWeight.w500,
+          //   color: MainController.isLightMode.value == true ? whiteColor : color2,
+          //   textAlign: TextAlign.center,
+          // ),
+        ],
+      ):Container();
+  }
+  static Widget generateCellMultiFileBox(int indexColumn, int indexRow, {var tableData}) {
+    String name;
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
+      name = tableData['columns'][indexColumn]['name'];
+    }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
+      return  dataModel != null &&dataModel.length != 0?Column(
+        children: [
+          Center(
+            child:Img('${ fileImage}',width: 50,height: 50),
+
           ),
+          // Txt(
+          //   '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
+          //   fontSize: 14,
+          //   fontWeight: FontWeight.w500,
+          //   color: MainController.isLightMode.value == true ? whiteColor : color2,
+          //   textAlign: TextAlign.center,
+          // ),
         ],
       ):Container();
   }
@@ -1776,18 +1806,51 @@ class ViewController extends GetxController {
     }
     List<dynamic> filesSelectedList=[];
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          return Txt(
+            '${column['title']}',
+            color:
+            MainController.isLightMode.value == true ? whiteColor : color2,
+          );
+        }),
+        SizedBox(
+          height: 10,
+        ),
+        FormFile(
+          columnName: column['title'],
+          onChanged: (selecetdFiles) {
+            // dataJson[columnName] = selecetdFiles;
+            if(column['type'] == 'file'){
+              ViewController.request[column['name']] = selecetdFiles;
+            }
+            else{
+              filesSelectedList.add(selecetdFiles);
+              ViewController.request[column['name']] = filesSelectedList;
+            }
 
-    // if (ViewController.request[column['name']] != null) {
-    //   filesSelectedList = ViewController.request[column['name']];
-    //   for (var data in filesSelectedList) {
-    //     selectedFilesMap['${column['name']}']!.add(data);
-    //   }
-    // }
-    // else{
-    //
-    //   print('filesSelectedList>>>${filesSelectedList}');
-    // }
+          },
+          filesSelected: selectedFilesMap,
+          selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
+          isSeletedFile: isSeletedFile,
+          column: column,
+          fileInfo: fileInfo,
+        ),
+      ],
+    );
+  }
 
+  static Widget generateMultiFileBox(var selecetdFiles, var column,
+      Rx<bool>? isSeletedFile) {
+    print('ViewController.generateFileBox>>>${selecetdFiles}');
+    Map<String, List<dynamic>> selectedFilesMap = {};
+    if (selectedFilesMap['${column['name']}'] == null) {
+      selectedFilesMap['${column['name']}'] = [];
+    }
+    List<dynamic> filesSelectedList=[];
+    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

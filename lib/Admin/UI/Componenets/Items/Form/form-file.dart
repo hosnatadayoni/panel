@@ -56,8 +56,6 @@ class _FormFileState extends State<FormFile> {
       }
     }
     return Obx(() {
-      // print('bbbbbbbbb>>>${MainController.chunckCurrentIndex.value}');
-      print('pppppppppps>>>${widget.fileInfo.value}');
       if (ViewController.isClickedBtn.value == true ||
           ViewController.isClickedEditBtn.value == true) {
         if (inputRequired != null) {
