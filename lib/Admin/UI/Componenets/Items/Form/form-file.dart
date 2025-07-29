@@ -87,7 +87,7 @@ class _FormFileState extends State<FormFile> {
                 );
 
                 if (picked != null)
-                  for (var file in picked.files) {
+                  for (PlatformFile file in picked.files) {
                     if (!fileNameList.contains(file.name)) {
                       fileNameList.add(file.name);
                     }
