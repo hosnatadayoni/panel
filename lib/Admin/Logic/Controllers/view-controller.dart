@@ -599,6 +599,7 @@ class ViewController extends GetxController {
   }
 
   static Future<Widget> generateDataColumn(int indexColumn, int indexRow, {var table}) async {
+    print('MainController.tableData.value e>>>${MainController.tableData.value}');
     var size = MediaQuery.of(Get.context!).size;
     String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];

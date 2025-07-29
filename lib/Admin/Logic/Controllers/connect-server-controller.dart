@@ -120,6 +120,7 @@ class ConncetServerController extends GetxController {
     var response = await RestApi.post(listFieldUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
+          print('ffffffff>>>${response!.data['data']}');
       listFieldsRes=response!.data['data'];
     }, printResponse: true);
   }
@@ -134,6 +135,7 @@ class ConncetServerController extends GetxController {
     var response = await RestApi.post(listValidateUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
+          print('listValidate a>>>${response!.data['data']}');
       listValidateRes=response!.data['data'];
     }, printResponse: true);
   }

@@ -265,6 +265,11 @@
             "is_selected": false
           },
           {
+            "title": "Number double",
+            "value": "Number double",
+            "is_selected": false
+          },
+          {
             "title": "checkbox",
             "value": "checkbox",
             "default_value": false,

@@ -9,6 +9,7 @@ import 'package:panel/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:panel/Admin/UI/Views/dashboard.dart';
 import 'package:panel/Admin/UI/Views/edit.dart';
 import 'package:panel/Admin/boxes.dart';
+import 'package:panel/AdminCustom/UI/Views/createValidator.dart';
 import 'package:panel/AdminCustom/UI/Views/creteField.dart';
 import 'package:panel/AdminCustom/UI/Views/editField.dart';
 import 'package:panel/AdminCustom/UI/Views/editSchema.dart';
@@ -73,7 +74,7 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(tableName);
     print('HelperController.createPageFunction>>${table}');
     if (table['view'] == 'custom') {
-      if (table['table-name'] == 'project' || table['table-name'] == 'validators') {
+      if (table['table-name'] == 'project') {
         await Get.to(() => CreatePage(tableName));
       }
       if( table['table-name'] == 'schema'){
@@ -110,6 +111,75 @@ class HelperController extends GetxController {
       }
       else if(table['table-name'] == 'fields'){
         await Get.to(() => CretePageField(tableName));
+      }
+      else if(table['table-name'] == 'validators'){
+        Map<String, dynamic> parent = await DB.parentItem;
+        print('oogfff>>>${parent}');
+        int i = ConncetServerController.listFieldsRes.indexWhere((element) => element['_id']==parent['parent_id']);
+        String type = ConncetServerController.listFieldsRes[i]['type'];
+        await ConncetServerController.listValidate({'my_field':parent['parent_id']});
+
+        var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='validators');
+        if(index!=-1) {
+            MainController.tableInfo['columns'][0]['items'] = [];
+            if(type == 'file' || type == 'multiFile'){
+              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "Reqiured",
+                "value": "reqiured",
+              });
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "All Files",
+                "value": "allFiles",
+              });
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "Pdf",
+                "value": "pdf",
+              });
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "Image",
+                "value": "image",
+              });
+              MainController.tableInfo['columns'][0]['items'].add( {
+                "title": "Xlsx",
+                "value": "xlsx",
+              });
+              MainController.tableInfo['columns'][0]['items'].add( {
+                "title": "Word",
+                "value": "word",
+              });
+              MainController.tableInfo['columns'][0]['items'].add( {
+                "title": "PowerPoint",
+                "value": "powerPoint",
+              });
+            }
+            else if(type == 'Number int' || type == 'Number double'){
+              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "Reqiured",
+                "value": "reqiured",
+              });
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "min",
+                "value": "min",
+              });
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "max",
+                "value": "max",
+              });
+
+            }
+            else{
+              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
+              MainController.tableInfo['columns'][0]['items'].add({
+                "title": "Reqiured",
+                "value": "reqiured",
+              });
+
+            }
+
+        }
+        await Get.to(() => CreateValidator(tableName));
       }
 
     } else {
