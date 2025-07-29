@@ -280,7 +280,8 @@ class ValidatorController extends GetxController {
                 return [false, column['validators'][i]['message']];
               }
           }  if (column['validators'][i]['type'] == 'min') {
-              if (file.size >= column['validators'][i]['size']) {
+              if (file.size >= column['validators'][i]['size'])
+              {
                 return [true, ''];
               } else {
                 return [false, column['validators'][i]['message']];
