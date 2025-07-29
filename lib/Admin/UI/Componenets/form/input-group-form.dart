@@ -1,12 +1,12 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/btn.dart';
-import 'package:finance/Admin/UI/Componenets/dropDown/drop-down.dart';
-import 'package:finance/Admin/UI/Componenets/form/checkbox-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/file-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/input-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/radioButton-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/select-form.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/btn.dart';
+import 'package:panel/Admin/UI/Componenets/dropDown/drop-down.dart';
+import 'package:panel/Admin/UI/Componenets/form/checkbox-form.dart';
+import 'package:panel/Admin/UI/Componenets/form/file-form.dart';
+import 'package:panel/Admin/UI/Componenets/form/input-form.dart';
+import 'package:panel/Admin/UI/Componenets/form/radioButton-form.dart';
+import 'package:panel/Admin/UI/Componenets/form/select-form.dart';
 import 'package:flutter/material.dart';
 
 // class InputGroup extends StatelessWidget {

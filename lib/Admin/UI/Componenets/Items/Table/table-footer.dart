@@ -1,13 +1,13 @@
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/helper-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/view-controller.dart';
 
 class TableFooter extends StatefulWidget {
   const TableFooter({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/btn.dart';
-import 'package:finance/Admin/UI/Componenets/progress/progress-item.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/btn.dart';
+import 'package:panel/Admin/UI/Componenets/progress/progress-item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 

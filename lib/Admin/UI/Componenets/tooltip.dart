@@ -1,4 +1,4 @@
-import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
+import 'package:panel/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';

@@ -1,4 +1,4 @@
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 
 class CustomAccordion extends StatefulWidget {

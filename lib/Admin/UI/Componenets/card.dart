@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/img.dart';
-import 'package:finance/Admin/UI/Componenets/General/myDivider.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/img.dart';
+import 'package:panel/Admin/UI/Componenets/General/myDivider.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'btn.dart';
 // class CustomCard extends StatelessWidget {
@@ -138,9 +138,9 @@ import 'btn.dart';
 //   }
 // }
 
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/img.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/img.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 enum directionCard{
   left,

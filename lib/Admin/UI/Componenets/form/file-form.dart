@@ -1,7 +1,7 @@
-// import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-// import 'package:finance/Public/styles.dart';
-// import 'package:finance/UI/Componenets/General/txt.dart';
-// import 'package:finance/UI/Componenets/form/input-form.dart';
+// import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+// import 'package:panel/Public/styles.dart';
+// import 'package:panel/UI/Componenets/General/txt.dart';
+// import 'package:panel/UI/Componenets/form/input-form.dart';
 // import 'package:flutter/material.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:get/get.dart';
@@ -136,10 +136,10 @@
 //     );
 //   }
 // }
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/form/input-form.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/form/input-form.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';

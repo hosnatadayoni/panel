@@ -1,4 +1,4 @@
-import 'package:finance/Admin/Public/styles.dart';
+import 'package:panel/Admin/Public/styles.dart';
 import 'package:flutter/animation.dart';
 
 import '../btn.dart';

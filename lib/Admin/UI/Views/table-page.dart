@@ -1,8 +1,8 @@
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/Admin/UI/Views/main-table.dart';
+import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/Items/Header/header.dart';
+import 'package:panel/Admin/UI/Componenets/Items/Menu/menu.dart';
+import 'package:panel/Admin/UI/Views/main-table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';

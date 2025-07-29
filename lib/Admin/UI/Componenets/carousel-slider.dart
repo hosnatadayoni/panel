@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/img.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/img.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 // class DetailSlider extends StatefulWidget {

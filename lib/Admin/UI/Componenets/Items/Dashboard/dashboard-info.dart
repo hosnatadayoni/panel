@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/myDivider.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/myDivider.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

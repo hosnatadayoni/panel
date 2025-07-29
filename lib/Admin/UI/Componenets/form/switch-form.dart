@@ -1,4 +1,4 @@
-import 'package:finance/Admin/Public/styles.dart';
+import 'package:panel/Admin/Public/styles.dart';
 import 'package:flutter/material.dart';
 
 // class CustomSwitch extends StatefulWidget {

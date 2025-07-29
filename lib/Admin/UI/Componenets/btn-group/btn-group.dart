@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/btn-group/btn-group-item.dart';
-import 'package:finance/Admin/UI/Componenets/dropDown/drop-down.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/btn-group/btn-group-item.dart';
+import 'package:panel/Admin/UI/Componenets/dropDown/drop-down.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 enum ButtonGroupSize { large, medium, small }

@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
-import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/project.dart';
-import 'package:finance/Admin/Public/api-urls.dart';
+import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/record-controller.dart';
+import 'package:panel/Admin/Logic/Helpers/token-methods.dart';
+import 'package:panel/Admin/Logic/Models/ServerModel/project.dart';
+import 'package:panel/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
 import '../Models/db.dart';

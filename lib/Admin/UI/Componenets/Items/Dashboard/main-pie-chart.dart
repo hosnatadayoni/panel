@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Dashboard/pie-chart.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/Items/Dashboard/pie-chart.dart';
 import 'package:flutter/material.dart';
 
 class MainPieChart extends StatefulWidget {

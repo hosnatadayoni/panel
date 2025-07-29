@@ -1,6 +1,6 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Dashboard/circle-progress-bar.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/Items/Dashboard/circle-progress-bar.dart';
 import 'package:flutter/material.dart';
 class DashboardInfo2 extends StatelessWidget {
    DashboardInfo2({required this.title , required this.color , required this.num});

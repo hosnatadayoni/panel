@@ -1,10 +1,10 @@
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Public/images.dart';
-import 'package:finance/Admin/UI/Componenets/General/img.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/Admin/UI/Views/dashboard.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
+import 'package:panel/Admin/Public/images.dart';
+import 'package:panel/Admin/UI/Componenets/General/img.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/Items/Form/form-text-field.dart';
+import 'package:panel/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

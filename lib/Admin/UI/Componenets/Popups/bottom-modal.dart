@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:finance/Admin/Public/styles.dart';
+import 'package:panel/Admin/Public/styles.dart';
 
 
 showBottomModal(BuildContext context,double height,Widget child,{String? title,bool dragable=true}){

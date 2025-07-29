@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Logic/Helpers/token-methods.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';

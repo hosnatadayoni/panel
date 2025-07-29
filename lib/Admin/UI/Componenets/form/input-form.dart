@@ -1,7 +1,7 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/form/color-form.dart';
-import 'package:finance/Admin/UI/Componenets/form/file-form.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/form/color-form.dart';
+import 'package:panel/Admin/UI/Componenets/form/file-form.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 enum keyboardType{

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Public/styles.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Public/styles.dart';
 import '../General/img.dart';
 
 class PickerBtn extends StatelessWidget {

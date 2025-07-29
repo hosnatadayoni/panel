@@ -1,11 +1,11 @@
 
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
 import 'package:flutter/material.dart';
 // import 'package:services/Admin/Logic/Controllers/app-controller.dart';
 // import 'package:services/Public/config.dart';
 // import 'package:services/Public/styles.dart';
 
-import 'package:finance/Admin/Public/styles.dart';
+import 'package:panel/Admin/Public/styles.dart';
 
 class BtnIcon extends StatefulWidget {
   String text;

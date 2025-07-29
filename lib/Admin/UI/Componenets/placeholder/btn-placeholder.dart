@@ -1,5 +1,5 @@
-import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/placeholder/content-placeholder.dart';
+import 'package:panel/Admin/Public/styles.dart';
+import 'package:panel/Admin/UI/Componenets/placeholder/content-placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 

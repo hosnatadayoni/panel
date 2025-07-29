@@ -1,4 +1,4 @@
-import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../Logic/Controllers/app-controller.dart';
