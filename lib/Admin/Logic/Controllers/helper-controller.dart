@@ -77,111 +77,130 @@ class HelperController extends GetxController {
       if (table['table-name'] == 'project') {
         await Get.to(() => CreatePage(tableName));
       }
-      if( table['table-name'] == 'schema'){
+      if (table['table-name'] == 'schema') {
         await ConncetServerController.listSchema();
         MainController.tableInfo['columns'][6]['items'] = [];
-        var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='schema');
-        if(index!=-1){
-          for(var field in ConncetServerController.listSchemaRes) {
-            print('HelperController.createPageFunction222${ MainController.tableInfo['columns']}');
+        var index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == 'schema');
+        if (index != -1) {
+          for (var field in ConncetServerController.listSchemaRes) {
+            print(
+                'HelperController.createPageFunction222${MainController.tableInfo['columns']}');
             MainController.tableInfo['columns'][6]['items']
                 .add({"title": field['name'], "value": field['name']});
           }
-          print('HelperController.createPageFunction>>>${  MainController.tableInfo['columns'][6]}');
+          print(
+              'HelperController.createPageFunction>>>${MainController.tableInfo['columns'][6]}');
         }
         await Get.to(() => CreatePage(tableName));
-
       }
-      if( table['table-name'] == 'filters'){
+      if (table['table-name'] == 'filters') {
         Map<String, dynamic> parent = await DB.parentItem;
-        print('HelperController.createPageFunction>>>${parent}');
         if (parent.length != 0) {
-          await ConncetServerController.listField({'name':parent['parent_table']});
+          await ConncetServerController.listField(
+              {'name': parent['parent_table']});
         }
-        var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='filters');
-        if(index!=-1){
-          for(var field in ConncetServerController.listFieldsRes) {
-            print('HelperController.createPageFunction222${field['name']}');
+        var index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == 'filters');
+        if (index != -1) {
+          for (var field in ConncetServerController.listFieldsRes) {
             MainController.tableInfo['columns'][0]['items']
                 .add({"title": field['name'], "value": field['name']});
           }
-          print('HelperController.createPageFunction>>>${ MainController.tableInfo}');
         }
         await Get.to(() => CreatePage(tableName));
-      }
-      else if(table['table-name'] == 'fields'){
+      } else if (table['table-name'] == 'fields') {
         await Get.to(() => CretePageField(tableName));
-      }
-      else if(table['table-name'] == 'validators'){
+      } else if (table['table-name'] == 'validators') {
         Map<String, dynamic> parent = await DB.parentItem;
-        print('oogfff>>>${parent}');
-        int i = ConncetServerController.listFieldsRes.indexWhere((element) => element['_id']==parent['parent_id']);
+        int i = ConncetServerController.listFieldsRes.indexWhere((element) => element['_id'] == parent['parent_id']);
         String type = ConncetServerController.listFieldsRes[i]['type'];
-        await ConncetServerController.listValidate({'my_field':parent['parent_id']});
-
-        var index =MainController.SubMenuList.indexWhere((element) => element['table-name']=='validators');
-        if(index!=-1) {
-            MainController.tableInfo['columns'][0]['items'] = [];
-            if(type == 'file' || type == 'multiFile'){
-              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
-              MainController.tableInfo['columns'][0]['items'].add({
+        await ConncetServerController.listValidate({'my_field': parent['parent_id']});
+        var index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == 'validators');
+        if (index != -1) {
+          MainController.tableInfo['columns'][0]['items'] = [];
+          if (type == 'file' || type == 'multiFile') {
+            MainController.tableInfo['columns'][0]['items'].addAll([
+              {
+                "title": "انتخاب نشده",
+                "value": "",
+              },{
                 "title": "Reqiured",
                 "value": "reqiured",
-              });
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
+                "title": "Reqiured",
+                "value": "reqiured",
+              },
+              {
                 "title": "All Files",
                 "value": "allFiles",
-              });
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
                 "title": "Pdf",
                 "value": "pdf",
-              });
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
                 "title": "Image",
                 "value": "image",
-              });
-              MainController.tableInfo['columns'][0]['items'].add( {
+              },
+              {
                 "title": "Xlsx",
                 "value": "xlsx",
-              });
-              MainController.tableInfo['columns'][0]['items'].add( {
+              },
+              {
                 "title": "Word",
                 "value": "word",
-              });
-              MainController.tableInfo['columns'][0]['items'].add( {
+              },
+              {
                 "title": "PowerPoint",
                 "value": "powerPoint",
-              });
-            }
-            else if(type == 'Number int' || type == 'Number double'){
-              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
+                "title": "Min",
+                "value": "min",
+              },
+              {
+                "title": "Max",
+                "value": "max",
+              }
+
+            ]);
+          } else if (type == 'Number int' || type == 'Number double') {
+            MainController.tableInfo['columns'][0]['items'].addAll([
+              {
+                "title": "انتخاب نشده",
+                "value": "",
+              },
+              {
                 "title": "Reqiured",
                 "value": "reqiured",
-              });
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
                 "title": "min",
                 "value": "min",
-              });
-              MainController.tableInfo['columns'][0]['items'].add({
+              },
+              {
                 "title": "max",
                 "value": "max",
-              });
-
-            }
-            else{
-              MainController.tableInfo['columns'][0]['items'].add({"title": "انتخاب نشده","value": ""});
-              MainController.tableInfo['columns'][0]['items'].add({
+              }
+            ]);
+          } else {
+            MainController.tableInfo['columns'][0]['items'].add([
+              {
+                "title": "انتخاب نشده",
+                "value": "",
+              },
+              {
                 "title": "Reqiured",
                 "value": "reqiured",
-              });
-
-            }
-
+              }
+            ]);
+          }
         }
         await Get.to(() => CreateValidator(tableName));
       }
-
     } else {
       await Get.to(() => CreatePage(tableName));
     }
@@ -194,39 +213,43 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'project') {
-        if(ViewController.request['name'] != null){
-          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        if (ViewController.request['name'] != null) {
+          ViewController.request['name'] =
+              ViewController.request['name'].trim().replaceAll(' ', '_');
         }
         var Id = Uuid().v4();
-        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        DataModel newData =
+            DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
-            ViewCustomController.getDataTable(table['table-name'])) ==
+                ViewCustomController.getDataTable(table['table-name'])) ==
             false) {
           await ConncetServerController.createProject(ViewController.request);
           MainController.goToTablePage(table, loadData: false);
+        } else {
+          showSnackbar(snackTypes.error,
+              "${AppController.of(Get.context!)!.value('error')}");
         }
-        else {
-          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
-        }
-        ViewController.isClickedBtn.value=true;
+        ViewController.isClickedBtn.value = true;
       }
 
       if (table['table-name'] == 'schema') {
-        if(ViewController.request['name'] != null){
-          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        if (ViewController.request['name'] != null) {
+          ViewController.request['name'] =
+              ViewController.request['name'].trim().replaceAll(' ', '_');
         }
         var Id = Uuid().v4();
-        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        DataModel newData =
+            DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
-            ViewCustomController.getDataTable(table['table-name'])) ==
+                ViewCustomController.getDataTable(table['table-name'])) ==
             false) {
           await ConncetServerController.createSchema(ViewController.request);
           MainController.goToTablePage(table, loadData: false);
+        } else {
+          showSnackbar(snackTypes.error,
+              "${AppController.of(Get.context!)!.value('error')}");
         }
-        else {
-          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
-        }
-        ViewController.isClickedBtn.value=true;
+        ViewController.isClickedBtn.value = true;
       }
 
       if (table['table-name'] == 'fields') {
@@ -235,43 +258,40 @@ class HelperController extends GetxController {
         if (parent.length != 0) {
           ViewController.request.addAll({'table': parent['parent_id']});
         }
-        if(ViewController.request['name'] != null){
-          ViewController.request['name'] = ViewController.request['name'].trim().replaceAll(' ', '_');
+        if (ViewController.request['name'] != null) {
+          ViewController.request['name'] =
+              ViewController.request['name'].trim().replaceAll(' ', '_');
         }
         var Id = Uuid().v4();
-        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
+        DataModel newData =
+            DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
-            ViewCustomController.getDataTable(table['table-name'])) ==
+                ViewCustomController.getDataTable(table['table-name'])) ==
             false) {
           await ConncetServerController.createField(ViewController.request);
           MainController.goToTablePage(table, loadData: false);
+        } else {
+          showSnackbar(snackTypes.error,
+              "${AppController.of(Get.context!)!.value('error')}");
         }
-        else {
-
-          showSnackbar(snackTypes.error, "${AppController.of(Get.context!)!.value('error')}");
-        }
-        ViewController.isClickedBtn.value=true;
+        ViewController.isClickedBtn.value = true;
       }
 
       if (table['table-name'] == 'filters') {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
-          ViewController.request.addAll({
-            'table': parent['parent_id']
-          });
+          ViewController.request.addAll({'table': parent['parent_id']});
         }
         await ConncetServerController.createFilter(ViewController.request);
-        MainController.goToTablePage(table,loadData: false);
+        MainController.goToTablePage(table, loadData: false);
       }
       if (table['table-name'] == 'validators') {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
-          ViewController.request.addAll({
-            'field': parent['parent_id']
-          });
+          ViewController.request.addAll({'field': parent['parent_id']});
         }
         await ConncetServerController.createValidate(ViewController.request);
-        MainController.goToTablePage(table,loadData: false);
+        MainController.goToTablePage(table, loadData: false);
       }
     } else {
       Map<String, dynamic> parent = await DB.parentItem;
@@ -306,16 +326,17 @@ class HelperController extends GetxController {
         };
       }
       if (tableName == 'filters') {
-        DB.parentItem={
-          'parent_id':MainController.tableData.value[index]['_id'],
-          'parent_table':MainController.tableData.value[index]['name']
+        DB.parentItem = {
+          'parent_id': MainController.tableData.value[index]['_id'],
+          'parent_table': MainController.tableData.value[index]['name']
         };
       }
       if (tableName == 'validators') {
-        print('HelperController.relationFunction>>>${MainController.tableData.value[index]}');
-        DB.parentItem={
-          'parent_id':MainController.tableData.value[index]['_id'],
-          'parent_table':MainController.tableData.value[index]['name']
+        print(
+            'HelperController.relationFunction>>>${MainController.tableData.value[index]}');
+        DB.parentItem = {
+          'parent_id': MainController.tableData.value[index]['_id'],
+          'parent_table': MainController.tableData.value[index]['name']
         };
       }
       pageInateFunction();
@@ -348,17 +369,16 @@ class HelperController extends GetxController {
     if (table['view'] == 'custom') {
       if (tableName == 'schema') {
         request.addAll({'id': id});
-        if(request['name'] != null){
+        if (request['name'] != null) {
           request['name'] = request['name'].trim().replaceAll(' ', '_');
         }
         final record = DataModel(id: request['_id'], data: request);
-        var validate = await RecordController.validate(tableName, record,
-            ViewCustomController.getDataTable(tableName));
-        if (validate == false){
-          await ConncetServerController.updateSchema(request,id);
+        var validate = await RecordController.validate(
+            tableName, record, ViewCustomController.getDataTable(tableName));
+        if (validate == false) {
+          await ConncetServerController.updateSchema(request, id);
           await MainController.goToTablePage(table);
-        }
-        else {
+        } else {
           showSnackbar(snackTypes.error,
               '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
         }
@@ -371,7 +391,7 @@ class HelperController extends GetxController {
         // };
         // await ConncetServerController.updateField(req);
         print('HelperController.editFunction request>>$request');
-        await ConncetServerController.updateField(request,id);
+        await ConncetServerController.updateField(request, id);
         print('req field page>>>${request}');
         await MainController.goToTablePage(table);
       }
@@ -393,10 +413,10 @@ class HelperController extends GetxController {
       if (table['table-name'] == 'project') {
         await Get.to(() => EditPage(data: data));
       }
-       if(table['table-name'] == 'fields'){
+      if (table['table-name'] == 'fields') {
         await Get.to(() => EditFieldPage(data: data));
       }
-      if( table['table-name'] == 'schema') {
+      if (table['table-name'] == 'schema') {
         // await ConncetServerController.listSchema();
         // var index = MainController.SubMenuList.indexWhere((
         //     element) => element['table-name'] == 'schema');
@@ -412,23 +432,23 @@ class HelperController extends GetxController {
         // }
         await ConncetServerController.listSchema();
         MainController.tableInfo['columns'][6]['items'] = [];
-        var index = MainController.SubMenuList.indexWhere((
-            element) => element['table-name'] == 'schema');
+        var index = MainController.SubMenuList.indexWhere(
+            (element) => element['table-name'] == 'schema');
         if (index != -1) {
           for (var field in ConncetServerController.listSchemaRes) {
-            print('HelperController.createPageFunction222${ MainController
-                .tableInfo['columns']}');
-            MainController.tableInfo['columns'][6]['items'].add({"title": field['name'], "value": field['name']});
-            }
+            print(
+                'HelperController.createPageFunction222${MainController.tableInfo['columns']}');
+            MainController.tableInfo['columns'][6]['items']
+                .add({"title": field['name'], "value": field['name']});
           }
+        }
         await Get.to(() => EditSchemaPage(data: data));
       }
-
-      } else {
+    } else {
       await Get.to(() => EditPage(data: data));
     }
-
   }
+
   // static editPageFunction(var data) async {
   //   var table =MainController.getInfoTable(MainController.tableName.value);
   //   var tableName=table['table-name'];
@@ -445,21 +465,20 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table['table-name'];
     if (table['view'] == 'custom') {
-      if(tableName=='fields'){
-        var index=ConncetServerController.listFiltersRes.indexWhere((element) => element['column']==item['name']);
-
-        print('HelperController.deleteFunction>>${index}>>${ConncetServerController.listFiltersRes}>>');
-        if(index!=-1){
-          await ConncetServerController.deleteFilter({'id':ConncetServerController.listFiltersRes[index]['_id']});
+      if (tableName == 'fields') {
+        var index = ConncetServerController.listFiltersRes
+            .indexWhere((element) => element['column'] == item['name']);
+        if (index != -1) {
+          await ConncetServerController.deleteFilter(
+              {'id': ConncetServerController.listFiltersRes[index]['_id']});
         }
-        await ConncetServerController.deleteField({'id':item['_id']});
-
+        await ConncetServerController.deleteField({'id': item['_id']});
       }
       if (tableName == 'project') {
         await ConncetServerController.deleteProject(item['api_key']);
       }
-      if(tableName=='schema'){
-        await ConncetServerController.deleteSchema({'name':item['name']});
+      if (tableName == 'schema') {
+        await ConncetServerController.deleteSchema({'name': item['name']});
       }
       pageInateFunction();
     } else {
@@ -487,7 +506,6 @@ class HelperController extends GetxController {
       }
       if (tableName == 'schema') {
         await ConncetServerController.listSchema();
-
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],
@@ -497,28 +515,34 @@ class HelperController extends GetxController {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
           await ConncetServerController.listField(
-              {'name': parent['parent_table']});
+              {'name': 'item'});
         }
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],
             listItems: ConncetServerController.listFieldsRes);
       }
-      if(tableName=='filters'){
-
+      if (tableName == 'filters') {
         Map<String, dynamic> parent = await DB.parentItem;
-        print('HelperController.pageInateFunction>>>${parent}');
         if (parent.length != 0) {
-          await ConncetServerController.listFilter({'my_table':parent['parent_id']});
+          await ConncetServerController.listFilter(
+              {'my_table': parent['parent_id']});
         }
-        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listFiltersRes );
+        await pageInateItems(
+            perPage: table['countShowRow'],
+            currentPage: table['currentPage'],
+            listItems: ConncetServerController.listFiltersRes);
       }
-      if(tableName=='validators'){
+      if (tableName == 'validators') {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
-          await ConncetServerController.listValidate({'my_field':parent['parent_id']});
+          await ConncetServerController.listValidate(
+              {'my_field': parent['parent_id']});
         }
-        await pageInateItems( perPage : table['countShowRow'], currentPage:table['currentPage'], listItems:ConncetServerController.listValidateRes );
+        await pageInateItems(
+            perPage: table['countShowRow'],
+            currentPage: table['currentPage'],
+            listItems: ConncetServerController.listValidateRes);
       }
     } else {
       MainController.tableData.value =
@@ -536,8 +560,6 @@ class HelperController extends GetxController {
     var endByCondition = end >= totalItems ? totalItems : end;
     MainController.endIndex.value = int.parse(endByCondition.toString());
     List<dynamic> list = listItems.skip(s).take(perPage).toList();
-    print(
-        'HelperController.pageInateItems>>${totalItems}>>${end}>${s}>>${perPage}');
     MainController.tableData.value = list;
     MainController.allData.value = list;
   }
@@ -632,15 +654,12 @@ class HelperController extends GetxController {
     return Jalali(year, month, day);
   }
 
-  static Future<List> itemsListFunction(
-      String tableName) async {
-    print('items list function');
+  static Future<List> itemsListFunction(String tableName) async {
     var table = MainController.getInfoTable(tableName);
     if (table['view'] == 'custom') {
       if (table['table-name'] == 'schema') {
         int index = ConncetServerController.listSchemaRes
             .indexWhere((s) => s['name'] == DB.parentItem['parent_table']);
-        print('index a>>>${index}');
         if (index != -1) {
           ConncetServerController.listSchemaRes
               .remove(ConncetServerController.listSchemaRes[index]);
@@ -654,16 +673,15 @@ class HelperController extends GetxController {
   }
 
   static backFunction() async {
-    var index=MainController.SubMenuList.indexWhere((element) => element['relations'].any((element) => element['table-name']==MainController.tableName.value));
-    print('HelperController.backFunction>>$index');
-    if(index!=-1){
+    var index = MainController.SubMenuList.indexWhere((element) => element['relations'].any((element) => element['table-name'] == MainController.tableName.value));
+    if (index != -1) {
       MainController.selectedSubItem.value = index;
-      // DB.parentItem={};
-      MainController.tableName.value=MainController.SubMenuList[index]['table-name'];
+      // DB.parentItem = {};
+      MainController.tableName.value =
+          MainController.SubMenuList[index]['table-name'];
+      Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
       await MainController.goToTablePage(MainController.SubMenuList[index]);
-
-
-    }else{
+    } else {
       MainController.isClickedItem.value = false;
       MainController.selectedItem.value = -1;
       MainController.selectedSubItem.value = -1;
@@ -671,29 +689,21 @@ class HelperController extends GetxController {
     }
   }
 
-  static checkboxFunctuin(String name , int indexRow , var text) async {
+  static checkboxFunctuin(String name, int indexRow, var text) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
-    if(table['view'] == 'custom'){
-      if(table['table-name'] == 'schema'){
-          // MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          // await ConncetServerController.updateSchema({"${name}" : text});
-        await ConncetServerController.updateSchema({"${name}" : text},MainController.tableData[indexRow]['_id']);
+    if (table['view'] == 'custom') {
+      if (table['table-name'] == 'schema') {
+        await ConncetServerController.updateSchema(
+            {"${name}": text}, MainController.tableData[indexRow]['_id']);
       }
-      if(table['table-name'] == 'fields'){
-          // MainController.tableData.value[indexRow][name] =  !MainController.tableData.value[indexRow][name];
-          // print("field>>>>checkbox>>>${MainController.tableData.value[indexRow]}");
-          // await ConncetServerController.updateField({"${name}" : text});
-        await ConncetServerController.updateField({"${name}" : text},MainController.tableData[indexRow]['_id']);
+      if (table['table-name'] == 'fields') {
+        await ConncetServerController.updateField(
+            {"${name}": text}, MainController.tableData[indexRow]['_id']);
       }
-
-    }
-    else{
-      // await DB('${MainController.tableInfo['table-name']}').
-      // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
-      // .updateRecords({'${name}':'${text}'});
-      await DB('${MainController.tableInfo['table-name']}').
-      where('_id', '\$eq', '${MainController.tableData[indexRow]['_id']}')
-          .updateRecords({'${name}':'${text}'});
+    } else {
+      await DB('${MainController.tableInfo['table-name']}')
+          .where('_id', '\$eq', '${MainController.tableData[indexRow]['_id']}')
+          .updateRecords({'${name}': '${text}'});
     }
   }
 }

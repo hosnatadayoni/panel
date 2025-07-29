@@ -59,10 +59,6 @@ class _CreateValidatorState extends State<CreateValidator> {
       else{
         itemsList.value = MainController.tableInfo['columns'][0]['items'] ?? [];
       }
-      print('itemsListFileType.value>>>${itemsListFileType.value}');
-      print('itemsListValueNumberType.value>>>${itemsListValueNumberType.value}');
-      print('itemsList.value>>>${itemsList.value}');
-    print('type.value bbb>>>${type.value}');
   }
   @override
   void initState() {
@@ -253,7 +249,6 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                   height: 10,
                                                 ),
                                                 Obx((){
-                                                  print('cccccc>>>${itemsListFileType.value}');
                                                   return SelectBox(
                                                       name: '${MainController.tableInfo['columns'][j]['title']}',
                                                       column: MainController.tableInfo['columns'][j],
@@ -271,12 +266,8 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                               }),
                                                               value:item['value']),
                                                       ],
-                                                      initalValue: initailValueFileType.value == '' || initailValueFileType.value == null
-                                                          ? itemsListFileType.first['value']
-                                                          : initailValueFileType.value,
+                                                      initalValue: initailValueFileType.value == '' ? itemsListFileType.first['value'] : initailValueFileType.value,
                                                       onChanged: (value) async {
-                                                        print('value qyuu>>>${value}');
-                                                        // sourceItem2.value = value!;
                                                         selectedFileType.value = value!;
                                                         initailValueFileType.value = value;
 

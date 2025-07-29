@@ -120,9 +120,9 @@ class ConncetServerController extends GetxController {
     var response = await RestApi.post(listFieldUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
-          print('ffffffff>>>${response!.data['data']}');
-      listFieldsRes=response!.data['data'];
-    }, printResponse: true);
+        listFieldsRes=response!.data['data'];
+
+        }, printResponse: true);
   }
 
   static deleteValidate(Map<String, dynamic> json) async {
@@ -157,6 +157,7 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       listFiltersRes=response!.data['data'];
+
     }, printResponse: true);
   }
 
