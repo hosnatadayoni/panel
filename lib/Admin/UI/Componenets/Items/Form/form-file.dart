@@ -92,12 +92,10 @@ class _FormFileState extends State<FormFile> {
                       fileNameList.add(file.name);
                     }
                     var [validation, message] =ValidatorController.validationFile(widget.column, file);
-                    print('_FormFileState.build>>${validation}>>>${message}');
                     if (validation == false) {
                     fileNameList.removeWhere((element) => element==file.name);
                       showSnackbar(snackTypes.error, '${message}');
                     } else {
-
                       filePath.value !=
                           await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo);
                       setState(() {
