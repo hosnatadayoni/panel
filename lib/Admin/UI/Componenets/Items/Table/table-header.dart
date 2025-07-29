@@ -47,16 +47,17 @@ class _TableHeaderState extends State<TableHeader> {
                     offset: Offset(0, 45),
                     onSelected: (value) async {
                       setState(() {
-                        MainController.tableInfo['schema']['countShowRow'] = value;
+                        MainController.tableInfo['countShowRow'] = value;
                         selectedCount = value;
-                        MainController.startIndex.value = (MainController.tableInfo['schema']['currentPage']-1) * MainController.tableInfo['schema']['countShowRow'];
-                        MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['schema']['countShowRow']}');
-                        MainController.tableInfo['schema']['currentPage'] = 1;
+                        MainController.startIndex.value = (MainController.tableInfo['currentPage']-1) * MainController.tableInfo['countShowRow'];
+                        MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['countShowRow']}');
+                        MainController.tableInfo['currentPage'] = 1;
                         // MainController.renderPagination();
                       });
-                      MainController.tableData.value= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                      // ViewController.totalPage.value =  (MainController.tableData.value.length / MainController.tableInfo['countShowRow']).ceil();
-                      ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+                      MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
+                      print('MainController.tableData.value.length g>>>${MainController.tableData.value.length}');
+                      print('MainController.tableInfo[countShowRow] f>>>${MainController.tableInfo['countShowRow']}');
+                      ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
@@ -89,7 +90,7 @@ class _TableHeaderState extends State<TableHeader> {
                         children: [
                           Icon(Icons.arrow_drop_down_sharp , size: 20, color:  color1,),
                           SizedBox(width: 5,),
-                          Txt('${MainController.tableInfo['schema']['countShowRow']}' , fontSize: 14 , fontWeight: FontWeight.w700, color: MainController.isLightMode.value == true? whiteColor : color1),
+                          Txt('${MainController.tableInfo['countShowRow']}' , fontSize: 14 , fontWeight: FontWeight.w700, color: MainController.isLightMode.value == true? whiteColor : color1),
                         ],
                       ),
                     ),
@@ -117,7 +118,7 @@ class _TableHeaderState extends State<TableHeader> {
                           lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
                           MainController.search(text);
                         setState(() {
-                          MainController.tableInfo['schema']['currentPage'] = 1;
+                          MainController.tableInfo['currentPage'] = 1;
                         });
 
                       }),

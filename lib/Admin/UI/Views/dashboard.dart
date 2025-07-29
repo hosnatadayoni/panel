@@ -1,17 +1,14 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Dashboard/dashboard-box.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
-import '../../Logic/Models/db.dart';
-import '../Componenets/Items/Dashboard/dashboard-box.dart';
-import '../Componenets/Items/Header/header.dart';
-import '../Componenets/Items/Menu/menu.dart';
 
 
 class DashboardPage extends StatelessWidget {
@@ -32,6 +29,7 @@ class DashboardPage extends StatelessWidget {
                 SizedBox(height: 20,),
                 Positioned(
                   // right: size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50,
+
                   right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50 : 0,
                   left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 320 : 50 : 50 : 0,
                   top: 100,

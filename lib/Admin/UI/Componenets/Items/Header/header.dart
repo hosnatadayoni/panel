@@ -1,7 +1,6 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/user-controller.dart';
-import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Views/login-page.dart';
@@ -10,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
-import '../../../Views/set-token-page.dart';
 
 
 class Header extends StatelessWidget {
@@ -24,8 +21,8 @@ class Header extends StatelessWidget {
     return Obx((){
       return Positioned(
          // right:size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
-        right:  Directionality.of(context) == TextDirection.rtl  ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50 : 0,
-        left:  Directionality.of(context) == TextDirection.ltr  ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50 : 0,
+        right:  Directionality.of(context) == TextDirection.rtl  ? 50 : 0,
+        left:  Directionality.of(context) == TextDirection.ltr  ? 50 : 0,
         child: Container(
           padding: EdgeInsets.all(15),
           // color: MainController.isLightMode.value == true? background:whiteColor,
@@ -46,7 +43,45 @@ class Header extends StatelessWidget {
                 //   Get.to(() => DashboardPage());
                 // },
                   child: Txt('${AppController.of(context)!.value('management panel')}' , fontSize: 20 , fontWeight: FontWeight.w500 , color: MainController.isLightMode.value == true? whiteColor : color3)),
-
+              // InkWell(
+              //   onTap: (){
+              //   },
+              //   child: MouseRegion(
+              //     onEnter:(_){
+              //       isHoverMenu.value = true;
+              //     },
+              //     onExit: (_){
+              //       isHoverMenu.value = false;
+              //     },
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Txt('logout' , fontSize: 20 , fontWeight: FontWeight.w500, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,),
+              //         Stack(
+              //           children: [
+              //             Container(
+              //                 width: 40,
+              //                 height: 40,
+              //                 child: Icon(CupertinoIcons.bell_fill, size: 25, color: isHoverMenu.value == true && MainController.isLightMode.value == false ? colorBtn : isHoverMenu.value == false && MainController.isLightMode.value == false ? color3 : isHoverMenu.value == false && MainController.isLightMode.value == true ? whiteColor : color3,)),
+              //             Positioned(
+              //               left: 1,
+              //               child: Container(
+              //                 width: 20,
+              //                 height: 20,
+              //                 decoration: BoxDecoration(
+              //                   color: redColor,
+              //                   shape: BoxShape.circle,
+              //                 ),
+              //                 child: Txt('1' , color: whiteColor, textAlign: TextAlign.center,),
+              //               ),
+              //             )
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               Row(
                 children: [
                   Stack(
@@ -91,11 +126,8 @@ class Header extends StatelessWidget {
                           PopupMenuItem(
                             value: 'logout',
                             child: InkWell(
-                              onTap:() async {
-                                await Token.removeToken();
-                                Get.to(() => SetTokenPage());
-
-                                // Get.to(() => LoginPage());
+                              onTap:(){
+                                Get.to(() => LoginPage());
                         },
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -28,8 +28,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
-    if(widget.column['validators']!=null && widget.column['validators'].length!=0){
-      print('_MultiSelectDropdownState.build>>${widget.column['validators']}');
+    if(widget.column['validators'] != null){
       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }

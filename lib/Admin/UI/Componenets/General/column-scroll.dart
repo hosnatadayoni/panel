@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Public/config.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
     super.initState();
     _scrollController.addListener(() async{
       if(_scrollController.position.pixels > _scrollController.position.maxScrollExtent-100
-          && widget.onEndScroll!=null && !AppController.loadingList.contains(widget.loadingTag)){
+          && widget.onEndScroll!=null && !AppController.loadingList.value.contains(widget.loadingTag)){
         await widget.onEndScroll!();
       }
 
@@ -45,7 +46,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
           // if(widget.loadingTag==null)
           //  isLoading=AppController.isLoading.value;
           // else
-          isLoading=AppController.loadingList.contains(widget.loadingTag);
+          isLoading=AppController.loadingList.value.contains(widget.loadingTag);
           return !isLoading && widget.checkEmptyList!=null && widget.checkEmptyList!()?
           widget.emptyList??Container():Scrollbar(
               interactive: true,
@@ -81,7 +82,7 @@ class _ColumnScrollState extends State<ColumnScroll> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
-                                    color: colorBtn,
+                                    color: appColor,
                                     strokeWidth: 4,
                                   ),
                                 ],

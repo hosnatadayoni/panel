@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
-import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-color.dart';
@@ -15,12 +13,10 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
-import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -28,7 +24,6 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
-import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
 import 'connect-server-controller.dart';
 
@@ -42,11 +37,6 @@ class ViewController extends GetxController {
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
   static RxInt totalPage=0.obs;
-
-  static copyClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text:text));
-    showSnackbar(snackTypes.info, "کپی شد");
-  }
 
   static Future<Widget> generateFilterView(
       Map<String, dynamic> filterInfo) async {
@@ -68,7 +58,7 @@ class ViewController extends GetxController {
     var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
-      if (columns[j]['is_show_store'] == true) {
+      if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
         var type = column['type'];
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
@@ -154,18 +144,18 @@ class ViewController extends GetxController {
                     onChanged: (value) async {
 
                       if (value != 'true') {
-                        ViewController.request['${column['name']}${filterInfo['operator']}']=
+                        ViewController.request['${column['name']}${filterInfo['oprator']}']=
                         {
                           'value': false,
                           'column': '${column['name']}',
-                          'operator': '${filterInfo['operator']}',
+                          'oprator': '${filterInfo['oprator']}',
                         };
                       } else {
-                        ViewController.request['${column['name']}${filterInfo['operator']}']=
+                        ViewController.request['${column['name']}${filterInfo['oprator']}']=
                         {
                           'value': true,
                           'column': '${column['name']}',
-                          'operator': '${filterInfo['operator']}',
+                          'oprator': '${filterInfo['oprator']}',
                         };
                       }
                     },
@@ -207,11 +197,11 @@ class ViewController extends GetxController {
                     isSeletedDate: false.obs,
                     onDateChanged: (date) {
                       // dataJson[columnName] =  date;
-                      ViewController.request['${column['name']}${filterInfo['operator']}']=
+                      ViewController.request['${column['name']}${filterInfo['oprator']}']=
                       {
                         'value': date,
                         'column': '${column['name']}',
-                        'operator': '${filterInfo['operator']}',
+                        'oprator': '${filterInfo['oprator']}',
                       };
                     },
                     column: column,
@@ -247,7 +237,7 @@ class ViewController extends GetxController {
           children.add(colorBox);
         }
 
-        else if (type == 'file' || type == 'multiFile') {
+        else if (type == 'file') {
           fileBox = generateFileBox('', column, false.obs);
 
           children.add(fileBox);
@@ -272,7 +262,7 @@ class ViewController extends GetxController {
     var timeBox;
 
     for (var j = 0; j < columns.length; j++) {
-      if (columns[j]['is_show_store'] == true) {
+      if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
@@ -295,25 +285,24 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextField(_fbKey, column, type, '');
+          print('ViewController.generateStoreFormView>>${column['title']}');
+          var init=column.containsKey('default_value')?column['default_value']:'';
+          textField = generateFormTextField(_fbKey, column, type, init);
           children.add(SizedBox(
             height: 20,
           ));
           children.add(textField);
         }
         if (type == 'select') {
-
+          var initValue;
           List<dynamic> items = await itemsList(column);
-          print('ViewController.generateStoreFormView>>$items');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
-
           children.add(SizedBox(
             height: 20,
           ));
           children.add(selectBox);
-        }
-        else if (type == 'checkbox') {
+        } else if (type == 'checkbox') {
           checkBox = generateFormCheckBox(column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -348,7 +337,8 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file' || type == 'multiFile') {
+        } else if (type == 'file') {
+
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -378,14 +368,13 @@ class ViewController extends GetxController {
     var fileBox;
     var timeBox;
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-      if (MainController.tableInfo['columns'][j]['is_show_edit'] == true) {
+      if (MainController.tableInfo['columns'][j]['is-show-edit'] == true) {
         var column = MainController.tableInfo['columns'][j];
         var type = column['type'];
-        var name = column['name'];
+        var name = column['title'];
         var maxValidator;
         var minValidator;
         List<dynamic> items = [];
-        print('dataModel d>>>${dataModel['${name}']}');
         if (column['validators'] != null) {
           maxValidator = column['validators'].firstWhere(
                   (validator) => validator['type'] == 'max',
@@ -401,6 +390,7 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+          print('dataModel[{name}]>>>${name}>>>${dataModel['${name}']}>>>${dataModel['${name}'].runtimeType}');
           textField = generateFormTextField(_fbKey, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
@@ -414,7 +404,7 @@ class ViewController extends GetxController {
           print('ViewController.generateStoreFormView>>${items}');
 
           if (items.length != 0) {
-            if (column['source_items'] != 'custom') {
+            if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != ''){
 
                 selectedItem = items.firstWhere((element) => element['_id'] == dataModel[name]['_id']);
@@ -466,10 +456,10 @@ class ViewController extends GetxController {
           Map<String, dynamic> selectedItem = <String, dynamic>{};
           var items = await ViewController.itemsList(column);
           if (items.length != 0) {
-            if (column['source_items'] != 'custom') {
+            if (column['sourceItems'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items
-                    .firstWhere((element) => element['_id'] == dataModel[name]['_id']);
+                    .firstWhere((element) => element['_id'] == dataModel[name].first['_id']);
               selectBox = await generateFormRadioButton(
                   column,
                   items,
@@ -528,7 +518,7 @@ class ViewController extends GetxController {
           List<dynamic> items = await ViewController.itemsList(column,dataModel: dataModel);
           List<dynamic> multiSelectedItemList = [];
           if (items.length != 0) {
-            if (column['source_table'] != null) {
+            if (column['sourceTable'] != null) {
               for (var selectedItem in items) {
                 multiSelectedItemList.add(itemsShowSelectItem(selectedItem, column));
               }
@@ -538,19 +528,19 @@ class ViewController extends GetxController {
               }
             }
           }
-          if(dataModel.isNotEmpty){
-            multiSelectBox = await genarateEditFormMuiltiSelectBox(
-                column,
-                multiSelectedItemList.length != 0 ? RxString(multiSelectedItemList.join(' , ')) : RxString(''),
-                items.length != 0 ? RxList(items) : <dynamic>[].obs,
-                false.obs);
-          }else{
-            multiSelectBox = await genarateEditFormMuiltiSelectBox(column, RxString(''), <dynamic>[].obs, false.obs);
-          }
-          children.add(SizedBox(
-            height: 20,
-          ));
-          children.add(multiSelectBox);
+            if(dataModel.isNotEmpty){
+              multiSelectBox = await genarateEditFormMuiltiSelectBox(
+                  column,
+                  multiSelectedItemList.length != 0 ? RxString(multiSelectedItemList.join(' , ')) : RxString(''),
+                  items.length != 0 ? RxList(items) : <dynamic>[].obs,
+                  false.obs);
+            }else{
+              multiSelectBox = await genarateEditFormMuiltiSelectBox(column, RxString(''), <dynamic>[].obs, false.obs);
+            }
+            children.add(SizedBox(
+              height: 20,
+            ));
+            children.add(multiSelectBox);
 
 
         }
@@ -568,7 +558,7 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         }
-        else if (type == 'file' || type == 'multiFile') {
+        else if (type == 'file') {
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
@@ -612,7 +602,7 @@ class ViewController extends GetxController {
     var size = MediaQuery.of(Get.context!).size;
     String name = '';
     name = MainController.tableInfo['columns'][indexColumn]['name'];
-    var dataModel = MainController.tableData[indexRow]['${name}'];
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
     String type = '';
     if (table == null) {
       type = MainController.tableInfo['columns'][indexColumn]['type'];
@@ -623,19 +613,20 @@ class ViewController extends GetxController {
     }
     var child;
     if (type == 'checkbox') {
-      child = generateCheckBox(indexColumn, indexRow, tableData: table);
+      child = ViewController.generateCheckBox(indexColumn, indexRow, tableData: table);
+
     }
     else if (type == 'color') {
       child = generateColor(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'select' || type == 'radiobutton') {
       child = InkWell(
-         onDoubleTap: () async {
-           await copyClipboard( MainController.tableData[indexRow]['${name}']!=null?
-           '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'');
-         },
-        child: Txt(MainController.tableData[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
+        onDoubleTap: (){
+          MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
+        },
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn]) }':'',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -645,13 +636,12 @@ class ViewController extends GetxController {
     }
     else if (type == 'multiSelect') {
       child = InkWell(
-        onDoubleTap: () async {
-          await copyClipboard( MainController.tableData[indexRow]['${name}']!=null?
-          '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'');
-
+        onDoubleTap: (){
+            MainController.copyClipboard(MainController.tableData.value[indexRow]['${name}']!=null?
+            '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',);
         },
-        child: Txt(MainController.tableData[indexRow]['${name}']!=null?
-        '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
+        child: Txt(MainController.tableData.value[indexRow]['${name}']!=null?
+          '${itemsShowSelectItem(MainController.tableData.value[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}':'',
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: MainController.isLightMode.value == true ? whiteColor : color2,
@@ -659,7 +649,7 @@ class ViewController extends GetxController {
         ),
       );
     }
-    else if (type == 'file' || type == 'multiFile') {
+    else if (type == 'file') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else {
@@ -694,13 +684,15 @@ class ViewController extends GetxController {
     if (dataModel == null) {
       dataModel = false;
     }
+    dataModel='${dataModel}'=='true'?true:false;
     return CheckBox(
       defaultValue: dataModel,
       checkBoxTitle: '',
       onChange: (text) async {
-
-        await DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}').updateRecords({'${name}':'${text}'});
-
+        // await DB('${MainController.tableInfo['table-name']}').
+        // where('_id', '\$eq', '${MainController.tableData.value[indexRow]['_id']}')
+        // .updateRecords({'${name}':'${text}'});
+        HelperController.checkboxFunctuin(name ,  indexRow , text);
       },
       index: indexRow,
       column: tableData == null
@@ -717,21 +709,21 @@ class ViewController extends GetxController {
     } else {
       name = tableData['columns'][indexColumn]['name'];
     }
-    var dataModel = MainController.tableData[indexRow]['${name}'];
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
 
-    return InkWell(
-      onDoubleTap: () async {
-        await copyClipboard('${dataModel}');
-      },
-      child: Center(
-        child: dataModel != null
-            ? Container(
-          width: 50,
-          height: 50,
-          color: Color(int.parse('${dataModel}')),
-        )
-            : Container(),
+    return Center(
+      child: dataModel != null
+          ? InkWell(
+        onDoubleTap: (){
+          MainController.copyClipboard(dataModel);
+        },
+            child: Container(
+        width: 50,
+        height: 50,
+        color: Color(int.parse('${dataModel}')),
       ),
+          )
+          : Container(),
     );
   }
 
@@ -745,21 +737,23 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-      return  dataModel != null &&dataModel.length != 0?Column(
-        children: [
-          Center(
-            child:Img('${ dataModel}',width: 100,height: 100,isNetwork: true,),
 
-          ),
-          Txt(
+    return Obx(() {
+      return Center(
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
+          child: Txt(
             '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: MainController.isLightMode.value == true ? whiteColor : color2,
             textAlign: TextAlign.center,
           ),
-        ],
-      ):Container();
+        ),
+      );
+    });
   }
 
   static Widget generateData(int indexColumn, int indexRow, {var tableData}) {
@@ -773,11 +767,11 @@ class ViewController extends GetxController {
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
     return Obx(() {
-      return InkWell(
-        onDoubleTap: () async {
-          await copyClipboard('${dataModel != null ? dataModel : ''}');
-        },
-        child: Center(
+      return Center(
+        child: InkWell(
+          onDoubleTap: (){
+            MainController.copyClipboard(dataModel);
+          },
           child: Txt(
             '${dataModel != null ? dataModel : ''}',
             fontSize: 14,
@@ -790,7 +784,17 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, String initValue) {
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, var initValue) {
+    if(initValue.toString()!='') {
+      if (column['type'] == 'Number int') {
+        ViewController.request[column['name']] = int.parse('${initValue.toString()}');
+      } else if (column['type'] == 'Number double') {
+        ViewController.request[column['name']] = double.parse('${initValue.toString()}');
+      } else {
+        ViewController.request[column['name']] = initValue.toString();
+      }
+    }
+
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -810,7 +814,7 @@ class ViewController extends GetxController {
           hint: '${column['title']}',
           lable: '',
           column: column,
-          initValue: initValue,
+          initValue: initValue.toString(),
           onChange: (text) {
             // dataJson[columnName] = text;
             if (text != null && text != '') {
@@ -861,33 +865,33 @@ class ViewController extends GetxController {
             onChange: (text) {
               if (text != null && text != '') {
                 if (column['type'] == 'Number int') {
-                  ViewController.request['${column['name']}${filterInfo['operator']}']=
+                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
                   {
                     'value': '${int.parse('${text}')}',
                     'column': '${column['name']}',
-                    'operator': '${filterInfo['operator']}',
+                    'oprator': '${filterInfo['oprator']}',
                   };
                 } else if (column['type'] == 'Number double') {
-                  ViewController.request['${column['name']}${filterInfo['operator']}']=
+                  ViewController.request['${column['name']}${filterInfo['oprator']}']=
                   {
                     'value': '${double.parse('${text}')}',
                     'column': '${column['name']}',
-                    'operator': '${filterInfo['operator']}',
+                    'oprator': '${filterInfo['oprator']}',
                   };
                 } else {
-                  ViewController.request['${column['name']} ${filterInfo['operator']}']=
+                  ViewController.request['${column['name']} ${filterInfo['oprator']}']=
                   {
                     'value': '${text}',
                     'column': '${column['name']}',
-                    'operator': '${filterInfo['operator']}',
+                    'oprator': '${filterInfo['oprator']}',
                   };
                 }
               } else {
-                ViewController.request['${column['name']} ${filterInfo['operator']}']=
+                ViewController.request['${column['name']} ${filterInfo['oprator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'operator': '${filterInfo['operator']}',
+                  'oprator': '${filterInfo['oprator']}',
                 };
               }
             },
@@ -914,7 +918,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['source_items'] != 'custom'
+        column['sourceItems'] != 'custom'
             ? SelectBox(
             name: '${column['title']}',
             column: column,
@@ -948,20 +952,20 @@ class ViewController extends GetxController {
             onChanged: (value) async {
               if (value != '') {
                 // selectedValue=value!;
-                ViewController.request['${column['name']}${filterInfo['operator']}']=
+                ViewController.request['${column['name']}${filterInfo['oprator']}']=
                 {
                   'value': value,
                   'column': '${column['name']}',
-                  'operator': '${filterInfo['operator']}',
+                  'oprator': '${filterInfo['oprator']}',
 
                 };
                 // ViewController.request[column['name']] = value;
               } else {
-                ViewController.request['${column['name']}${filterInfo['operator']}']=
+                ViewController.request['${column['name']}${filterInfo['oprator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'operator': '${filterInfo['operator']}',
+                  'oprator': '${filterInfo['oprator']}',
                 };
                 // ViewController.request[column['name']] = '';
               }
@@ -999,18 +1003,18 @@ class ViewController extends GetxController {
                 }
               }
               if (value != '') {
-                ViewController.request['${column['name']}${filterInfo['operator']}']=
+                ViewController.request['${column['name']}${filterInfo['oprator']}']=
                 {
                   'value': value,
                   'column': '${column['name']}',
-                  'operator': '${filterInfo['operator']}',
+                  'oprator': '${filterInfo['oprator']}',
                 };
               } else {
-                ViewController.request['${column['name']}${filterInfo['operator']}']=
+                ViewController.request['${column['name']}${filterInfo['oprator']}']=
                 {
                   'value': '',
                   'column': '${column['name']}',
-                  'operator': '${filterInfo['operator']}',
+                  'oprator': '${filterInfo['oprator']}',
                 };
               }
             },
@@ -1041,11 +1045,11 @@ class ViewController extends GetxController {
           selectedTime: selectedTime,
           isSeletedTime: isSeletedTime,
           onTimeChanged: (time) {
-            ViewController.request['${column['name']}${filterInfo['operator']}']=
+            ViewController.request['${column['name']}${filterInfo['oprator']}']=
             {
               'value': time,
               'column': '${column['name']}',
-              'operator': '${filterInfo['operator']}',
+              'oprator': '${filterInfo['oprator']}',
             };
           },
         ),
@@ -1078,11 +1082,11 @@ class ViewController extends GetxController {
                   '0x${colorChanged.value.toRadixString(16).padLeft(8, '0')}';
               // dataJson[columnName] = hexColor;
 
-              ViewController.request['${column['name']}${filterInfo['operator']}']=
+              ViewController.request['${column['name']}${filterInfo['oprator']}']=
               {
                 'value': hexColor,
                 'column': '${column['name']}',
-                'operator': '${filterInfo['operator']}',
+                'oprator': '${filterInfo['oprator']}',
               };
             },
             column: column,
@@ -1113,7 +1117,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['source_items'] != 'custom' ?
+        column['sourceItems'] != 'custom' ?
         SelectBox(
             name: '${column['title']}',
             column: column,
@@ -1227,7 +1231,7 @@ class ViewController extends GetxController {
         SizedBox(
           height: 10,
         ),
-        column['source_items'] != 'custom' ?
+        column['sourceItems'] != 'custom' ?
         RadioButton(
           name: '',
           radioButtonItems: [
@@ -1318,8 +1322,8 @@ class ViewController extends GetxController {
     List<dynamic> selectedId = [];
 
 
-    if (column['source_items'] != 'custom') {
-      items = await DB('${column['source_table']}').getRecords();
+    if (column['sourceItems'] != 'custom') {
+      items = await DB('${column['sourceTable']}').getRecords();
 
       if (selectedItemsList.length != 0) {
         for (var selectedItem in selectedItemsList) {
@@ -1368,11 +1372,11 @@ class ViewController extends GetxController {
                                               requestMultiSelect = item;
                                               selectedItemsList.add(item);
                                               selectedItemId.add(item['_id']);
-                                            } else {
+                                                  } else {
                                               requestMultiSelect.removeWhere((key, value) => value == ['_id']);
                                               selectedItemsList.removeWhere( (element) => element['_id']==item['_id']);
                                               selectedItemId.remove(item['_id']);
-                                            }
+                                                  }
                                             if (item['_id'] == '') {
                                               selectedItemId.value.remove(item['_id']);
                                             }
@@ -1410,9 +1414,9 @@ class ViewController extends GetxController {
     }
     else {
       if (selectedItemsList.length != 0) {
-        for (var selectedItem in selectedItemsList) {
-          selectedItemId.add(selectedItem['value']);
-        }
+      for (var selectedItem in selectedItemsList) {
+        selectedItemId.add(selectedItem['value']);
+      }
       }
       items = column['items'];
 
@@ -1520,7 +1524,7 @@ class ViewController extends GetxController {
     items = await itemsList(column);
     List<dynamic> selectedId = [];
     return items.length != 0
-        ? column['source_items'] != 'custom'
+        ? column['sourceItems'] != 'custom'
         ? new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1768,26 +1772,19 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFileBox(var selecetdFiles, var column,
+  static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
-    List<dynamic> filesSelectedList=[];
-    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
-
-    // if (ViewController.request[column['name']] != null) {
-    //   filesSelectedList = ViewController.request[column['name']];
-    //   for (var data in filesSelectedList) {
-    //     selectedFilesMap['${column['name']}']!.add(data);
-    //   }
-    // }
-    // else{
-    //
-    //   print('filesSelectedList>>>${filesSelectedList}');
-    // }
-
+    List<dynamic> filesSelectedList;
+    if (ViewController.request[column['name']] != null) {
+      filesSelectedList = ViewController.request[column['name']];
+      for (var data in filesSelectedList) {
+        selectedFilesMap['${column['name']}']!.add(data);
+      }
+    }
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1804,21 +1801,14 @@ class ViewController extends GetxController {
         FormFile(
           columnName: column['title'],
           onChanged: (selecetdFiles) {
+            print('selecetdFiles>>>${selecetdFiles}');
             // dataJson[columnName] = selecetdFiles;
-            if(column['type'] == 'file'){
-              ViewController.request[column['name']] = selecetdFiles;
-            }
-            else{
-              filesSelectedList.add(selecetdFiles);
-              ViewController.request[column['name']] = filesSelectedList;
-            }
-
+            ViewController.request[column['name']] = selecetdFiles;
           },
           filesSelected: selectedFilesMap,
-          selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
+          selectedFilesTxt: selecetdFiles,
           isSeletedFile: isSeletedFile,
           column: column,
-          fileInfo: fileInfo,
         ),
       ],
     );
@@ -1931,7 +1921,7 @@ class ViewController extends GetxController {
           a.add(listItems[i]);
         }
         else {
-          if(column['source_items']=='table') {
+          if(column['sourceItems']=='table') {
             List<dynamic> empty = [];
             for (var field in items) {
               empty.add(listItems[i][field]);
@@ -1952,7 +1942,7 @@ class ViewController extends GetxController {
         if (listItems['_id'] == '') {
           return "${AppController.of(Get.context!)!.value('not selected')}";
         }
-        if(column['source_items']=='table') {
+        if(column['sourceItems']=='table') {
           List<dynamic> empty = [];
           for (var field in items) {
             empty.add(listItems[field]);
@@ -1967,15 +1957,15 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-    print('ViewController.itemsList>>>$column');
-    var type = column['source_items'];
-    var tableName = column['source_table'];
+    var type = column['sourceItems'];
+    var tableName = column['sourceTable'];
     List<dynamic> dropDownListItems = [];
+    print('type of sourceItems>>>${type}');
     if (type != 'custom') {
+      print('dataModel g>>>${dataModel} ${column['name']}');
       if (dataModel==null || dataModel.isEmpty ) {
-        // Future.delayed(Duration.zero, () async {
-        List<dynamic> data = await DB('${tableName}').getRecords();
-        data.removeWhere((element) => element['sync']!=null);
+        List<dynamic> data = await HelperController.itemsListFunction(tableName);
+        print('ViewController.itemsList>>>${data}');
         dropDownListItems = data;
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
@@ -1989,13 +1979,12 @@ class ViewController extends GetxController {
           dropDownListItems=[];
         }
         else{
-          dataModel[column['name']].removeWhere((element) => element['sync']!=null);
           List<dynamic> a = [];
-          for (int i = 0; i < dataModel[column['name']].length; i++) {
+        for (int i = 0; i < dataModel[column['name']].length; i++) {
             a.add(dataModel[column['name']][i]);
-          };
-          dropDownListItems=a;
-        }}
+        };
+      dropDownListItems=a;
+      }}
     }
     else {
       List<dynamic> itemss = [];
@@ -2012,7 +2001,73 @@ class ViewController extends GetxController {
         }
       }
       dropDownListItems = itemss;
+      print('dropDownListItems>>>${dropDownListItems}');
     }
+    return dropDownListItems;
+  }
+
+  static Future<List> itemsSelect (var column, {var dataModel}) async {
+    List<dynamic> items = [];
+    var type = column['sourceItems'];
+    var tableName = column['sourceTable'];
+    List<dynamic> dropDownListItems = [];
+    if (type != 'custom') {
+      if (dataModel==null || dataModel.isEmpty ) {
+        List<dynamic> data = await DB(tableName).getRecords();
+        dropDownListItems = data;
+        for (int i = 0; i < dropDownListItems.length; i++) {
+          List<dynamic> a = [];
+          for (var field in column['items']) {
+            a.add(dropDownListItems[i][field]);
+          }
+          items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
+        }
+      }
+      else {
+        if(dataModel[column['name']]==null){
+          List<dynamic> data = await DB(tableName).getRecords();
+          dropDownListItems = data;
+          for (int i = 0; i < dropDownListItems.length; i++) {
+            List<dynamic> a = [];
+            for (var field in column['items']) {
+              a.add(dropDownListItems[i][field]);
+            }
+            items.add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
+          }
+        }
+        else{
+          for (var item in dataModel[column['name']])
+            dropDownListItems.add((await DB(tableName).where('_id', '\$eq', item).getRecords()).first);
+
+          for (int i = 0; i < dropDownListItems.length; i++) {
+            List<dynamic> a = [];
+            for (var field in column['items']) {
+              a.add(dropDownListItems[i][field]);
+            }
+            items
+                .add({'title': a.join('%'), 'value': dropDownListItems[i]['_id']});
+          }
+        }}
+    }
+
+    else {
+      List<dynamic> itemss = [];
+
+      if (dataModel==null || dataModel.isEmpty ) {
+        itemss = column['items'];
+        // dropDownListItems.add(item);
+      }
+      else {
+        if(dataModel[column['name']]==null){
+          itemss = column['items'];
+        }else
+          for (var item in dataModel[column['name']])
+            itemss.add(column['items'].firstWhere((element) => element['value'] == item));
+      }
+      dropDownListItems = itemss;
+    }
+
+
     return dropDownListItems;
   }
 

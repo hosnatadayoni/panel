@@ -291,7 +291,6 @@ class Btn extends StatefulWidget {
    bool isToggle;
    bool isCenter;
    BorderRadius? borderRadius;
-   String? loadingTag;
 
   Btn(
        {
@@ -309,8 +308,7 @@ class Btn extends StatefulWidget {
          this.isActive = false,
         this.isToggle = false,
         this.isCenter = false,
-        this.borderRadius,
-         this.loadingTag
+        this.borderRadius
       });
 
   @override
@@ -556,17 +554,7 @@ class _BtnState extends State<Btn> {
                     color:_isHovered ?contentColor(): widget.isOutline! ? textColor(): contentColor(),
                     decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
                   ),
-                  child: Obx((){
-                    return (AppController.loadingList.contains(widget.loadingTag) && widget.loadingTag!=null)?
-                    Container(
-                      width: 25,
-                      height: 25,
-                      child: CircularProgressIndicator(
-                        color: whiteColor,
-                        strokeWidth: 2,
-                      ),
-                    ): widget.content!;
-                  }),
+                  child: widget.content!,
                 ),
               ),
             ),

@@ -34,7 +34,7 @@ class _CheckBoxState extends State<CheckBox> {
     var inputRequired;
     String? errorMessage;
     if(widget.column != null){
-      if(widget.column['validators'] != null && widget.column['validators'].length!=0){
+      if(widget.column['validators'] != null){
         inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
         errorMessage = inputRequired['message'];
       }

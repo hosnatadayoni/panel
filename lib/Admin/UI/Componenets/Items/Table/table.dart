@@ -2,11 +2,13 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:finance/Admin/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class TableBox extends StatefulWidget {
@@ -33,9 +35,13 @@ class _TableBoxState extends State<TableBox> {
 
   @override
   Widget build(BuildContext context) {
+    print('_TableBoxState.build table info is>>${MainController.tableInfo}');
+
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
+      print('ViewController.request>>>${ViewController.request}');
+      print('MainController.selectedItem.value table page>>>${MainController.selectedItem.value}');
       return Container(
           color: MainController.isLightMode.value == true
               ? background
@@ -51,13 +57,14 @@ class _TableBoxState extends State<TableBox> {
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
                 child: Table(
-
                   //defaultColumnWidth: FixedColumnWidth(200),
                   // defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
                   defaultColumnWidth: FixedColumnWidth(
                       (MainController.tableInfo['columns'].length > 8
                           ? 200.0
-                          : size.width / 7)),
+                          : size.width /
+                              (MainController.tableInfo['columns'].length +
+                                  1))),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
@@ -66,10 +73,10 @@ class _TableBoxState extends State<TableBox> {
                   children: [
                     TableRow(children: [
                       for (var i = 0;
-                      i < MainController.tableInfo['columns'].length;
-                      i++)
+                          i < MainController.tableInfo['columns'].length;
+                          i++)
                         if (MainController.tableInfo['columns'][i]
-                        ['is_show_table'] ==
+                                ['is-show-table'] ==
                             true)
                           Center(
                               child: Container(
@@ -79,7 +86,7 @@ class _TableBoxState extends State<TableBox> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                       color: MainController.isLightMode.value ==
-                                          true
+                                              true
                                           ? whiteColor
                                           : color2))),
                       Container(
@@ -90,20 +97,20 @@ class _TableBoxState extends State<TableBox> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color:
-                                  MainController.isLightMode.value == true
-                                      ? whiteColor
-                                      : color2)))
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : color2)))
                     ]),
-                    if (MainController.tableData.length != 0)
+                    if (MainController.tableData.value.length != 0)
                       for (var i = 0;
-                      i < MainController.tableData.length;
-                      i++)
+                          i < MainController.tableData.value.length;
+                          i++)
                         TableRow(children: [
                           for (var j = 0;
-                          j < MainController.tableInfo['columns'].length;
-                          j++)
+                              j < MainController.tableInfo['columns'].length;
+                              j++)
                             if (MainController.tableInfo['columns'][j]
-                            ['is_show_table'] ==
+                                    ['is-show-table'] ==
                                 true)
                               FutureBuilder<Widget>(
                                 future: ViewController.generateDataColumn(j, i),
@@ -131,24 +138,33 @@ class _TableBoxState extends State<TableBox> {
                                         width: borderSize, color: itemColor34),
                                   ),
                                   color:
-                                  MainController.isLightMode.value == true
-                                      ? background
-                                      : whiteColor,
+                                      MainController.isLightMode.value == true
+                                          ? background
+                                          : whiteColor,
                                 ),
                                 child: PopupMenuButton<String>(
                                   elevation: 0,
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
-                                    var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
-                                        .firstWhere((item) => item == value, orElse: () => null):null;
+                                    var relation = MainController.tableInfo['relations']
+                                        .firstWhere((item) => item['table-name'] == value, orElse: () => null);
                                     if(relation!=null){
+                                      // MainController.selectedItem.value = MainController.SubMenuList.indexWhere((element) =>
+                                      // element[
+                                      // 'table-name'] ==
+                                      //     relation['table-name']);
                                       MainController
                                           .tableName.value =
-                                      relation;
+                                      relation['table-name'];
                                       print(
                                           '_TableBoxState.build>>${MainController.tableName.value}');
-                                      HelperController.relationFunction(table: relation, index: i);
+
+                                      HelperController
+                                          .relationFunction(
+                                          table: relation,
+                                          index: i);
+
                                     }
                                     if(value=='edit'){
                                       setState(() {
@@ -166,12 +182,12 @@ class _TableBoxState extends State<TableBox> {
                                       });
                                     }
                                     if(value=='refresh'){
-                                      print('_TableBoxState.build>>>${MainController.tableData.value[i]}');
                                       await DB(
-                                          '${MainController.tableInfo['schema']['name']}')
-                                          // .where('id', '\$eq',
-                                          // '${MainController.tableData.value[i]['id']}')
-                                          .storeRecord(MainController.tableData.value[i]);
+                                          '${MainController.tableInfo['table-name']}')
+                                          .where('id', '\$eq',
+                                          '${MainController.tableData.value[i]['id']}')
+                                          .updateRecord(MainController
+                                          .tableData.value[i]);
                                     }
                                     if(value=='remove'){
                                       showDialog(
@@ -236,15 +252,12 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
-                                                              HelperController.deleteFunction(
-                                                                  MainController
-                                                                      .tableData
-                                                                      .value[i]['_id']);
+                                                              HelperController.deleteFunction(MainController.tableData.value[i]);
                                                               // setState(() {
-                                                              //   DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
+                                                              //   DB('${MainController.tableInfo['table-name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
                                                               // });
-                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['table-name']}').paginate();
+                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['table-name']}').infoPage();
                                                               // Navigator.pop(context);
                                                             },
                                                             child:
@@ -282,7 +295,7 @@ class _TableBoxState extends State<TableBox> {
                                   itemBuilder: (BuildContext  context) {
                                     return <PopupMenuEntry<String>>[
                                       if (MainController.tableData.value[i]
-                                      ['sync'] ==
+                                              ['sync'] ==
                                           'false')
                                         PopupMenuItem<String>(
                                             value: 'refresh',
@@ -291,9 +304,9 @@ class _TableBoxState extends State<TableBox> {
                                                 children: [
                                                   Icon(Icons.refresh,
                                                       color: MainController
-                                                          .isLightMode
-                                                          .value ==
-                                                          true
+                                                                  .isLightMode
+                                                                  .value ==
+                                                              true
                                                           ? whiteColor
                                                           : color3),
                                                   SizedBox(
@@ -301,9 +314,9 @@ class _TableBoxState extends State<TableBox> {
                                                   ),
                                                   Txt('${AppController.of(context)!.value('refresh')}',
                                                       color: MainController
-                                                          .isLightMode
-                                                          .value ==
-                                                          false
+                                                                  .isLightMode
+                                                                  .value ==
+                                                              false
                                                           ? color3
                                                           : whiteColor)
                                                 ],
@@ -316,9 +329,9 @@ class _TableBoxState extends State<TableBox> {
                                               children: [
                                                 Icon(Icons.edit,
                                                     color: MainController
-                                                        .isLightMode
-                                                        .value ==
-                                                        true
+                                                                .isLightMode
+                                                                .value ==
+                                                            true
                                                         ? whiteColor
                                                         : color3),
                                                 SizedBox(
@@ -326,9 +339,9 @@ class _TableBoxState extends State<TableBox> {
                                                 ),
                                                 Txt('${AppController.of(context)!.value('edit')}',
                                                     color: MainController
-                                                        .isLightMode
-                                                        .value ==
-                                                        false
+                                                                .isLightMode
+                                                                .value ==
+                                                            false
                                                         ? color3
                                                         : whiteColor)
                                               ],
@@ -342,9 +355,9 @@ class _TableBoxState extends State<TableBox> {
                                                 Icon(
                                                   CupertinoIcons.trash,
                                                   color: MainController
-                                                      .isLightMode
-                                                      .value ==
-                                                      true
+                                                              .isLightMode
+                                                              .value ==
+                                                          true
                                                       ? whiteColor
                                                       : color3,
                                                 ),
@@ -353,21 +366,41 @@ class _TableBoxState extends State<TableBox> {
                                                 ),
                                                 Txt('${AppController.of(context)!.value('remove')}',
                                                     color: MainController
-                                                        .isLightMode
-                                                        .value ==
-                                                        false
+                                                                .isLightMode
+                                                                .value ==
+                                                            false
                                                         ? color3
                                                         : whiteColor)
                                               ],
                                             ),
                                           )),
-                                      if (MainController.tableInfo['schema']['relations']!=null&& MainController.tableInfo['schema']['relations'].length != 0)
-                                        for (var item in MainController.tableInfo['schema']['relations'])
+                                      if (MainController.tableInfo['relations'].length != 0)
+                                        for (var item in MainController.tableInfo['relations'])
                                           PopupMenuItem<String>(
-                                              value: item.toString(),
+
+                                            // onTap: (){
+                                            //   print('_TableBoxState.build');
+                                            //     MainController.selectedItem
+                                            //       .value = MainController
+                                            //       .SubMenuList
+                                            //       .indexWhere((element) =>
+                                            //   element[
+                                            //   'table-name'] ==
+                                            //       item['table-name']);
+                                            //   MainController
+                                            //       .tableName.value =
+                                            //   item['table-name'];
+                                            //   print(
+                                            //       '_TableBoxState.build>>${MainController.tableName.value}');
+                                            //   HelperController
+                                            //       .relationFunction(
+                                            //       table: item,
+                                            //       index: i);
+                                            // },
+                                              value: item['table-name'].toString(),
                                               child: Container(
                                                 child: Txt(
-                                                  item,
+                                                  item['title'],
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: whiteColor,
@@ -381,9 +414,9 @@ class _TableBoxState extends State<TableBox> {
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       border:
-                                      Border.all(color: colorBtn, width: 1),
+                                          Border.all(color: colorBtn, width: 1),
                                       borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
+                                          BorderRadius.all(Radius.circular(10)),
                                       color: colorBtn,
                                     ),
                                     child: Row(

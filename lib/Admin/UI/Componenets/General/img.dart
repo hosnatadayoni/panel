@@ -1,4 +1,3 @@
-import 'package:finance/Admin/Public/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,10 +27,10 @@ class Img extends StatelessWidget {
               child:
               path.split('.').last=='svg'?
               isNetwork?
-              SvgPicture.network(baseUrl+this.path,color: this.color,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill):
+              SvgPicture.network(this.path,color: this.color,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill):
               SvgPicture.asset(this.path,color: this.color,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill,) :
               isNetwork?
-              Image.network(baseUrl+path,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill) :
+              Image.network(path,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill) :
               Image.asset(path,fit: this.width==null || this.height==null?BoxFit.contain:BoxFit.fill),
             )
         ),

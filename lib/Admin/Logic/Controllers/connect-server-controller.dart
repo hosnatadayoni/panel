@@ -1,61 +1,184 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
+import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/project.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
 import '../Models/db.dart';
-import 'app-controller.dart';
 
 class ConncetServerController extends GetxController {
+  static Map<String, dynamic> storeRecordRes = {};
+  static Map<String, dynamic> updateRecordRes = {};
+  static List<Map<String, dynamic>> filterRecordRes = [];
+  static List<dynamic> listProjectRes = [];
+  static List<dynamic> listSchemaRes = [];
+  static List<dynamic> listFieldsRes = [];
+  static List<dynamic> listFiltersRes = [];
+  static List<dynamic> listValidateRes = [];
 
-  static Map<String, dynamic>storeRecordRes={};
-  static Map<String, dynamic> updateRecordRes={};
-  static List<Map<String, dynamic>>filterRecordRes=[];
-  static bool deleteRecordRes=false;
-  static RxList<dynamic> getRecordRes=[].obs;
+  static bool deleteRecordRes = false;
+  static List<dynamic> getRecordRes = [];
 
-  static listSchemaByField() async {
-    AppController.finishLoading('list-schema');
-    var response = await RestApi.post(listSchemaUrl,);
+  static createProject(Map<String, dynamic> json) async {
+    var response =
+        await RestApi.post(createProjectUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
+          Project project = Project.fromJson(response!.data['data']);
 
-          MainController.SubMenuList.value=response!.data['data'];
-          for (var name in MainController.tableNames()) {
-            MainController.addsyncField('${name}');
-
-            MainController.setRelations('${name}');
-
-            MainController.addParentForRelations('${name}');
-          }
-          // storeRecordRes={};
-          // storeRecordRes=response!.data['data'];
-        },printResponse: true);
-    AppController.finishLoading('list-schema');
+        },
+        printResponse: true);
   }
-
-  static listField(var json) async {
-    var response = await RestApi.post(listFieldUrl, body: json);
+  static listProject() async {
+    String? s ;
+    s= await Token.getToken();
+    var response = await RestApi.post(listProjectUrl, body: {'api_key': s});
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          // storeRecordRes={};
-          // storeRecordRes=response!.data['data'];
-        },printResponse: true);
+          listProjectRes=response!.data['data'];
+
+        },
+        printResponse: true);
+  }
+  static deleteProject(var apiKey) async {
+    var response = await RestApi.post(deleteProjectUrl, body: {'api_key':apiKey},useApiKey: false);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static createSchema(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+    }, printResponse: true);
+  }
+  static updateSchema(Map<String, dynamic> request,var id) async {
+    var body= {
+      'id': id,
+      'column': json.encode(request).toString(),
+    };
+    var response = await RestApi.post(updateSchemaUrl, body: body);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static deleteSchema(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listSchema() async {
+    var s = await Token.getToken();
+    var response = await RestApi.post(listSchemaUrl, body: {'api_key': s});
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listSchemaRes=response!.data['data'];
+      // for(var schema in listSchemaRes){
+      //   if(schema['relations']!=null && schema['relations'].length!=0){
+      //     var rels=[];
+      //     for(var rel in schema['relations']){
+      //       var index;
+      //       index =listSchemaRes.indexWhere((element) => element['_id']==rel);
+      //           if(index!=-1){
+      //             listSchemaRes[index]['relations'].add( listSchemaRes[index]['name']);
+      //
+      //           }
+      //     }
+      //   }
+      // }
+        }, printResponse: true);
   }
 
-  static storeRecordGeneral (var json) async {
+  static createField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static updateField(Map<String, dynamic> request,var id) async {
+    var body= {
+      'id': id,
+      'field': json.encode(request).toString(),
+    };
+    var response = await RestApi.post(updateFieldUrl, body: body);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static deleteField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteFieldUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+  static listField(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFieldUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listFieldsRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+  static deleteValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteValidateUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listValidate(Map<String, dynamic> json) async {
+    var s = await Token.getToken();
+    var response = await RestApi.post(listValidateUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listValidateRes=response!.data['data'];
+    }, printResponse: true);
+  }
+  static createValidate(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createValidateFieldsUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
+  static deleteFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(deleteFilterUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {}, printResponse: true);
+  }
+  static listFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFiltersUrl, body:json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+      listFiltersRes=response!.data['data'];
+    }, printResponse: true);
+  }
+
+  static createFilter(Map<String, dynamic> json) async {
+    var response = await RestApi.post(createFilterSchemaUrl, body: json);
+    RestApi.responseHandler(
+        response: response, successCallback: () async {
+
+    }, printResponse: true);
+  }
+
+
+
+
+
+  static storeRecordGeneral(var json) async {
     var response = await RestApi.post(storeRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          storeRecordRes={};
-          storeRecordRes=response!.data['data'];
-        },printResponse: true);
-    // AppController.finishLoading('store-record');
-    // AppController.finishLoading('get-records');
+          storeRecordRes = {};
+          storeRecordRes = response!.data['data'];
+        },
+        printResponse: true);
   }
 
   static updateRecordGeneral(var json) async {
@@ -63,65 +186,63 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          updateRecordRes={};
-          updateRecordRes=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
-        },printResponse: true);
-    // AppController.finishLoading('update-records');
-    // AppController.finishLoading('get-records');
+          updateRecordRes = {};
+          updateRecordRes = response!.data['data'];
+        },
+        printResponse: true);
   }
 
-  static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
-    var info=await MainController.getInfoTable(tableName);
-    var perPage=perpage??info['schema']['countShowRow'];
-    var currentPage=page??info['schema']['currentPage'];
-    var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
-      'pageNumber':currentPage.toString(),
-      'perPage':perPage.toString()})
-    );
+  static getRecordGeneral(var tableName) async {
+    var info = await MainController.getInfoTable(tableName);
+
+    var perPage = info['countShowRow'];
+    var currentPage = info['currentPage'];
+    var response = await RestApi.post(getRecordsUrl,
+        body: ({
+          'table_name': tableName,
+          'pageNumber': currentPage.toString(),
+          'perPage': perPage.toString()
+        }));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          getRecordRes.value=[];
-          getRecordRes.value=response!.data['data']['data']!=null?response.data['data']['data']:[];
-          MainController.totalItems.value=response.data['data']['count'];
-
-        },printResponse: true);
-    // AppController.finishLoading('get-records');
+          getRecordRes = [];
+          getRecordRes = response!.data['data']['data'];
+          MainController.tableData.value = response.data['data']['data'];
+        },
+        printResponse: true);
   }
 
-  static createJsonFilter(var wheres,String tableName,String type,{var page=null,var perpage=null}) async {
-    List<dynamic>l=[];
-    Map<String,dynamic> c={};
-    Map<String,dynamic> body ={};
-    var info=await MainController.getInfoTable(tableName);
-    var perPage=perpage??info['schema']['countShowRow'];
-    var currentPage=page??info['schema']['currentPage'];
+  static createJsonFilter(var wheres, String tableName, String type) {
+    List<dynamic> l = [];
+    Map<String, dynamic> c = {};
+    Map<String, dynamic> body = {};
     body.addAll({
-        'table_name':tableName,
-        'type':type,
-      'pageNumber':currentPage.toString(),
-      'perPage':perPage.toString()
+      'table_name': tableName,
+      'type': type,
+    });
+    for (Where item in wheres.values) {
+      l.add({
+        'column': '${item.fieldName}',
+        'operation': "${item.oprator != null ? item.oprator : "\$eq"}",
+        'value': "${item.value}"
       });
-    for(Where item in wheres.values){
-      l.add({'column':'${item.fieldName}','operation': "${item.operator!=null?item.operator:"\$eq"}",'value': "${item.value}"});
-      }
-
+    }
     body.addAll({
-        'filter':json.encode(l),
-
-      });
+      'filter': json.encode(l),
+    });
     return body;
   }
 
-  static filterRecordGeneral(var wheres,String tableName,String type) async {
-    var json=await createJsonFilter(wheres, tableName,type);
+  static filterRecordGeneral(var wheres, String tableName, String type) async {
+    var json = createJsonFilter(wheres, tableName, type);
     var response = await RestApi.post(filterRecordsUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          filterRecordRes=response!.data['data']['data']!=null?response.data['data']['data'].cast<Map<String, dynamic>>():[];
-          MainController.totalItems.value=response.data['data']['count'];
-        },printResponse: true);
+          filterRecordRes = response!.data['data'].cast<Map<String, dynamic>>();
+        },
+        printResponse: true);
   }
 
   static deleteRecordGeneral(var json) async {
@@ -129,17 +250,17 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          deleteRecordRes=true;
-        },printResponse: true,errorCallback:()=> deleteRecordRes=false);
-    // AppController.finishLoading('delete-record');
-    // AppController.finishLoading('get-records');
+          deleteRecordRes = true;
+        },
+        printResponse: true,
+        errorCallback: () => deleteRecordRes = false);
   }
 
-  static addSyncField(Map<dynamic,dynamic> json,bool status){
+  static addSyncField(Map<dynamic, dynamic> json, bool status) {
     return json.addAll(RecordController.syncFunction(status));
   }
 
-  static setDatabaseme(Map<dynamic,dynamic> json) async {
+  static setDatabaseme(Map<dynamic, dynamic> json) async {
     // print('ConncetServerController.setDatabaseme>>${json}');
     // var response = await RestApi.post(storeUrl, body: json);
     // RestApi.responseHandler(
@@ -151,4 +272,5 @@ class ConncetServerController extends GetxController {
     //   addSyncField(json, false);
     // });
   }
+
 }

@@ -1,9 +1,14 @@
 
-enum requestTypes {
+enum requestTypes{
   get,post,put,delete
 }
 
-enum btnTypes {
+
+enum snackTypes{
+  error,info,success,warning
+}
+
+enum btnTypes{
   primary,
   secondary,
   withBorder
@@ -38,7 +43,4 @@ enum fontTypes{
   overlineSM,
 
   change
-}
-enum operation{
-  delete,update
 }

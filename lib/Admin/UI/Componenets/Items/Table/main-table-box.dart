@@ -13,23 +13,14 @@ import '../../General/txt.dart';
 
 class MainTableBox extends StatefulWidget {
 
-  MainTableBox();
+   MainTableBox();
 
   @override
   State<MainTableBox> createState() => _MainTableBoxState();
 }
-class _MainTableBoxState extends State<MainTableBox> {
-  late List<Future<Widget>> _futures;
 
-  @override
-  void initState() {
-    super.initState();
-    if(MainController.tableInfo['schema']['filters'] != null){
-      _futures = MainController.tableInfo['schema']['filters']
-          .map<Future<Widget>>((filter) => ViewController.generateFilterView(filter))
-          .toList();
-    }
-  }
+
+class _MainTableBoxState extends State<MainTableBox> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -46,31 +37,24 @@ class _MainTableBoxState extends State<MainTableBox> {
           ColumnScroll(
             children: [
               TableHeader(),
-              if(MainController.tableInfo['schema']['filters']!=null && MainController.tableInfo['schema']['filters'].length!=0)
-                Container(
-                  width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      for (var future in _futures)
-                        FutureBuilder<Widget>(
-                          future: future,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              return snapshot.data ?? Container();
-                            }
-                          },
-                        ),
-                    ],
+              if(MainController.tableInfo['filters']!=null && MainController.tableInfo['filters'].length!=0)
+                for(var filter in MainController.tableInfo['filters'])
+                  Container(
+                    color: Colors.blue,
+                    child: FutureBuilder<Widget>(
+                      future: ViewController.generateFilterView(filter),
+                      builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
+                        } else {
+                          return snapshot.data ?? Container();
+                        }
+                      },
+                    ),
                   ),
-                ),
-              if(MainController.tableInfo['schema']['filters']!=null &&MainController.tableInfo['schema']['filters'].length!=0)
+              if(MainController.tableInfo['filters']!=null &&MainController.tableInfo['filters'].length!=0)
                 Container(
                   margin: EdgeInsets.only(left: 5),
                   width: 140,
@@ -78,30 +62,30 @@ class _MainTableBoxState extends State<MainTableBox> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
-                      List<dynamic>w=MainController.tableInfo['schema']['filters'];
+                      List<dynamic>w=MainController.tableInfo['filters'];
                       String opration='\$eq';
                       if(ViewController.request.length!=0){
                         var d;
-                        List<dynamic> d2=await DB('${MainController.tableInfo['schema']['name']}').getRecords();
-                        var a= DB('${MainController.tableInfo['schema']['name']}');
-                        for(var filter in ViewController.request.values){
+                        List<dynamic> d2=await DB('${MainController.tableInfo['table-name']}').getRecords();
+                        var a= DB('${MainController.tableInfo['table-name']}');
+                      for(var filter in ViewController.request.values){
                           var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
-                          if(w[indexFilter]['operator']!=null){
+                        if(w[indexFilter]['oprator']!=null){
 
-                            opration=w[indexFilter]['operator'];
-                          }
-                          if(filter['value']!='' && filter['value']!=null){
-
-                            d=a.where('${filter['column']}','${filter['operator']}',filter['value']);
-                          }
+                            opration=w[indexFilter]['oprator'];
                         }
-                        if(d!=null){
-                          d2=await d.getRecords();
+                        if(filter['value']!='' && filter['value']!=null){
 
+                          d=a.where('${filter['column']}','${filter['oprator']}',filter['value']);
                         }
-                        MainController.tableData.value=d2;
+                      }
+                      if(d!=null){
+                        d2=await d.getRecords();
 
-                      }},
+                      }
+                      MainController.tableData.value=d2;
+
+                    }},
                     child: Center(child: Txt('${AppController.of(context)!.value('apply')}', textAlign: TextAlign.center)),
                   ),
                 ),

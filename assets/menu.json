@@ -114,22 +114,6 @@
         "is-show-edit": false
       },
       {
-        "name": "File",
-        "title": "File",
-        "type": "file",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
-        "name": "multiFile",
-        "title": "multiFile",
-        "type": "multiFile",
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": true
-      },
-      {
         "name": "online",
         "title": "online",
         "type": "checkbox",
@@ -305,8 +289,7 @@
             "title": "file",
             "value": "file",
             "is_selected": false
-          }
-          ,
+          },
           {
             "title": "multiFile",
             "value": "multiFile",
@@ -455,7 +438,40 @@
       {
         "name": "type",
         "title": "type",
-        "type": "string",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "type": "select",
+        "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          }, {
+            "title": "Reqiured",
+            "value": "reqiured",
+            "is_selected": true
+          },
+          {
+            "title": "All Files",
+            "value": "allFiles",
+            "is_selected": false
+          },
+          {
+            "title": "Pdf",
+            "value": "pdf",
+            "is_selected": false
+          },
+          {
+            "title": "Image",
+            "value": "image",
+            "is_selected": false
+          },
+          {
+            "title": "Xlsx",
+            "value": "xlsx",
+            "is_selected": false
+          }
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true

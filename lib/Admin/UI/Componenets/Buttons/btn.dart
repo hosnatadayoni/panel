@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import '../General/txt.dart';
 
@@ -33,6 +34,7 @@ class Btn extends StatelessWidget {
           width: this.isHalf?((size.width<maxItemWidth?size.width:maxItemWidth)-(2*paddingSize))/2.05:this.width??maxItemWidth,
           height: height??50,
           decoration: BoxDecoration(
+            gradient: this.type!=btnType.custom?gradiant1:null,
             border: Border.all(color:this.type==btnType.secondary?itemColor5:Colors.transparent,width: borderSize),
             borderRadius: BorderRadius.circular(15)
           ),
@@ -45,7 +47,7 @@ class Btn extends StatelessWidget {
             child:
             Obx(
                     () {
-                  return (AppController.loadingList.contains(loadingTag) && loadingTag!=null)?
+                  return (AppController.loadingList.value.contains(loadingTag) && loadingTag!=null)?
                   Container(
                     width: 25,
                     height: 25,

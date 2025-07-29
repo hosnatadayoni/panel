@@ -1,11 +1,9 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +11,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import '../../Public/styles.dart';
-class SetTokenPage extends StatelessWidget {
 
-  String? token;
+class SetTokenPage extends StatelessWidget {
+  const SetTokenPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -85,23 +84,11 @@ class SetTokenPage extends StatelessWidget {
                                   name: 'set-token',
                                   lable: '${AppController.of(context)!.value('Enter the token')}' ,
                                   hint: '' ,onChange: (text){
-                                    token=text;
                                 },)),
                             SizedBox(height: 20,),
                             InkWell(
-                              onTap: () async {
-                                print('SetTokenPage.build>>>${token}');
-                                if(token!=null && token!.trim().length!=0) {
-                                  await Token.setToken(token!);
-                                  MainController.apiKey.value =token!;
-                                  print('SetTokenPage.build iss>>>${ MainController.apiKey.value }');
-                                  // await MainController.loadJson();
-                                  // await MainController.loadData();
-                                  Get.to(() => DashboardPage());
-                                }
-                                else{
-                                  showSnackbar(snackTypes.error, AppController.of(context)!.value('Enter the token') );
-                                }
+                              onTap: (){
+                                Get.to(() => DashboardPage());
                               },
                               child: Center(
                                 child: Container(

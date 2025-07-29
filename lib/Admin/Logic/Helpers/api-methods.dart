@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import '../../UI/Componenets/Popups/snackbar.dart';
-import '../Controllers/app-controller.dart';
-import '../Controllers/main-controller.dart';
 
 enum requestTypes{
   get,post,put,delete
@@ -78,8 +79,8 @@ class RestApi {
     if(response==null){
       if(isConnected)
         showSnackbar(snackTypes.error, 'Server Error');
-      // else
-      //   showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
+      else
+        showSnackbar(snackTypes.error, '${AppController.of(Get.context!)!.value('Check the Internet connection.')}');
       // if(ModalRoute.of(Get.Get.context!)!.settings.name!='/networkError')
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }
@@ -139,7 +140,7 @@ class RestApi {
     }
   }
 
-  static Future<Response?> post(url, {body=null, useToken = true}) async {
+  static Future<Response?> post(url, {body=null, useToken = true, useApiKey = true}) async {
     if(await Connectivity().checkConnectivity()==ConnectivityResult.none){
       isConnected=false;
       return null;
@@ -157,36 +158,26 @@ class RestApi {
       dio.options.headers["Access-Control-Allow-Origin"]=true;
       // dio.options.contentType="multipart/form-data";
       dio.options.contentType="application/json";
-      if (MainController.apiKey.value != '') {
-        print('RestApi.post>>>${MainController.apiKey.value}');
-        if(body==null){
-          body={'api_key': '${MainController.apiKey.value}'};
-        }else {
-          body.addAll({
-            'api_key': '${MainController.apiKey.value}'
-          });
-        }
+      if(useApiKey) {
+        body.addAll({
+          'api_key': await Token.getToken()
+        });
+      }
       // body=json.encode(body).toString();
       print('**apiUrl**>>>>${url}');
       print('**token**>>>>${mytoken}');
-      // print('**body**>>>>${body}');
+      print('**body**>>>>${body}');
       var formData = null;
       if(body!=null)
         formData=FormData.fromMap(body);
       var response = await dio.post(url, data: formData,);
       print('>>>Success<<<<');
       return response;
-    }
-      else{
-        print('>>>>>>>>>>>>>>Enter Token<<<<<<<<<<<<<<<<');
-
-        return null;
-      }
-    }catch (e) {
+    } catch (e) {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -229,7 +220,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -270,7 +261,7 @@ class RestApi {
       if (e is DioError && e.response != null) {
         return e.response;
       }else if(e is DioError && e.type==DioErrorType.connectionTimeout) {
-        print('>>>>>>>>>>>>>>connectionTimeout<<<<<<<<<<<<<<<<');
+        print('>>>>>>>>>>>>>>connectTimeout<<<<<<<<<<<<<<<<');
         isConnected=false;
         return null;
       } else {
@@ -315,5 +306,4 @@ class RestApi {
     return false;
   }
 }
-
 
