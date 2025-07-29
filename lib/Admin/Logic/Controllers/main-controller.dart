@@ -606,8 +606,6 @@ class MainController extends GetxController {
     var filePath = null;
     if (singleFile == null)
       return null;
-    // MainController.chunckCurrentIndex.value = 0;
-    // MainController.totlaChunck.value = 0;
 
       final path = singleFile.path!;
       final file = File(path);
@@ -627,8 +625,7 @@ class MainController extends GetxController {
               : remaining;
           final bytes = raf.readSync(chunkSize);
           final String chunk = base64Encode(bytes);
-            MainController.updateFileInfo(
-                singleFile.name, (totalLength / chunkSize).ceil(), chunkIndex, fileInfo);
+            MainController.updateFileInfo(singleFile.name, (totalLength / chunkSize).ceil(), chunkIndex, fileInfo);
           var body = {
             'table_name': tableName,
             'data': chunk,
@@ -641,9 +638,7 @@ class MainController extends GetxController {
           RestApi.responseHandler(
               response: response,
               successCallback: () async {
-                print('MainController.uploadFileInChunks>>${response!
-                    .data['data']}');
-                filePath = response.data['data'];
+                filePath = response!.data['data'];
                 chunkName = filePath;
                 if (chunkName != null) {
                     fileInfo[singleFile.name] = [
@@ -679,15 +674,15 @@ class MainController extends GetxController {
       int currentChunk,
       RxMap<String, List<dynamic>> fileInfo,
       ) {
-    // اگر قبلاً نام چانک ذخیره شده، آن را حفظ کنید
     dynamic existingChunkName = fileInfo[fileName]!.length > 2 ? fileInfo[fileName]![2] : null;
     fileInfo[fileName] = [
       totalChunks,
       currentChunk,
-      existingChunkName, // حفظ نام چانک اگر وجود دارد
+      existingChunkName,
     ];
     fileInfo.refresh();
   }
+
   static  deleteFileInChunks(String filePath) async {
     var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,}, useToken: false);
     RestApi.responseHandler(

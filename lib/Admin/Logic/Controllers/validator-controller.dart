@@ -24,23 +24,6 @@ class ValidatorController extends GetxController {
     if (column['is_show_store'] == true) {
       if (column['type'] == 'multiSelect') {
         if (dataJson[name] != null) {
-          // List<dynamic> items = await ViewController.itemsList(column);
-          // if(items.length != 0) {
-          //   if (dataJson[name] != null) {
-          //     for (var id in dataJson[name]) {
-          //       var selectedItem = items.firstWhere(
-          //             (element) => element['value'] == id,
-          //         orElse: () => null,
-          //       );
-          //       if(selectedItem == null){
-          //         if(dataJson[name].length == 1){
-          //           dataJson[name] = [];
-          //         }
-          //
-          //       }
-          //     }
-          //   }
-          // }
           if (dataJson[name].length == 0) {
             return checkInputRequiredValidator(indexColumn, dataJson,
                 tableData: tableData);
@@ -48,19 +31,6 @@ class ValidatorController extends GetxController {
         }
       }
       if (column['type'] == 'select' || column['type'] == 'radiobutton') {
-        // if(dataJson[name] == 'آیتم مربوطه یافت نشد'){
-        //   dataJson[name] = '';
-        // }
-        // List<dynamic> items = await ViewController.itemsList(
-        //     column);
-        // if(items.length != 0){
-        //   Map<String, dynamic> selectedItem = items.firstWhere(
-        //           (element) => element['value'] == dataJson[name],
-        //       orElse: () => {'error': '${AppController.of(Get.context!)!.value('The corresponding item has been deleted')}'});
-        //   if(selectedItem['title'] == null){
-        //     dataJson[name] = '';
-        //   }
-        // }
         if (dataJson[name] == '' || dataJson[name] == null) {
           return checkInputRequiredValidator(indexColumn, dataJson,
               tableData: tableData);
@@ -73,17 +43,6 @@ class ValidatorController extends GetxController {
         return checkInputRangeValidator(indexColumn, dataJson,
             tableData: tableData);
       }
-      // if(column['validators'] != null){
-      //   var inputRequired = column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-      //   if(inputRequired != null){
-      //     if(inputRequired['type'] == 'required'){
-      //       return checkInputRequiredValidator(indexColumn , dataJson);
-      //     }
-      //   }
-      //   if(type == 'number' || type == 'file'){
-      //     return checkInputRangeValidator(indexColumn , dataJson);
-      //   }
-      // }
     } else {
       return true;
     }
@@ -118,9 +77,6 @@ class ValidatorController extends GetxController {
             return false;
           }
         }
-        // if(dataJson[name] == null || dataJson[name] == ''){
-        //
-        // }
         else {
           return true;
         }
