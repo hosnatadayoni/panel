@@ -558,6 +558,7 @@ class MainController extends GetxController {
 
   static getInitData() async {
     var token = await Token.getToken();
+    print('MainController.getInitData>>${token}');
     if (token != null) {
       apiKey.value = token;
       // ConncetServerController.listSchemaByField();

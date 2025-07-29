@@ -569,6 +569,7 @@ class ViewController extends GetxController {
           children.add(colorBox);
         }
         else if (type == 'file' || type == 'multiFile') {
+          print('FFFFF>>>${dataModel[name]} ${name}');
           fileBox = generateFileBox(
               '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
               column,
