@@ -480,6 +480,12 @@ class HelperController extends GetxController {
       if (tableName == 'schema') {
         await ConncetServerController.deleteSchema({'name': item['name']});
       }
+      if (tableName == 'validators') {
+        await ConncetServerController.deleteValidate({'id': item['_id']});
+      }
+      if (tableName == 'filters') {
+        await ConncetServerController.deleteFilter({'id': item['_id']});
+      }
       pageInateFunction();
     } else {
       DB('${tableName}').where('_id', '\$eq', '${item['_id']}').deleteRecord();
