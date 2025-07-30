@@ -56,7 +56,7 @@ class _TableBoxState extends State<TableBox> {
                   // defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
                   defaultColumnWidth: FixedColumnWidth(
                       (MainController.tableInfo['columns'].length > 8
-                          ? 200.0
+                          ? 150.0
                           : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
@@ -64,7 +64,9 @@ class _TableBoxState extends State<TableBox> {
                           ? whiteColor
                           : color1),
                   children: [
-                    TableRow(children: [
+                    TableRow(
+
+                        children: [
                       for (var i = 0;
                       i < MainController.tableInfo['columns'].length;
                       i++)
@@ -95,10 +97,10 @@ class _TableBoxState extends State<TableBox> {
                                       : color2)))
                     ]),
                     if (MainController.tableData.length != 0)
-                      for (var i = 0;
-                      i < MainController.tableData.length;
-                      i++)
-                        TableRow(children: [
+                      for (var i = 0; i < MainController.tableData.length; i++)
+                        TableRow(
+
+                            children: [
                           for (var j = 0;
                           j < MainController.tableInfo['columns'].length;
                           j++)
@@ -109,8 +111,7 @@ class _TableBoxState extends State<TableBox> {
                                 future: ViewController.generateDataColumn(j, i),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<Widget> snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                     return CircularProgressIndicator();
                                   } else if (snapshot.hasError) {
                                     return Txt(

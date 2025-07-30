@@ -564,8 +564,9 @@ class ViewController extends GetxController {
           children.add(colorBox);
         }
         else if (type == 'file') {
-          fileBox = generateFileBox(
-              '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
+          print('ViewController.generateEditFormView>>${dataModel}');
+          fileBox = generateEditFileBox(
+              dataModel[name] != null && dataModel[name] != ''? dataModel : null,
               column,
               dataModel[name] == null ? false.obs : true.obs);
           children.add(SizedBox(
@@ -574,8 +575,9 @@ class ViewController extends GetxController {
           children.add(fileBox);
         }
         else if (type == 'multiFile') {
-          fileBox = generateMultiFileBox(
-              '${dataModel[name] != null && dataModel[name] != ''? dataModel[name] : []}',
+          print('ViewController.generateEditFormView>>${dataModel}>>${column}');
+          fileBox = generateEditMultiFileBox(
+             dataModel[name] != null && dataModel[name].length != 0? dataModel : [],
               column,
               dataModel[name] == null ? false.obs : true.obs);
           children.add(SizedBox(
@@ -809,9 +811,10 @@ class ViewController extends GetxController {
         },
         child: Center(
           child: Txt(
-            '${dataModel != null ? dataModel : ''}',
+            '${dataModel != null ? dataModel.length > 20 ? dataModel.substring(0, 20) + '...' : dataModel : ''}',
             fontSize: 14,
             fontWeight: FontWeight.w500,
+
             color: MainController.isLightMode.value == true ? whiteColor : color2,
             textAlign: TextAlign.center,
           ),
@@ -1821,13 +1824,14 @@ class ViewController extends GetxController {
         ),
         FormFile(
           columnName: column['title'],
-          onChanged: (selecetdFiles) {
+          onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
             if(column['type'] == 'file'){
-              ViewController.request[column['name']] = selecetdFiles;
+              ViewController.request[column['name']] = file;
+              print('ViewController.generateFileBox>>>${file}>>>${ ViewController.request[column['name']]}');
             }
             else{
-              filesSelectedList.add(selecetdFiles);
+              filesSelectedList.add(file);
               ViewController.request[column['name']] = filesSelectedList;
             }
 
@@ -1839,6 +1843,165 @@ class ViewController extends GetxController {
           fileInfo: fileInfo,
         ),
       ],
+    );
+  }
+  static Widget generateEditFileBox(var data, var column,
+      Rx<bool>? isSeletedFile) {
+    String name=column['name'];
+    RxString file= data!=null && data[name]!=null?'${data[name]}'.obs:''.obs;
+
+    print('ViewController.generateEditFileBox${data.runtimeType}>>${name}');
+    Map<String, List<dynamic>> selectedFilesMap = {};
+    if (selectedFilesMap['${column['name']}'] == null) {
+      selectedFilesMap['${column['name']}'] = [];
+    }
+    List<dynamic> filesSelectedList=[];
+    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+    return Obx(() {
+        return new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+             Txt(
+                '${column['title']}',
+                color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+              ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            file.value!=''?
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
+                    ? whiteColor
+                    : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Icon(
+                        Icons.insert_drive_file,
+                        size: 40,
+                        color: primary2,
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                        left: 0,
+                        child: IconButton(color: redColor, onPressed: () async {
+                          var status=await MainController.deleteFileInChunks(data[name+'_name'],recordId: data['_id'],record: json.encode({name:null}).toString());
+                          if(status==true){
+                            file.value='';
+                          }
+                        }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
+                  ],
+                ),
+              ):
+            FormFile(
+              columnName: column['title'],
+              onChanged: (selecetdFiles) {
+                  ViewController.request[name] = selecetdFiles;
+              },
+              filesSelected: selectedFilesMap,
+              // selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
+              selectedFilesTxt:  '',
+              isSeletedFile: isSeletedFile,
+              column: column,
+              fileInfo: fileInfo,
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  static Widget generateEditMultiFileBox(var data, var column,
+      Rx<bool>? isSeletedFile) {
+    String name=column['name'];
+    RxList<String> files= data!=null && data[name]!=null?data[name+'_name'].obs:[].obs;
+
+    print('ViewController.generateEditFileBox${data.runtimeType}>>${name}');
+    Map<String, List<dynamic>> selectedFilesMap = {};
+    if (selectedFilesMap['${column['name']}'] == null) {
+      selectedFilesMap['${column['name']}'] = [];
+    }
+    List<dynamic> filesSelectedList=[];
+    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+    return Obx(() {
+        return new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+             Txt(
+                '${column['title']}',
+                color:
+                MainController.isLightMode.value == true ? whiteColor : color2,
+              ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            files.length!=0?
+            Txt(
+              '${files}',
+              color:
+              MainController.isLightMode.value == true ? whiteColor : color2,
+            ):Container(),
+            FormFile(
+              columnName: column['title'],
+              onChanged: (selecetdFiles) {
+                filesSelectedList.add(selecetdFiles);
+                files.add(selecetdFiles);
+
+                ViewController.request[column['name']] = files;
+              },
+              filesSelected: selectedFilesMap,
+              selectedFilesTxt: filesSelectedList,
+              // selectedFilesTxt:  '',
+              isSeletedFile: isSeletedFile,
+              column: column,
+              fileInfo: fileInfo,
+            ),
+            files.length!=0?
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
+                    ? whiteColor
+                    : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
+                child: Row(
+                  children: [
+                    for(String file in files)
+
+                      Stack(
+                      children: [
+                        Center(
+                          child: Icon(
+                            Icons.insert_drive_file,
+                            size: 40,
+                            color: primary2,
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                            left: 0,
+                            child: IconButton(color: redColor, onPressed: () async {
+                              var status=await MainController.deleteFileInChunks(file,recordId: data['_id'],record: json.encode({name:null}).toString());
+                              if(status==true){
+                                files.removeWhere((element) => element==file);
+                              }
+                            }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
+                      ],
+                    ),
+                  ],
+                ),
+              ):Container()
+
+          ],
+        );
+      }
     );
   }
 

@@ -648,6 +648,7 @@ class MainController extends GetxController {
                     ];
                   fileInfo.refresh();
                 }
+                return filePath;
               },
               errorCallback: () {
                 print('Failed to upload chunk $chunkIndex');
@@ -662,7 +663,7 @@ class MainController extends GetxController {
       } finally {
         raf.closeSync();
       }
-      print('Upload finished.');
+      print('Upload finished.>>>$filePath');
 
       return filePath;
     }
@@ -683,15 +684,22 @@ class MainController extends GetxController {
     fileInfo.refresh();
   }
 
-  static  deleteFileInChunks(String filePath) async {
-    var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,}, useToken: false);
+  static Future<bool> deleteFileInChunks(String filePath, {var recordId=null,var record=null}) async {
+    bool status=false;
+    var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,'record_id':recordId,'record':record}, useToken: false);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-
+          if(recordId!=null) {
+            if(response!.data['data']!=null && response.data['data'].length!=0)
+            MainController.renderData(operation.update, response.data['data'].first);
+          }
+          status= true;
+          print('MainController.deleteFileInChunks>>$status');
         },
         errorCallback: () {
-
+          status= false;
         }, printResponse: true);
+    return status;
   }
 }

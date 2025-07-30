@@ -8,6 +8,7 @@ const double borderSize=1;
 
 
 final List<BoxShadow> shadow=[BoxShadow(color: Colors.black.withOpacity(0.02),spreadRadius: 0,blurRadius: 10,offset: Offset(0,2))];
+final List<BoxShadow> shadow2=[BoxShadow(color: Colors.white,spreadRadius: 0,blurRadius: 10,offset: Offset(0,2))];
 const Color blackColor=Color(0xff000000);
 const Color whiteColor=Color(0xffFFFFFF);
 const Color redColor = Color(0xffF30000);

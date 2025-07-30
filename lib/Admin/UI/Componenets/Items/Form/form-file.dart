@@ -94,12 +94,13 @@ class _FormFileState extends State<FormFile> {
                     fileNameList.removeWhere((element) => element==file.name);
                       showSnackbar(snackTypes.error, '${message}');
                     } else {
-                      filePath.value !=
-                          await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo);
+                      filePath.value = (await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo))!;
+                        print('_FormFileState.build>>${filePath.value}');
                       setState(() {
                         widget.isSeletedFile!.value = true;
                       });
                       if (widget.onChanged != null) {
+
                         widget.onChanged!(filePath.value);
                       }
                     }
@@ -113,13 +114,16 @@ class _FormFileState extends State<FormFile> {
                         ? background
                         : whiteColor,
                     borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : background,width: 0.5)
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(
                         Icons.cloud_upload_outlined,
-                        size: 40,
+                        size: 30,
                         color: MainController.isLightMode.value == true
                             ? whiteColor
                             : blackColor,
@@ -127,7 +131,7 @@ class _FormFileState extends State<FormFile> {
                       SizedBox(width: 10),
                       Txt(
                         '${AppController.of(context)!.value('Select file')}',
-                        fontSize: 16,
+                        fontSize: 12,
                         color: MainController.isLightMode.value == true
                             ? whiteColor
                             : blackColor,
@@ -150,7 +154,7 @@ class _FormFileState extends State<FormFile> {
                       Icon(
                         Icons.insert_drive_file,
                         size: 40,
-                        color: Colors.blue,
+                        color: primary2,
                       ),
                       SizedBox(
                         width: 5,
