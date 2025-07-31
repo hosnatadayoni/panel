@@ -1233,36 +1233,40 @@ class DB {
     for (var data in records) {
       a = data;
       a.forEach((key, value) {
-        if (value is List) {
-          var sourceItem = MainController.getDetailsOfField(
-              '${this.tableName}', key)['source_items'];
-          if (sourceItem == 'custom') {
-            List<String> idList = [];
-            for (int i = 0; i < value.length; i++) {
-              idList.add(value[i]['value']);
-            }
-            a[key] = idList;
-          } else {
-            List<String> idList = [];
-            for (int i = 0; i < value.length; i++) {
-              if(value[i] is Map){
-                idList.add(value[i]['_id']);
-              }else{
-                idList.add(value[i]);
-
+        if( MainController.getDetailsOfField(
+            '${this.tableName}', key)!=null) {
+          if (value is List) {
+            var sourceItem = MainController.getDetailsOfField(
+                '${this.tableName}', key)['source_items'];
+            if (sourceItem == 'custom') {
+              List<String> idList = [];
+              for (int i = 0; i < value.length; i++) {
+                idList.add(value[i]['value']);
               }
-
+              a[key] = idList;
+            } else {
+              List<String> idList = [];
+              for (int i = 0; i < value.length; i++) {
+                if (value[i] is Map) {
+                  print('DB.updateRecords>>${value[i]}');
+                  if (value[i]['_id'] != null) {
+                    idList.add(value[i]['_id']);
+                  }
+                } else {
+                  idList.add(value[i]);
+                }
+              }
+              a[key] = idList;
             }
-            a[key] = idList;
           }
-        }
-        if (value is Map) {
-          var sourceItem = MainController.getDetailsOfField(
-              '${this.tableName}', key)['source_items'];
-          if (sourceItem == 'custom') {
-            a[key] = value['value'];
-          } else {
-            a[key] = value['_id'];
+          if (value is Map) {
+            var sourceItem = MainController.getDetailsOfField(
+                '${this.tableName}', key)['source_items'];
+            if (sourceItem == 'custom') {
+              a[key] = value['value'];
+            } else {
+              a[key] = value['_id'];
+            }
           }
         }
         if (request.containsKey(key)) {

@@ -671,7 +671,7 @@ class ViewController extends GetxController {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'multiFile' ) {
-      child = generateCellFileBox(indexColumn, indexRow, tableData: table);
+      child = generateCellMultiFileBox(indexColumn, indexRow, tableData: table);
     }
     else {
       child = generateData(indexColumn, indexRow, tableData: table);
@@ -1761,7 +1761,8 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-    return  dataModel != null &&dataModel.length != 0?Column(
+    return  dataModel != null &&dataModel.length != 0?
+    Column(
       children: [
         Center(
             child:Image.network(
@@ -1772,6 +1773,37 @@ class ViewController extends GetxController {
               errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                 return Image.asset(fileImage,width: 70,
                   height: 70,); // عکس جایگزین
+              },
+            )
+          // Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
+
+        ),
+      ],
+    ):Container();
+  }
+  static Widget generateCellMultiFileBox(int indexColumn, int indexRow, {var tableData}) {
+    String name;
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
+      name = tableData['columns'][indexColumn]['name'];
+    }
+    var dataModel = MainController.tableData.value[indexRow]['${name}_multi'];
+    print('ViewController.generateCellMultiFileBox$dataModel');
+    return  dataModel != null &&dataModel.length != 0?
+    Row(
+      children: [
+        for(var data in dataModel)
+
+          Center(
+            child:Image.network(
+              baseUrl+'${data['path']}',
+              width: 40,
+              height: 40,
+              fit: BoxFit.fill,
+              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Image.asset(fileImage,width: 70,
+                  height: 40,); // عکس جایگزین
               },
             )
           // Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
@@ -1852,36 +1884,46 @@ class ViewController extends GetxController {
             ),
 
             file.value!=''?
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
-                    ? whiteColor
-                    : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.network(
-                        baseUrl+'${ file}',
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.fill,
-                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                          return Image.asset(fileImage,width:40,
-                            height: 40,); // عکس جایگزین
-                        },
-                      )
-                    ),
-                    Positioned(
-                      top: 0,
-                        left: 0,
-                        child: IconButton(color: redColor, onPressed: () async {
-                          var status=await MainController.deleteFileInChunks(data[name+'_name'],recordId: data['_id'],record: json.encode({name:null}).toString());
-                          if(status==true){
-                            file.value='';
-                          }
-                        }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
-                  ],
+              IntrinsicWidth(
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20,),
+                            Image.network(
+                              baseUrl+'${ file}',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.fill,
+                              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                return Image.asset(fileImage,width:40,
+                                  height: 40,); // عکس جایگزین
+                              },
+                            ),
+                            Txt(
+                              '${data[name+'_name']}',
+                              color: MainController.isLightMode.value == true ? whiteColor : color2,
+                            ),
+                          ],
+                        )
+                      ),
+                      Positioned(
+                        top: 0,
+                          left: 0,
+                          child: IconButton(color: redColor, onPressed: () async {
+                            var status=await MainController.deleteFileInChunks(data[name+'_name'],recordId: data['_id'],record: json.encode({name:null}).toString());
+                            if(status==true){
+                              file.value='';
+                            }
+                          }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
+                    ],
+                  ),
                 ),
               ):
             FormFile(
@@ -1905,22 +1947,29 @@ class ViewController extends GetxController {
   static Widget generateEditMultiFileBox(var data, var column,
       Rx<bool>? isSeletedFile) {
     String name=column['name'];
-    print('ViewController.generateEditMultiFileBox>>${data.runtimeType}>>>${column}');
-
-
-    print('ViewController.generateEditFileBox${data.runtimeType}>>${name}');
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
-    List<dynamic> filesSelectedList=[];
+    RxList<String> filesSelectedList=<String>[].obs;
+    RxList<dynamic> filesList=[].obs;
     if(data!=null&&data.length!=0){
 
         if (data[name + '_name']!=null && data[name + '_name'].length!=0){
-          filesSelectedList.addAll(data[name + '_name']);
+
 
       }
+        if (data[name ]!=null && data[name].length!=0){
+          filesList.addAll(data[name+'_multi']);
+
+          for(var file in data[name]) {
+          filesSelectedList.add('${file}');
+
+          }
+      }
     }
+    print('ViewController.generateEditMultiFileBox>>${filesSelectedList}');
+
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
     return Obx(() {
         return new Column(
@@ -1935,14 +1984,6 @@ class ViewController extends GetxController {
             SizedBox(
               height: 10,
             ),
-
-            data!=null&&data.length!=0?
-            Txt(
-              '${data[name]}',
-              color:
-              MainController.isLightMode.value == true ? whiteColor : color2,
-            ):Container(),
-
             data!=null&&data.length!=0?
               IntrinsicWidth(
                 child: Container(
@@ -1967,30 +2008,41 @@ class ViewController extends GetxController {
                       ),
                       Row(
                         children: [
-                          for(var file in data[name])
+                          for(var file in filesList)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Stack(
                               children: [
                                 Center(
-                                    child: Image.network(
-                                      baseUrl+'${file}',
-                                      width: 70,
-                                      height: 70,
-                                      fit: BoxFit.fill,
-                                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                                        return Image.asset(fileImage,width:70,
-                                          height: 70,); // عکس جایگزین
-                                      },
+                                    child: Column(
+                                      children: [
+                                        Image.network(
+                                          baseUrl+'${file['path']}',
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.fill,
+                                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                            return Image.asset(fileImage,width:70,
+                                              height: 70,); // عکس جایگزین
+                                          },
+                                        ),
+                                        Txt(
+                                          '${file['name']}',
+                                          color: MainController.isLightMode.value == true ? whiteColor : color2,
+                                        ),
+                                      ],
                                     )
                                 ),
                                 Positioned(
                                   top: 0,
                                     left: 0,
                                     child: IconButton(color: redColor, onPressed: () async {
-                                      var status=await MainController.deleteFileInChunks(file,recordId: file['_id'],record: json.encode({name:null}).toString());
+                                      var status=await MainController.deleteFileInChunks(file['name'],recordId: file['_id'],record: json.encode({name:null}).toString());
                                       if(status==true){
-                                        filesSelectedList.removeWhere((element) => element==file);
+
+                                        filesSelectedList.removeWhere((element) => element==file['name']);
+                                        filesList.removeWhere((element) => element['path']==file['path']);
+                                        filesList.removeWhere((element) => element['name']==file['name']);
                                       }
                                     }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
                               ],

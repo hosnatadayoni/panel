@@ -640,7 +640,8 @@ class MainController extends GetxController {
               response: response,
               successCallback: () async {
                 filePath = response!.data['data'];
-                chunkName = filePath;
+                print('MainController.uploadFileInChunks>>${filePath}');
+              chunkName = filePath;
                 if (chunkName != null) {
                     fileInfo[singleFile.name] = [
                       (totalLength / chunkSize).ceil(),
@@ -649,12 +650,11 @@ class MainController extends GetxController {
                     ];
                   fileInfo.refresh();
                 }
-                return filePath;
               },
               errorCallback: () {
                 print('Failed to upload chunk $chunkIndex');
                 return null;
-              }, printResponse: false);
+              }, printResponse: true);
           offset += currentChunkSize;
           chunkIndex++;
         }
