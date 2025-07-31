@@ -320,6 +320,13 @@ class HelperController extends GetxController {
         Token.setToken(MainController.tableData.value[index]['api_key']);
       }
       if (tableName == 'fields') {
+        var indexMenu = MainController.SubMenuList.indexWhere((element) => element['table-name'] == MainController.tableName.value);
+        MainController.SubMenuList[indexMenu].addAll({
+          'parent_id': MainController.tableData.value[index]['_id'],
+          'parent_table': MainController.tableData.value[index]['name']
+        });
+        print('HelperController.relationFunction 2>>${MainController.SubMenuList[indexMenu]}');
+
         DB.parentItem = {
           'parent_id': MainController.tableData.value[index]['_id'],
           'parent_table': MainController.tableData.value[index]['name']
@@ -521,7 +528,7 @@ class HelperController extends GetxController {
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
           await ConncetServerController.listField(
-              {'name': 'item'});
+              {'name': parent['parent_table']});
         }
         await pageInateItems(
             perPage: table['countShowRow'],
@@ -680,13 +687,73 @@ class HelperController extends GetxController {
 
   static backFunction() async {
     var index = MainController.SubMenuList.indexWhere((element) => element['relations'].any((element) => element['table-name'] == MainController.tableName.value));
+
     if (index != -1) {
       MainController.selectedSubItem.value = index;
       // DB.parentItem = {};
-      MainController.tableName.value =
-          MainController.SubMenuList[index]['table-name'];
+      MainController.tableName.value = MainController.SubMenuList[index]['table-name'];
+      var indexNew = MainController.SubMenuList.indexWhere((element) => element['table-name'] == MainController.tableName.value);
+      var table = MainController.getInfoTable(MainController.tableName.value);
+      MainController.tableInfo = table;
+      var tableName = table['table-name'];
+      if (table['view'] == 'custom') {
+        MainController.endIndex.value = 0;
+        MainController.startIndex.value = 0;
+        if (tableName == 'project') {
+          await ConncetServerController.listProject();
+
+          await pageInateItems(
+              perPage: table['countShowRow'],
+              currentPage: table['currentPage'],
+              listItems: ConncetServerController.listProjectRes);
+        }
+        if (tableName == 'schema') {
+          await ConncetServerController.listSchema();
+          await pageInateItems(
+              perPage: table['countShowRow'],
+              currentPage: table['currentPage'],
+              listItems: ConncetServerController.listSchemaRes);
+        }
+        if (tableName == 'fields') {
+          // Map<String, dynamic> parent = await DB.parentItem;
+          // if (parent.length != 0) {
+            await ConncetServerController.listField(
+                {'name':   MainController.tableInfo['parent_table']});
+          // }
+          await pageInateItems(
+              perPage: table['countShowRow'],
+              currentPage: table['currentPage'],
+              listItems: ConncetServerController.listFieldsRes);
+        }
+        if (tableName == 'filters') {
+          Map<String, dynamic> parent = await DB.parentItem;
+          if (parent.length != 0) {
+            await ConncetServerController.listFilter(
+                {'my_table': parent['parent_id']});
+          }
+          await pageInateItems(
+              perPage: table['countShowRow'],
+              currentPage: table['currentPage'],
+              listItems: ConncetServerController.listFiltersRes);
+        }
+        if (tableName == 'validators') {
+          Map<String, dynamic> parent = await DB.parentItem;
+          if (parent.length != 0) {
+            await ConncetServerController.listValidate(
+                {'my_field': parent['parent_id']});
+          }
+          await pageInateItems(
+              perPage: table['countShowRow'],
+              currentPage: table['currentPage'],
+              listItems: ConncetServerController.listValidateRes);
+        }
+      } else {
+        MainController.tableData.value =
+        await DB('${MainController.tableName.value}').paginate();
+        MainController.allData.value = MainController.tableData.value;
+      }
       Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-      await MainController.goToTablePage(MainController.SubMenuList[index]);
+      // await MainController.goToTablePage(MainController.SubMenuList[index]);
     } else {
       MainController.isClickedItem.value = false;
       MainController.selectedItem.value = -1;
