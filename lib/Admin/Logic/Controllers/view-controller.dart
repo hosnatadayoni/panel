@@ -29,6 +29,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
+import '../../Public/config.dart';
 import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
 import 'connect-server-controller.dart';
@@ -577,7 +578,7 @@ class ViewController extends GetxController {
         else if (type == 'multiFile') {
           print('ViewController.generateEditFormView>>${dataModel}>>${column}');
           fileBox = generateEditMultiFileBox(
-             dataModel[name] != null && dataModel[name].length != 0? dataModel : [],
+             dataModel[name] != null && dataModel[name].length != 0? dataModel : null,
               column,
               dataModel[name] == null ? false.obs : true.obs);
           children.add(SizedBox(
@@ -670,7 +671,7 @@ class ViewController extends GetxController {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else if (type == 'multiFile' ) {
-      child = generateCellMultiFileBox(indexColumn, indexRow, tableData: table);
+      child = generateCellFileBox(indexColumn, indexRow, tableData: table);
     }
     else {
       child = generateData(indexColumn, indexRow, tableData: table);
@@ -745,54 +746,6 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateCellFileBox(int indexColumn, int indexRow, {var tableData}) {
-    String name;
-    if (tableData == null) {
-      name = MainController.tableInfo['columns'][indexColumn]['name'];
-    } else {
-      name = tableData['columns'][indexColumn]['name'];
-    }
-    var dataModel = MainController.tableData.value[indexRow]['${name}'];
-      return  dataModel != null &&dataModel.length != 0?Column(
-        children: [
-          Center(
-            child:Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
-
-          ),
-          // Txt(
-          //   '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-          //   fontSize: 14,
-          //   fontWeight: FontWeight.w500,
-          //   color: MainController.isLightMode.value == true ? whiteColor : color2,
-          //   textAlign: TextAlign.center,
-          // ),
-        ],
-      ):Container();
-  }
-  static Widget generateCellMultiFileBox(int indexColumn, int indexRow, {var tableData}) {
-    String name;
-    if (tableData == null) {
-      name = MainController.tableInfo['columns'][indexColumn]['name'];
-    } else {
-      name = tableData['columns'][indexColumn]['name'];
-    }
-    var dataModel = MainController.tableData.value[indexRow]['${name}'];
-      return  dataModel != null &&dataModel.length != 0?Column(
-        children: [
-          Center(
-            child:Img('${ fileImage}',width: 50,height: 50),
-
-          ),
-          // Txt(
-          //   '${dataModel != null ? dataModel.length != 0 ? dataModel : '' : ''}',
-          //   fontSize: 14,
-          //   fontWeight: FontWeight.w500,
-          //   color: MainController.isLightMode.value == true ? whiteColor : color2,
-          //   textAlign: TextAlign.center,
-          // ),
-        ],
-      ):Container();
-  }
 
   static Widget generateData(int indexColumn, int indexRow, {var tableData}) {
     // DataModel dataModel = MainController.tableData.value[indexRow];
@@ -1800,6 +1753,33 @@ class ViewController extends GetxController {
       ],
     );
   }
+  static Widget generateCellFileBox(int indexColumn, int indexRow, {var tableData}) {
+    String name;
+    if (tableData == null) {
+      name = MainController.tableInfo['columns'][indexColumn]['name'];
+    } else {
+      name = tableData['columns'][indexColumn]['name'];
+    }
+    var dataModel = MainController.tableData.value[indexRow]['${name}'];
+    return  dataModel != null &&dataModel.length != 0?Column(
+      children: [
+        Center(
+            child:Image.network(
+              baseUrl+'${dataModel}',
+              width: 70,
+              height: 70,
+              fit: BoxFit.fill,
+              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Image.asset(fileImage,width: 70,
+                  height: 70,); // عکس جایگزین
+              },
+            )
+          // Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
+
+        ),
+      ],
+    ):Container();
+  }
 
   static Widget generateFileBox(var selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
@@ -1881,11 +1861,16 @@ class ViewController extends GetxController {
                 child: Stack(
                   children: [
                     Center(
-                      child: Icon(
-                        Icons.insert_drive_file,
-                        size: 40,
-                        color: primary2,
-                      ),
+                      child: Image.network(
+                        baseUrl+'${ file}',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.fill,
+                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                          return Image.asset(fileImage,width:40,
+                            height: 40,); // عکس جایگزین
+                        },
+                      )
                     ),
                     Positioned(
                       top: 0,
@@ -1920,7 +1905,8 @@ class ViewController extends GetxController {
   static Widget generateEditMultiFileBox(var data, var column,
       Rx<bool>? isSeletedFile) {
     String name=column['name'];
-    RxList<String> files= data!=null && data[name]!=null?data[name+'_name'].obs:[].obs;
+    print('ViewController.generateEditMultiFileBox>>${data.runtimeType}>>>${column}');
+
 
     print('ViewController.generateEditFileBox${data.runtimeType}>>${name}');
     Map<String, List<dynamic>> selectedFilesMap = {};
@@ -1928,6 +1914,13 @@ class ViewController extends GetxController {
       selectedFilesMap['${column['name']}'] = [];
     }
     List<dynamic> filesSelectedList=[];
+    if(data!=null&&data.length!=0){
+
+        if (data[name + '_name']!=null && data[name + '_name'].length!=0){
+          filesSelectedList.addAll(data[name + '_name']);
+
+      }
+    }
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
     return Obx(() {
         return new Column(
@@ -1943,59 +1936,71 @@ class ViewController extends GetxController {
               height: 10,
             ),
 
-            files.length!=0?
+            data!=null&&data.length!=0?
             Txt(
-              '${files}',
+              '${data[name]}',
               color:
               MainController.isLightMode.value == true ? whiteColor : color2,
             ):Container(),
-            FormFile(
-              columnName: column['title'],
-              onChanged: (selecetdFiles) {
-                filesSelectedList.add(selecetdFiles);
-                files.add(selecetdFiles);
 
-                ViewController.request[column['name']] = files;
-              },
-              filesSelected: selectedFilesMap,
-              selectedFilesTxt: filesSelectedList,
-              // selectedFilesTxt:  '',
-              isSeletedFile: isSeletedFile,
-              column: column,
-              fileInfo: fileInfo,
-            ),
-            files.length!=0?
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
-                    ? whiteColor
-                    : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
-                child: Row(
-                  children: [
-                    for(String file in files)
-
-                      Stack(
-                      children: [
-                        Center(
-                          child: Icon(
-                            Icons.insert_drive_file,
-                            size: 40,
-                            color: primary2,
+            data!=null&&data.length!=0?
+              IntrinsicWidth(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(border: Border.all(color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : background,width: 0.5),  borderRadius: BorderRadius.circular(10),),
+                  child: Column(
+                    children: [
+                      FormFile(
+                        columnName: column['title'],
+                        onChanged: (selecetdFiles) {
+                          filesSelectedList.add(selecetdFiles);
+                          ViewController.request[column['name']] = filesSelectedList;
+                        },
+                        filesSelected: selectedFilesMap,
+                        selectedFilesTxt: filesSelectedList,
+                        // selectedFilesTxt:  '',
+                        isSeletedFile: isSeletedFile,
+                        column: column,
+                        fileInfo: fileInfo,
+                      ),
+                      Row(
+                        children: [
+                          for(var file in data[name])
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                              children: [
+                                Center(
+                                    child: Image.network(
+                                      baseUrl+'${file}',
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.fill,
+                                      errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                        return Image.asset(fileImage,width:70,
+                                          height: 70,); // عکس جایگزین
+                                      },
+                                    )
+                                ),
+                                Positioned(
+                                  top: 0,
+                                    left: 0,
+                                    child: IconButton(color: redColor, onPressed: () async {
+                                      var status=await MainController.deleteFileInChunks(file,recordId: file['_id'],record: json.encode({name:null}).toString());
+                                      if(status==true){
+                                        filesSelectedList.removeWhere((element) => element==file);
+                                      }
+                                    }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
+                              ],
                           ),
-                        ),
-                        Positioned(
-                          top: 0,
-                            left: 0,
-                            child: IconButton(color: redColor, onPressed: () async {
-                              var status=await MainController.deleteFileInChunks(file,recordId: data['_id'],record: json.encode({name:null}).toString());
-                              if(status==true){
-                                files.removeWhere((element) => element==file);
-                              }
-                            }, icon: Icon(Icons.delete, size: 25 , color:redColor ,),))
-                      ],
-                    ),
-                  ],
+                            ),
+
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ):Container()
 
