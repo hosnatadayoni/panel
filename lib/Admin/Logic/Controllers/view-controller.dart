@@ -1784,6 +1784,7 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
+    print('ViewController.generateCellFileBox${MainController.tableData.value[indexRow]}');
     return dataModel != null && dataModel.length != 0
         ? Column(
             children: [
