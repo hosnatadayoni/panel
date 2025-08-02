@@ -614,7 +614,7 @@ class MainController extends GetxController {
       final raf = file.openSync(mode: FileMode.read);
       int offset = 0;
       int chunkIndex = 1;
-      String? chunkName;
+      Map<String,dynamic> chunkName={};
       try {
           if (!fileInfo.containsKey(singleFile.name)) {
             fileInfo[singleFile.name] = [];
@@ -641,14 +641,16 @@ class MainController extends GetxController {
               successCallback: () async {
                 filePath = response!.data['data'];
                 print('MainController.uploadFileInChunks>>${filePath}');
-              chunkName = filePath;
-                if (chunkName != null) {
+                if(filePath!=null) {
+                  chunkName = filePath;
+                  if (chunkName.isNotEmpty) {
                     fileInfo[singleFile.name] = [
                       (totalLength / chunkSize).ceil(),
                       chunkIndex,
                       chunkName,
                     ];
-                  fileInfo.refresh();
+                    fileInfo.refresh();
+                  }
                 }
               },
               errorCallback: () {
@@ -666,7 +668,7 @@ class MainController extends GetxController {
       }
       print('Upload finished.>>>$filePath');
 
-      return filePath;
+      return filePath['name'];
     }
 
 

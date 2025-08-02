@@ -41,7 +41,7 @@ class _FormFileState extends State<FormFile> {
 
   List<int> fileSizeList = [];
   Rx<String> filePath = ''.obs;
-  List<String> fileNameList = [];
+  RxList<String> fileNameList = <String>[].obs;
 
   @override
   Widget build(BuildContext context) {
@@ -147,168 +147,92 @@ class _FormFileState extends State<FormFile> {
           Column(
             children: [
               for (var i = 0; i < fileNameList.length; i++)
-                Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.insert_drive_file,
-                        size: 40,
-                        color: primary2,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Obx(() {
-
-                        var fileData = widget.fileInfo[fileNameList[i]];
-                        var totalChunks=1;
-                        var currentChunk=0;
-                        var chunkName=null ;
-                        if(widget.fileInfo[fileNameList[i]]!=null) {
-                           totalChunks = fileData?[0] ?? 1;
-                           currentChunk = fileData?[1] ?? 0;
-                           chunkName = fileData!.length > 2
-                              ? fileData[2]
-                              : fileNameList[i];
-                        }
-                        return widget.fileInfo[fileNameList[i]]!=null?Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Txt(
-                                  totalChunks == currentChunk
-                                      ? '${chunkName != null ? chunkName : fileNameList[i]}'
-                                      : '${fileNameList[i]}',
-                                  fontSize: 16,
-                                  color: totalChunks == currentChunk
-                                      ? Colors.white
-                                      : Colors.grey,
-                                ),
-                                if (totalChunks == currentChunk)
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    color: Colors.red,
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return Dialog(
-                                                child: Container(
-                                              width: 150,
-                                              height: 150,
-                                              padding: EdgeInsets.all(15),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10)),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Txt('${AppController.of(context)!.value('Do you want this item to be removed?')}'),
-                                                  Spacer(),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  15),
-                                                          width: 52,
-                                                          height: 52,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10)),
-                                                              color: redColor),
-                                                          child: Center(
-                                                              child: Txt(
-                                                            '${AppController.of(context)!.value('no')}',
-                                                            color: whiteColor,
-                                                          )),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          await MainController
-                                                              .deleteFileInChunks(
-                                                                  chunkName);
-                                                          setState(() {
-                                                            fileNameList
-                                                                .removeAt(i);
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  15),
-                                                          width: 52,
-                                                          height: 52,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10)),
-                                                              color:
-                                                                  successColor),
-                                                          child: Center(
-                                                              child: Txt(
-                                                            '${AppController.of(context)!.value('yes')}',
-                                                            color: whiteColor,
-                                                          )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ));
-                                          });
-                                    },
-                                  )
-                              ],
-                            ),
-                            currentChunk != 0
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: LinearProgressIndicator(
-                                        value: totalChunks > 0
-                                            ? currentChunk / totalChunks
-                                            : 0,
-                                        backgroundColor: Colors.grey,
-                                        minHeight: 5,
-                                        color: totalChunks == currentChunk
-                                            ? Colors.green
-                                            : Colors.red,
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ):Container();
-                      })
-                    ],
-                  ),
-                ),
+                ViewController.generateSelectFileBox(fileNameList, widget.fileInfo, i)
+                // Container(
+                //   margin: EdgeInsets.only(bottom: 10),
+                //   child: Row(
+                //     children: [
+                //       Icon(
+                //         Icons.insert_drive_file,
+                //         size: 40,
+                //         color: primary2,
+                //       ),
+                //       SizedBox(
+                //         width: 5,
+                //       ),
+                //       Obx(() {
+                //
+                //         var fileData = widget.fileInfo[fileNameList[i]];
+                //         var totalChunks=1;
+                //         var currentChunk=0;
+                //         var chunkName=null ;
+                //         if(widget.fileInfo[fileNameList[i]]!=null) {
+                //            totalChunks = fileData?[0] ?? 1;
+                //            currentChunk = fileData?[1] ?? 0;
+                //            chunkName = fileData!.length > 2
+                //               ? fileData[2]
+                //               : fileNameList[i];
+                //         }
+                //         return widget.fileInfo[fileNameList[i]]!=null?Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Row(
+                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //               children: [
+                //                 Txt(
+                //                   totalChunks == currentChunk
+                //                       ? '${chunkName != null ? chunkName : fileNameList[i]}'
+                //                       : '${fileNameList[i]}',
+                //                   fontSize: 16,
+                //                   color: totalChunks == currentChunk
+                //                       ? Colors.white
+                //                       : Colors.grey,
+                //                 ),
+                //                 if (totalChunks == currentChunk)
+                //                   IconButton(
+                //                     icon: Icon(Icons.delete),
+                //                     color: Colors.red,
+                //                     onPressed: () {
+                //                       ViewController.widgetDeletePopup(
+                //                           onChange: () async {
+                //                             await MainController
+                //                                 .deleteFileInChunks(
+                //                                 chunkName);
+                //                             setState(() {
+                //                               fileNameList
+                //                                   .removeAt(i);
+                //                               Navigator.pop(
+                //                                   context);
+                //                             });
+                //                           });
+                //                     },
+                //                   )
+                //               ],
+                //             ),
+                //             currentChunk != 0
+                //                 ? ClipRRect(
+                //                     borderRadius: BorderRadius.circular(50),
+                //                     child: SizedBox(
+                //                       width: 200,
+                //                       child: LinearProgressIndicator(
+                //                         value: totalChunks > 0
+                //                             ? currentChunk / totalChunks
+                //                             : 0,
+                //                         backgroundColor: Colors.grey,
+                //                         minHeight: 5,
+                //                         color: totalChunks == currentChunk
+                //                             ? Colors.green
+                //                             : Colors.red,
+                //                       ),
+                //                     ),
+                //                   )
+                //                 : Container(),
+                //           ],
+                //         ):Container();
+                //       })
+                //     ],
+                //   ),
+                // ),
             ],
           ),
           SizedBox(
