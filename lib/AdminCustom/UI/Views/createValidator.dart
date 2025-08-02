@@ -57,6 +57,7 @@ class _CreateValidatorState extends State<CreateValidator> {
         itemsListValueNumberType.value = MainController.tableInfo['columns'][0]['items'] ?? [];
       }
       else{
+        print('_CreateValidatorState.loadItems>>${ MainController.tableInfo['columns'][0]['items']}');
         itemsList.value = MainController.tableInfo['columns'][0]['items'] ?? [];
       }
   }
@@ -70,7 +71,6 @@ class _CreateValidatorState extends State<CreateValidator> {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
     print('hhhhhhhh>>>${MainController.tableInfo['columns'][0]['items']}');
-    print('type.value aaa>>>${type.value}');
     return Scaffold(
       body: Container(
         width: size.width,
@@ -294,7 +294,7 @@ class _CreateValidatorState extends State<CreateValidator> {
                                               ],
                                             ):Container():
                                             type.value == 'Number int' || type.value == 'Number double'  ?
-                                            itemsListValueNumberType.value.length !=0 ? Column(
+                                            itemsListValueNumberType.length !=0 ? Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Obx(() {
@@ -357,7 +357,7 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                 ),
                                               ],
                                             ) : Container() :
-                                            itemsList.value.length != 0 ? Column(
+                                            itemsList.length != 0 ? Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Obx(() {
@@ -372,12 +372,12 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                   height: 10,
                                                 ),
                                                 Obx((){
-                                                  print('gggggs>>>${itemsList.first}');
+                                                  print('_CreateValidatorState.build>>>${itemsList}>>${MainController.tableInfo['columns'][j]}');
                                                   return SelectBox(
                                                       name: '${MainController.tableInfo['columns'][j]['title']}',
                                                       column: MainController.tableInfo['columns'][j],
                                                       items: [
-                                                        for (var item in itemsList.value)
+                                                        for (var item in itemsList)
                                                           DropdownMenuItem(
                                                               child: Obx(() {
                                                                 return Txt(
@@ -390,12 +390,8 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                               }),
                                                               value:item['value']),
                                                       ],
-                                                      initalValue: initailValueType.value == '' || initailValueType.value == null
-                                                          ? itemsList.first['value']
-                                                          : initailValueType.value,
+                                                      initalValue: initailValueType.value == '' ? itemsList.first['value'] : initailValueType.value,
                                                       onChanged: (value) async {
-                                                        print('value qyuu>>>${value}');
-                                                        // sourceItem2.value = value!;
                                                         selectedType.value = value!;
                                                         initailValueType.value = value;
                                                         if(value == 'multiSelect'){

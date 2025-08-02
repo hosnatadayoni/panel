@@ -154,6 +154,9 @@
         "sourceItems": "custom",
         "sourceTable": null,
         "items":[],
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -164,7 +167,15 @@
         "type": "select",
         "sourceItems": "custom",
         "sourceTable": null,
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
         "items": [
+          {
+            "title": "انتخاب نشده",
+            "value": "",
+            "is_selected": true
+          },
           {
             "title": "==",
             "value": "$eq",

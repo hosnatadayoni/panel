@@ -95,6 +95,7 @@ class HelperController extends GetxController {
         await Get.to(() => CreatePage(tableName));
       }
       if (table['table-name'] == 'filters') {
+        MainController.tableInfo['columns'][0]['items'] = [];
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
           await ConncetServerController.listField(
@@ -103,15 +104,24 @@ class HelperController extends GetxController {
         var index = MainController.SubMenuList.indexWhere(
             (element) => element['table-name'] == 'filters');
         if (index != -1) {
+
+          MainController.tableInfo['columns'][0]['items']
+              .add(  {
+            "title": "انتخاب نشده",
+            "value": "",
+          });
           for (var field in ConncetServerController.listFieldsRes) {
             MainController.tableInfo['columns'][0]['items']
                 .add({"title": field['name'], "value": field['name']});
           }
         }
+        print('HelperController.createPageFunction>>${MainController.tableInfo['columns'][0]['items']}');
         await Get.to(() => CreatePage(tableName));
-      } else if (table['table-name'] == 'fields') {
+      }
+      else if (table['table-name'] == 'fields') {
         await Get.to(() => CretePageField(tableName));
-      } else if (table['table-name'] == 'validators') {
+      }
+      else if (table['table-name'] == 'validators') {
         Map<String, dynamic> parent = await DB.parentItem;
         int i = ConncetServerController.listFieldsRes.indexWhere((element) => element['_id'] == parent['parent_id']);
         String type = ConncetServerController.listFieldsRes[i]['type'];
@@ -121,7 +131,7 @@ class HelperController extends GetxController {
         if (index != -1) {
           MainController.tableInfo['columns'][0]['items'] = [];
           if (type == 'file' || type == 'multiFile') {
-            MainController.tableInfo['columns'][0]['items'].addAll([
+            MainController.tableInfo['columns'][0]['items']=[
               {
                 "title": "انتخاب نشده",
                 "value": "",
@@ -166,9 +176,9 @@ class HelperController extends GetxController {
                 "value": "max",
               }
 
-            ]);
+            ];
           } else if (type == 'Number int' || type == 'Number double') {
-            MainController.tableInfo['columns'][0]['items'].addAll([
+            MainController.tableInfo['columns'][0]['items']=[
               {
                 "title": "انتخاب نشده",
                 "value": "",
@@ -185,9 +195,9 @@ class HelperController extends GetxController {
                 "title": "max",
                 "value": "max",
               }
-            ]);
+            ];
           } else {
-            MainController.tableInfo['columns'][0]['items'].add([
+            MainController.tableInfo['columns'][0]['items']=[
               {
                 "title": "انتخاب نشده",
                 "value": "",
@@ -196,7 +206,7 @@ class HelperController extends GetxController {
                 "title": "Reqiured",
                 "value": "reqiured",
               }
-            ]);
+            ];
           }
         }
         await Get.to(() => CreateValidator(tableName));
