@@ -531,7 +531,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                        : primaryDark,
                                                                  );
                                                                }),
-                                                               value: item['title']),
+                                                               value: item['name']),
                                                        ],
                                                        initalValue: initailValueSourceTable.value == '' || initailValueSourceTable.value == null ?"":initailValueSourceTable.value,
                                                        onChanged: (value) async {
@@ -540,8 +540,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                          if(sourceSelected.value != ''){
                                                            await ConncetServerController.listField({'name': sourceSelected.value});
                                                            for(var data in ConncetServerController.listFieldsRes){
-                                                             if(!sourceTableItems.contains(data['title'])){
-                                                               sourceTableItems.add(data['title']);
+                                                             if(!sourceTableItems.contains(data['name'])){
+                                                               sourceTableItems.add(data['name']);
                                                              }
                                                            }
                                                          }
