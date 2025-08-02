@@ -1487,7 +1487,7 @@ class MainController extends GetxController {
     // ConncetServerController.listSchema();
 
     for (var name in tableNames()) {
-      addsyncField('${name}');
+      // addsyncField('${name}');
       createMultiSelectTable('${name}');
       addParentForRelations('${name}');
     }
