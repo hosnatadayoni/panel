@@ -1,13 +1,15 @@
-import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
-import 'package:panel/Admin/Logic/Controllers/helper-controller.dart';
-import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
-import 'package:panel/Admin/Public/styles.dart';
-import 'package:panel/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:panel/Admin/Logic/Controllers/view-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/helper-controller.dart';
+import '../../../../Logic/Controllers/app-controller.dart';
+import '../../../../Logic/Controllers/main-controller.dart';
+import '../../../../Logic/Controllers/view-controller.dart';
+import '../../../../Logic/Controllers/view-controller.dart';
+import '../../../../Logic/Models/db.dart';
+import '../../../../Public/styles.dart';
+import '../../General/txt.dart';
 
 class TableFooter extends StatefulWidget {
   const TableFooter({Key? key}) : super(key: key);
@@ -15,26 +17,24 @@ class TableFooter extends StatefulWidget {
   @override
   State<TableFooter> createState() => _TableFooterState();
 }
+var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['name'];
 
 class _TableFooterState extends State<TableFooter> {
   @override
   Widget build(BuildContext context) {
+    print('HelperController.pageInateFunction 2>>${MainController.totalItems.value}>>${ MainController.totalPages.value}');
+
     var size = MediaQuery.of(context).size;
-    // var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'];
-
-
     return Obx((){
       return Container(
         child: size.width > 556 ?
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // children: pagenationBox(ViewController.totalPage.value , tableSelected),
-          children: pagenationBox(ViewController.totalPage.value , MainController.tableName.value),
+          children: pagenationBox( ),
         ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // children: pagenationBox(ViewController.totalPage.value , tableSelected),
-          children: pagenationBox(ViewController.totalPage.value , MainController.tableName.value),
+          children: pagenationBox(),
         ),);
     });
   }
@@ -50,11 +50,13 @@ class _TableFooterState extends State<TableFooter> {
       child: InkWell(
         onTap: ()async{
           setState(() {
-            MainController.tableInfo['currentPage'] = i;
+            MainController.tableInfo ['currentPage'] = i;
           });
+          print('_TableFooterState.box currentPage>>>${ MainController.tableInfo ['currentPage']}');
           HelperController.pageInateFunction();
-          // MainController.tableData.value= await DB('${tableSelected}').paginate();
-          // MainController.allData.value= MainController.tableData.value;
+          // var dataPageinate=await DB('${tableSelected}').paginate();
+          // MainController.tableData.value = dataPageinate;
+          // MainController.allData.value = MainController.tableData;
         },
         child: Container(
             margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
@@ -64,7 +66,7 @@ class _TableFooterState extends State<TableFooter> {
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color:isHover.value == true  ? colorBtn:i ==MainController.tableInfo['currentPage'] ? colorBtn : Colors.blue,
+                  color:isHover.value == true  ? colorBtn:i ==MainController.tableInfo ['currentPage'] ? colorBtn : Colors.blue,
                 ),
                 child: Center(child: Txt('${i}', textAlign: TextAlign.center , color: whiteColor,)),
               );
@@ -74,7 +76,7 @@ class _TableFooterState extends State<TableFooter> {
     );
   }
 
-  List<Widget> pagenationBox(totalPages , tableSelected){
+  List<Widget> pagenationBox(){
     var size = MediaQuery.of(context).size;
 
     return [
@@ -104,7 +106,7 @@ class _TableFooterState extends State<TableFooter> {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              Txt('${MainController.tableData.value.length}',
+              Txt('${MainController.totalItems.value}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
@@ -124,7 +126,7 @@ class _TableFooterState extends State<TableFooter> {
               borderRadius: BorderRadius.all(
                   Radius.circular(5)),
               color: MainController
-                  .tableInfo['currentPage'] > 1
+                  .tableInfo ['currentPage'] > 1
                   ? color3
                   : color7,
             ),
@@ -132,23 +134,22 @@ class _TableFooterState extends State<TableFooter> {
               style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.all(15)),
               onPressed: MainController
-                  .tableInfo['currentPage'] > 1 ? () async {
+                  .tableInfo ['currentPage'] > 1 ? () async {
                 setState(() {
-                  MainController.tableInfo['currentPage']--;
+                  MainController.tableInfo ['currentPage']--;
                 });
                 HelperController.pageInateFunction();
-
                 // MainController.tableData.value= await DB('${tableSelected}').paginate();
               } : null,
               child: Txt('${AppController.of(context)!.value(
                   'previous')}', color: MainController
-                  .tableInfo['currentPage'] > 1
+                  .tableInfo ['currentPage'] > 1
                   ? whiteColor
                   : color3),
             ),
           ),
           SizedBox(width: 5,),
-          if (totalPages > 5) ...[
+          if (  MainController.totalPages.value > 5) ...[
             box(1, tableSelected),
             box(2, tableSelected),
             SizedBox(width: 5),
@@ -159,18 +160,18 @@ class _TableFooterState extends State<TableFooter> {
               child: Center(child: Txt('...', fontSize: 20)),
             ),
             SizedBox(width: 5),
-            box(totalPages - 1, tableSelected),
-            box(totalPages, tableSelected),
+            box( MainController.totalPages.value - 1, tableSelected),
+            box( MainController.totalPages.value, tableSelected),
           ] else ...[
-            for (var i = 1; i <= totalPages; i++)
+            for (var i = 1; i <=  MainController.totalPages.value; i++)
               box(i, tableSelected),
           ],
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
                   Radius.circular(5)),
-              color: MainController.tableInfo['currentPage'] <
-                  totalPages
+              color: MainController.tableInfo ['currentPage'] <
+                   MainController.totalPages.value
                   ? color3
                   : color7,
             ),
@@ -179,21 +180,20 @@ class _TableFooterState extends State<TableFooter> {
                 style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(15)),
                 onPressed: MainController
-                    .tableInfo['currentPage'] <
-                    totalPages ? () async {
+                    .tableInfo ['currentPage'] <
+                      MainController.totalPages.value ? () async {
                   setState(() {
-                    MainController.tableInfo['currentPage']++;
+                    MainController.tableInfo ['currentPage']++;
                   });
                   HelperController.pageInateFunction();
-
                   // MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                 } : null,
                 child: Txt(
                   '${AppController.of(context)!.value('next')}',
                   color: MainController
-                      .tableInfo['currentPage'] <
-                      totalPages
+                      .tableInfo ['currentPage'] <
+                        MainController.totalPages.value
                       ? whiteColor
                       : color3,),
               ),
@@ -210,7 +210,7 @@ class _TableFooterState extends State<TableFooter> {
                 borderRadius: BorderRadius.all(
                     Radius.circular(5)),
                 color: MainController
-                    .tableInfo['currentPage'] > 1
+                    .tableInfo ['currentPage'] > 1
                     ? color3
                     : color7,
               ),
@@ -218,22 +218,23 @@ class _TableFooterState extends State<TableFooter> {
                 style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(15)),
                 onPressed: MainController
-                    .tableInfo['currentPage'] > 1 ? () async {
+                    .tableInfo ['currentPage'] > 1 ? () async {
                   setState(() {
-                    MainController.tableInfo['currentPage']--;
+                    MainController.tableInfo ['currentPage']--;
                   });
+                  // MainController.renderPagination();
                   HelperController.pageInateFunction();
                   // MainController.tableData.value= await DB('${tableSelected}').paginate();
                 } : null,
                 child: Txt('${AppController.of(context)!.value(
                     'previous')}', color: MainController
-                    .tableInfo['currentPage'] > 1
+                    .tableInfo ['currentPage'] > 1
                     ? whiteColor
                     : color3),
               ),
             ),
             SizedBox(width: 5,),
-            if (totalPages > 5) ...[
+            if (  MainController.totalPages.value > 5) ...[
               box(1, tableSelected),
               box(2, tableSelected),
               SizedBox(width: 5),
@@ -244,18 +245,18 @@ class _TableFooterState extends State<TableFooter> {
                 child: Center(child: Txt('...', fontSize: 20)),
               ),
               SizedBox(width: 5),
-              box(totalPages - 1, tableSelected),
-              box(totalPages, tableSelected),
+              box(  MainController.totalPages.value - 1, tableSelected),
+              box(  MainController.totalPages.value, tableSelected),
             ] else ...[
-              for (var i = 1; i <= totalPages; i++)
+              for (var i = 1; i <=   MainController.totalPages.value; i++)
                 box(i, tableSelected),
             ],
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
                     Radius.circular(5)),
-                color: MainController.tableInfo['currentPage'] <
-                    totalPages
+                color: MainController.tableInfo ['currentPage'] <
+                      MainController.totalPages.value
                     ? color3
                     : color7,
               ),
@@ -264,20 +265,21 @@ class _TableFooterState extends State<TableFooter> {
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(15)),
                   onPressed: MainController
-                      .tableInfo['currentPage'] <
-                      totalPages ? () async {
+                      .tableInfo ['currentPage'] <
+                        MainController.totalPages.value ? () async {
                     setState(() {
-                      MainController.tableInfo['currentPage']++;
+                      MainController.tableInfo ['currentPage']++;
                     });
                     HelperController.pageInateFunction();
+                    // MainController.renderPagination();
                     // MainController.tableData.value= await DB('${tableSelected}').paginate();
 
                   } : null,
                   child: Txt(
                     '${AppController.of(context)!.value('next')}',
                     color: MainController
-                        .tableInfo['currentPage'] <
-                        totalPages
+                        .tableInfo ['currentPage'] <
+                          MainController.totalPages.value
                         ? whiteColor
                         : color3,),
                 ),

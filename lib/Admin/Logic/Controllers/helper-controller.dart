@@ -517,7 +517,13 @@ class HelperController extends GetxController {
     }
     Navigator.pop(Get.context!);
   }
-
+  static infoPageFunction(var totalItems,String tableName) async {
+    int countShowRow = await MainController.getInfoTable(tableName)['countShowRow'];
+    int perPage = countShowRow != null ? countShowRow : 10;
+    int totalPage = (totalItems.length / perPage).ceil();
+    MainController.totalItems.value = totalItems.length;
+    MainController.totalPages.value = totalPage;
+  }
   static pageInateFunction() async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     MainController.tableInfo = table;
@@ -527,14 +533,12 @@ class HelperController extends GetxController {
       MainController.startIndex.value = 0;
       if (tableName == 'project') {
         await ConncetServerController.listProject();
-
-        await pageInateItems(
-            perPage: table['countShowRow'],
-            currentPage: table['currentPage'],
-            listItems: ConncetServerController.listProjectRes);
+        await pageInateItems(perPage: table['countShowRow'], currentPage: table['currentPage'], listItems: ConncetServerController.listProjectRes);
+        await infoPageFunction(ConncetServerController.listProjectRes,tableName);
       }
       if (tableName == 'schema') {
         await ConncetServerController.listSchema();
+        await infoPageFunction(ConncetServerController.listSchemaRes,tableName);
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],
@@ -546,10 +550,13 @@ class HelperController extends GetxController {
           await ConncetServerController.listField(
               {'name': parent['parent_table']});
         }
+        await infoPageFunction(ConncetServerController.listFieldsRes,tableName);
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],
             listItems: ConncetServerController.listFieldsRes);
+
+
       }
       if (tableName == 'filters') {
         Map<String, dynamic> parent = await DB.parentItem;
@@ -557,10 +564,13 @@ class HelperController extends GetxController {
           await ConncetServerController.listFilter(
               {'my_table': parent['parent_id']});
         }
+        await infoPageFunction(ConncetServerController.listFiltersRes,tableName);
+
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],
             listItems: ConncetServerController.listFiltersRes);
+
       }
       if (tableName == 'validators') {
         Map<String, dynamic> parent = await DB.parentItem;
@@ -568,6 +578,7 @@ class HelperController extends GetxController {
           await ConncetServerController.listValidate(
               {'my_field': parent['parent_id']});
         }
+        await infoPageFunction(ConncetServerController.listValidateRes,tableName);
         await pageInateItems(
             perPage: table['countShowRow'],
             currentPage: table['currentPage'],

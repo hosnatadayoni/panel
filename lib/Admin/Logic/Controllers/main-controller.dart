@@ -1779,10 +1779,8 @@ class MainController extends GetxController {
 
   static goToTablePage(var table,{bool loadData=true,var tableFields=null, var tableData=null}) async {
     if (table['view'] == 'custom') {
-      HelperController.pageInateFunction();
+      await HelperController.pageInateFunction();
       Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
-
-      // HelperController.tablePageFunction(table: table);
     } else {
       if(loadData==true)
       await MainController.loadData(tableData: tableFields,tableDataItems: tableData);
