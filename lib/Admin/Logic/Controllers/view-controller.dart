@@ -29,6 +29,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
+import 'package:uuid/uuid.dart';
 import '../../Public/config.dart';
 import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
@@ -83,8 +84,6 @@ class ViewController extends GetxController {
       if (columns[j]['is_show_store'] == true) {
         var column = columns[j];
         var type = column['type'];
-        GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-        GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
         var maxValidator;
         var minValidator;
         if (column['validators'] != null) {
@@ -101,8 +100,7 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField =
-              generateFormTextFieldFilter(_fbKey, column, filterInfo, type, '');
+          textField = generateFormTextFieldFilter( column, filterInfo, type, '');
           children.add(textField);
         }
 
@@ -291,7 +289,8 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextField(_fbKey, column, type, '');
+          GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(debugLabel: column['name']+'_store');
+          textField = generateFormTextField(key, column, type, '');
           children.add(SizedBox(
             height: 20,
           ));
@@ -394,8 +393,9 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-          textField = generateFormTextField(_fbKey, column, type,
+          GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(debugLabel: column['name']+'_edit');
+          print('ViewController.generateFilterFormView>>$key');
+          textField = generateFormTextField(key, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
             height: 20,
@@ -799,7 +799,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateFormTextFieldFilter(GlobalKey<FormBuilderState> _fbKey,
+  static Widget generateFormTextFieldFilter(
       var column, var filterInfo, var type, String initValue) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -819,7 +819,7 @@ class ViewController extends GetxController {
           child: FormTextField(
             isValidate: false,
             name: '${column['title']}',
-            fbKey: _fbKey,
+            // fbKey: _fbKey,
             hint: '${column['title']}',
             lable: '',
             column: column,

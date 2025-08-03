@@ -388,7 +388,7 @@ class MainController extends GetxController {
         MainController.tableData.value = (await DB('${tableInfo['schema']['name']}').paginate());
         MainController.allData.value = MainController.tableData.value;
       } else {
-        MainController.tableInfo = tableData;
+        MainController.tableInfo.value = tableData;
         if (tableDataItems != null) {
           MainController.tableData.value = tableDataItems;
           MainController.allData.value = MainController.tableData.value;
