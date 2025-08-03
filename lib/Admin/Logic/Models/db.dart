@@ -176,7 +176,7 @@ class DB {
         if (dataItems.isNotEmpty) {
           data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
-          box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
+          box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
           var boxList=box.values.toList();
 
           for(var item in boxList){
@@ -186,20 +186,20 @@ class DB {
           }
         }else{
           var tableInfo = MainController.SubMenuList[index];
-          box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
+          box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
           data=(await getDataTypeOfFieldList(box.values.toList()));
         }
 
 
       }else{
         var tableInfo = MainController.SubMenuList[index];
-        box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
+        box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
         data.addAll(await getDataTypeOfFieldList(box.values.toList()));
       }
     }
     else {
       var tableInfo = MainController.SubMenuList[index];
-      box = await Hive.openBox<DataModel>('${tableInfo['schema']['name']}');
+      box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
       data = await getDataTypeOfFieldList(box.values.toList());
     }
     if (index != -1) {
@@ -1077,62 +1077,74 @@ class DB {
 
   Future<void> storeRecord(Map<dynamic, dynamic> request) async {
     AppController.startLoading('store-record');
-    Box box = await Hive.openBox<DataModel>('${this.tableName}');
-    ViewController.isClickedBtn.value = true;
-    var Id = Uuid().v4();
+    try {
+      Box box = await Hive.openBox<DataModel>(
+          MainController.apiKey.value + '${this.tableName}');
+      ViewController.isClickedBtn.value = true;
+      var Id = Uuid().v4();
 
-    Map<String, dynamic> newRequest = Map.from(request);
-    if(ValidatorController.validateByType(newRequest, '${this.tableName}')==true) {
-      print('DB.storeRecord request>>>${newRequest}>>>>${request}');
-      List<dynamic> columns = MainController.getColumnsList(
-          '${this.tableName}');
-      for (var column in columns) {
-        if (!newRequest.keys.contains(column)) {
-          newRequest.addAll({'${column}': null});
+      Map<String, dynamic> newRequest = Map.from(request);
+      if (ValidatorController.validateByType(newRequest, '${this.tableName}') ==
+          true) {
+        print('DB.storeRecord request>>>${newRequest}>>>>${request}');
+        List<dynamic> columns = MainController.getColumnsList(
+            '${this.tableName}');
+        for (var column in columns) {
+          if (!newRequest.keys.contains(column)) {
+            newRequest.addAll({'${column}': null});
+          }
         }
-      }
-      if (parentItem != {}) {
-        newRequest.addAll(parentItem);
-      }
-      newRequest.addAll({
-        "sync": "false",
-        "server error": "Dont sync this record!",
-      });
+        if (parentItem != {}) {
+          newRequest.addAll(parentItem);
+        }
+        newRequest.addAll({
+          "sync": "false",
+          "server error": "Dont sync this record!",
+        });
 
-      DataModel newData = DataModel(id: newRequest.keys.contains('_id')
-          ? request['_id'].toString()
-          : '${Id}', data: newRequest);
-      var beforValidate = HelperController.beforeStoreValidation(newData);
-      if (beforValidate['status'] == false) {
-        showSnackbar(snackTypes.error, beforValidate['message']);
-      } else {
-        if (await RecordController.validate(this.tableName!, newData,
-            MainController.getInfoTable(this.tableName!)) ==
-            false) {
-          var before = await HelperController.beforeStore(newData);
-          if (before['status'] == false) {
-            showSnackbar(snackTypes.error, before['message']);
-          } else {
-            DataModel customData = await HelperController.beforeStore(
-                newData)['data'];
-            if (customData.data.keys.contains('_id')) {
-              customData.data['_id'] = null;
-            }
-            Map<String, dynamic> setRecord = {
-              "table_name": '${this.tableName}',
-              "record": json.encode(customData.data).toString(),
-            };
-            if (MainController.getStatusTable(this.tableName!) == true) {
-              await ConncetServerController.storeRecordGeneral(setRecord);
-              Box box = await Hive.openBox<DataModel>('${this.tableName}');
-              if (ConncetServerController.storeRecordRes.isNotEmpty) {
-                if (request.containsKey('_id')) {
-                  var tableDataIndex = box.values.toList().indexWhere((
-                      element) => element.id == request['_id']);
-                  if (tableDataIndex != -1) {
-                    await box.deleteAt(tableDataIndex);
-                    // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
+        DataModel newData = DataModel(id: newRequest.keys.contains('_id')
+            ? request['_id'].toString()
+            : '${Id}', data: newRequest);
+        var beforValidate = HelperController.beforeStoreValidation(newData);
+        if (beforValidate['status'] == false) {
+          showSnackbar(snackTypes.error, beforValidate['message']);
+        } else {
+          if (await RecordController.validate(this.tableName!, newData,
+              MainController.getInfoTable(this.tableName!)) ==
+              false) {
+            var before = await HelperController.beforeStore(newData);
+            if (before['status'] == false) {
+              showSnackbar(snackTypes.error, before['message']);
+            } else {
+              DataModel customData = await HelperController.beforeStore(
+                  newData)['data'];
+              if (customData.data.keys.contains('_id')) {
+                customData.data['_id'] = null;
+              }
+              Map<String, dynamic> setRecord = {
+                "table_name": '${this.tableName}',
+                "record": json.encode(customData.data).toString(),
+              };
+              if (MainController.getStatusTable(this.tableName!) == true) {
+                await ConncetServerController.storeRecordGeneral(setRecord);
+                Box box = await Hive.openBox<DataModel>(
+                    MainController.apiKey.value + '${this.tableName}');
+                if (ConncetServerController.storeRecordRes.isNotEmpty) {
+                  if (request.containsKey('_id')) {
+                    var tableDataIndex = box.values.toList().indexWhere((
+                        element) => element.id == request['_id']);
+                    if (tableDataIndex != -1) {
+                      await box.deleteAt(tableDataIndex);
+                      // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
 
+                    } else {
+                      DataModel recordStored = DataModel(
+                          id: '${ConncetServerController
+                              .storeRecordRes['_id']}',
+                          data: ConncetServerController.storeRecordRes);
+                      await box.add(recordStored);
+                      // MainController.renderData(operation.store,recordStored.data);
+                    }
                   } else {
                     DataModel recordStored = DataModel(
                         id: '${ConncetServerController.storeRecordRes['_id']}',
@@ -1140,57 +1152,53 @@ class DB {
                     await box.add(recordStored);
                     // MainController.renderData(operation.store,recordStored.data);
                   }
-                } else {
-                  DataModel recordStored = DataModel(
-                      id: '${ConncetServerController.storeRecordRes['_id']}',
-                      data: ConncetServerController.storeRecordRes);
-                  await box.add(recordStored);
-                  // MainController.renderData(operation.store,recordStored.data);
                 }
-              }
-              else {
-                customData.data['sync'] = 'false';
-                if (request.containsKey('_id')) {
-                  if (box.values.toList().indexWhere((element) =>
-                  element.id == request['_id']) == -1) {
+                else {
+                  customData.data['sync'] = 'false';
+                  if (request.containsKey('_id')) {
+                    if (box.values.toList().indexWhere((element) =>
+                    element.id == request['_id']) == -1) {
+                      await box.add(customData);
+                      // MainController.renderData(operation.store,customData.data);
+
+                    }
+                  } else {
+                    print(
+                        'DB.storeRecord customData is>>${customData}>>>${customData
+                            .data}');
                     await box.add(customData);
                     // MainController.renderData(operation.store,customData.data);
-
                   }
-                } else {
-                  print(
-                      'DB.storeRecord customData is>>${customData}>>>${customData
-                          .data}');
-                  await box.add(customData);
-                  // MainController.renderData(operation.store,customData.data);
                 }
+              } else {
+                await box.add(customData);
+                // MainController.renderData(operation.store,customData.data);
+
               }
-            } else {
-              await box.add(customData);
-              // MainController.renderData(operation.store,customData.data);
+              var afterData = await HelperController.afterStore(
+                  this.tableName!, newRequest, customData);
+              if (afterData['status'] == false) {
+                showSnackbar(snackTypes.error, afterData['message']);
+              }
+              // MainController.renderData(operation.store,data);
 
+              ViewController.isClickedBtn.value = false;
+              request = {};
+              newRequest = {};
             }
-            var afterData = await HelperController.afterStore(
-                this.tableName!, newRequest, customData);
-            if (afterData['status'] == false) {
-              showSnackbar(snackTypes.error, afterData['message']);
-            }
-            // MainController.renderData(operation.store,data);
-
-            ViewController.isClickedBtn.value = false;
-            request = {};
-            newRequest = {};
+          } else {
+            showSnackbar(snackTypes.error,
+                "${AppController.of(Get.context!)!.value('error')}");
           }
-        } else {
-          showSnackbar(snackTypes.error,
-              "${AppController.of(Get.context!)!.value('error')}");
         }
       }
+      else {
+        showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
+      }
+      AppController.finishLoading('store-record');
+    } catch (err) {
+      showSnackbar(snackTypes.error,'عملیات با خطا مواجه شد');
     }
-    else{
-      showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
-    }
-    AppController.finishLoading('store-record');
   }
 
   convertFormatUpdate(var value,var key,var a){
@@ -1225,7 +1233,7 @@ class DB {
     AppController.startLoading('update-records');
     List<dynamic> records = await getRecords();
     ViewController.isClickedEditBtn.value = true;
-    Box box = await Hive.openBox<DataModel>('${this.tableName}');
+    Box box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${this.tableName}');
     Map<String, dynamic> a = {};
 
     List<Map<String, dynamic>> toAdd = [];
@@ -1412,7 +1420,7 @@ class DB {
   deleteRecord() async {
     AppController.startLoading('delete-record');
     List<dynamic> records = await getRecords();
-    Box box = await Hive.openBox<DataModel>('${this.tableName}');
+    Box box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${this.tableName}');
     var boxList=box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
     for (var data in records) {

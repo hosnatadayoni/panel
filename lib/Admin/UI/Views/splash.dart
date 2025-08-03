@@ -2,6 +2,7 @@
 import 'package:finance/Admin/Public/config.dart';
 import 'package:flutter/material.dart';
 import '../../Logic/Controllers/main-controller.dart';
+import '../../Public/styles.dart';
 import '../Componenets/General/img.dart';
 
 class Splash extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SplashState extends State<Splash> {
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: appColor,
+        backgroundColor: background,
         body: Column(
           children: [
             Expanded(
