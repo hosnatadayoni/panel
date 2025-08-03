@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:get/get.dart';
 import '../../General/txt.dart';
 
 class MainTableBox extends StatefulWidget {
@@ -19,19 +20,13 @@ class MainTableBox extends StatefulWidget {
   State<MainTableBox> createState() => _MainTableBoxState();
 }
 class _MainTableBoxState extends State<MainTableBox> {
-  late List<Future<Widget>> _futures;
+
+
+
 
   @override
-  void initState() {
-    super.initState();
-    if(MainController.tableInfo['schema']['filters'] != null){
-      _futures = MainController.tableInfo['schema']['filters']
-          .map<Future<Widget>>((filter) => ViewController.generateFilterView(filter))
-          .toList();
-    }
-  }
-  @override
   Widget build(BuildContext context) {
+
     var size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(10),
@@ -43,73 +38,69 @@ class _MainTableBoxState extends State<MainTableBox> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ColumnScroll(
-            children: [
-              TableHeader(),
-              if(MainController.tableInfo['schema']['filters']!=null && MainController.tableInfo['schema']['filters'].length!=0)
-                Container(
-                  width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      for (var future in _futures)
-                        FutureBuilder<Widget>(
-                          future: future,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              return snapshot.data ?? Container();
+          Obx( () {
+              return ColumnScroll(
+                children: [
+                  TableHeader(),
+                  if(MainController.tableInfo['schema']['filters']!=null && MainController.tableInfo['schema']['filters'].length!=0)
+                    Container(
+                      width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          ViewController.filters.isEmpty
+                              ? CircularProgressIndicator():
+                           Column(
+                             children: [
+                               for (var future in  ViewController.filters)
+                               future
+                             ],
+                           )
+                        ],
+                      ),
+                    ),
+                  if(MainController.tableInfo['schema']['filters']!=null &&MainController.tableInfo['schema']['filters'].length!=0)
+                    Container(
+                      margin: EdgeInsets.only(left: 5),
+                      width: 140,
+                      height: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Colors.blue),
+                        onPressed: () async {
+                          List<dynamic>w=MainController.tableInfo['schema']['filters'];
+                          String opration='\$eq';
+                          if(ViewController.request.length!=0){
+                            var d;
+                            List<dynamic> d2=await DB('${MainController.tableInfo['schema']['name']}').getRecords();
+                            var a= DB('${MainController.tableInfo['schema']['name']}');
+                            for(var filter in ViewController.request.values){
+                              var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
+                              if(w[indexFilter]['operator']!=null){
+                                opration=w[indexFilter]['operator'];
+                              }
+                              if(filter['value']!='' && filter['value']!=null){
+                                d=a.where('${filter['column']}','${filter['operator']}',filter['value']);
+                              }
                             }
-                          },
-                        ),
-                    ],
-                  ),
-                ),
-              if(MainController.tableInfo['schema']['filters']!=null &&MainController.tableInfo['schema']['filters'].length!=0)
-                Container(
-                  margin: EdgeInsets.only(left: 5),
-                  width: 140,
-                  height: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () async {
-                      List<dynamic>w=MainController.tableInfo['schema']['filters'];
-                      String opration='\$eq';
-                      if(ViewController.request.length!=0){
-                        var d;
-                        List<dynamic> d2=await DB('${MainController.tableInfo['schema']['name']}').getRecords();
-                        var a= DB('${MainController.tableInfo['schema']['name']}');
-                        for(var filter in ViewController.request.values){
-                          var indexFilter=w.indexWhere((element) => element['column']==filter['column']);
-                          if(w[indexFilter]['operator']!=null){
+                            if(d!=null){
+                              d2=await d.getRecords();
 
-                            opration=w[indexFilter]['operator'];
-                          }
-                          if(filter['value']!='' && filter['value']!=null){
+                            }
+                            MainController.tableData.value=d2;
 
-                            d=a.where('${filter['column']}','${filter['operator']}',filter['value']);
-                          }
-                        }
-                        if(d!=null){
-                          d2=await d.getRecords();
-
-                        }
-                        MainController.tableData.value=d2;
-
-                      }},
-                    child: Center(child: Txt('${AppController.of(context)!.value('apply')}', textAlign: TextAlign.center)),
-                  ),
-                ),
-              SizedBox(height: 10,),
-              TableBox(),
-              SizedBox(height: 20,),
-              TableFooter(),
-            ],
+                          }},
+                        child: Center(child: Txt('${AppController.of(context)!.value('apply')}', textAlign: TextAlign.center)),
+                      ),
+                    ),
+                  SizedBox(height: 10,),
+                  TableBox(),
+                  SizedBox(height: 20,),
+                  TableFooter(),
+                ],
+              );
+            }
           ),
         ],
       ),

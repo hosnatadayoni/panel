@@ -44,12 +44,21 @@ class ViewController extends GetxController {
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
   static RxInt totalPage = 0.obs;
+  static RxList<Widget> filters = <Widget>[].obs;
 
   static copyClipboard(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     showSnackbar(snackTypes.info, "کپی شد");
   }
-
+  static callFilterView() async {
+    if (MainController.tableInfo['schema']['filters'] != null) {
+      var futures = MainController.tableInfo['schema']['filters']
+          .map<Future<Widget>>((filter) => ViewController.generateFilterView(filter))
+          .toList();
+      filters.value = await Future.wait(futures);
+      print('ViewController.callFilterView>>>${filters.value}');
+    }
+  }
   static Future<Widget> generateFilterView(
       Map<String, dynamic> filterInfo) async {
     var columnInfo = MainController.getColumnInfo(filterInfo['column']);

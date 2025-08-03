@@ -87,7 +87,7 @@ class MainController extends GetxController {
   static Rx<int> selectedItemList = 0.obs;
 
   static RxList<dynamic> SubMenuList = [].obs;
-  static dynamic tableInfo = null;
+  static RxMap<String,dynamic> tableInfo = <String,dynamic>{}.obs;
   DataModel? dataModel;
   static var allColumn;
 
@@ -381,15 +381,10 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> loadData(
-      {var tableData = null, var tableDataItems}) async {
-    // MainController.tableData.value=[];
+  static Future<void> loadData({var tableData = null, var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null || tableData.length == 0) {
-        MainController.tableInfo = SubMenuList[MainController.selectedSubItem.value];
-        // if(tableInfo['status']=="online")
-        // await ConncetServerController.getRecordGeneral('${tableInfo['name']}');
-        // else
+        MainController.tableInfo.value = SubMenuList[MainController.selectedSubItem.value];
         MainController.tableData.value = (await DB('${tableInfo['schema']['name']}').paginate());
         MainController.allData.value = MainController.tableData.value;
       } else {
@@ -412,6 +407,7 @@ class MainController extends GetxController {
         tableInfo = SubMenuList[0];
       }
     }
+    await ViewController.callFilterView();
     if (tableData == null || tableData.length == 0) {
       for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
         if (MainController.tableInfo['columns'][j]['is_show_store'] == null) {
@@ -545,11 +541,9 @@ class MainController extends GetxController {
       // HelperController.tablePageFunction(table: table);
     } else {
       if (loadData == true)
-        await MainController.loadData(
-            tableData: tableFields, tableDataItems: tableData);
+        await MainController.loadData(tableData: tableFields, tableDataItems: tableData);
       MainController.tableInfo['schema']['currentPage']=1;
-      ViewController.totalPage.value =
-      await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+      ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
       await Get.to(() => TablePage());
     }
   }
