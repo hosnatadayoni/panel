@@ -222,10 +222,11 @@ class HelperController extends GetxController {
       var tableData = null}) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['view'] == 'custom') {
+
       if (table['table-name'] == 'project') {
-        if (ViewController.request['name'] != null) {
-          ViewController.request['name'] =
-              ViewController.request['name'].trim().replaceAll(' ', '_');
+        for(String key in ViewController.request.keys){
+          if(ViewController.request[key] is String)
+            ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
         }
         var Id = Uuid().v4();
         DataModel newData =
@@ -243,6 +244,10 @@ class HelperController extends GetxController {
       }
 
       if (table['table-name'] == 'schema') {
+        for(String key in ViewController.request.keys){
+          if(ViewController.request[key] is String)
+            ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
+        }
         if (ViewController.request['name'] != null) {
           ViewController.request['name'] =
               ViewController.request['name'].trim().replaceAll(' ', '_');
@@ -263,6 +268,10 @@ class HelperController extends GetxController {
       }
 
       if (table['table-name'] == 'fields') {
+        for(String key in ViewController.request.keys){
+          if(ViewController.request[key] is String)
+            ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
+        }
         Map<String, dynamic> parent = await DB.parentItem;
         print('await DB.parentItem>>>${await DB.parentItem}');
         if (parent.length != 0) {
@@ -288,6 +297,10 @@ class HelperController extends GetxController {
       }
 
       if (table['table-name'] == 'filters') {
+        for(String key in ViewController.request.keys){
+          if(ViewController.request[key] is String)
+            ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
+        }
         Map<String, dynamic> parent = await DB.parentItem;
         if (parent.length != 0) {
           ViewController.request.addAll({'table': parent['parent_id']});

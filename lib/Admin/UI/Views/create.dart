@@ -37,7 +37,6 @@ class _CreatePageState extends State<CreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('_CreatePageState.build>>${MainController.SubMenuList.indexWhere((element) => element['table-name']=='schema')}');
 
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;

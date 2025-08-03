@@ -488,7 +488,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                 if (value == 'Number int' || value == 'Number double') {
                                                                   ViewController.request['type_field'] = 'number';
                                                                 }
-                                                                if (value == 'select' || value == 'radiobutton' || value == 'multiSelect' || value == 'string' || value == 'file'|| value == 'checkbox') {
+                                                                if (value == 'select' || value == 'radiobutton' || value == 'multiSelect' || value == 'string' || value == 'multiFile' || value == 'file'|| value == 'checkbox') {
                                                                   ViewController.request['type_field'] = 'string';
                                                                 }
                                                                 for (var item in typeItems.value) {
@@ -1037,8 +1037,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                       return sourceTableItems
                                                           .value.length != 0
                                                           ? MainController
-                                                          .tableInfo['columns'][j]['sourceItems'] !=
-                                                          'custom'
+                                                          .tableInfo['columns'][j]['sourceItems'] != 'custom'
                                                           ? Column(
                                                         crossAxisAlignment: CrossAxisAlignment
                                                             .start,
@@ -1057,8 +1056,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           Obx(() {
                                                             return MultiSelectDropdown(
                                                               items: [
-                                                                for (var item in sourceTableItems
-                                                                    .value)
+                                                                for (var item in sourceTableItems)
                                                                   DropdownMenuItem(
                                                                       value: item,
                                                                       child: Obx(() {
@@ -1072,9 +1070,6 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                   child: Obx(() {
                                                                                     return Checkbox(
                                                                                         activeColor: colorBtn,
-                                                                                        // value: selectedItemsList.any(
-                                                                                        //         (map) =>
-                                                                                        //         mapEquals(map, item)),
                                                                                         value: selectedItemsList
                                                                                             .contains(
                                                                                             item),
@@ -1085,17 +1080,13 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                             hintTxt
                                                                                                 .value =
                                                                                             '';
-                                                                                            // if (!selectedItemsList.any(
-                                                                                            //         (map) =>
-                                                                                            //         mapEquals(
-                                                                                            //             map, item))) {
+
                                                                                             if (!selectedItemsList
                                                                                                 .contains(
                                                                                                 item)) {
                                                                                               selectedId =
                                                                                               [
                                                                                               ];
-                                                                                              // ViewController.requestMultiSelect = item;
                                                                                               selectedItemsList
                                                                                                   .add(
                                                                                                   item);
@@ -1249,8 +1240,6 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                   child: Obx(() {
                                                                                     return Checkbox(
                                                                                         activeColor: colorBtn,
-                                                                                        // value: selectedItemsList.any((map) =>
-                                                                                        //     mapEquals(map, item)),
                                                                                         value: selectedItemsList
                                                                                             .contains(
                                                                                             item),
@@ -1261,18 +1250,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                             hintTxt
                                                                                                 .value =
                                                                                             '';
-                                                                                            // if (!selectedItemsList.any((map) =>
-                                                                                            //     mapEquals(map, item))) {
-                                                                                            if (!selectedItemsList
-                                                                                                .contains(
-                                                                                                item)) {
-                                                                                              selectedId =
-                                                                                              [
-                                                                                              ];
-                                                                                              // ViewController.requestMultiSelect = item;
-                                                                                              selectedItemsList
-                                                                                                  .add(
-                                                                                                  item);
+                                                                                            if (!selectedItemsList.contains(item)) {selectedId = [];
+                                                                                              selectedItemsList.add(item);
                                                                                             } else {
                                                                                               selectedId =
                                                                                               [
@@ -1292,9 +1271,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                               }
                                                                                             }
 
-                                                                                            if (selectedItemsList
-                                                                                                .value
-                                                                                                .length ==
+                                                                                            if (selectedItemsList.length ==
                                                                                                 0) {
                                                                                               isSelectedItem
                                                                                                   .value =
@@ -1304,21 +1281,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                                   .value =
                                                                                               true;
                                                                                             }
-                                                                                            // for (var r in selectedItemsList)
-                                                                                            // hintTxt.value = hintTxt.value + r['title'];
-                                                                                            // hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
-                                                                                            hintTxt
-                                                                                                .value =
-                                                                                                ViewController
-                                                                                                    .itemsShowSelectItem(
-                                                                                                    selectedItemsList,
-                                                                                                    MainController
-                                                                                                        .tableInfo['columns'][j]);
-                                                                                            // for (var r in selectedItemsList)
-                                                                                            //   selectedId.add(r['value']);
-                                                                                            selectedId
-                                                                                                .add(
-                                                                                                item);
+                                                                                         hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+                                                                                            selectedId.add(item);
 
                                                                                             ViewController
                                                                                                 .request[MainController
