@@ -55,6 +55,26 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       stroredSchema=response!.data['data'];
+      await ConncetServerController.createField({
+        'table':'${stroredSchema['_id']}',
+        "title":'parent_table',
+        "name":'parent_table',
+        "type":'string',
+        "type_field":'string',
+        "is_show_table":false,
+        "is_show_store":false,
+        "is_show_edit":false,
+      });
+      await ConncetServerController.createField({
+        'table':'${stroredSchema['_id']}',
+        "title":'parent_id',
+        "name":'parent_id',
+        "type":'string',
+        "type_field":'string',
+        "is_show_table":false,
+        "is_show_store":false,
+        "is_show_edit":false,
+      });
     }, printResponse: true);
   }
   static updateSchema(Map<String, dynamic> request,var id) async {
@@ -77,19 +97,6 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       listSchemaRes=response!.data['data'];
-      // for(var schema in listSchemaRes){
-      //   if(schema['relations']!=null && schema['relations'].length!=0){
-      //     var rels=[];
-      //     for(var rel in schema['relations']){
-      //       var index;
-      //       index =listSchemaRes.indexWhere((element) => element['_id']==rel);
-      //           if(index!=-1){
-      //             listSchemaRes[index]['relations'].add( listSchemaRes[index]['name']);
-      //
-      //           }
-      //     }
-      //   }
-      // }
         }, printResponse: true);
   }
 
@@ -123,7 +130,8 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
         listFieldsRes=response!.data['data'];
-
+        listFieldsRes.removeWhere((element) => element['name']=='parent_table');
+        listFieldsRes.removeWhere((element) => element['name']=='parent_id');
         }, printResponse: true);
   }
 
