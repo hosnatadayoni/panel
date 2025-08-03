@@ -776,6 +776,7 @@ class ViewController extends GetxController {
           column: column,
           initValue: initValue,
           onChange: (text) {
+            print('ViewController.generateFormTextField>>>${text}');
             // dataJson[columnName] = text;
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
@@ -826,9 +827,10 @@ class ViewController extends GetxController {
             initValue: initValue,
             onChange: (text) {
               if (text != null && text != '') {
+                print('ViewController.generateFormTextFieldFilter>>${text}>>${text==null}>>${text==''}');
+
                 if (column['type'] == 'Number int') {
-                  ViewController
-                      .request['${column['name']}${filterInfo['operator']}'] = {
+                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${int.parse('${text}')}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
@@ -841,20 +843,19 @@ class ViewController extends GetxController {
                     'operator': '${filterInfo['operator']}',
                   };
                 } else {
-                  ViewController.request[
-                      '${column['name']} ${filterInfo['operator']}'] = {
+                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${text}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
                   };
                 }
               } else {
-                ViewController
-                    .request['${column['name']} ${filterInfo['operator']}'] = {
+                ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                   'value': '',
                   'column': '${column['name']}',
                   'operator': '${filterInfo['operator']}',
                 };
+                print('ViewController.generateFormTextFieldFilter request>>${ViewController.request['${column['name']}${filterInfo['operator']}']}');
               }
             },
             isMobile: type == 'mobile' ? true : false,

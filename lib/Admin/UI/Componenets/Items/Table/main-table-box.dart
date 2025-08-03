@@ -45,19 +45,14 @@ class _MainTableBoxState extends State<MainTableBox> {
                   if(MainController.tableInfo['schema']['filters']!=null && MainController.tableInfo['schema']['filters'].length!=0)
                     Container(
                       width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
-                      child: Wrap(
+                      child:     ViewController.filters.isEmpty
+                          ? CircularProgressIndicator(): Wrap(
                         crossAxisAlignment: WrapCrossAlignment.start,
                         spacing: 10,
                         runSpacing: 10,
                         children: [
-                          ViewController.filters.isEmpty
-                              ? CircularProgressIndicator():
-                           Column(
-                             children: [
-                               for (var future in  ViewController.filters)
-                               future
-                             ],
-                           )
+                           for (var future in  ViewController.filters)
+                           future
                         ],
                       ),
                     ),
@@ -71,7 +66,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                         onPressed: () async {
                           List<dynamic>w=MainController.tableInfo['schema']['filters'];
                           String opration='\$eq';
-                          if(ViewController.request.length!=0){
+                          print('_MainTableBoxState.build>>>${ViewController.request}');
+                        if(ViewController.request.length!=0){
                             var d;
                             List<dynamic> d2=await DB('${MainController.tableInfo['schema']['name']}').getRecords();
                             var a= DB('${MainController.tableInfo['schema']['name']}');
