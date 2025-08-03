@@ -741,7 +741,7 @@ class ViewController extends GetxController {
         },
         child: Center(
           child: Txt(
-            '${dataModel != null ? dataModel.length > 20 ? dataModel.substring(0, 20) + '...' : dataModel : ''}',
+            '${dataModel != null ? dataModel.toString().length > 20 ? dataModel.toString().substring(0, 20) + '...' : dataModel : ''}',
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color:
@@ -807,7 +807,7 @@ class ViewController extends GetxController {
       children: [
         Obx(() {
           return Txt(
-            '${column['title']}',
+            '${column['title']} (${filterInfo['operator']})',
             color:
                 MainController.isLightMode.value == true ? whiteColor : color2,
           );
