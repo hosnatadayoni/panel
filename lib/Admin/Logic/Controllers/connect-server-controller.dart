@@ -55,9 +55,6 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       stroredSchema=response!.data['data'];
-      if(json['relations']!=null && json['relations'].length!=0){
-
-      }
     }, printResponse: true);
   }
   static updateSchema(Map<String, dynamic> request,var id) async {
