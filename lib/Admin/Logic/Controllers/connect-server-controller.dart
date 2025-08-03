@@ -17,6 +17,7 @@ class ConncetServerController extends GetxController {
   static List<dynamic> listFieldsRes = [];
   static List<dynamic> listFiltersRes = [];
   static List<dynamic> listValidateRes = [];
+  static Map<String,dynamic>stroredSchema={};
 
   static bool deleteRecordRes = false;
   static List<dynamic> getRecordRes = [];
@@ -53,6 +54,10 @@ class ConncetServerController extends GetxController {
     var response = await RestApi.post(createSchemaUrl, body: json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
+      stroredSchema=response!.data['data'];
+      if(json['relations']!=null && json['relations'].length!=0){
+
+      }
     }, printResponse: true);
   }
   static updateSchema(Map<String, dynamic> request,var id) async {

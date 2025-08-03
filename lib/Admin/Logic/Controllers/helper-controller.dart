@@ -84,13 +84,10 @@ class HelperController extends GetxController {
             (element) => element['table-name'] == 'schema');
         if (index != -1) {
           for (var field in ConncetServerController.listSchemaRes) {
-            print(
-                'HelperController.createPageFunction222${MainController.tableInfo['columns']}');
-            MainController.tableInfo['columns'][6]['items']
-                .add({"title": field['name'], "value": field['name']});
+            print('HelperController.createPageFunction222${MainController.tableInfo['columns']}');
+            MainController.tableInfo['columns'][6]['items'].add({"title": field['name'], "value": field['name']});
           }
-          print(
-              'HelperController.createPageFunction>>>${MainController.tableInfo['columns'][6]}');
+          print('HelperController.createPageFunction>>>${MainController.tableInfo['columns'][6]}');
         }
         await Get.to(() => CreatePage(tableName));
       }
@@ -248,17 +245,13 @@ class HelperController extends GetxController {
           if(ViewController.request[key] is String)
             ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
         }
-        if (ViewController.request['name'] != null) {
-          ViewController.request['name'] =
-              ViewController.request['name'].trim().replaceAll(' ', '_');
-        }
         var Id = Uuid().v4();
         DataModel newData =
             DataModel(id: '${Id}', data: ViewController.request);
-        if (await RecordController.validate(table['table-name'], newData,
-                ViewCustomController.getDataTable(table['table-name'])) ==
-            false) {
+        if (await RecordController.validate(table['table-name'], newData, ViewCustomController.getDataTable(table['table-name'])) == false) {
+
           await ConncetServerController.createSchema(ViewController.request);
+
           MainController.goToTablePage(table, loadData: false);
         } else {
           showSnackbar(snackTypes.error,
