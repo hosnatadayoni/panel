@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Views/create.dart';
+import '../../UI/Views/dashboard.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/dataModel.dart';
 import '../Models/db.dart';
@@ -57,7 +58,39 @@ class HelperController extends GetxController {
   }
 
 //end delete
+  static backFunction() async {
+    // print('HelperController.backFunction>>${ MainController.SubMenuList}');
+    var index = MainController.SubMenuList.indexWhere((element) => element['schema']['relations']!=null?element['schema']['relations'].any((element)
+    {
+                return element == MainController.tableName.value;
+    }):element==null);
+    if (index != -1) {
+      print('HelperController.backFunction${MainController.SubMenuList[index]}');
 
+      MainController.selectedSubItem.value = index;
+      MainController.tableName.value = MainController.SubMenuList[index]['schema']['name'];
+      var indexNew = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == MainController.tableName.value);
+      var table = MainController.getInfoTable(MainController.tableName.value);
+      MainController.tableInfo.value = table;
+      print('HelperController.backFunction>>${MainController.tableName.value}>>${MainController.SubMenuList[indexNew]}>>${table}>>${ MainController.tableInfo}>>${MainController.SubMenuList[index]}');
+      if (table['view'] == 'custom') {
+        MainController.endIndex.value = 0;
+        MainController.startIndex.value = 0;
+      }
+      else {
+        MainController.tableData.value =
+        await DB('${MainController.tableName.value}').paginate();
+        MainController.allData.value = MainController.tableData;
+      }
+      // Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
+      // await MainController.goToTablePage(MainController.SubMenuList[index]);
+    } else {
+      MainController.isClickedItem.value = false;
+      MainController.selectedItem.value = -1;
+      MainController.selectedSubItem.value = -1;
+      Get.to(() => DashboardPage());
+    }
+  }
   static createPageFunction(String tableName) async {
     var table = MainController.getInfoTable(tableName);
     if (table['schema']['view'] == 'custom') {
