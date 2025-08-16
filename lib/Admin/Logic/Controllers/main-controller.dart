@@ -44,14 +44,12 @@ class MainController extends GetxController {
     Item(
       title: 'Home',
       icon: Icons.home,
-    )
+    ),
+    Item(
+      title: 'route',
+      icon: Icons.link,
+    ),
   ];
-  // static RxInt totlaChunck = 0.obs;
-  // static RxInt chunckCurrentIndex = 0.obs;
-  // static RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
-
-
-  //
 
   static String formatNumber(String number) {
     try {
@@ -62,7 +60,6 @@ class MainController extends GetxController {
     }
   }
 
-  // static Rx<int> selectedItem = (-1).obs;
   static Rx<int> selectedItem = 0.obs;
   static Rx<int> selectedSubItem = (-1).obs;
   static Rx<Item> itemSelected = Item().obs;
@@ -114,7 +111,17 @@ class MainController extends GetxController {
     }
     return null;
   }
-
+  static Future<void> loadJson() async {
+    await ConncetServerController.listSchemaByField();
+    // // String jsonFileString;
+    // // jsonFileString = await rootBundle.loadString('assets/menu.json');
+    // // SubMenuList = json.decode(jsonFileString);
+    //
+    // for (var name in tableNames()) {
+    //   // addsyncField('${name}');
+    //   addParentForRelations('${name}');
+    // }
+  }
   static getColumnPrime() {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       var column = MainController.tableInfo['columns'][j];
@@ -265,17 +272,6 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> loadJson() async {
-    await ConncetServerController.listSchemaByField();
-    // String jsonFileString;
-    // jsonFileString = await rootBundle.loadString('assets/menu.json');
-    // SubMenuList = json.decode(jsonFileString);
-
-    for (var name in tableNames()) {
-      // addsyncField('${name}');
-      addParentForRelations('${name}');
-    }
-  }
 
   static setRelations(String tableName){
     var index = SubMenuList.indexWhere((element) => element['schema']['name'] == tableName);
@@ -451,7 +447,6 @@ class MainController extends GetxController {
 
   static Future<bool> identificationValidator(var cellExcel, var column) async {
     //check null cell
-
     if (column['validators'] != null) {
       // check null cell
       if (cellExcel == null ||
@@ -530,10 +525,7 @@ class MainController extends GetxController {
     return true;
   }
 
-  static goToTablePage(var table,
-      {bool loadData = true,
-        var tableFields = null,
-        var tableData = null}) async {
+  static goToTablePage(var table, {bool loadData = true, var tableFields = null, var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
       HelperController.pageInateFunction();
       Navigator.push(

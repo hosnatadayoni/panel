@@ -37,14 +37,7 @@ class Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               InkWell(
-                // onTap: (){
-                //   MainController.isClickedItem.value = false;
-                //   // MainController.selectedItem.value = -1;
-                //   MainController.selectedItem.value = 0;
-                //   // MainController.selectedSubItem.value = -1;
-                //   MainController.selectedSubItem.value = 0;
-                //   Get.to(() => DashboardPage());
-                // },
+
                   child: Txt('${AppController.of(context)!.value('management panel')}' , fontSize: 20 , fontWeight: FontWeight.w500 , color: MainController.isLightMode.value == true? whiteColor : color3)),
 
               Row(

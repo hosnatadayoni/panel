@@ -51,13 +51,7 @@ class _TableBoxState extends State<TableBox> {
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
                 child: Table(
-
-                  //defaultColumnWidth: FixedColumnWidth(200),
-                  // defaultColumnWidth: FixedColumnWidth((size.width)  / (MainController.tableInfo['columns'].length + 1 )),
-                  defaultColumnWidth: FixedColumnWidth(
-                      (MainController.tableInfo['columns'].length > 8
-                          ? 150.0
-                          : size.width / 7)),
+                  defaultColumnWidth: FixedColumnWidth((MainController.tableInfo['columns'].length > 8 ? 150.0 : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
@@ -65,11 +59,8 @@ class _TableBoxState extends State<TableBox> {
                           : color1),
                   children: [
                     TableRow(
-
                         children: [
-                      for (var i = 0;
-                      i < MainController.tableInfo['columns'].length;
-                      i++)
+                      for (var i = 0; i < MainController.tableInfo['columns'].length; i++)
                         if (MainController.tableInfo['columns'][i]
                         ['is_show_table'] ==
                             true)
@@ -147,8 +138,6 @@ class _TableBoxState extends State<TableBox> {
                                       MainController
                                           .tableName.value =
                                       relation;
-                                      print(
-                                          '_TableBoxState.build>>${MainController.tableName.value}');
                                       HelperController.relationFunction(table: relation, index: i);
                                     }
                                     if(value=='edit'){
@@ -167,13 +156,7 @@ class _TableBoxState extends State<TableBox> {
                                       });
                                     }
                                     if(value=='refresh'){
-                                      print('_TableBoxState.build>>>${MainController.tableData.value[i]}');
-                                      await DB(
-                                          '${MainController.tableInfo['schema']['name']}')
-                                          // .where('id', '\$eq',
-                                          // '${MainController.tableData.value[i]['id']}')
-                                          .storeRecord(MainController.tableData.value[i]);
-                                    }
+                                      await DB('${MainController.tableInfo['schema']['name']}').storeRecord(MainController.tableData.value[i]);}
                                     if(value=='remove'){
                                       showDialog(
                                           context: context,
@@ -241,12 +224,7 @@ class _TableBoxState extends State<TableBox> {
                                                                   MainController
                                                                       .tableData
                                                                       .value[i]['_id']);
-                                                              // setState(() {
-                                                              //   DB('${MainController.tableInfo['schema']['name']}').where('_id', '\$eq', '${MainController.tableData.value[i]['_id']}').deleteRecord();
-                                                              // });
-                                                              // MainController.tableData.value= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                                                              // ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
-                                                              // Navigator.pop(context);
+
                                                             },
                                                             child:
                                                             Container(

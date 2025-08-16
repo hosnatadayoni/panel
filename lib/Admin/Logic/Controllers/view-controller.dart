@@ -298,7 +298,6 @@ class ViewController extends GetxController {
         }
         if (type == 'select') {
           List<dynamic> items = await itemsList(column);
-          print('ViewController.generateStoreFormView>>$items');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
 
@@ -394,7 +393,6 @@ class ViewController extends GetxController {
             type == 'email' ||
             type == 'mobile') {
           GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(debugLabel: column['name']+'_edit');
-          print('ViewController.generateFilterFormView>>$key');
           textField = generateFormTextField(key, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
@@ -404,8 +402,6 @@ class ViewController extends GetxController {
         } else if (type == 'select') {
           Map<String, dynamic> selectedItem = <String, dynamic>{};
           List<dynamic> items = await ViewController.itemsList(column);
-          print('ViewController.generateStoreFormView>>${items}');
-
           if (items.length != 0) {
             if (column['source_items'] != 'custom') {
               if (dataModel[name] != null && dataModel[name] != '') {
@@ -541,7 +537,6 @@ class ViewController extends GetxController {
           ));
           children.add(colorBox);
         } else if (type == 'file') {
-          print('ViewController.generateEditFormView>>${dataModel}');
           fileBox = generateEditFileBox(
               dataModel[name] != null && dataModel[name] != ''
                   ? dataModel
@@ -553,7 +548,6 @@ class ViewController extends GetxController {
           ));
           children.add(fileBox);
         } else if (type == 'multiFile') {
-          print('ViewController.generateEditFormView>>${dataModel}>>${column}');
           fileBox = generateEditMultiFileBox(
               dataModel[name] != null && dataModel[name].length != 0
                   ? dataModel
@@ -753,9 +747,9 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey,
-      var column, var type, String initValue) {
-    return new Column(
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, String initValue) {
+    return
+      new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
@@ -776,8 +770,6 @@ class ViewController extends GetxController {
           column: column,
           initValue: initValue,
           onChange: (text) {
-            print('ViewController.generateFormTextField>>>${text}');
-            // dataJson[columnName] = text;
             if (text != null && text != '') {
               if (column['type'] == 'Number int') {
                 ViewController.request[column['name']] = int.parse('${text}');
@@ -827,8 +819,6 @@ class ViewController extends GetxController {
             initValue: initValue,
             onChange: (text) {
               if (text != null && text != '') {
-                print('ViewController.generateFormTextFieldFilter>>${text}>>${text==null}>>${text==''}');
-
                 if (column['type'] == 'Number int') {
                   ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${int.parse('${text}')}',
@@ -855,7 +845,6 @@ class ViewController extends GetxController {
                   'column': '${column['name']}',
                   'operator': '${filterInfo['operator']}',
                 };
-                print('ViewController.generateFormTextFieldFilter request>>${ViewController.request['${column['name']}${filterInfo['operator']}']}');
               }
             },
             isMobile: type == 'mobile' ? true : false,
@@ -1794,7 +1783,6 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
-    print('ViewController.generateCellFileBox${MainController.tableData.value[indexRow]}');
     return dataModel != null && dataModel.length != 0
         ? Column(
             children: [
@@ -1830,7 +1818,6 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}_multi'];
-    print('ViewController.generateCellMultiFileBox$dataModel');
     return dataModel != null && dataModel.length != 0
         ? Container(
       width: 150,
@@ -1888,8 +1875,6 @@ class ViewController extends GetxController {
             // dataJson[columnName] = selecetdFiles;
             if (column['type'] == 'file') {
               ViewController.request[column['name']] = file;
-              print(
-                  'ViewController.generateFileBox>>>${file}>>>${ViewController.request[column['name']]}');
             } else {
               filesSelectedList.add(file);
               ViewController.request[column['name']] = filesSelectedList;
@@ -1912,7 +1897,6 @@ class ViewController extends GetxController {
     RxString file =
         data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
 
-    print('ViewController.generateEditFileBox${data.runtimeType}>>${name}');
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -2022,7 +2006,6 @@ class ViewController extends GetxController {
   static Widget generateEditMultiFileBox(
       var data, var column, Rx<bool>? isSeletedFile) {
     String name = column['name'];
-    print('ViewController.generateEditMultiFileBox dataaaa isss>>${data}');
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -2192,7 +2175,6 @@ class ViewController extends GetxController {
       if (fileInfo[fileSelectedList[index]] != null) {
         totalChunks = fileData?[0] ?? 1;
         currentChunk = fileData?[1] ?? 0;
-        print('ViewController.generateSelectFileBox>>${fileData!.length}>>>${fileData}>>>${fileSelectedList[index]}');
         chunkName.value = fileData!.length > 2 ?fileData[2]!=null? fileData[2]:{} : fileSelectedList[index];
       }
       return Container(

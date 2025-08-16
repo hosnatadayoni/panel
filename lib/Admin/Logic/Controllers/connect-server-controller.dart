@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
@@ -14,6 +15,9 @@ class ConncetServerController extends GetxController {
   static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
   static RxList<dynamic> getRecordRes=[].obs;
+  static RxList<dynamic> getRouteRes=[].obs;
+  static RxInt currentPageRoute=1.obs;
+  static RxInt countShowRowRoute=10.obs;
 
   static listSchemaByField() async {
     AppController.finishLoading('list-schema');
@@ -71,6 +75,7 @@ class ConncetServerController extends GetxController {
   }
 
   static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
+    print('ConncetServerController.getRecordGeneral');
     var info=await MainController.getInfoTable(tableName);
     var perPage=perpage??info['schema']['countShowRow'];
     var currentPage=page??info['schema']['currentPage'];
@@ -88,7 +93,61 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }
+  static storeRoute (var json) async {
+    var response = await RestApi.post(storeRoutesUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getRouteRes.add(response!.data['data']);
+        },printResponse: true);
+    // AppController.finishLoading('store-record');
+    // AppController.finishLoading('get-records');
+  }
+  static getRoute() async {
+    var response = await RestApi.post(listRoutesUrl, body:{'currentPageRoute':currentPageRoute.value.toString(), 'perPage':countShowRowRoute.value.toString()});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getRouteRes.value=[];
+          getRouteRes.value=response!.data['data']['data'].length!=0?response.data['data']['data']:[];
+          MainController.totalItems.value=response.data['data']['count'];
+          int s = (currentPageRoute.value - 1) * countShowRowRoute.value;
+          var end = s + countShowRowRoute.value;
+          MainController.startIndex.value = s;
+          var endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
+          MainController.endIndex.value = endBycondition;
+          ViewController.totalPage.value =(MainController.totalItems.value/countShowRowRoute.value).ceil();
+          print('ConncetServerController.getRoute${ MainController.totalPages.value}');
+        },printResponse: true);
+    // AppController.finishLoading('get-records');
+  }
 
+  static updateRoute(var json,var id) async {
+    var response = await RestApi.post(updateRouteUrl, body: {'item':(json),'id':id});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          var update=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data']:[];
+          var index=getRouteRes.indexWhere((element) => element['_id']==update['_id']);
+          if(index!=-1){
+            getRouteRes[index]=update;
+          }
+        },printResponse: true);
+  }
+
+  static deleteRoute(var id) async {
+    var response = await RestApi.post(deleteRouteUrl, body: {'id':id});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          var index=getRouteRes.indexWhere((element) => element['_id']==id);
+          if(index!=-1){
+            getRouteRes.removeAt(index);
+          }
+        },printResponse: true);
+    // AppController.finishLoading('update-records');
+    // AppController.finishLoading('get-records');
+  }
   static createJsonFilter(var wheres,String tableName,String type,{var page=null,var perpage=null}) async {
     List<dynamic>l=[];
     Map<String,dynamic> c={};

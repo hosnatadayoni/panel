@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
@@ -10,29 +13,18 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Componenets/btn.dart';
+import '../../Componenets/Items/Form/form-text-field.dart';
+import '../../Componenets/btn.dart';
 
-class EditPage extends StatefulWidget {
-  EditPage({this.data});
+class EditRoute extends StatefulWidget {
+  EditRoute({this.data});
   var data;
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditRoute> createState() => _EditRouteState();
 }
 
-class _EditPageState extends State<EditPage> {
-  Rx<Widget> _future=Column().obs;
-
-  addWidget()async{
-    Future.delayed(Duration.zero, () async {
-      _future.value = await ViewController.generateEditFormView(widget.data);
-    });
-  }
-  @override
-  void initState() {
-    super.initState();
-    addWidget();
-  }
+class _EditRouteState extends State<EditRoute> {
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +52,20 @@ class _EditPageState extends State<EditPage> {
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      _future.value,
+                      inputs('عنوان','title'),
+                      inputs('آدرس','address'),
+                      inputs('ظاهر','view'),
                       SizedBox(height: 20,),
-                      if(MainController.selectedSubItem.value != -1)
-                         if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
                             Container(
                         padding: EdgeInsets.all(10),
                         width: size.width,
                         child: Wrap(
-                          // mainAxisAlignment: MainAxisAlignment.end,
                           alignment: WrapAlignment.end,
                           children: [
                             Btn(type: btnType.primary, isOutline: true, content: Txt(
                               '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
                             ),onClick: () async {
-                              await MainController.loadData();
-                              await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
+                              Navigator.pop(context);
                             }),
                             SizedBox(width: 5,),
                             Btn(type: btnType.primary , content: Txt(
@@ -85,16 +75,10 @@ class _EditPageState extends State<EditPage> {
                               fontWeight: FontWeight.w400,
                             ),
                                 onClick: () async {
-                                  if(ViewController.request.length!=0) {
-                                    HelperController.editFunction('${MainController.tableInfo['schema']['name']}',id:'${widget.data!['_id']}' ,request:ViewController.request );
+                                    if(ViewController.request.length!=0) {
+                                    ConncetServerController.updateRoute(json.encode(ViewController.request),widget.data['_id']);
                                   }
-                                  else{
-                                    await MainController.loadData();
-                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                                  }
-                                  if (ViewController.isClickedBtn.value == false) {
-                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                                  }
+                                  Navigator.pop(context);
                                 } , loadingTag: 'update-records'),
                           ],
                         )
@@ -109,6 +93,37 @@ class _EditPageState extends State<EditPage> {
           ],
         ),
       ),
+    );
+  }
+  inputs(String name,String title){
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          return Txt(
+            '${name}',
+            color:
+            MainController.isLightMode.value == true ? whiteColor : color2,
+          );
+        }),
+        SizedBox(
+          height: 10,
+        ),
+        FormTextField(
+          name:  '${name}',
+          hint:  '${name}',
+          lable: '',
+          initValue: '${widget.data[title]}',
+          column: null,
+          onChange: (text) {
+            if (text != null && text != '') {
+              ViewController.request['${title}'] = text;
+            } else {
+              ViewController.request['${title}'] = '';
+            }
+          },
+        ),
+      ],
     );
   }
 }

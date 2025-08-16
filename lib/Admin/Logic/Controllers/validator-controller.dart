@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
@@ -205,7 +203,7 @@ class ValidatorController extends GetxController {
                 }
               }
               if (column['type'] == 'checkBox') {
-                if (request[key] is Bool == false) {
+                if (request[key] is bool == false) {
                   return false;
                 }
               }
