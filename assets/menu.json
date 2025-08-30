@@ -306,10 +306,19 @@
             "title": "file",
             "value": "file",
             "is_selected": false
+          },          {
+            "title": "file pv",
+            "value": "file_pv",
+            "is_selected": false
           },
           {
             "title": "multiFile",
             "value": "multiFile",
+            "is_selected": false
+          },
+          {
+            "title": "multiFile pv",
+            "value": "multiFile_pv",
             "is_selected": false
           }
         ],

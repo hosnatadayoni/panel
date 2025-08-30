@@ -490,7 +490,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                 if (value == 'Number int' || value == 'Number double') {
                                                                   ViewController.request['type_field'] = 'number';
                                                                 }
-                                                                if (value == 'select' || value == 'radiobutton' || value == 'multiSelect' || value == 'string' || value == 'multiFile' || value == 'file'|| value == 'checkbox') {
+                                                                if (value == 'select' || value == 'radiobutton' || value == 'multiSelect' || value == 'string' || value == 'multiFile' || value == 'file'|| value == 'multiFile_pv' || value == 'file_pv'|| value == 'checkbox') {
                                                                   ViewController.request['type_field'] = 'string';
                                                                 }
                                                                 for (var item in typeItems.value) {
