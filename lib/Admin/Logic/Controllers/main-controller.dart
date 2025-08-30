@@ -591,7 +591,8 @@ class MainController extends GetxController {
     if (singleFile == null)
       return null;
 
-      final path = singleFile.path!;
+    print('MainController.uploadFileInChunks>>${column}');
+    final path = singleFile.path!;
       final file = File(path);
       final totalLength = await file.length();
       final raf = file.openSync(mode: FileMode.read);
@@ -613,6 +614,7 @@ class MainController extends GetxController {
           var body = {
             'table_name': tableName,
             'data': chunk,
+            'field_id':column['_id'],
             'name': file.uri.pathSegments.last,
             'currentChunkIndex': chunkIndex,
             'totalChunks': (totalLength / chunkSize).ceil(),

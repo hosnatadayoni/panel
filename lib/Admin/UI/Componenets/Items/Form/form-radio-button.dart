@@ -22,7 +22,7 @@ class RadioButton extends StatelessWidget {
     var inputRequired;
     String? errorMessage;
 
-    if(this.column['validators'] != null){
+    if(this.column['validators'] != null && this.column['validators'].length!=0){
       inputRequired = this.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }

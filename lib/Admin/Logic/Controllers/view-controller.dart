@@ -1182,6 +1182,7 @@ class ViewController extends GetxController {
 
   static Widget generateFormRadioButton(var column, List<dynamic> items,
       String initalValue, Rx<bool> isSelectedItem) {
+    print('ViewController.generateFormRadioButton>>${items}');
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1213,7 +1214,7 @@ class ViewController extends GetxController {
                 ],
                 onChanged: (text) {
                   if (text != '') {
-                    // selectedValue=value!;
+                  //   // selectedValue=value!;
                     ViewController.request[column['name']] = text;
                   } else {
                     ViewController.request[column['name']] = '';
@@ -2405,7 +2406,6 @@ class ViewController extends GetxController {
   }
 
   static Future<List> itemsList(var column, {var dataModel}) async {
-    print('ViewController.itemsList>>>$column');
     var type = column['source_items'];
     var tableName = column['source_table'];
     List<dynamic> dropDownListItems = [];
