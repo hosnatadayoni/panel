@@ -68,7 +68,7 @@ class _TableBoxState extends State<TableBox> {
                               child: Container(
                                   padding: EdgeInsets.all(10),
                                   child: Txt(
-                                      '${MainController.tableInfo['columns'][i]['name']}',
+                                      '${MainController.tableInfo['columns'][i]['title']}',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                       color: MainController.isLightMode.value ==
