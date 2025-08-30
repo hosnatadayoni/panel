@@ -762,10 +762,7 @@ class _TableHeaderRouteState extends State<TableHeaderRoute> {
                             name: 'search',
                             lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
                           MainController.search(text);
-
                             ConncetServerController.currentPageRoute.value = 1;
-
-
                         }),
                       ),
                     ],
