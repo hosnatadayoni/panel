@@ -232,6 +232,17 @@
     "view": "custom",
     "columns": [
       {
+        "name": "name",
+        "title": "name(En)",
+        "type": "string",
+        "validators": [
+          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
+        ],
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": false
+      },
+      {
         "name": "title",
         "title": "title",
         "type": "string",
@@ -242,17 +253,7 @@
         "is-show-store": true,
         "is-show-edit": true
       },
-      {
-        "name": "name",
-        "title": "name",
-        "type": "string",
-        "validators": [
-          {"type": "required" , "message": "وارد کردن این آیتم الزامی است"}
-        ],
-        "is-show-table": true,
-        "is-show-store": true,
-        "is-show-edit": false
-      },
+
       {
         "name": "type",
         "title": "type",

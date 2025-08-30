@@ -262,7 +262,7 @@ class HelperController extends GetxController {
 
       if (table['table-name'] == 'fields') {
         for(String key in ViewController.request.keys){
-          if(key=='name' || key=='title')
+          if(key=='name' )
             ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
         }
         Map<String, dynamic> parent = await DB.parentItem;
