@@ -61,6 +61,8 @@ class _CretePageFieldState extends State<CretePageField> {
   RxList<dynamic> typeItems = [].obs;
 
   Future<void> loadItems() async {
+    typeItems.value=[];
+    sourceTableItems.value=[];
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'select') {
@@ -830,6 +832,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                   .value,
                                                               onChanged: (
                                                                   value) async {
+                                                                sourceTableItems.value=[];
                                                                 initailValueSourceTable
                                                                     .value =
                                                                 value!;
@@ -926,6 +929,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                   .value,
                                                               onChanged: (
                                                                   value) async {
+
                                                                 for (var item in sourceTable
                                                                     .value) {
                                                                   if (item['title'] ==
@@ -953,14 +957,8 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                         'name': sourceSelected
                                                                             .value
                                                                       });
-                                                                  for (var data in ConncetServerController
-                                                                      .listFieldsRes) {
-                                                                    if (!sourceTableItems
-                                                                        .contains(
-                                                                        data['title'])) {
-                                                                      sourceTableItems
-                                                                          .add(
-                                                                          data['title']);
+                                                                  for (var data in ConncetServerController.listFieldsRes) {
+                                                                    if (!sourceTableItems.contains(data['title'])) {sourceTableItems.add(data['title']);
                                                                     }
                                                                   }
                                                                 }
@@ -1214,7 +1212,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           Obx(() {
                                                             return Txt(
                                                               '${MainController
-                                                                  .tableInfo['columns'][j]['title']}',
+                                                                  .tableInfo['columns'][j]['title']} ',
                                                               color: MainController
                                                                   .isLightMode
                                                                   .value == true
@@ -1225,8 +1223,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           Obx(() {
                                                             return MultiSelectDropdown(
                                                               items: [
-                                                                for (var item in sourceTableItems
-                                                                    .value)
+                                                                for (var item in sourceTableItems.value)
                                                                   DropdownMenuItem(
                                                                       value: item,
                                                                       child: Obx(() {
