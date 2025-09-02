@@ -10,6 +10,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Logic/Controllers/app-controller.dart';
 import '../../../Logic/Controllers/view-controller.dart';
+import '../../../Public/api-urls.dart';
 import '../../../Public/config.dart';
 import '../../../Public/styles.dart';
 import '../../Componenets/General/txt.dart';
@@ -283,9 +284,9 @@ class _TableRouteState extends State<TableRoute> {
                                                 size: 18),
                                             onPressed: () => _launchUrl(
                                               context,
-                                              baseUrl +
-                                                  '/' +
-                                                  (row['address'] ?? ''),
+                                              baseApiUrl+'/admin/showRoute/' +row['_id']+'?api_key='+MainController.apiKey.value
+                                              // '/' +
+                                                  // (row['address'] ?? ''),
                                             ),
                                             label: Text(
                                               row['address'] ?? '',

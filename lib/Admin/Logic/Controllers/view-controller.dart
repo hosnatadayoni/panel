@@ -4,6 +4,7 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/img.dart';
@@ -51,15 +52,18 @@ class ViewController extends GetxController {
     await Clipboard.setData(ClipboardData(text: text));
     showSnackbar(snackTypes.info, "کپی شد");
   }
+
   static callFilterView() async {
     if (MainController.tableInfo['schema']['filters'] != null) {
       var futures = MainController.tableInfo['schema']['filters']
-          .map<Future<Widget>>((filter) => ViewController.generateFilterView(filter))
+          .map<Future<Widget>>(
+              (filter) => ViewController.generateFilterView(filter))
           .toList();
       filters.value = await Future.wait(futures);
       print('ViewController.callFilterView>>>${filters.value}');
     }
   }
+
   static Future<Widget> generateFilterView(
       Map<String, dynamic> filterInfo) async {
     var columnInfo = MainController.getColumnInfo(filterInfo['column']);
@@ -100,7 +104,7 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          textField = generateFormTextFieldFilter( column, filterInfo, type, '');
+          textField = generateFormTextFieldFilter(column, filterInfo, type, '');
           children.add(textField);
         }
 
@@ -289,7 +293,8 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(debugLabel: column['name']+'_store');
+          GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(
+              debugLabel: column['name'] + '_store');
           textField = generateFormTextField(key, column, type, '');
           children.add(SizedBox(
             height: 20,
@@ -339,7 +344,10 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file' || type == 'multiFile') {
+        } else if (type == 'file' ||
+            type == 'file_pv' ||
+            type == 'multiFile' ||
+            type == 'multiFile_pv') {
           fileBox = generateFileBox('', column, false.obs);
           children.add(SizedBox(
             height: 20,
@@ -392,7 +400,8 @@ class ViewController extends GetxController {
             type == 'Number int' ||
             type == 'email' ||
             type == 'mobile') {
-          GlobalKey<FormBuilderState> key = GlobalKey<FormBuilderState>(debugLabel: column['name']+'_edit');
+          GlobalKey<FormBuilderState> key =
+              GlobalKey<FormBuilderState>(debugLabel: column['name'] + '_edit');
           textField = generateFormTextField(key, column, type,
               '${dataModel['${name}'] != null ? dataModel['${name}'] : ''}');
           children.add(SizedBox(
@@ -536,7 +545,7 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(colorBox);
-        } else if (type == 'file') {
+        } else if (type == 'file' || type == 'file_pv') {
           fileBox = generateEditFileBox(
               dataModel[name] != null && dataModel[name] != ''
                   ? dataModel
@@ -547,7 +556,7 @@ class ViewController extends GetxController {
             height: 20,
           ));
           children.add(fileBox);
-        } else if (type == 'multiFile') {
+        } else if (type == 'multiFile' || type == 'multiFile_pv') {
           fileBox = generateEditMultiFileBox(
               dataModel[name] != null && dataModel[name].length != 0
                   ? dataModel
@@ -640,9 +649,9 @@ class ViewController extends GetxController {
           textAlign: TextAlign.center,
         ),
       );
-    } else if (type == 'file') {
+    } else if (type == 'file' || type == 'file_pv') {
       child = generateCellFileBox(indexColumn, indexRow, tableData: table);
-    } else if (type == 'multiFile') {
+    } else if (type == 'multiFile' || type == 'multiFile_pv') {
       child = generateCellMultiFileBox(indexColumn, indexRow, tableData: table);
     } else {
       child = generateData(indexColumn, indexRow, tableData: table);
@@ -747,9 +756,9 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey, var column, var type, String initValue) {
-    return
-      new Column(
+  static Widget generateFormTextField(GlobalKey<FormBuilderState> _fbKey,
+      var column, var type, String initValue) {
+    return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
@@ -820,7 +829,8 @@ class ViewController extends GetxController {
             onChange: (text) {
               if (text != null && text != '') {
                 if (column['type'] == 'Number int') {
-                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
+                  ViewController
+                      .request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${int.parse('${text}')}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
@@ -833,14 +843,16 @@ class ViewController extends GetxController {
                     'operator': '${filterInfo['operator']}',
                   };
                 } else {
-                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
+                  ViewController
+                      .request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${text}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
                   };
                 }
               } else {
-                ViewController.request['${column['name']}${filterInfo['operator']}'] = {
+                ViewController
+                    .request['${column['name']}${filterInfo['operator']}'] = {
                   'value': '',
                   'column': '${column['name']}',
                   'operator': '${filterInfo['operator']}',
@@ -1214,7 +1226,7 @@ class ViewController extends GetxController {
                 ],
                 onChanged: (text) {
                   if (text != '') {
-                  //   // selectedValue=value!;
+                    //   // selectedValue=value!;
                     ViewController.request[column['name']] = text;
                   } else {
                     ViewController.request[column['name']] = '';
@@ -1778,10 +1790,13 @@ class ViewController extends GetxController {
   static Widget generateCellFileBox(int indexColumn, int indexRow,
       {var tableData}) {
     String name;
+    String type;
     if (tableData == null) {
       name = MainController.tableInfo['columns'][indexColumn]['name'];
+      type = MainController.tableInfo['columns'][indexColumn]['type'];
     } else {
       name = tableData['columns'][indexColumn]['name'];
+      type = tableData['columns'][indexColumn]['type'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
     return dataModel != null && dataModel.length != 0
@@ -1789,7 +1804,9 @@ class ViewController extends GetxController {
             children: [
               Center(
                   child: Image.network(
-                baseUrl + '${dataModel}',
+                type == 'file'
+                    ? baseUrl
+                    : baseUrlPvFile + '${dataModel}',
                 width: 60,
                 height: 60,
                 fit: BoxFit.fill,
@@ -1813,21 +1830,24 @@ class ViewController extends GetxController {
   static Widget generateCellMultiFileBox(int indexColumn, int indexRow,
       {var tableData}) {
     String name;
+    String type;
     if (tableData == null) {
       name = MainController.tableInfo['columns'][indexColumn]['name'];
+      type = MainController.tableInfo['columns'][indexColumn]['type'];
     } else {
       name = tableData['columns'][indexColumn]['name'];
+      type = tableData['columns'][indexColumn]['type'];
     }
     var dataModel = MainController.tableData.value[indexRow]['${name}_multi'];
     return dataModel != null && dataModel.length != 0
         ? Container(
-      width: 150,
-          child: Wrap(
+            width: 150,
+            child: Wrap(
               children: [
                 for (var data in dataModel)
                   Center(
                       child: Image.network(
-                    baseUrl + '${data['path']}',
+                    type=='multiFile'?baseUrl:baseUrlPvFile + '${data['path']}',
                     width: 50,
                     height: 50,
                     fit: BoxFit.fill,
@@ -1845,7 +1865,7 @@ class ViewController extends GetxController {
                       ),
               ],
             ),
-        )
+          )
         : Container();
   }
 
@@ -1874,7 +1894,7 @@ class ViewController extends GetxController {
           columnName: column['title'],
           onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
-            if (column['type'] == 'file') {
+            if (column['type'] == 'file' || column['type'] == 'file_pv') {
               ViewController.request[column['name']] = file;
             } else {
               filesSelectedList.add(file);
@@ -1883,7 +1903,9 @@ class ViewController extends GetxController {
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt:
-              column['type'] == 'file' ? selecetdFiles : filesSelectedList,
+              column['type'] == 'file' || column['type'] == 'file_pv'
+                  ? selecetdFiles
+                  : filesSelectedList,
           isSeletedFile: isSeletedFile,
           column: column,
           fileInfo: fileInfo,
@@ -1895,6 +1917,7 @@ class ViewController extends GetxController {
   static Widget generateEditFileBox(
       var data, var column, Rx<bool>? isSeletedFile) {
     String name = column['name'];
+    String type = column['type'];
     RxString file =
         data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
 
@@ -1937,7 +1960,7 @@ class ViewController extends GetxController {
                               height: 20,
                             ),
                             Image.network(
-                              baseUrl + '${file}',
+                              type=='file'?baseUrl :baseUrlPvFile + '${file}',
                               width: 40,
                               height: 40,
                               fit: BoxFit.fill,
@@ -2007,6 +2030,7 @@ class ViewController extends GetxController {
   static Widget generateEditMultiFileBox(
       var data, var column, Rx<bool>? isSeletedFile) {
     String name = column['name'];
+    String type = column['type'];
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -2075,7 +2099,7 @@ class ViewController extends GetxController {
                                         child: Column(
                                       children: [
                                         Image.network(
-                                          baseUrl + '${file['path']}',
+                                          type=='multiFile'?baseUrl:baseUrlPvFile + '${file['path']}',
                                           width: 70,
                                           height: 70,
                                           fit: BoxFit.fill,
@@ -2166,7 +2190,7 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateSelectFileBox(RxList<String> fileSelectedList,
+  static Widget generateSelectFileBox(String type,RxList<String> fileSelectedList,
       RxMap<String, List<dynamic>> fileInfo, var index) {
     return Obx(() {
       var fileData = fileInfo[fileSelectedList[index]];
@@ -2176,7 +2200,11 @@ class ViewController extends GetxController {
       if (fileInfo[fileSelectedList[index]] != null) {
         totalChunks = fileData?[0] ?? 1;
         currentChunk = fileData?[1] ?? 0;
-        chunkName.value = fileData!.length > 2 ?fileData[2]!=null? fileData[2]:{} : fileSelectedList[index];
+        chunkName.value = fileData!.length > 2
+            ? fileData[2] != null
+                ? fileData[2]
+                : {}
+            : fileSelectedList[index];
       }
       return Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -2184,7 +2212,7 @@ class ViewController extends GetxController {
           children: [
             chunkName.isNotEmpty
                 ? Image.network(
-                    baseUrl + '${chunkName['path']}',
+                    type.endsWith('pv')?baseUrlPvFile:baseUrl + '${chunkName['path']}',
                     width: 70,
                     height: 70,
                     fit: BoxFit.fill,
@@ -2215,7 +2243,8 @@ class ViewController extends GetxController {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Txt(
-                              totalChunks == currentChunk ? '${chunkName.isNotEmpty ? chunkName['name']!=null?chunkName['name']:'' : ''}'
+                              totalChunks == currentChunk
+                                  ? '${chunkName.isNotEmpty ? chunkName['name'] != null ? chunkName['name'] : '' : ''}'
                                   : '',
                               fontSize: 16,
                               color: totalChunks == currentChunk
@@ -2229,7 +2258,8 @@ class ViewController extends GetxController {
                                 onPressed: () {
                                   ViewController.widgetDeletePopup(
                                       onChange: () async {
-                                    await MainController.deleteFileInChunks(chunkName['name']!);
+                                    await MainController.deleteFileInChunks(
+                                        chunkName['name']!);
                                     fileSelectedList.removeAt(index);
                                     Navigator.pop(Get.context!);
                                   });

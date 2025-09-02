@@ -1,6 +1,7 @@
 import 'config.dart';
 
 const String baseApiUrl=baseUrl+'/api/v1';
+const String baseUrlPvFile=baseApiUrl+'/record/pv';
 const String listSchemaUrl=baseApiUrl+'/admin/listSchemaByField';
 const String listFieldUrl=baseApiUrl+'/admin/listFields';
 const String listRoutesUrl=baseApiUrl+'/admin/listRoutes';

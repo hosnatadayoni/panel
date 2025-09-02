@@ -67,13 +67,13 @@ class _FormFileState extends State<FormFile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.column['type'] == 'multiFile' ||
-              (widget.column['type'] == 'file' && fileNameList.length == 0))
+          if (widget.column['type'] == 'multiFile' ||widget.column['type'] == 'multiFile_pv' ||
+              ((widget.column['type'] == 'file' ||widget.column['type'] == 'file_pv') && fileNameList.length == 0))
             InkWell(
               onTap: () async {
                 FilePickerResult? picked = await FilePicker.platform.pickFiles(
                   allowMultiple:
-                      widget.column['type'] == 'multiFile' ? true : false,
+                      widget.column['type'] == 'multiFile' || widget.column['type'] == 'multiFile_pv' ? true : false,
                   type: FileType.custom,
                   withReadStream: true,
                   withData: true,
@@ -147,7 +147,7 @@ class _FormFileState extends State<FormFile> {
           Column(
             children: [
               for (var i = 0; i < fileNameList.length; i++)
-                ViewController.generateSelectFileBox(fileNameList, widget.fileInfo, i)
+                ViewController.generateSelectFileBox(widget.column['type'],fileNameList, widget.fileInfo, i)
                 // Container(
                 //   margin: EdgeInsets.only(bottom: 10),
                 //   child: Row(
