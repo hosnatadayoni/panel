@@ -4,259 +4,11 @@ import 'package:flutter/material.dart';
 import '../../Logic/Controllers/app-controller.dart';
 import '../../Public/styles.dart';
 
-// enum btnType{
-//   primary,
-//   custom
-// }
-// enum ButtonSize {
-//   small,
-//   medium,
-//   large
-// }
-//
-//
-// class Btn extends StatefulWidget {
-//   final Function? onClick;
-//   final btnType type;
-//   final String? loadingTag;
-//   final String? text;
-//   final Widget? child;
-//   final double? width;
-//   final double? height;
-//   final fontTypes fontType;
-//   final Color? color;
-//    Color? hoverColor;
-//    Color? hoverPrimaryTypeColor;
-//   final bool isLink;
-//   final ButtonSize size;
-//   final bool disabled;
-//   final bool isBlock;
-//   final bool responsive;
-//   final double? responsiveBreakpoint;
-//   final bool isToggle;
-//
-//
-//   Btn(
-//       this.type, {
-//         this.text,
-//         this.onClick,
-//         this.width,
-//         this.height,
-//         this.fontType = fontTypes.heading4,
-//         this.loadingTag,
-//         this.child,
-//         this.color,
-//         this.hoverColor,
-//         this.hoverPrimaryTypeColor,
-//         this.isLink = false,
-//         this.size = ButtonSize.medium,
-//         this.disabled = false,
-//         this.isBlock = false,
-//         this.responsive = false,
-//         this.responsiveBreakpoint = 768,
-//         this.isToggle = false,
-//
-//       });
-//
-//   @override
-//   _BtnState createState() => _BtnState();
-// }
-//
-// class _BtnState extends State<Btn> {
-//   bool _isHovered = false;
-//   bool _isToggle = false;
-//
-//   EdgeInsets getButtonPadding() {
-//     switch (widget.size) {
-//       case ButtonSize.small:
-//         return EdgeInsets.symmetric(vertical: 12, horizontal: 16);
-//       case ButtonSize.large:
-//         return EdgeInsets.symmetric(vertical: 24, horizontal: 32);
-//       case ButtonSize.medium:
-//       default:
-//         return EdgeInsets.symmetric(vertical: 20, horizontal: 24);
-//     }
-//   }
-//
-//   double getFontSize() {
-//     switch (widget.size) {
-//       case ButtonSize.small:
-//         return 12;
-//       case ButtonSize.large:
-//         return 16;
-//       case ButtonSize.medium:
-//       default:
-//         return 14;
-//     }
-//   }
-//
-//   // Color getBackgroundColor() {
-//   //   if (_isHovered && widget.hoverColor != null) {
-//   //     return widget.hoverColor!;
-//   //   }
-//   //   switch (widget.type) {
-//   //     case btnType.primary:
-//   //       return _isHovered ? (widget.color ?? Colors.transparent) : Colors.transparent;
-//   //     case btnType.custom:
-//   //       return widget.color ?? Colors.transparent;
-//   //     default:
-//   //       return whiteColor;
-//   //   }
-//   // }
-//   Color getBackgroundColor() {
-//     if (widget.disabled) {
-//       return widget.color?.withOpacity(0.65) ?? Colors.transparent;
-//     }
-//     if (_isHovered && widget.hoverColor != null) {
-//       if (widget.type == btnType.primary) {
-//         if(widget.isToggle){
-//           widget.hoverColor = Colors.transparent;
-//         }
-//       }
-//       return widget.hoverColor!;
-//     }
-//
-//     switch (widget.type) {
-//       case btnType.primary:
-//         return _isHovered ? (widget.color ?? Colors.transparent) : Colors.transparent;
-//       case btnType.custom:
-//         return widget.color ?? Colors.transparent;
-//       default:
-//         return whiteColor;
-//     }
-//   }
-//
-//   Color getBorderColor() {
-//     if (widget.type == btnType.primary) {
-//       return _isHovered ? (widget.color ?? Colors.transparent) : (widget.color ?? Colors.transparent);
-//     }
-//     return Colors.transparent;
-//   }
-//
-//   Color getTextColor() {
-//     const defaultColor = whiteColor;
-//     if (widget.isLink) {
-//
-//       if(widget.isToggle){
-//         return widget.color ?? defaultColor;
-//       }
-//       else{
-//         if(widget.disabled == false){
-//           return Colors.blue;
-//         }
-//       }
-//
-//     }
-//     if(widget.isToggle){
-//       widget.hoverPrimaryTypeColor = widget.color;
-//     }
-//
-//     if (widget.type == btnType.primary) {
-//       if (_isHovered) {
-//         return widget.hoverPrimaryTypeColor ?? widget.color ?? defaultColor;
-//       }
-//       return widget.color ?? defaultColor;
-//     }
-//
-//     return widget.type == btnType.custom
-//         ? whiteColor
-//         : widget.color ?? defaultColor;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     var size = MediaQuery.of(context).size;
-//     return Center(
-//       child: MouseRegion(
-//         onEnter: (_) => setState(() => widget.disabled == false ? _isHovered = true : _isHovered = false),
-//         onExit: (_) => setState(() => _isHovered = false),
-//         child: IgnorePointer(
-//           ignoring: widget.disabled,
-//           child: Focus(
-//             canRequestFocus: !widget.disabled,
-//             child: Container(
-//               // padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 12),
-//               // width: widget.isBlock == true ? size.width : null,
-//               width: widget.isBlock || (widget.responsive && size.width < widget.responsiveBreakpoint!)
-//                   ? size.width
-//                   : widget.width,
-//               decoration: BoxDecoration(
-//                 border: Border.all(
-//                   color: _isToggle ? Colors.transparent : (getBorderColor() ?? Colors.transparent),
-//                   width: borderSize,
-//                 ),
-//                 borderRadius: BorderRadius.circular(5),
-//               ),
-//               child: ElevatedButton(
-//                   onPressed: widget.disabled
-//                       ? null
-//                       : () async {
-//                     if (widget.isToggle) {
-//                       setState(() {
-//                         _isToggle = !_isToggle;
-//                       });
-//                     }
-//                     if (widget.onClick != null) {
-//                       widget.onClick!();
-//                     }
-//                   },
-//                   focusNode: widget.disabled ? FocusNode(skipTraversal: true) : null,
-//                 // onPressed: () async {
-//                 //   if (widget.onClick != null) widget.onClick!();
-//                 // },
-//                 child: Obx(() {
-//                   return (AppController.loadingList.value.contains(widget.loadingTag) && widget.loadingTag != null)
-//                       ? Container(
-//                     width: 25,
-//                     height: 25,
-//                     child: CircularProgressIndicator(
-//                       color: whiteColor,
-//                       strokeWidth: 2,
-//                     ),
-//                   )
-//                       : widget.child == null
-//                       ? Txt(
-//                     widget.text ?? '',
-//                     fontSize: getFontSize(),
-//                     fontWeight: FontWeight.w500,
-//                     color: getTextColor(),
-//                     // textDecoration:widget.disabled == false ?  widget.isLink ? TextDecoration.underline : TextDecoration.none :TextDecoration.none ,
-//                     textDecoration: widget.isToggle && widget.isLink
-//                         ? TextDecoration.none
-//                         : (widget.disabled == false && widget.isLink)
-//                         ? TextDecoration.underline
-//                         : TextDecoration.none,
-//                   )
-//                       : widget.child!;
-//                 }),
-//                 style: ButtonStyle(
-//                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                     RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(5),
-//                     ),
-//                   ),
-//                   backgroundColor: MaterialStateProperty.all(getBackgroundColor()),
-//                 //   backgroundColor: MaterialStateProperty.all<Color?>(
-//                 //     widget.disabled
-//                 //         ? widget.color?.withOpacity(0.65) ?? Colors.transparent // استفاده ایمن از withOpacity
-//                 //             : getBackgroundColor(),
-//                 //
-//                 // ),
-//                   elevation: MaterialStateProperty.all(0),
-//                   padding: MaterialStateProperty.all(
-//                       EdgeInsets.only(top: 20, bottom: 20, left: 12, right: 12)),
-//                   overlayColor: MaterialStateProperty.all(Colors.transparent),
-//                   mouseCursor: MaterialStateProperty.all(
-//                       widget.disabled ? SystemMouseCursors.forbidden : SystemMouseCursors.click),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+enum ButtonSize {
+  small,
+  medium,
+  large
+}
 enum btnType{
   primary,
   secondary,
@@ -268,33 +20,27 @@ enum btnType{
   dark,
   link,
 }
-
-enum ButtonSize {
-  small,
-  medium,
-  large
-}
-
 class Btn extends StatefulWidget {
-   btnType? type;
-   Function? onClick;
-   Widget? content;
-   double? width;
-   double? height;
-   bool? isOutline;
-   ButtonSize size;
-   bool disabled;
-   bool isBlock;
-   bool responsive;
-   double? responsiveBreakpoint;
-   bool? isActive;
-   bool isToggle;
-   bool isCenter;
-   BorderRadius? borderRadius;
+  btnType? type;
+  Function? onClick;
+  Widget? content;
+  double? width;
+  double? height;
+  bool? isOutline;
+  ButtonSize size;
+  bool disabled;
+  bool isBlock;
+  bool responsive;
+  double? responsiveBreakpoint;
+  bool? isActive;
+  bool isToggle;
+  bool isCenter;
+  BorderRadius? borderRadius;
+  String? loadingTag;
 
   Btn(
-       {
-         required this.type,
+      {
+        required this.type,
         this.content,
         this.onClick,
         this.width,
@@ -305,10 +51,11 @@ class Btn extends StatefulWidget {
         this.isBlock = false,
         this.responsive = false,
         this.responsiveBreakpoint = 768,
-         this.isActive = false,
+        this.isActive = false,
         this.isToggle = false,
         this.isCenter = false,
-        this.borderRadius
+        this.borderRadius,
+        this.loadingTag
       });
 
   @override
@@ -554,13 +301,23 @@ class _BtnState extends State<Btn> {
                     color:_isHovered ?contentColor(): widget.isOutline! ? textColor(): contentColor(),
                     decoration: widget.type == btnType.link ?TextDecoration.underline : TextDecoration.none,
                   ),
-                  child: widget.content!,
+                  child: Obx((){
+                    return (AppController.loadingList.contains(widget.loadingTag) && widget.loadingTag!=null)?
+                    Container(
+                      width: 25,
+                      height: 25,
+                      child: CircularProgressIndicator(
+                        color: whiteColor,
+                        strokeWidth: 2,
+                      ),
+                    ): widget.content!;
+                  }),
                 ),
               ),
             ),
-              ),
-            ),
           ),
-        );
+        ),
+      ),
+    );
   }
 }

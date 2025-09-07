@@ -63,7 +63,6 @@ class MainController extends GetxController {
       title: 'Home',
       icon: Icons.home,
     )
-
   ];
 
   //

@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:panel/Admin/Logic/Controllers/main-controller.dart';
 import 'package:panel/Admin/Logic/Controllers/record-controller.dart';
+import 'package:panel/Admin/Logic/Controllers/view-controller.dart';
 import 'package:panel/Admin/Logic/Helpers/token-methods.dart';
 import 'package:panel/Admin/Logic/Models/ServerModel/project.dart';
 import 'package:panel/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
 import '../Models/db.dart';
+import 'app-controller.dart';
 
 class ConncetServerController extends GetxController {
   static Map<String, dynamic> storeRecordRes = {};
@@ -17,6 +19,8 @@ class ConncetServerController extends GetxController {
   static List<dynamic> listFieldsRes = [];
   static List<dynamic> listFiltersRes = [];
   static List<dynamic> listValidateRes = [];
+  static RxList<dynamic> getRouteRes=[].obs;
+
   static Map<String,dynamic>stroredSchema={};
 
   static bool deleteRecordRes = false;
@@ -50,6 +54,7 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {}, printResponse: true);
   }
+
   static createSchema(Map<String, dynamic> json) async {
     var response = await RestApi.post(createSchemaUrl, body: json);
     RestApi.responseHandler(
@@ -170,7 +175,6 @@ class ConncetServerController extends GetxController {
 
     }, printResponse: true);
   }
-
   static createFilter(Map<String, dynamic> json) async {
     var response = await RestApi.post(createFilterSchemaUrl, body: json);
     RestApi.responseHandler(
@@ -179,6 +183,67 @@ class ConncetServerController extends GetxController {
     }, printResponse: true);
   }
 
+  static storeRoute (var json) async {
+    var response = await RestApi.post(storeRoutesUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getRouteRes.add(response!.data['data']);
+        },printResponse: true);
+    // AppController.finishLoading('store-record');
+    // AppController.finishLoading('get-records');
+  }
+  static getRoute({int currentPageRoute=1, int countShowRowRoute=10}) async {
+    AppController.startLoading('get-route');
+  var response = await RestApi.post(listRoutesUrl, body:{'currentPageRoute':currentPageRoute.toString(), 'perPage':countShowRowRoute.toString()});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getRouteRes.value=[];
+          getRouteRes.value=response!.data['data']['data'].length!=0?response.data['data']['data']:[];
+          MainController.totalItems.value=response.data['data']['count'];
+          int s = (currentPageRoute - 1) * countShowRowRoute;
+          int end = s + countShowRowRoute;
+          MainController.startIndex.value = s;
+          int endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
+          MainController.endIndex.value = endBycondition;
+          ViewController.totalPage.value =(MainController.totalItems.value/countShowRowRoute).ceil();
+          print('ConncetServerController.getRoute${ MainController.totalPages.value}');
+        },printResponse: true);
+    AppController.finishLoading('get-route');
+  }
+
+  static updateRoute(var json,var id) async {
+    AppController.startLoading('update-route');
+    var response = await RestApi.post(updateRouteUrl, body: {'item':(json),'id':id});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          var update=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data']:[];
+          var index=getRouteRes.indexWhere((element) => element['_id']==update['_id']);
+          if(index!=-1){
+            getRouteRes[index]=update;
+          }
+        },printResponse: true);
+    AppController.finishLoading('update-route');
+
+  }
+
+  static deleteRoute(var id) async {
+    AppController.startLoading('update-route');
+
+    var response = await RestApi.post(deleteRouteUrl, body: {'id':id});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          var index=getRouteRes.indexWhere((element) => element['_id']==id);
+          if(index!=-1){
+            getRouteRes.removeAt(index);
+          }
+        },printResponse: true);
+    AppController.finishLoading('update-route');
+    // AppController.finishLoading('get-records');
+  }
 
 
 
