@@ -18,12 +18,12 @@ import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/Items/Header/header.dart';
 import '../../Componenets/Items/Menu/menu.dart';
 
-class TableRoute extends StatefulWidget {
+class TableAdmin extends StatefulWidget {
   @override
-  State<TableRoute> createState() => _TableRouteState();
+  State<TableAdmin> createState() => _TableAdminState();
 }
 
-class _TableRouteState extends State<TableRoute> {
+class _TableAdminState extends State<TableAdmin> {
   String _normalizeUrl(String raw) {
     final trimmed = raw.trim();
     if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {

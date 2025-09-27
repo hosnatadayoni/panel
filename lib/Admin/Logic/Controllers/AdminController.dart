@@ -14,6 +14,10 @@ class AdminController extends GetxController {
   static RxInt currentPageRole=1.obs;
   static RxInt countShowRowRole=10.obs;
 
+  static RxList<dynamic> getAdminRes=[].obs;
+  static RxInt currentPageAdmin=1.obs;
+  static RxInt countShowRowAdmin=10.obs;
+
   static storeAccess (var json) async {
     var response = await RestApi.post(storeAccessUrl, body: (json));
     RestApi.responseHandler(
@@ -114,4 +118,43 @@ class AdminController extends GetxController {
     // AppController.finishLoading('update-records');
     // AppController.finishLoading('get-records');
   }
+
+
+  static storeAdmin (var json) async {
+    var response = await RestApi.post(storeAdminUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getAdminRes.add(response!.data['data']);
+        },printResponse: true);
+  }
+  static getAdmins() async {
+    var response = await RestApi.post(listAdminsUrl, body:{'pageNumber':currentPageAdmin.value.toString(), 'perPage':countShowRowAdmin.value.toString()});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          getAdminRes.value=[];
+          getAdminRes.value=response!.data['data']['data'].length!=0?response.data['data']['data']:[];
+          MainController.totalItems.value=response.data['data']['count'];
+          int s = (currentPageAdmin.value - 1) * countShowRowAdmin.value;
+          var end = s + countShowRowAdmin.value;
+          MainController.startIndex.value = s;
+          var endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
+          MainController.endIndex.value = endBycondition;
+          ViewController.totalPage.value =(MainController.totalItems.value/countShowRowAdmin.value).ceil();
+        },printResponse: true);
+  }
+  static updateAdmin(var json,var id) async {
+    var response = await RestApi.post(updateAdminUrl, body: {'item':(json),'id':id});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          var update=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data']:[];
+          var index=getAdminRes.indexWhere((element) => element['_id']==update['_id']);
+          if(index!=-1){
+            getAdminRes[index]=update;
+          }
+        },printResponse: true);
+  }
+
 }

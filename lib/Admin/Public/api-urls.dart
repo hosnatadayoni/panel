@@ -20,6 +20,12 @@ const String storeRoleUrl=baseApiUrl+'/admin/createRole';
 const String updateRoleUrl=baseApiUrl+'/admin/updateRole';
 const String deleteRoleUrl=baseApiUrl+'/admin/deleteRole';
 
+
+const String listAdminsUrl=baseApiUrl+'/admin/listAdmin';
+const String storeAdminUrl=baseApiUrl+'/admin/createAdmin';
+const String updateAdminUrl=baseApiUrl+'/admin/updateAdmin';
+const String deleteAdminUrl=baseApiUrl+'/admin/deleteAdmin';
+
 const String storeRecordUrl=baseApiUrl+'/record/storeRecord';
 const String updateRecordUrl=baseApiUrl+'/record/updateRecord';
 const String deleteRecordUrl=baseApiUrl+'/record/deleteRecord';

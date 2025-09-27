@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
@@ -16,7 +17,7 @@ import 'package:get/get.dart';
 import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/btn.dart';
 
-class CreateRoute extends StatelessWidget {
+class CreateAdmin extends StatelessWidget {
 
 
   @override
@@ -64,9 +65,9 @@ class CreateRoute extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                               ),
                                   onClick: () async {
-                                    print('_CreateRouteState.build>>>${json.encode(ViewController.request)}');
+                                    print('_CreateAdminState.build>>>${json.encode(ViewController.request)}');
                                     if(ViewController.request.length!=0) {
-                                      ConncetServerController.storeRoute(ViewController.request);
+                                      AdminController.storeAdmin(ViewController.request);
                                     }
                                     Navigator.pop(context);
                                   } , loadingTag: 'update-records'),
