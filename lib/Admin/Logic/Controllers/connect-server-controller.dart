@@ -93,6 +93,7 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }
+
   static storeRoute (var json) async {
     var response = await RestApi.post(storeRoutesUrl, body: (json));
     RestApi.responseHandler(
@@ -100,8 +101,6 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           getRouteRes.add(response!.data['data']);
         },printResponse: true);
-    // AppController.finishLoading('store-record');
-    // AppController.finishLoading('get-records');
   }
   static getRoute() async {
     var response = await RestApi.post(listRoutesUrl, body:{'currentPageRoute':currentPageRoute.value.toString(), 'perPage':countShowRowRoute.value.toString()});
@@ -121,7 +120,6 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }
-
   static updateRoute(var json,var id) async {
     var response = await RestApi.post(updateRouteUrl, body: {'item':(json),'id':id});
     RestApi.responseHandler(
@@ -134,7 +132,6 @@ class ConncetServerController extends GetxController {
           }
         },printResponse: true);
   }
-
   static deleteRoute(var id) async {
     var response = await RestApi.post(deleteRouteUrl, body: {'id':id});
     RestApi.responseHandler(
@@ -148,6 +145,7 @@ class ConncetServerController extends GetxController {
     // AppController.finishLoading('update-records');
     // AppController.finishLoading('get-records');
   }
+
   static createJsonFilter(var wheres,String tableName,String type,{var page=null,var perpage=null}) async {
     List<dynamic>l=[];
     Map<String,dynamic> c={};

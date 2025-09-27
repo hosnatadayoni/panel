@@ -9,6 +9,17 @@ const String storeRoutesUrl=baseApiUrl+'/admin/createRoute';
 const String updateRouteUrl=baseApiUrl+'/admin/updateRoute';
 const String deleteRouteUrl=baseApiUrl+'/admin/deleteRoute';
 
+const String listAccessesUrl=baseApiUrl+'/admin/listAccesses';
+const String storeAccessUrl=baseApiUrl+'/admin/createAccess';
+const String updateAccessUrl=baseApiUrl+'/admin/updateAccess';
+const String deleteAccessUrl=baseApiUrl+'/admin/deleteAccess';
+
+
+const String listRolesUrl=baseApiUrl+'/admin/listRole';
+const String storeRoleUrl=baseApiUrl+'/admin/createRole';
+const String updateRoleUrl=baseApiUrl+'/admin/updateRole';
+const String deleteRoleUrl=baseApiUrl+'/admin/deleteRole';
+
 const String storeRecordUrl=baseApiUrl+'/record/storeRecord';
 const String updateRecordUrl=baseApiUrl+'/record/updateRecord';
 const String deleteRecordUrl=baseApiUrl+'/record/deleteRecord';

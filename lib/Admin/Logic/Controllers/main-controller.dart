@@ -49,6 +49,18 @@ class MainController extends GetxController {
       title: 'route',
       icon: Icons.link,
     ),
+    Item(
+      title: 'access',
+      icon: Icons.accessibility,
+    ),
+    Item(
+      title: 'role & access',
+      icon: Icons.key,
+    ),
+    Item(
+      title: 'admin',
+      icon: Icons.person,
+    ),
   ];
 
   static String formatNumber(String number) {
