@@ -39,6 +39,7 @@ class _SelectBoxState extends State<SelectBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
+    if(widget.column!=null)
     if(widget.column['validators'] != null && widget.column['validators'].length!=0){
        inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
        errorMessage = inputRequired['message'];

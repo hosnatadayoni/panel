@@ -14,6 +14,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Componenets/Items/Form/form-selectBox.dart';
 import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/btn.dart';
 
@@ -75,9 +76,10 @@ class CreateAdmin extends StatelessWidget {
                           )
                       ),
 
-                      inputs('عنوان','title'),
-                      inputs('آدرس','address'),
-                      inputs('ظاهر','view'),
+                      inputs('نام','name'),
+                      inputs('نام کاربری','username'),
+                      inputs('پسورد','password'),
+                      selects(),
                       SizedBox(height: 20,),
 
                     ],
@@ -120,6 +122,49 @@ class CreateAdmin extends StatelessWidget {
             }
           },
         ),
+      ],
+    );
+  }
+  selects(){
+    ViewController.request['role_id'] =  AdminController.getRoleRes.first['_id'];
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Txt(
+          'نقش',
+          color: MainController.isLightMode.value == true
+              ? whiteColor
+              : color2,
+        ),
+         SizedBox(height: 10,),
+         SelectBox(
+            name: 'نقش',
+            items: [
+              for (var item in AdminController.getRoleRes)
+                DropdownMenuItem(
+                    child: Obx(() {
+                      return Txt(
+                        '${item['name']}',
+                        color:
+                        MainController.isLightMode.value == true
+                            ? whiteColor
+                            : primaryDark,
+                      );
+                    }),
+                    value: item['_id']),
+            ],
+            initalValue: AdminController.getRoleRes.first['_id'],
+            onChanged: (value) async {
+
+              if (value != '') {
+                ViewController.request['role_id'] = value;
+              } else {
+                ViewController.request['role_id'] =  AdminController.getRoleRes.first['_id'];
+              }
+            },
+            hintText: '',
+            isSeleted: true.obs,
+            selectedValue: ''),
       ],
     );
   }

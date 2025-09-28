@@ -60,6 +60,7 @@ class _TableRoleState extends State<TableRole> {
                         : (size.width) - 50
                     : (size.width) - 50,
                 padding: EdgeInsets.all(size.width > 800 ? 15 : 0),
+                height: size.height,
                 child: ColumnScroll(
                   children: [
                     SizedBox(
@@ -360,7 +361,8 @@ OperationView(var data) {
         offset: Offset(0, 55),
         onSelected: (String value) async {
           if (value == 'access') {
-            ViewController.request={};
+            await AdminController.getAccess();
+            await AdminController.getAccessRole(data['_id']);
             Get.to(TableRoleAccess(data: data,));
           }
           if (value == 'edit') {
@@ -492,9 +494,7 @@ OperationView(var data) {
                         width: 10,
                       ),
                       Txt('${AppController.of(context)!.value('remove')}',
-                          color: MainController.isLightMode.value == false
-                              ? color3
-                              : whiteColor)
+                          color: MainController.isLightMode.value == false ? color3 : whiteColor)
                     ],
                   ),
                 )),

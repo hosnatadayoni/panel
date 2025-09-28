@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
@@ -14,9 +15,12 @@ import '../../../Public/api-urls.dart';
 import '../../../Public/config.dart';
 import '../../../Public/styles.dart';
 import '../../Componenets/General/txt.dart';
+import '../../Componenets/Items/Form/form-checkBox.dart';
 import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/Items/Header/header.dart';
 import '../../Componenets/Items/Menu/menu.dart';
+import 'create-admin.dart';
+import 'edit-admin.dart';
 
 class TableAdmin extends StatefulWidget {
   @override
@@ -24,23 +28,6 @@ class TableAdmin extends StatefulWidget {
 }
 
 class _TableAdminState extends State<TableAdmin> {
-  String _normalizeUrl(String raw) {
-    final trimmed = raw.trim();
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-      return trimmed;
-    }
-    return 'https://$trimmed';
-  }
-
-  Future<void> _launchUrl(BuildContext context, String url) async {
-    final uri = Uri.parse(_normalizeUrl(url));
-    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!ok && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('باز کردن لینک ناموفق بود: ${uri.toString()}')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,8 +154,9 @@ class _TableAdminState extends State<TableAdmin> {
                                           ViewController.isClickedEditBtn.value = false;
                                         });
                                         Future.delayed(Duration.zero, () async {
+                                          await AdminController.getRoles();
                                           ViewController.request = {};
-                                      Get.to(CreateRoute());
+                                      Get.to(CreateAdmin());
                                         });
                                       },
                                       value: 'create',
@@ -242,9 +230,11 @@ class _TableAdminState extends State<TableAdmin> {
                         final header = TableRow(
                           // decoration: BoxDecoration(color: Colors.blue.shade50),
                           children: [
-                            HeaderCell('عنوان'),
-                            HeaderCell('آدرس'),
-                            HeaderCell('ظاهر'),
+                            HeaderCell('نام'),
+                            HeaderCell('نام کاربری'),
+                            HeaderCell('رمز عبور'),
+                            HeaderCell('نقش'),
+                            HeaderCell('غیرفعال'),
                             HeaderCell('عملیات'),
                           ],
                         );
@@ -252,15 +242,14 @@ class _TableAdminState extends State<TableAdmin> {
                         // ردیف‌های دیتا
 
                         return Obx( () {
-                           rows.value = (ConncetServerController.getRouteRes.value)
+                           rows.value = (AdminController.getAdminRes)
                                 .map<TableRow>((row) {
                                   return TableRow(
                                     children: [
-                                      // عنوان
                                       Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Text(
-                                          row['title'] ?? '',
+                                          row['name'] ?? '',
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                             fontSize: 14,
@@ -273,46 +262,65 @@ class _TableAdminState extends State<TableAdmin> {
                                           maxLines: 2,
                                         ),
                                       ),
-
-                                      // آدرس
                                       Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: TextButton.icon(
-                                            icon: const Icon(Icons.open_in_new,
-                                                size: 18),
-                                            onPressed: () => _launchUrl(
-                                              context,
-                                              baseApiUrl+'/admin/showRoute/' +row['_id']+'?api_key='+MainController.apiKey.value
-                                              // '/' +
-                                                  // (row['address'] ?? ''),
-                                            ),
-                                            label: Text(
-                                              row['address'] ?? '',
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            style: TextButton.styleFrom(
-                                              padding: EdgeInsets.zero,
-                                              alignment: Alignment.centerRight,
-                                            ),
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          row['username'] ?? '',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                MainController.isLightMode.value
+                                                    ? whiteColor
+                                                    : color1,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
                                         ),
                                       ),
-
-                                      // ظاهر
                                       Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Txt(
-                                          '${row['view'] ?? ''}',
-                                          color:
-                                              MainController.isLightMode.value
-                                                  ? whiteColor
-                                                  : color1,
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          row['password'] ?? '',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                MainController.isLightMode.value
+                                                    ? whiteColor
+                                                    : color1,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
                                         ),
                                       ),
-
-                                      // عملیات
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          row['role']!=null ? row['role']['name'] +'(${row['role']['description']})': '',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                MainController.isLightMode.value
+                                                    ? whiteColor
+                                                    : color1,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child:CheckBox(
+                                          defaultValue: row['in_active'],
+                                          checkBoxTitle: '',
+                                          checkBoxName: '',
+                                          onChange: (val) {
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(8),
                                         child: Align(
@@ -348,7 +356,9 @@ class _TableAdminState extends State<TableAdmin> {
                                         0: IntrinsicColumnWidth(),
                                         1: IntrinsicColumnWidth(),
                                         2: IntrinsicColumnWidth(),
-                                        3: FixedColumnWidth(80),
+                                        3: IntrinsicColumnWidth(),
+                                        4: IntrinsicColumnWidth(),
+                                        5: IntrinsicColumnWidth(),
                                       },
                                       children: [header, ...rows],
                                     ),
@@ -403,8 +413,9 @@ OperationView(var data) {
         offset: Offset(0, 55),
         onSelected: (String value) async {
           if (value == 'edit') {
+            AdminController.getRoles();
             ViewController.request={};
-            Get.to(EditRoute(data: data,));
+            Get.to(EditAdmin(data: data,));
           }
           if (value == 'remove') {
             showDialog(

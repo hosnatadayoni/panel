@@ -13,18 +13,20 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Logic/Controllers/AdminController.dart';
+import '../../Componenets/Items/Form/form-selectBox.dart';
 import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/btn.dart';
 
-class EditRoute extends StatefulWidget {
-  EditRoute({this.data});
+class EditAdmin extends StatefulWidget {
+  EditAdmin({this.data});
   var data;
 
   @override
-  State<EditRoute> createState() => _EditRouteState();
+  State<EditAdmin> createState() => _EditAdminState();
 }
 
-class _EditRouteState extends State<EditRoute> {
+class _EditAdminState extends State<EditAdmin> {
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,10 @@ class _EditRouteState extends State<EditRoute> {
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      inputs('عنوان','title'),
-                      inputs('آدرس','address'),
-                      inputs('ظاهر','view'),
+                      inputs('نام','name'),
+                      inputs('نام کاربری','username'),
+                      inputs('پسورد','password'),
+                      selects(),
                       SizedBox(height: 20,),
                             Container(
                         padding: EdgeInsets.all(10),
@@ -76,7 +79,7 @@ class _EditRouteState extends State<EditRoute> {
                             ),
                                 onClick: () async {
                                     if(ViewController.request.length!=0) {
-                                    ConncetServerController.updateRoute(json.encode(ViewController.request),widget.data['_id']);
+                                    AdminController.updateAdmin(json.encode(ViewController.request),widget.data['_id']);
                                   }
                                   Navigator.pop(context);
                                 } , loadingTag: 'update-records'),
@@ -123,6 +126,49 @@ class _EditRouteState extends State<EditRoute> {
             }
           },
         ),
+      ],
+    );
+  }
+  selects(){
+    ViewController.request['role_id'] =  '${widget.data['role_id']}';
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Txt(
+          'نقش',
+          color: MainController.isLightMode.value == true
+              ? whiteColor
+              : color2,
+        ),
+        SizedBox(height: 10,),
+        SelectBox(
+            name: 'نقش',
+            items: [
+              for (var item in AdminController.getRoleRes)
+                DropdownMenuItem(
+                    child: Obx(() {
+                      return Txt(
+                        '${item['name']}',
+                        color:
+                        MainController.isLightMode.value == true
+                            ? whiteColor
+                            : primaryDark,
+                      );
+                    }),
+                    value: item['_id']),
+            ],
+            initalValue: '${widget.data['role_id']}',
+            onChanged: (value) async {
+
+              if (value != '') {
+                ViewController.request['role_id'] = value;
+              } else {
+                ViewController.request['role_id'] = widget.data['role_id'];
+              }
+            },
+            hintText: '',
+            isSeleted: true.obs,
+            selectedValue: ''),
       ],
     );
   }

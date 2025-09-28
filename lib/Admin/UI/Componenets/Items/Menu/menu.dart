@@ -16,6 +16,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../../../Logic/Controllers/connect-server-controller.dart';
+import '../../../Views/Admin/admin-page.dart';
 import '../../../Views/Role/role-page.dart';
 import '../../../Views/Route/route-page.dart';
 import '../../../Views/Route/table-route.dart';
@@ -169,7 +170,13 @@ class _MenuBoxState extends State<MenuBox> {
                                         }
                                         else if (MainController.selectedItem.value == 5 ) {
                                           await AdminController.getRoles();
+
                                           Get.to(() => RolePage());
+                                          MainController.isClickedItem.value = false;
+                                        }  else if (MainController.selectedItem.value == 6 ) {
+                                          await AdminController.getAdmins();
+
+                                          Get.to(() => AdminPage());
                                           MainController.isClickedItem.value = false;
                                         }  else {
                                           MainController.isClickedItem.value = true;
