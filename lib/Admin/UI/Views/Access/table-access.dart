@@ -793,7 +793,6 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
   }
 
   List<Widget> pagenationBox(totalPages , tableSelected){
-    print('_TableFooterRouteState.pagenationBox${totalPages}');
     var size = MediaQuery.of(context).size;
 
     return [

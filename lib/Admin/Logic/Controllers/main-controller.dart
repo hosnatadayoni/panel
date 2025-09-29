@@ -11,6 +11,7 @@ import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/enums.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu-item.dart';
+import 'package:finance/Admin/UI/Views/login-page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
@@ -556,12 +557,13 @@ class MainController extends GetxController {
 
   static getInitData() async {
     var token = await Token.getToken();
-    if (token != null) {
+    if(token!='') {
       apiKey.value = token;
       Get.to(() => DashboardPage());
-    } else {
-      Get.to(() => SetTokenPage());
     }
+         else {
+          Get.to(() => SetTokenPage());
+        }
   }
 
   static Map<String, dynamic> getDataTable(String tableName) {

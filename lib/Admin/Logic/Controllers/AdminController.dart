@@ -102,10 +102,10 @@ class AdminController extends GetxController {
         printResponse: true);
   }
 
-  static getRoles() async {
+  static getRoles({int? pageNumber, int? perPage}) async {
     var response = await RestApi.post(listRolesUrl, body: {
-      'pageNumber': currentPageRole.value.toString(),
-      'perPage': countShowRowRole.value.toString()
+      'pageNumber':pageNumber?? currentPageRole.value.toString(),
+      'perPage':pageNumber?? countShowRowRole.value.toString()
     });
     RestApi.responseHandler(
         response: response,

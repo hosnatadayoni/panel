@@ -153,7 +153,7 @@ class CreateAdmin extends StatelessWidget {
                     }),
                     value: item['_id']),
             ],
-            initalValue: AdminController.getRoleRes.first['_id'],
+            initalValue:ViewController.request['role_id']!=null? ViewController.request['role_id']:AdminController.getRoleRes.first['_id'],
             onChanged: (value) async {
 
               if (value != '') {

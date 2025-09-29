@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
@@ -154,7 +156,7 @@ class _TableAdminState extends State<TableAdmin> {
                                           ViewController.isClickedEditBtn.value = false;
                                         });
                                         Future.delayed(Duration.zero, () async {
-                                          await AdminController.getRoles();
+                                          await AdminController.getRoles(pageNumber: 0,perPage: 0);
                                           ViewController.request = {};
                                       Get.to(CreateAdmin());
                                         });
@@ -317,6 +319,9 @@ class _TableAdminState extends State<TableAdmin> {
                                           checkBoxTitle: '',
                                           checkBoxName: '',
                                           onChange: (val) {
+                                            row['in_active']=!row['in_active'];
+                                            AdminController.updateAdmin(json.encode(row),row['_id']);
+
                                             setState(() {});
                                           },
                                         ),
@@ -413,78 +418,9 @@ OperationView(var data) {
         offset: Offset(0, 55),
         onSelected: (String value) async {
           if (value == 'edit') {
-            AdminController.getRoles();
+            AdminController.getRoles(perPage: 0,pageNumber: 0);
             ViewController.request={};
             Get.to(EditAdmin(data: data,));
-          }
-          if (value == 'remove') {
-            showDialog(
-                context: Get.context!,
-                builder: (BuildContext context) {
-                  return Dialog(
-                      child: Container(
-                    width: 150,
-                    height: 150,
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Column(
-                      children: [
-                        Txt('${AppController.of(context)!.value('Do you want this item to be removed?')}'),
-                        Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                width: 52,
-                                height: 52,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: redColor),
-                                child: Center(
-                                    child: Txt(
-                                  '${AppController.of(context)!.value('no')}',
-                                  color: whiteColor,
-                                )),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            InkWell(
-                              onTap: () async {
-                                await ConncetServerController.deleteRoute(data['_id']);
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                width: 52,
-                                height: 52,
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    color: successColor),
-                                child: Center(
-                                    child: Txt(
-                                  '${AppController.of(context)!.value('yes')}',
-                                  color: whiteColor,
-                                )),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ));
-                });
           }
         },
         itemBuilder: (BuildContext context) {
@@ -502,27 +438,6 @@ OperationView(var data) {
                         width: 5,
                       ),
                       Txt('${AppController.of(context)!.value('edit')}',
-                          color: MainController.isLightMode.value == false
-                              ? color3
-                              : whiteColor)
-                    ],
-                  ),
-                )),
-            PopupMenuItem<String>(
-                value: 'remove',
-                child: Container(
-                  child: Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.trash,
-                        color: MainController.isLightMode.value == true
-                            ? whiteColor
-                            : color3,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Txt('${AppController.of(context)!.value('remove')}',
                           color: MainController.isLightMode.value == false
                               ? color3
                               : whiteColor)
@@ -849,7 +764,6 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
   }
 
   List<Widget> pagenationBox(totalPages , tableSelected){
-    print('_TableFooterRouteState.pagenationBox${totalPages}');
     var size = MediaQuery.of(context).size;
 
     return [

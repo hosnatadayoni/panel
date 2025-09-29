@@ -2,13 +2,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Token{
 
-  static Future<String?> getToken() async{
+  static Future<String> getToken() async{
     final prefs = await SharedPreferences.getInstance();
     String token=prefs.getString('full-token')??'';
     if(!token.isEmpty){
       return token;
     }else{
-      return null;
+      return '';
     }
   }
 
@@ -21,6 +21,26 @@ class Token{
     final prefs = await SharedPreferences.getInstance();
     return prefs.remove('full-token');
   }
+
+  // static Future<String?> getTokenData() async{
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String token=prefs.getString('token-data')??'';
+  //   if(!token.isEmpty){
+  //     return token;
+  //   }else{
+  //     return null;
+  //   }
+  // }
+  //
+  // static setTokenData(String token) async{
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('token-data', token);
+  // }
+  //
+  // static Future<bool> removeTokenData() async{
+  //   final prefs = await SharedPreferences.getInstance();
+  //   return prefs.remove('token-data');
+  // }
 
   static Future<String?> getName() async{
     final prefs = await SharedPreferences.getInstance();

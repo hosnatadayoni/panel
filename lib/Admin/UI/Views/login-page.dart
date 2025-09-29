@@ -6,12 +6,9 @@ import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
-import 'package:finance/Admin/UI/Views/set-token-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import '../../Public/styles.dart';
 
 class LoginPage extends StatelessWidget {
@@ -103,15 +100,14 @@ class LoginPage extends StatelessWidget {
                                 if(UserController.userName.value.isEmpty || UserController.password.value.isEmpty){
                                   showSnackbar(snackTypes.error,'${AppController.of(context)!.value('name or password cannot be empty')}');
                                 }
-                                else{
-                                  if(UserController.userName.value.length <10 || UserController.password.value.length < 10){
-                                    showSnackbar(snackTypes.error,'${AppController.of(context)!.value('first and last name and password must be more than 10 characters')}');
-                                  }
+                                // else{
+                                //   if(UserController.userName.value.length <10 || UserController.password.value.length < 10){
+                                //     showSnackbar(snackTypes.error,'${AppController.of(context)!.value('first and last name and password must be more than 10 characters')}');
+                                //   }
                                   else{
-                                    // Get.to(() => DashboardPage());
-                                    Get.to(() => SetTokenPage());
+                                    UserController.login();
                                   }
-                                }
+
                               },
                               child: Center(
                                 child: Container(

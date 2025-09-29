@@ -7,14 +7,15 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
+import 'package:finance/Admin/UI/Views/login-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import '../../Public/styles.dart';
-class SetTokenPage extends StatelessWidget {
 
+class SetTokenPage extends StatelessWidget {
   String? token;
   @override
   Widget build(BuildContext context) {
@@ -92,12 +93,11 @@ class SetTokenPage extends StatelessWidget {
                               onTap: () async {
                                 print('SetTokenPage.build>>>${token}');
                                 if(token!=null && token!.trim().length!=0) {
-                                  await Token.setToken(token!);
                                   MainController.apiKey.value =token!;
                                   print('SetTokenPage.build iss>>>${ MainController.apiKey.value }');
                                   // await MainController.loadJson();
                                   // await MainController.loadData();
-                                  Get.to(() => DashboardPage());
+                                  Get.to(() => LoginPage());
                                 }
                                 else{
                                   showSnackbar(snackTypes.error, AppController.of(context)!.value('Enter the token') );
