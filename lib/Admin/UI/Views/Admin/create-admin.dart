@@ -126,7 +126,8 @@ class CreateAdmin extends StatelessWidget {
     );
   }
   selects(){
-    ViewController.request['role_id'] =  AdminController.getRoleRes.first['_id'];
+    var initvalue= AdminController.getRoleRes.length!=0? AdminController.getRoleRes.first['_id']:null;
+    ViewController.request['role_id'] =initvalue;
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -153,13 +154,13 @@ class CreateAdmin extends StatelessWidget {
                     }),
                     value: item['_id']),
             ],
-            initalValue:ViewController.request['role_id']!=null? ViewController.request['role_id']:AdminController.getRoleRes.first['_id'],
+            initalValue:ViewController.request['role_id']!=null? ViewController.request['role_id']:initvalue,
             onChanged: (value) async {
 
               if (value != '') {
                 ViewController.request['role_id'] = value;
               } else {
-                ViewController.request['role_id'] =  AdminController.getRoleRes.first['_id'];
+                ViewController.request['role_id'] = initvalue;
               }
             },
             hintText: '',

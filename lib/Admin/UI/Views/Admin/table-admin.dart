@@ -234,15 +234,12 @@ class _TableAdminState extends State<TableAdmin> {
                           children: [
                             HeaderCell('نام'),
                             HeaderCell('نام کاربری'),
-                            HeaderCell('رمز عبور'),
                             HeaderCell('نقش'),
                             HeaderCell('غیرفعال'),
                             HeaderCell('عملیات'),
                           ],
                         );
-
                         // ردیف‌های دیتا
-
                         return Obx( () {
                            rows.value = (AdminController.getAdminRes)
                                 .map<TableRow>((row) {
@@ -283,23 +280,7 @@ class _TableAdminState extends State<TableAdmin> {
                                       Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Text(
-                                          row['password'] ?? '',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                MainController.isLightMode.value
-                                                    ? whiteColor
-                                                    : color1,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          row['role']!=null ? row['role']['name'] +'(${row['role']['description']})': '',
+                                          row['role']!=null ? row['role']['name'] +'(${row['role']['description']??""})': '',
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                             fontSize: 14,
@@ -418,7 +399,7 @@ OperationView(var data) {
         offset: Offset(0, 55),
         onSelected: (String value) async {
           if (value == 'edit') {
-            AdminController.getRoles(perPage: 0,pageNumber: 0);
+            await AdminController.getRoles(perPage: 0,pageNumber: 0);
             ViewController.request={};
             Get.to(EditAdmin(data: data,));
           }

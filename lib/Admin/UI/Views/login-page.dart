@@ -1,6 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/user-controller.dart';
 import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/UI/Componenets/General/img.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -9,6 +8,7 @@ import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import '../../Logic/Controllers/AdminController.dart';
 import '../../Public/styles.dart';
 
 class LoginPage extends StatelessWidget {
@@ -83,7 +83,7 @@ class LoginPage extends StatelessWidget {
                                 child: FormTextField(
                                   name: 'userName',
                                   lable: '${AppController.of(context)!.value('username')}' , hint: '${AppController.of(context)!.value('username')}' ,onChange: (text){
-                                  UserController.userName.value = text;
+                                  AdminController.userModel.value.username = text;
                                 },)),
                             SizedBox(height: 10,),
                             Container(
@@ -91,21 +91,21 @@ class LoginPage extends StatelessWidget {
                                 child: FormTextField(
                                   name: 'password',
                                   lable: '${AppController.of(context)!.value('password')}' , hint: '${AppController.of(context)!.value('password')}',onChange: (text){
-                                  UserController.password.value = text;
+                                  AdminController.userModel.value.password = text;
                                 }, isPassword: true,fbKey: _fbKey,)),
 
                             SizedBox(height: 20,),
                             InkWell(
                               onTap: (){
-                                if(UserController.userName.value.isEmpty || UserController.password.value.isEmpty){
+                                if(AdminController.userModel.value.username!.trim().isEmpty ||  AdminController.userModel.value.password!.trim().isEmpty){
                                   showSnackbar(snackTypes.error,'${AppController.of(context)!.value('name or password cannot be empty')}');
                                 }
                                 // else{
-                                //   if(UserController.userName.value.length <10 || UserController.password.value.length < 10){
+                                //   if(AdminController.userName.value.length <10 || AdminController.password.value.length < 10){
                                 //     showSnackbar(snackTypes.error,'${AppController.of(context)!.value('first and last name and password must be more than 10 characters')}');
                                 //   }
                                   else{
-                                    UserController.login();
+                                    AdminController.login();
                                   }
 
                               },

@@ -9,7 +9,7 @@ import '../Models/db.dart';
 import 'app-controller.dart';
 
 class ConncetServerController extends GetxController {
-
+  static RxList<dynamic> listTableNames=[].obs;
   static Map<String, dynamic>storeRecordRes={};
   static Map<String, dynamic> updateRecordRes={};
   static List<Map<String, dynamic>>filterRecordRes=[];
@@ -19,12 +19,27 @@ class ConncetServerController extends GetxController {
   static RxInt currentPageRoute=1.obs;
   static RxInt countShowRowRoute=10.obs;
 
+  static listSchema() async {
+    AppController.finishLoading('list-schema');
+    var response = await RestApi.post(listSchemaUrl2,);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+           listTableNames.value = [];
+          for (var table in response!.data['data']) {
+            listTableNames.add(table['name']);
+          }
+        },printResponse: true);
+    AppController.finishLoading('list-schema');
+  }
+
   static listSchemaByField() async {
     AppController.finishLoading('list-schema');
     var response = await RestApi.post(listSchemaUrl,);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
+          MainController.SubMenuList.value=[];
 
           MainController.SubMenuList.value=response!.data['data'];
           for (var name in MainController.tableNames()) {

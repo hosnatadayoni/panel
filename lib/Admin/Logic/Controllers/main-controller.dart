@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:chunked_uploader/chunked_uploader.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
@@ -22,7 +23,6 @@ import '../../UI/Views/table-page.dart';
 import '../Helpers/api-methods.dart';
 import 'connect-server-controller.dart';
 import 'helper-controller.dart';
-
 
 class MainController extends GetxController {
   static Rx<bool> isLightMode = true.obs;
@@ -97,13 +97,11 @@ class MainController extends GetxController {
   static Rx<int> selectedItemList = 0.obs;
 
   static RxList<dynamic> SubMenuList = [].obs;
-  static RxMap<String,dynamic> tableInfo = <String,dynamic>{}.obs;
+  static RxMap<String, dynamic> tableInfo = <String, dynamic>{}.obs;
   DataModel? dataModel;
   static var allColumn;
 
   static GlobalKey<FormBuilderState> fbKey = GlobalKey<FormBuilderState>();
-
-
 
   static getColumnInfo(String title) {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
@@ -124,6 +122,7 @@ class MainController extends GetxController {
     }
     return null;
   }
+
   static Future<void> loadJson() async {
     await ConncetServerController.listSchemaByField();
     // // String jsonFileString;
@@ -135,6 +134,7 @@ class MainController extends GetxController {
     //   addParentForRelations('${name}');
     // }
   }
+
   static getColumnPrime() {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       var column = MainController.tableInfo['columns'][j];
@@ -285,33 +285,35 @@ class MainController extends GetxController {
     }
   }
 
-
-  static setRelations(String tableName){
-    var index = SubMenuList.indexWhere((element) => element['schema']['name'] == tableName);
+  static setRelations(String tableName) {
+    var index = SubMenuList.indexWhere(
+        (element) => element['schema']['name'] == tableName);
     var items = SubMenuList[index];
     print('MainController.setRelations>>>${index}>>${SubMenuList[index]}');
 
-    if(items['schema']['relations']!=null && items['schema']['relations'].length!=0) {
-      var relates=[];
+    if (items['schema']['relations'] != null &&
+        items['schema']['relations'].length != 0) {
+      var relates = [];
 
       for (var relations in items['schema']['relations']) {
-        var index = SubMenuList.indexWhere((element) =>element['schema']['name']== relations);
+        var index = SubMenuList.indexWhere(
+            (element) => element['schema']['name'] == relations);
         if (index != -1) {
           relates.add(SubMenuList[index]['schema']['name']);
         }
       }
-      SubMenuList[index]['relations']=relates;
+      SubMenuList[index]['relations'] = relates;
     }
     print('MainController.changeRelations>>${SubMenuList[index]['relations']}');
     return items['relations'];
   }
-  static addsyncField(String tableName){
-    var index = SubMenuList.indexWhere((element) => element['schema']['name'] == tableName);
+
+  static addsyncField(String tableName) {
+    var index = SubMenuList.indexWhere(
+        (element) => element['schema']['name'] == tableName);
     var items = SubMenuList[index];
-    if(items['schema']['view']==null){
-      items.addAll({
-        'view':'default'
-      });
+    if (items['schema']['view'] == null) {
+      items.addAll({'view': 'default'});
     }
     items['columns'].add({
       'name': 'sync',
@@ -331,13 +333,13 @@ class MainController extends GetxController {
     });
   }
 
-
   static List<dynamic> tableNames() {
     var list = [];
     for (var table in SubMenuList) {
-      print('MainController.tableNames>>${table}');
       list.add(table['schema']['name']);
     }
+    print('MainController.tableNames>>${list}');
+
     return list;
   }
 
@@ -358,17 +360,16 @@ class MainController extends GetxController {
       l.add(list);
     }
     ;
-
     return l;
   }
 
-
-
   static addParentForRelations(String tableName) {
     var getDataTable = MainController.getDataTable(tableName);
-    if (getDataTable['schema']['relations']!=null  && getDataTable['schema']['relations'].length != 0) {
+    if (getDataTable['schema']['relations'] != null &&
+        getDataTable['schema']['relations'].length != 0) {
       for (var relate in getDataTable['schema']['relations']) {
-        var index = SubMenuList.indexWhere((element) => element['schema']['name'] == relate);
+        var index = SubMenuList.indexWhere(
+            (element) => element['schema']['name'] == relate);
         var items = SubMenuList[index];
         items['columns'].add({
           'name': 'parent_table',
@@ -390,11 +391,14 @@ class MainController extends GetxController {
     }
   }
 
-  static Future<void> loadData({var tableData = null, var tableDataItems}) async {
+  static Future<void> loadData(
+      {var tableData = null, var tableDataItems}) async {
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null || tableData.length == 0) {
-        MainController.tableInfo.value = SubMenuList[MainController.selectedSubItem.value];
-        MainController.tableData.value = (await DB('${tableInfo['schema']['name']}').paginate());
+        MainController.tableInfo.value =
+            SubMenuList[MainController.selectedSubItem.value];
+        MainController.tableData.value =
+            (await DB('${tableInfo['schema']['name']}').paginate());
         MainController.allData.value = MainController.tableData.value;
       } else {
         MainController.tableInfo.value = tableData;
@@ -406,7 +410,8 @@ class MainController extends GetxController {
           //   await ConncetServerController.getRecordGeneral('${tableInfo['name']}');
           // else
           MainController.tableData.value =
-          (await DB('${MainController.tableInfo['schema']['name']}').paginate());
+              (await DB('${MainController.tableInfo['schema']['name']}')
+                  .paginate());
 
           MainController.allData.value = MainController.tableData.value;
         }
@@ -466,7 +471,7 @@ class MainController extends GetxController {
           cellExcel == '' ||
           cellExcel is List && cellExcel.isEmpty) {
         var inputRequired = column['validators'].firstWhere(
-                (validator) => validator['type'] == 'required',
+            (validator) => validator['type'] == 'required',
             orElse: () => null);
         if (inputRequired != null) {
           if (inputRequired['type'] == 'required') {
@@ -494,10 +499,10 @@ class MainController extends GetxController {
         if (column['type'] == 'Number int' ||
             column['type'] == 'Number double') {
           var minValidator = column['validators'].firstWhere(
-                  (validator) => validator['type'] == 'min',
+              (validator) => validator['type'] == 'min',
               orElse: () => null);
           var maxValidator = column['validators'].firstWhere(
-                  (validator) => validator['type'] == 'max',
+              (validator) => validator['type'] == 'max',
               orElse: () => null);
           // int numberExcel = int.parse('${cellExcel}');
           num? intValue;
@@ -538,17 +543,22 @@ class MainController extends GetxController {
     return true;
   }
 
-  static goToTablePage(var table, {bool loadData = true, var tableFields = null, var tableData = null}) async {
+  static goToTablePage(var table,
+      {bool loadData = true,
+      var tableFields = null,
+      var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
       HelperController.pageInateFunction();
       Navigator.push(
           Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
-      // HelperController.tablePageFunction(table: table);
+      // HelpegrController.tablePageFunction(table: table);
     } else {
       if (loadData == true)
-        await MainController.loadData(tableData: tableFields, tableDataItems: tableData);
-      MainController.tableInfo['schema']['currentPage']=1;
-      ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+        await MainController.loadData(
+            tableData: tableFields, tableDataItems: tableData);
+      MainController.tableInfo['schema']['currentPage'] = 1;
+      ViewController.totalPage.value =
+          await DB('${MainController.tableInfo['schema']['name']}').infoPage();
       await Get.to(() => TablePage());
     }
   }
@@ -557,13 +567,13 @@ class MainController extends GetxController {
 
   static getInitData() async {
     var token = await Token.getToken();
-    if(token!='') {
+    if (token != '') {
       apiKey.value = token;
+      await AdminController.getAdmin();
       Get.to(() => DashboardPage());
+    } else {
+      Get.to(() => SetTokenPage());
     }
-         else {
-          Get.to(() => SetTokenPage());
-        }
   }
 
   static Map<String, dynamic> getDataTable(String tableName) {
@@ -576,7 +586,7 @@ class MainController extends GetxController {
     return dataTableName;
   }
 
-  static renderData(operation type,var data){
+  static renderData(operation type, var data) {
     // if(type== operation.store){
     //   print('MainController.renderData store>>${data}');
     //   MainController.tableData.add(data);
@@ -584,100 +594,101 @@ class MainController extends GetxController {
     //   MainController.totalItems.value++;
     //   MainController.endIndex.value++;
     // } else
-      if(type== operation.delete){
-      MainController.tableData.removeWhere((element) => element['_id']==data['_id']);
+    if (type == operation.delete) {
+      MainController.tableData
+          .removeWhere((element) => element['_id'] == data['_id']);
       MainController.allData.value = MainController.tableData;
       MainController.totalItems.value--;
       MainController.endIndex.value--;
-    } else if(type== operation.update) {
-      var index = MainController.tableData.indexWhere((
-          element) => element['_id'] == data['_id']);
+    } else if (type == operation.update) {
+      var index = MainController.tableData
+          .indexWhere((element) => element['_id'] == data['_id']);
       if (index != -1) {
-        MainController.tableData[index]=data;
+        MainController.tableData[index] = data;
         MainController.allData.value = MainController.tableData;
       }
     }
-
   }
 
-  static Future<String?> uploadFileInChunks(var  singleFile,var column,  RxMap<String, List<dynamic>> fileInfo,  {int chunkSize = 512 * 1024}) async {
+  static Future<String?> uploadFileInChunks(
+      var singleFile, var column, RxMap<String, List<dynamic>> fileInfo,
+      {int chunkSize = 512 * 1024}) async {
     var filePath = null;
-    if (singleFile == null)
-      return null;
+    if (singleFile == null) return null;
 
     print('MainController.uploadFileInChunks>>${column}');
     final path = singleFile.path!;
-      final file = File(path);
-      final totalLength = await file.length();
-      final raf = file.openSync(mode: FileMode.read);
-      int offset = 0;
-      int chunkIndex = 1;
-      Map<String,dynamic> chunkName={};
-      try {
-          if (!fileInfo.containsKey(singleFile.name)) {
-            fileInfo[singleFile.name] = [];
-          }
-        while (offset < totalLength) {
-          final remaining = totalLength - offset;
-          final currentChunkSize = remaining > chunkSize
-              ? chunkSize
-              : remaining;
-          final bytes = raf.readSync(chunkSize);
-          final String chunk = base64Encode(bytes);
-            MainController.updateFileInfo(singleFile.name, (totalLength / chunkSize).ceil(), chunkIndex, fileInfo);
-          var body = {
-            'table_name': tableName,
-            'data': chunk,
-            'field_id':column['_id'],
-            'name': file.uri.pathSegments.last,
-            'currentChunkIndex': chunkIndex,
-            'totalChunks': (totalLength / chunkSize).ceil(),
-          };
-          var response = await RestApi.post(
-              uploadFileUrl, body: body, useToken: false);
-          RestApi.responseHandler(
-              response: response,
-              successCallback: () async {
-                filePath = response!.data['data'];
-                print('MainController.uploadFileInChunks>>${filePath}');
-                if(filePath!=null) {
-                  chunkName = filePath;
-                  if (chunkName.isNotEmpty) {
-                    fileInfo[singleFile.name] = [
-                      (totalLength / chunkSize).ceil(),
-                      chunkIndex,
-                      chunkName,
-                    ];
-                    fileInfo.refresh();
-                  }
-                }
-              },
-              errorCallback: () {
-                print('Failed to upload chunk $chunkIndex');
-                return null;
-              }, printResponse: true);
-          offset += currentChunkSize;
-          chunkIndex++;
-        }
-      } catch (e) {
-        print('Error during upload: $e');
-        return null;
-      } finally {
-        raf.closeSync();
+    final file = File(path);
+    final totalLength = await file.length();
+    final raf = file.openSync(mode: FileMode.read);
+    int offset = 0;
+    int chunkIndex = 1;
+    Map<String, dynamic> chunkName = {};
+    try {
+      if (!fileInfo.containsKey(singleFile.name)) {
+        fileInfo[singleFile.name] = [];
       }
-      print('Upload finished.>>>$filePath');
-
-      return filePath['name'];
+      while (offset < totalLength) {
+        final remaining = totalLength - offset;
+        final currentChunkSize = remaining > chunkSize ? chunkSize : remaining;
+        final bytes = raf.readSync(chunkSize);
+        final String chunk = base64Encode(bytes);
+        MainController.updateFileInfo(singleFile.name,
+            (totalLength / chunkSize).ceil(), chunkIndex, fileInfo);
+        var body = {
+          'table_name': tableName,
+          'data': chunk,
+          'field_id': column['_id'],
+          'name': file.uri.pathSegments.last,
+          'currentChunkIndex': chunkIndex,
+          'totalChunks': (totalLength / chunkSize).ceil(),
+        };
+        var response =
+            await RestApi.post(uploadFileUrl, body: body, useToken: false);
+        RestApi.responseHandler(
+            response: response,
+            successCallback: () async {
+              filePath = response!.data['data'];
+              print('MainController.uploadFileInChunks>>${filePath}');
+              if (filePath != null) {
+                chunkName = filePath;
+                if (chunkName.isNotEmpty) {
+                  fileInfo[singleFile.name] = [
+                    (totalLength / chunkSize).ceil(),
+                    chunkIndex,
+                    chunkName,
+                  ];
+                  fileInfo.refresh();
+                }
+              }
+            },
+            errorCallback: () {
+              print('Failed to upload chunk $chunkIndex');
+              return null;
+            },
+            printResponse: true);
+        offset += currentChunkSize;
+        chunkIndex++;
+      }
+    } catch (e) {
+      print('Error during upload: $e');
+      return null;
+    } finally {
+      raf.closeSync();
     }
+    print('Upload finished.>>>$filePath');
 
+    return filePath['name'];
+  }
 
   static void updateFileInfo(
-      String fileName,
-      int totalChunks,
-      int currentChunk,
-      RxMap<String, List<dynamic>> fileInfo,
-      ) {
-    dynamic existingChunkName = fileInfo[fileName]!.length > 2 ? fileInfo[fileName]![2] : null;
+    String fileName,
+    int totalChunks,
+    int currentChunk,
+    RxMap<String, List<dynamic>> fileInfo,
+  ) {
+    dynamic existingChunkName =
+        fileInfo[fileName]!.length > 2 ? fileInfo[fileName]![2] : null;
     fileInfo[fileName] = [
       totalChunks,
       currentChunk,
@@ -686,22 +697,33 @@ class MainController extends GetxController {
     fileInfo.refresh();
   }
 
-  static Future<bool> deleteFileInChunks(String filePath, {var recordId=null,var record=null}) async {
-    bool status=false;
-    var response = await RestApi.post(deleteFileUrl, body: {'fileName':filePath,'table_name': tableName,'record_id':recordId,'record':record}, useToken: false);
+  static Future<bool> deleteFileInChunks(String filePath,
+      {var recordId = null, var record = null}) async {
+    bool status = false;
+    var response = await RestApi.post(deleteFileUrl,
+        body: {
+          'fileName': filePath,
+          'table_name': tableName,
+          'record_id': recordId,
+          'record': record
+        },
+        useToken: false);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          if(recordId!=null) {
-            if(response!.data['data']!=null && response.data['data'].length!=0)
-            MainController.renderData(operation.update, response.data['data'].first);
+          if (recordId != null) {
+            if (response!.data['data'] != null &&
+                response.data['data'].length != 0)
+              MainController.renderData(
+                  operation.update, response.data['data'].first);
           }
-          status= true;
+          status = true;
           print('MainController.deleteFileInChunks>>$status');
         },
         errorCallback: () {
-          status= false;
-        }, printResponse: true);
+          status = false;
+        },
+        printResponse: true);
     return status;
   }
 }

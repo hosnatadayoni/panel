@@ -1,12 +1,19 @@
+import 'dart:convert';
+
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/user.dart';
+import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:get/get.dart';
 
 import '../../Public/api-urls.dart';
+import '../../UI/Views/dashboard.dart';
 import '../Helpers/api-methods.dart';
+import '../Helpers/token-methods.dart';
 import 'main-controller.dart';
 
 class AdminController extends GetxController {
   static RxList<dynamic> getAccessRes = [].obs;
+  static RxList<dynamic> getNameAccessRes = [].obs;
   static RxInt currentPageAccess = 1.obs;
   static RxInt countShowRowAccess = 10.obs;
 
@@ -19,12 +26,44 @@ class AdminController extends GetxController {
   static RxInt currentPageAdmin = 1.obs;
   static RxInt countShowRowAdmin = 10.obs;
 
+  static Rx<UserModel> userModel=UserModel().obs;
+
+  static Rx<bool> isVisibility = true.obs;
+
+  static login() async {
+    var response = await RestApi.post(loginUrl,
+        body: {'username': userModel.value.username, 'password': userModel.value.password,'api_key': MainController.apiKey.value},useToken: false);
+    RestApi.responseHandler(
+      response: response,
+
+      successCallback: () async {
+        var user = response!.data['data'];
+        if (user != null) {
+          await Token.setToken(user['token']!);
+          Get.to(DashboardPage());
+        }
+      },
+      printResponse: true,);
+  }
   static storeAccess(var json) async {
     var response = await RestApi.post(storeAccessUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           getAccessRes.add(response!.data['data']);
+        },
+        printResponse: true);
+  }
+
+  static getNameAccess() async {
+    var response = await RestApi.post(listNameAccessUrl);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          print('AdminController.getNameAccess>>>${response!.data['data']}');
+          getNameAccessRes.value = [];
+          getNameAccessRes.value =
+              response!.data['data'].length != 0 ? response.data['data'] : [];
         },
         printResponse: true);
   }
@@ -53,7 +92,9 @@ class AdminController extends GetxController {
               (MainController.totalItems.value / countShowRowAccess.value)
                   .ceil();
         },
-        printResponse: true);
+        printResponse: true, errorCallback: () {
+      getAccessRes.value = [];
+    });
   }
 
   static updateAccess(var json, var id) async {
@@ -104,8 +145,8 @@ class AdminController extends GetxController {
 
   static getRoles({int? pageNumber, int? perPage}) async {
     var response = await RestApi.post(listRolesUrl, body: {
-      'pageNumber':pageNumber?? currentPageRole.value.toString(),
-      'perPage':pageNumber?? countShowRowRole.value.toString()
+      'pageNumber': pageNumber ?? currentPageRole.value.toString(),
+      'perPage': pageNumber ?? countShowRowRole.value.toString()
     });
     RestApi.responseHandler(
         response: response,
@@ -125,7 +166,9 @@ class AdminController extends GetxController {
           ViewController.totalPage.value =
               (MainController.totalItems.value / countShowRowRole.value).ceil();
         },
-        printResponse: true);
+        printResponse: true, errorCallback: () {
+      getRoleRes.value = [];
+    });
   }
 
   static updateRole(var json, var id) async {
@@ -188,7 +231,10 @@ class AdminController extends GetxController {
           ViewController.totalPage.value =
               (MainController.totalItems.value / countShowRowRole.value).ceil();
         },
-        printResponse: true);
+        printResponse: true, errorCallback: () {
+      accessRoles.value = {};
+
+    });
   }
 
   static storeRoleAccesss(var json) async {
@@ -221,7 +267,8 @@ class AdminController extends GetxController {
         response: response,
         successCallback: () async {
           getAdminRes.value = [];
-          getAdminRes.value = response!.data['data']['data'].length != 0
+          getAdminRes.value = response!.data['data'] != null &&
+                  response.data['data']['data'].length != 0
               ? response.data['data']['data']
               : [];
           MainController.totalItems.value = response.data['data']['count'];
@@ -236,7 +283,23 @@ class AdminController extends GetxController {
               (MainController.totalItems.value / countShowRowAdmin.value)
                   .ceil();
         },
-        printResponse: true);
+        printResponse: true,
+        errorCallback: () {
+          getAdminRes.value = [];
+        });
+  }
+
+  static getAdmin() async {
+    var response = await RestApi.post(getAdminUrl);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          userModel.value = UserModel.fromJson(response!.data['data']);
+        },
+        printResponse: true,
+        errorCallback: () {
+          getAdminRes.value = [];
+        });
   }
 
   static updateAdmin(var json, var id) async {
@@ -256,5 +319,37 @@ class AdminController extends GetxController {
           }
         },
         printResponse: true);
+  }
+
+  static updateProfileAdmin() async {
+    var response =
+        await RestApi.post(updateProfileAdminUrl, body: {'item': jsonEncode(userModel.toJson())});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          userModel.value = UserModel.fromJson(response!.data['data']);
+          showSnackbar(snackTypes.success, 'عملیات با موفقیت انجام شد');
+        },
+
+        printResponse: true);
+  }
+  static changePass() async {
+    var response =
+        await RestApi.post(updatePasswordUrl, body: {'item': jsonEncode(userModel.toJson())});
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+
+          showSnackbar(snackTypes.success, 'عملیات با موفقیت انجام شد');
+        },
+
+        printResponse: true);
+  }
+
+  static logout() async {
+    await Token.removeToken();
+    MainController.SubMenuList.value = [];
+    getRoleRes.value = [];
+    getAdminRes.value = [];
   }
 }

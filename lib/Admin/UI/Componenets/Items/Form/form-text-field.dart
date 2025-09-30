@@ -1,6 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/user-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -12,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../../../../Logic/Controllers/AdminController.dart';
 
 class FormTextField extends StatefulWidget {
   String? lable;
@@ -244,7 +245,7 @@ class _FormTextFieldState extends State<FormTextField> {
               focusNode: _focusNode,
               controller: widget.initValue == null ? _formConroller : null,
               obscureText: widget.isPassword == true &&
-                      UserController.isVisibility.value == false
+                      AdminController.isVisibility.value == false
                   ? true
                   : false,
               keyboardType: widget.isLongTxt == true
@@ -302,12 +303,12 @@ class _FormTextFieldState extends State<FormTextField> {
                         return InkWell(
                             onTap: () {
                               setState(() {
-                                UserController.isVisibility.value =
-                                    !UserController.isVisibility.value;
+                                AdminController.isVisibility.value =
+                                    !AdminController.isVisibility.value;
                               });
                             },
                             child: Icon(
-                              UserController.isVisibility.value == true
+                              AdminController.isVisibility.value == true
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               size: 15,

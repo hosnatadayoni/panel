@@ -1,16 +1,17 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/user-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/user.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Views/login-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../../Logic/Controllers/AdminController.dart';
+import '../../../Views/Admin/profile.dart';
 import '../../../Views/set-token-page.dart';
 
 class Header extends StatelessWidget {
@@ -122,18 +123,24 @@ class Header extends StatelessWidget {
                         return <PopupMenuEntry>[
                           PopupMenuItem(
                               value: 'userName',
-                              child: Txt('${UserController.userName.value}',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color:
-                                      MainController.isLightMode.value == false
-                                          ? color3
-                                          : whiteColor)),
+                              child: InkWell(
+                                onTap: () async {
+                                  Get.to(Profile());
+                                },
+                                child: Txt('${AdminController.userModel.value.username}',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w300,
+                                    color: MainController.isLightMode.value ==
+                                            false
+                                        ? color3
+                                        : whiteColor),
+                              )),
                           PopupMenuItem(
                             value: 'logout',
                             child: InkWell(
                               onTap: () async {
                                 await Token.removeToken();
+                                AdminController.userModel.value=UserModel();
                                 Get.to(() => SetTokenPage());
                               },
                               child: Row(

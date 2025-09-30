@@ -56,7 +56,35 @@ class _EditAdminState extends State<EditAdmin> {
                       SizedBox(height: 80,),
                       inputs('نام','name'),
                       inputs('نام کاربری','username'),
-                      inputs('پسورد','password'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'رمز عبور',
+                            color:
+                            MainController.isLightMode.value == true ? whiteColor : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormTextField(
+                          name:  'رمز عبور',
+                          hint:  'رمز عبور',
+                          lable: '',
+                          initValue: '',
+                          column: null,
+                          onChange: (text) {
+                            if (text != null && text != '') {
+                              ViewController.request['password'] = text;
+                            } else {
+                              ViewController.request['password'] = '';
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                       selects(),
                       SizedBox(height: 20,),
                             Container(
@@ -129,8 +157,13 @@ class _EditAdminState extends State<EditAdmin> {
       ],
     );
   }
+
   selects(){
-    ViewController.request['role_id'] =  '${widget.data['role_id']}';
+    var initvalue= widget.data['role_id']!=null? '${widget.data['role_id']}':AdminController.getRoleRes.first['_id'];
+    var selectItem=initvalue;
+    print('_EditAdminState.selects>>${selectItem}');
+
+    ViewController.request['role_id'] =selectItem;
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,13 +190,13 @@ class _EditAdminState extends State<EditAdmin> {
                     }),
                     value: item['_id']),
             ],
-            initalValue: '${widget.data['role_id']}',
+            initalValue:ViewController.request['role_id']!=null? ViewController.request['role_id']: '${selectItem}',
             onChanged: (value) async {
 
               if (value != '') {
                 ViewController.request['role_id'] = value;
               } else {
-                ViewController.request['role_id'] = widget.data['role_id'];
+                ViewController.request['role_id'] = selectItem;
               }
             },
             hintText: '',

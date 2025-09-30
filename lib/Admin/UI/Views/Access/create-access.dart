@@ -14,6 +14,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Componenets/Items/Form/form-selectBox.dart';
 import '../../Componenets/Items/Form/form-text-field.dart';
 import '../../Componenets/btn.dart';
 
@@ -76,7 +77,7 @@ class CreateAccess extends StatelessWidget {
                       ),
 
                       inputs('عنوان','title'),
-                      inputs('نام','name'),
+                      select(),
                       SizedBox(height: 20,),
 
                     ],
@@ -119,6 +120,49 @@ class CreateAccess extends StatelessWidget {
             }
           },
         ),
+      ],
+    );
+  }
+  select(){
+    ViewController.request['name'] =  AdminController.getNameAccessRes.first;
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Txt(
+          'نام ',
+          color: MainController.isLightMode.value == true
+              ? whiteColor
+              : color2,
+        ),
+        SizedBox(height: 10,),
+        SelectBox(
+            name: 'نام',
+            items: [
+              for (var item in AdminController.getNameAccessRes)
+                DropdownMenuItem(
+                    child: Obx(() {
+                      return Txt(
+                        '${item}',
+                        color:
+                        MainController.isLightMode.value == true
+                            ? whiteColor
+                            : primaryDark,
+                      );
+                    }),
+                    value: item),
+            ],
+            initalValue:ViewController.request['name']!=null? ViewController.request['name']:AdminController.getNameAccessRes.first,
+            onChanged: (value) async {
+
+              if (value != '') {
+                ViewController.request['name'] = value;
+              } else {
+                ViewController.request['name'] =  AdminController.getNameAccessRes.first;
+              }
+            },
+            hintText: '',
+            isSeleted: true.obs,
+            selectedValue: ''),
       ],
     );
   }
