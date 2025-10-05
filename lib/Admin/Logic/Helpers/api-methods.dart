@@ -95,9 +95,14 @@ class RestApi {
     }
     else {
       print('error status code>>>>${response.statusCode} >> ${response}');
-      if (popupMessage && response.data != null &&
-          response.data['message'] != null)
+      if (popupMessage && response.data != null && response.data['message'] != null)
         showSnackbar(snackTypes.error, '${response.data['message'] ?? ''}');
+      else{
+        if(response.data['error'] != null){
+          showSnackbar(snackTypes.error, '${response.data['error'] ?? ''}');
+
+        }
+      }
       if (errorCallback != null)
         await errorCallback();
     }

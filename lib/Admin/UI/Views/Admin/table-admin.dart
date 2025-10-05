@@ -30,10 +30,9 @@ class TableAdmin extends StatefulWidget {
 }
 
 class _TableAdminState extends State<TableAdmin> {
-
   @override
   Widget build(BuildContext context) {
-    RxList<TableRow>rows=<TableRow>[].obs;
+    RxList<TableRow> rows = <TableRow>[].obs;
     Rx<bool> isHoverBtn = false.obs;
     var size = MediaQuery.of(context).size;
     return Directionality(
@@ -60,6 +59,7 @@ class _TableAdminState extends State<TableAdmin> {
                       : 50
                   : 0,
               child: Container(
+                height: size.height,
                 width: size.width > 800
                     ? MainController.isClickedItem.value == true
                         ? (size.width) - 300
@@ -71,155 +71,168 @@ class _TableAdminState extends State<TableAdmin> {
                     SizedBox(
                       height: 80,
                     ),
-
                     Container(
-                  padding: EdgeInsets.only(right: 10, left: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                          child: Txt(
-                            'مدیریت مسیرها',
+                      padding: EdgeInsets.only(right: 10, left: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                              child: Txt(
+                            'مدیریت ادمین',
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
                                 ? whiteColor
                                 : primaryDark,
                           )),
-                      Row(
-                        children: [
-                          MouseRegion(
-                            onEnter: (_) {
-                              isHoverBtn.value = true;
-                            },
-                            onExit: (_) {
-                              isHoverBtn.value = false;
-                            },
-                            child: InkWell(
-                              onTap: () {
-                              Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: colorBtn, width: 1),
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    color: isHoverBtn.value == true
-                                        ? colorBtn
-                                        : Colors.transparent),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.arrow_back,
+                          Row(
+                            children: [
+                              MouseRegion(
+                                onEnter: (_) {
+                                  isHoverBtn.value = true;
+                                },
+                                onExit: (_) {
+                                  isHoverBtn.value = false;
+                                },
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: colorBtn, width: 1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
                                         color: isHoverBtn.value == true
-                                            ? whiteColor
-                                            : colorBtn),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Txt(
-                                      '${AppController.of(context)!.value('back')}',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color:
-                                      isHoverBtn.value == true ? whiteColor : colorBtn,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          PopupMenuTheme(
-                            data: PopupMenuThemeData(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: BorderSide(width: borderSize, color: itemColor34),
-                              ),
-                              color: MainController.isLightMode.value == true
-                                  ? background
-                                  : whiteColor,
-                            ),
-                            child: PopupMenuButton(
-                              elevation: 0,
-                              offset: Offset(0, 55),
-                              onSelected: (value) {
-                                setState(() {});
-                              },
-                              itemBuilder: (BuildContext context) {
-                                return <PopupMenuEntry>[
-                                  PopupMenuItem(
-                                      onTap: () {
-                                        setState(() {
-                                          ViewController.isClickedBtn.value = false;
-                                          ViewController.isClickedEditBtn.value = false;
-                                        });
-                                        Future.delayed(Duration.zero, () async {
-                                          await AdminController.getRoles(pageNumber: 0,perPage: 0);
-                                          ViewController.request = {};
-                                      Get.to(CreateAdmin());
-                                        });
-                                      },
-                                      value: 'create',
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.add,
-                                              color:
-                                              MainController.isLightMode.value == false
-                                                  ? color3
-                                                  : whiteColor,
-                                              size: 15,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Txt('${AppController.of(context)!.value('create')}',
-                                                color: MainController.isLightMode.value ==
-                                                    false
-                                                    ? color3
-                                                    : whiteColor)
-                                          ],
+                                            ? colorBtn
+                                            : Colors.transparent),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.arrow_back,
+                                            color: isHoverBtn.value == true
+                                                ? whiteColor
+                                                : colorBtn),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                      )),
-
-                                ];
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: colorBtn, width: 1),
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  color: colorBtn,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Txt(
-                                      '${AppController.of(context)!.value('operation')}',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: whiteColor,
+                                        Txt(
+                                          '${AppController.of(context)!.value('back')}',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: isHoverBtn.value == true
+                                              ? whiteColor
+                                              : colorBtn,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_drop_down_sharp,
-                                      size: 20,
-                                      color: whiteColor,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              PopupMenuTheme(
+                                data: PopupMenuThemeData(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    side: BorderSide(
+                                        width: borderSize, color: itemColor34),
+                                  ),
+                                  color:
+                                      MainController.isLightMode.value == true
+                                          ? background
+                                          : whiteColor,
+                                ),
+                                child: PopupMenuButton(
+                                  elevation: 0,
+                                  offset: Offset(0, 55),
+                                  onSelected: (value) {
+                                    setState(() {});
+                                  },
+                                  itemBuilder: (BuildContext context) {
+                                    return <PopupMenuEntry>[
+                                      PopupMenuItem(
+                                          onTap: () {
+                                            setState(() {
+                                              ViewController
+                                                  .isClickedBtn.value = false;
+                                              ViewController.isClickedEditBtn
+                                                  .value = false;
+                                            });
+                                            Future.delayed(Duration.zero,
+                                                () async {
+                                              await AdminController.getRoles(
+                                                  pageNumber: 0, perPage: 0);
+                                              ViewController.request = {};
+                                              Get.to(CreateAdmin());
+                                            });
+                                          },
+                                          value: 'create',
+                                          child: Container(
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add,
+                                                  color: MainController
+                                                              .isLightMode
+                                                              .value ==
+                                                          false
+                                                      ? color3
+                                                      : whiteColor,
+                                                  size: 15,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Txt('${AppController.of(context)!.value('create')}',
+                                                    color: MainController
+                                                                .isLightMode
+                                                                .value ==
+                                                            false
+                                                        ? color3
+                                                        : whiteColor)
+                                              ],
+                                            ),
+                                          )),
+                                    ];
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: colorBtn, width: 1),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      color: colorBtn,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Txt(
+                                          '${AppController.of(context)!.value('operation')}',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: whiteColor,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_drop_down_sharp,
+                                          size: 20,
+                                          color: whiteColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                ),
+                      ),
+                    ),
                     SizedBox(
                       height: 25,
                     ),
@@ -227,135 +240,152 @@ class _TableAdminState extends State<TableAdmin> {
                     SizedBox(
                       height: 25,
                     ),
-                     LayoutBuilder(builder: (context, constraints) {
-                        // هدر
-                        final header = TableRow(
-                          // decoration: BoxDecoration(color: Colors.blue.shade50),
-                          children: [
-                            HeaderCell('نام'),
-                            HeaderCell('نام کاربری'),
-                            HeaderCell('نقش'),
-                            HeaderCell('غیرفعال'),
-                            HeaderCell('عملیات'),
-                          ],
-                        );
-                        // ردیف‌های دیتا
-                        return Obx( () {
-                           rows.value = (AdminController.getAdminRes)
-                                .map<TableRow>((row) {
-                                  return TableRow(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          row['name'] ?? '',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                MainController.isLightMode.value
-                                                    ? whiteColor
-                                                    : color1,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
+                    LayoutBuilder(builder: (context, constraints) {
+                      // هدر
+                      final header = TableRow(
+                        // decoration: BoxDecoration(color: Colors.blue.shade50),
+                        children: [
+                          HeaderCell('نام'),
+                          HeaderCell('نام کاربری'),
+                          HeaderCell('نقش'),
+                          HeaderCell('غیرفعال'),
+                          HeaderCell('عملیات'),
+                        ],
+                      );
+                      // ردیف‌های دیتا
+                      return Obx(
+                        () {
+                          rows.value = (AdminController.getAdminRes)
+                              .map<TableRow>((row) {
+                            return TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: InkWell(
+                                    onDoubleTap: () async {
+                                      ViewController.copyClipboard(row['name'] != null ? row['name'] : '',);
+                                    },
+                                    child: Text(
+                                      row['name'] ?? '',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: MainController.isLightMode.value
+                                            ? whiteColor
+                                            : color1,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          row['username'] ?? '',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                MainController.isLightMode.value
-                                                    ? whiteColor
-                                                    : color1,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          row['role']!=null ? row['role']['name'] +'(${row['role']['description']??""})': '',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                MainController.isLightMode.value
-                                                    ? whiteColor
-                                                    : color1,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child:CheckBox(
-                                          defaultValue: row['in_active'],
-                                          checkBoxTitle: '',
-                                          checkBoxName: '',
-                                          onChange: (val) {
-                                            row['in_active']=!row['in_active'];
-                                            AdminController.updateAdmin(json.encode(row),row['_id']);
-
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: OperationView(row),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                })
-                                .toList();
-
-                            return Scrollbar(
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.vertical,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      minWidth: constraints.maxWidth,
-                                    ),
-                                    child: Table(
-                                      border: TableBorder.all(
-                                          color: MainController
-                                                      .isLightMode.value ==
-                                                  true
-                                              ? whiteColor
-                                              : color1),
-                                      defaultVerticalAlignment:
-                                          TableCellVerticalAlignment.middle,
-                                      columnWidths: const <int,
-                                          TableColumnWidth>{
-                                        0: IntrinsicColumnWidth(),
-                                        1: IntrinsicColumnWidth(),
-                                        2: IntrinsicColumnWidth(),
-                                        3: IntrinsicColumnWidth(),
-                                        4: IntrinsicColumnWidth(),
-                                        5: IntrinsicColumnWidth(),
-                                      },
-                                      children: [header, ...rows],
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
                                   ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: InkWell(
+                                    onDoubleTap: () async {
+                                      ViewController.copyClipboard(row['username'] != null ? row['username'] : '',);
+                                    },
+                                    child: Text(
+                                      row['username'] ?? '',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: MainController.isLightMode.value
+                                            ? whiteColor
+                                            : color1,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: InkWell(
+                                    onDoubleTap: () async {
+                                      ViewController.copyClipboard(row['role'] != null ? row['role']['name'] : '',);
+                                    },
+                                    child: Text(
+                                      row['role'] != null
+                                          ? row['role']['name'] +
+                                              '(${row['role']['description'] ?? ""})'
+                                          : '',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: MainController.isLightMode.value
+                                            ? whiteColor
+                                            : color1,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: CheckBox(
+                                    defaultValue: row['in_active'],
+                                    checkBoxTitle: '',
+                                    checkBoxName: '',
+                                    onChange: (val) {
+                                      row['in_active'] = !row['in_active'];
+                                      AdminController.updateAdmin(
+                                          json.encode(row), row['_id']);
+
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: OperationView(row),
+                                  ),
+                                ),
+                              ],
                             );
-                          },
-                        );
-                      }),
-                    SizedBox(height: 20,),
+                          }).toList();
+
+                          return Scrollbar(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minWidth: constraints.maxWidth,
+                                  ),
+                                  child: Table(
+                                    border: TableBorder.all(
+                                        color:
+                                            MainController.isLightMode.value ==
+                                                    true
+                                                ? whiteColor
+                                                : color1),
+                                    defaultVerticalAlignment:
+                                        TableCellVerticalAlignment.middle,
+                                    columnWidths: const <int, TableColumnWidth>{
+                                      0: IntrinsicColumnWidth(),
+                                      1: IntrinsicColumnWidth(),
+                                      2: IntrinsicColumnWidth(),
+                                      3: IntrinsicColumnWidth(),
+                                      4: IntrinsicColumnWidth(),
+                                      5: IntrinsicColumnWidth(),
+                                    },
+                                    children: [header, ...rows],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                    SizedBox(
+                      height: 20,
+                    ),
                     TableFooterRoute(),
                   ],
                 ),
@@ -399,9 +429,11 @@ OperationView(var data) {
         offset: Offset(0, 55),
         onSelected: (String value) async {
           if (value == 'edit') {
-            await AdminController.getRoles(perPage: 0,pageNumber: 0);
-            ViewController.request={};
-            Get.to(EditAdmin(data: data,));
+            await AdminController.getRoles(perPage: 0, pageNumber: 0);
+            ViewController.request = {};
+            Get.to(EditAdmin(
+              data: data,
+            ));
           }
         },
         itemBuilder: (BuildContext context) {
@@ -459,232 +491,363 @@ OperationView(var data) {
     ),
   );
 }
-class TableHeaderRoute extends StatefulWidget {
 
+class TableHeaderRoute extends StatefulWidget {
   @override
   State<TableHeaderRoute> createState() => _TableHeaderRouteState();
 }
 
 class _TableHeaderRouteState extends State<TableHeaderRoute> {
-  List<int> showInfo = [10 , 25 , 50 , 100];
-  int  selectedCount =  10;
+  List<int> showInfo = [10, 25, 50, 100];
+  int selectedCount = 10;
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
-        padding: EdgeInsets.only(left: 15 , right: 15),
-        width:size.width ,
-        child: size.width > 600 ?
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Txt('${AppController.of(context)!.value('show')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
-                SizedBox(width: 5,),
-                Container(
-                  width: 70,
-                  child: PopupMenuTheme(
-                    data: PopupMenuThemeData(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(width: borderSize , color: itemColor34),
+        padding: EdgeInsets.only(left: 15, right: 15),
+        width: size.width,
+        child: size.width > 600
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Txt(
+                        '${AppController.of(context)!.value('show')}',
+                        color: MainController.isLightMode.value == true
+                            ? whiteColor
+                            : color1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
                       ),
-                      color:MainController.isLightMode.value == true? background:whiteColor,
-                    ),
-                    child: PopupMenuButton<int>(
-                      elevation: 0,
-                      offset: Offset(0, 45),
-                      onSelected: (value) async {
-                        // setState(() {
-                          ConncetServerController.countShowRowRoute.value = value;
-                          selectedCount = value;
-                          MainController.startIndex.value = (ConncetServerController.currentPageRoute.value-1) * ConncetServerController.countShowRowRoute.value;
-                          MainController.endIndex.value = MainController.startIndex.value +ConncetServerController.countShowRowRoute.value;
-                          ConncetServerController.currentPageRoute.value = 1;
-                        //   // MainController.renderPagination();
-                        // });
-                      await ConncetServerController.getRoute();
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return showInfo.map((item) {
-                          return PopupMenuItem<int>(
-                            value: item,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Txt(
-                                    '$item',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: MainController.isLightMode.value == true ? whiteColor : color1,
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        width: 70,
+                        child: PopupMenuTheme(
+                          data: PopupMenuThemeData(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+                                  width: borderSize, color: itemColor34),
+                            ),
+                            color: MainController.isLightMode.value == true
+                                ? background
+                                : whiteColor,
+                          ),
+                          child: PopupMenuButton<int>(
+                            elevation: 0,
+                            offset: Offset(0, 45),
+                            onSelected: (value) async {
+                              // setState(() {
+                              ConncetServerController.countShowRowRoute.value =
+                                  value;
+                              selectedCount = value;
+                              MainController.startIndex.value =
+                                  (ConncetServerController
+                                              .currentPageRoute.value -
+                                          1) *
+                                      ConncetServerController
+                                          .countShowRowRoute.value;
+                              MainController.endIndex.value =
+                                  MainController.startIndex.value +
+                                      ConncetServerController
+                                          .countShowRowRoute.value;
+                              ConncetServerController.currentPageRoute.value =
+                                  1;
+                              //   // MainController.renderPagination();
+                              // });
+                              await ConncetServerController.getRoute();
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return showInfo.map((item) {
+                                return PopupMenuItem<int>(
+                                  value: item,
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Txt(
+                                          '$item',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: MainController
+                                                      .isLightMode.value ==
+                                                  true
+                                              ? whiteColor
+                                              : color1,
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                );
+                              }).toList();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color:
+                                        MainController.isLightMode.value == true
+                                            ? whiteColor
+                                            : color1),
+                                borderRadius: BorderRadius.circular(16),
+                                color: MainController.isLightMode.value == true
+                                    ? background
+                                    : whiteColor,
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_drop_down_sharp,
+                                    size: 20,
+                                    color: color1,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Obx(() {
+                                    return Txt(
+                                        '${ConncetServerController.countShowRowRoute.value}',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color:
+                                            MainController.isLightMode.value ==
+                                                    true
+                                                ? whiteColor
+                                                : color1);
+                                  }),
                                 ],
                               ),
                             ),
-                          );
-                        }).toList();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: MainController.isLightMode.value == true? whiteColor : color1 ),
-                          borderRadius: BorderRadius.circular(16),
-                          color: MainController.isLightMode.value == true? background : whiteColor,
+                          ),
                         ),
-                        padding: EdgeInsets.all(10),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Txt(
+                        '${AppController.of(context)!.value('row')}',
+                        color: MainController.isLightMode.value == true
+                            ? whiteColor
+                            : color1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 20),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.arrow_drop_down_sharp , size: 20, color:  color1,),
-                            SizedBox(width: 5,),
-                            Obx(() {
-                                return Txt('${ConncetServerController.countShowRowRoute.value}' , fontSize: 14 , fontWeight: FontWeight.w700, color: MainController.isLightMode.value == true? whiteColor : color1);
-                              }
+                            Txt(
+                              '${AppController.of(context)!.value('search')}:',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : color1,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 27),
+                              width: 200,
+                              child: FormTextField(
+                                  name: 'search',
+                                  lable:
+                                      '${AppController.of(context)!.value('search')}...',
+                                  onChange: (text) {
+                                    MainController.search(text);
+                                    setState(() {
+                                      ConncetServerController
+                                          .currentPageRoute.value = 1;
+                                    });
+                                  }),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5,),
-                Txt('${AppController.of(context)!.value('row')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,)
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Txt('${AppController.of(context)!.value('search')}:' , fontSize: 16, fontWeight: FontWeight.w400,color: MainController.isLightMode.value == true ? whiteColor:color1, ),
-                      SizedBox(width: 5,),
-                      Container(
-                        margin:EdgeInsets.only(top: 27) ,
-                        width: 200,
-                        child: FormTextField(
-                            name: 'search',
-                            lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                          MainController.search(text);
-                          setState(() {
-                            ConncetServerController.currentPageRoute.value = 1;
-                          });
-
-                        }),
-                      ),
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
-          ],
-        ):
-        Column(
-          children: [
-            Row(
-              // crossAxisAlignment: WrapCrossAlignment.center,
+                ],
+              )
+            : Column(
+                children: [
+                  Row(
+                    // crossAxisAlignment: WrapCrossAlignment.center,
 
-              children: [
-                Txt('${AppController.of(context)!.value('show')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
-                SizedBox(width: 5,),
-                Container(
-                  width: 70,
-                  child: PopupMenuTheme(
-                    data: PopupMenuThemeData(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(width: borderSize , color: itemColor34),
+                    children: [
+                      Txt(
+                        '${AppController.of(context)!.value('show')}',
+                        color: MainController.isLightMode.value == true
+                            ? whiteColor
+                            : color1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
                       ),
-                      color:MainController.isLightMode.value == true? background:whiteColor,
-                    ),
-                    child: PopupMenuButton<int>(
-                      elevation: 0,
-                      offset: Offset(0, 45),
-                      onSelected: (value) async {
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        width: 70,
+                        child: PopupMenuTheme(
+                          data: PopupMenuThemeData(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(
+                                  width: borderSize, color: itemColor34),
+                            ),
+                            color: MainController.isLightMode.value == true
+                                ? background
+                                : whiteColor,
+                          ),
+                          child: PopupMenuButton<int>(
+                            elevation: 0,
+                            offset: Offset(0, 45),
+                            onSelected: (value) async {
+                              ConncetServerController.countShowRowRoute.value =
+                                  value;
+                              selectedCount = value;
+                              MainController.startIndex.value =
+                                  (ConncetServerController
+                                              .currentPageRoute.value -
+                                          1) *
+                                      10;
+                              MainController.endIndex.value =
+                                  MainController.startIndex.value + 10;
+                              ConncetServerController.currentPageRoute.value =
+                                  1;
 
-                          ConncetServerController.countShowRowRoute.value = value;
-                          selectedCount = value;
-                          MainController.startIndex.value = (ConncetServerController.currentPageRoute.value-1) *10;
-                          MainController.endIndex.value = MainController.startIndex.value + 10;
-                          ConncetServerController.currentPageRoute.value =1;
-
-                        await ConncetServerController.getRoute();
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return showInfo.map((item) {
-                          return PopupMenuItem<int>(
-                            value: item,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Txt(
-                                    '$item',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: MainController.isLightMode.value == true ? whiteColor : color1,
+                              await ConncetServerController.getRoute();
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return showInfo.map((item) {
+                                return PopupMenuItem<int>(
+                                  value: item,
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Txt(
+                                          '$item',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: MainController
+                                                      .isLightMode.value ==
+                                                  true
+                                              ? whiteColor
+                                              : color1,
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                );
+                              }).toList();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color:
+                                        MainController.isLightMode.value == true
+                                            ? whiteColor
+                                            : color1),
+                                borderRadius: BorderRadius.circular(16),
+                                color: MainController.isLightMode.value == true
+                                    ? background
+                                    : whiteColor,
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_drop_down_sharp,
+                                    size: 20,
+                                    color: color1,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Txt('${ConncetServerController.countShowRowRoute.value}',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: MainController.isLightMode.value ==
+                                              true
+                                          ? whiteColor
+                                          : color1),
                                 ],
                               ),
                             ),
-                          );
-                        }).toList();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: MainController.isLightMode.value == true? whiteColor : color1 ),
-                          borderRadius: BorderRadius.circular(16),
-                          color: MainController.isLightMode.value == true? background : whiteColor,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            Icon(Icons.arrow_drop_down_sharp , size: 20, color:  color1,),
-                            SizedBox(width: 5,),
-                            Txt('${ConncetServerController.countShowRowRoute.value}' , fontSize: 14 , fontWeight: FontWeight.w700, color: MainController.isLightMode.value == true? whiteColor : color1),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5,),
-                Txt('${AppController.of(context)!.value('row')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,)
-              ],
-            ),
-            SizedBox(height: 10,),
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Txt('${AppController.of(context)!.value('search')}:' , fontSize: 16, fontWeight: FontWeight.w400,color: MainController.isLightMode.value == true ? whiteColor:color1, ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 200,
-                        child: FormTextField(
-                            name: 'search',
-                            lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                          MainController.search(text);
-                            ConncetServerController.currentPageRoute.value = 1;
-                        }),
+                      SizedBox(
+                        width: 5,
                       ),
+                      Txt(
+                        '${AppController.of(context)!.value('row')}',
+                        color: MainController.isLightMode.value == true
+                            ? whiteColor
+                            : color1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      )
                     ],
                   ),
-                )
-              ],
-            ),
-          ],
-        )
-    );
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Txt(
+                              '${AppController.of(context)!.value('search')}:',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : color1,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              width: 200,
+                              child: FormTextField(
+                                  name: 'search',
+                                  lable:
+                                      '${AppController.of(context)!.value('search')}...',
+                                  onChange: (text) {
+                                    MainController.search(text);
+                                    ConncetServerController
+                                        .currentPageRoute.value = 1;
+                                  }),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ));
   }
 }
-class TableFooterRoute extends StatefulWidget {
 
+class TableFooterRoute extends StatefulWidget {
   @override
   State<TableFooterRoute> createState() => _TableFooterRouteState();
 }
@@ -695,258 +858,314 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
     var size = MediaQuery.of(context).size;
     var tableSelected = 'route';
 
-    return Obx((){
+    return Obx(() {
       return Container(
-        child: size.width > 556 ?
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
-        ) :
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
-        ),);
+        child: size.width > 556
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: pagenationBox(
+                    ViewController.totalPage.value, tableSelected),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: pagenationBox(
+                    ViewController.totalPage.value, tableSelected),
+              ),
+      );
     });
   }
-  Widget box(int i , tableSelected){
+
+  Widget box(int i, tableSelected) {
     Rx<bool> isHover = false.obs;
     return MouseRegion(
-      onEnter: (_){
+      onEnter: (_) {
         isHover.value = true;
       },
-      onExit: (_){
+      onExit: (_) {
         isHover.value = false;
       },
       child: InkWell(
-        onTap: ()async{
+        onTap: () async {
           setState(() {
             ConncetServerController.currentPageRoute.value = i;
           });
-          print('_TableFooterState.box currentPage>>>${ ConncetServerController.currentPageRoute.value}');
+          print(
+              '_TableFooterState.box currentPage>>>${ConncetServerController.currentPageRoute.value}');
           await ConncetServerController.getRoute();
-
         },
         child: Container(
-            margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
+            margin: EdgeInsets.only(
+                right: Directionality.of(context) == TextDirection.ltr ? 5 : 0,
+                left: Directionality.of(context) == TextDirection.rtl ? 5 : 0),
             width: 40,
             height: 40,
-            child: Obx((){
+            child: Obx(() {
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color:isHover.value == true  ? colorBtn:i ==ConncetServerController.currentPageRoute.value ? colorBtn : Colors.blue,
+                  color: isHover.value == true
+                      ? colorBtn
+                      : i == ConncetServerController.currentPageRoute.value
+                          ? colorBtn
+                          : Colors.blue,
                 ),
-                child: Center(child: Txt('${i}', textAlign: TextAlign.center , color: whiteColor,)),
+                child: Center(
+                    child: Txt(
+                  '${i}',
+                  textAlign: TextAlign.center,
+                  color: whiteColor,
+                )),
               );
-            })
-        ),
+            })),
       ),
     );
   }
 
-  List<Widget> pagenationBox(totalPages , tableSelected){
+  List<Widget> pagenationBox(totalPages, tableSelected) {
     var size = MediaQuery.of(context).size;
 
     return [
-      Obx((){
+      Obx(() {
         return Container(
           padding: EdgeInsets.only(left: 40, right: 40),
           child: Row(
             children: [
-              Txt('${AppController.of(context)!.value('show')}',
+              Txt(
+                '${AppController.of(context)!.value('show')}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${ConncetServerController.getRouteRes.value.length == 0
-                  ? 0
-                  : MainController.startIndex.value + 1}',
+                color: color3,
+              ),
+              Txt(
+                '${ConncetServerController.getRouteRes.value.length == 0 ? 0 : MainController.startIndex.value + 1}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${AppController.of(context)!.value('until')}',
+                color: color3,
+              ),
+              Txt(
+                '${AppController.of(context)!.value('until')}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${MainController.endIndex.value}', fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${AppController.of(context)!.value('from')}',
+                color: color3,
+              ),
+              Txt(
+                '${MainController.endIndex.value}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${MainController.totalItems.value}',
+                color: color3,
+              ),
+              Txt(
+                '${AppController.of(context)!.value('from')}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
-              Txt('${AppController.of(context)!.value('row')}',
+                color: color3,
+              ),
+              Txt(
+                '${MainController.totalItems.value}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: color3,),
+                color: color3,
+              ),
+              Txt(
+                '${AppController.of(context)!.value('row')}',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: color3,
+              ),
             ],
           ),
         );
       }),
-      size.width > 556 ?
-      Expanded(child: Wrap(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5)),
-              color: ConncetServerController.currentPageRoute.value > 1
-                  ? color3
-                  : color7,
-            ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(15)),
-              onPressed: ConncetServerController.currentPageRoute.value > 1 ? () async {
-                setState(() {
-                  ConncetServerController.currentPageRoute.value--;
-                });
-                // MainController.tableData.value= await DB('${tableSelected}').paginate();
-              } : null,
-              child: Txt('${AppController.of(context)!.value(
-                  'previous')}', color: ConncetServerController.currentPageRoute.value > 1
-                  ? whiteColor
-                  : color3),
-            ),
-          ),
-          SizedBox(width: 5,),
-          if (totalPages > 5) ...[
-            box(1, tableSelected),
-            box(2, tableSelected),
-            SizedBox(width: 5),
-            Container(
-              margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
-              width: 40,
-              height: 40,
-              child: Center(child: Txt('...', fontSize: 20)),
-            ),
-            SizedBox(width: 5),
-            box(totalPages - 1, tableSelected),
-            box(totalPages, tableSelected),
-          ] else ...[
-            for (var i = 1; i <= totalPages; i++)
-              box(i, tableSelected),
-          ],
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(5)),
-              color: ConncetServerController.currentPageRoute.value <
-                  totalPages
-                  ? color3
-                  : color7,
-            ),
-            child: Container(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(15)),
-                onPressed: ConncetServerController.currentPageRoute.value <
-                    totalPages ? () async {
-                  setState(() {
-                    ConncetServerController.currentPageRoute.value++;
-                  });
-                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
-
-                } : null,
-                child: Txt(
-                  '${AppController.of(context)!.value('next')}',
-                  color: ConncetServerController.currentPageRoute.value<
-                      totalPages
-                      ? whiteColor
-                      : color3,),
-              ),
-            ),
-          ),
-        ],
-      )):
-      Container(
-        padding: EdgeInsets.only(left: 40, right: 40),
-        child: Wrap(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5)),
-                color: ConncetServerController.currentPageRoute.value > 1
-                    ? color3
-                    : color7,
-              ),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.all(15)),
-                onPressed: ConncetServerController.currentPageRoute.value > 1 ? () async {
-                  setState(() {
-                    ConncetServerController.currentPageRoute.value--;
-                  });
-                  await ConncetServerController.getRoute();
-                  // MainController.renderPagination();
-                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
-                } : null,
-                child: Txt('${AppController.of(context)!.value(
-                    'previous')}', color: ConncetServerController.currentPageRoute.value > 1
-                    ? whiteColor
-                    : color3),
-              ),
-            ),
-            SizedBox(width: 5,),
-            if (totalPages > 5) ...[
-              box(1, tableSelected),
-              box(2, tableSelected),
-              SizedBox(width: 5),
-              Container(
-                margin: EdgeInsets.only(right: Directionality.of(context) == TextDirection.ltr ? 5  : 0 , left:Directionality.of(context) == TextDirection.rtl ? 5  : 0  ),
-                width: 40,
-                height: 40,
-                child: Center(child: Txt('...', fontSize: 20)),
-              ),
-              SizedBox(width: 5),
-              box(totalPages - 1, tableSelected),
-              box(totalPages, tableSelected),
-            ] else ...[
-              for (var i = 1; i <= totalPages; i++)
-                box(i, tableSelected),
-            ],
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5)),
-                color: ConncetServerController.currentPageRoute.value <
-                    totalPages
-                    ? color3
-                    : color7,
-              ),
-              child: Container(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(15)),
-                  onPressed: ConncetServerController.currentPageRoute.value <
-                      totalPages ? () async {
-                    setState(() {
-                      ConncetServerController.currentPageRoute.value++;
-                    });
-                    await ConncetServerController.getRoute();
-
-                    // MainController.renderPagination();
-                    // MainController.tableData.value= await DB('${tableSelected}').paginate();
-
-                  } : null,
-                  child: Txt(
-                    '${AppController.of(context)!.value('next')}',
-                    color: ConncetServerController.currentPageRoute.value <
-                        totalPages
-                        ? whiteColor
-                        : color3,),
+      size.width > 556
+          ? Expanded(
+              child: Wrap(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: ConncetServerController.currentPageRoute.value > 1
+                        ? color3
+                        : color7,
+                  ),
+                  child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(padding: EdgeInsets.all(15)),
+                    onPressed: ConncetServerController.currentPageRoute.value >
+                            1
+                        ? () async {
+                            setState(() {
+                              ConncetServerController.currentPageRoute.value--;
+                            });
+                            // MainController.tableData.value= await DB('${tableSelected}').paginate();
+                          }
+                        : null,
+                    child: Txt(
+                        '${AppController.of(context)!.value('previous')}',
+                        color:
+                            ConncetServerController.currentPageRoute.value > 1
+                                ? whiteColor
+                                : color3),
+                  ),
                 ),
+                SizedBox(
+                  width: 5,
+                ),
+                if (totalPages > 5) ...[
+                  box(1, tableSelected),
+                  box(2, tableSelected),
+                  SizedBox(width: 5),
+                  Container(
+                    margin: EdgeInsets.only(
+                        right: Directionality.of(context) == TextDirection.ltr
+                            ? 5
+                            : 0,
+                        left: Directionality.of(context) == TextDirection.rtl
+                            ? 5
+                            : 0),
+                    width: 40,
+                    height: 40,
+                    child: Center(child: Txt('...', fontSize: 20)),
+                  ),
+                  SizedBox(width: 5),
+                  box(totalPages - 1, tableSelected),
+                  box(totalPages, tableSelected),
+                ] else ...[
+                  for (var i = 1; i <= totalPages; i++) box(i, tableSelected),
+                ],
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    color: ConncetServerController.currentPageRoute.value <
+                            totalPages
+                        ? color3
+                        : color7,
+                  ),
+                  child: Container(
+                    child: ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(padding: EdgeInsets.all(15)),
+                      onPressed:
+                          ConncetServerController.currentPageRoute.value <
+                                  totalPages
+                              ? () async {
+                                  setState(() {
+                                    ConncetServerController
+                                        .currentPageRoute.value++;
+                                  });
+                                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
+                                }
+                              : null,
+                      child: Txt(
+                        '${AppController.of(context)!.value('next')}',
+                        color: ConncetServerController.currentPageRoute.value <
+                                totalPages
+                            ? whiteColor
+                            : color3,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ))
+          : Container(
+              padding: EdgeInsets.only(left: 40, right: 40),
+              child: Wrap(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: ConncetServerController.currentPageRoute.value > 1
+                          ? color3
+                          : color7,
+                    ),
+                    child: ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(padding: EdgeInsets.all(15)),
+                      onPressed:
+                          ConncetServerController.currentPageRoute.value > 1
+                              ? () async {
+                                  setState(() {
+                                    ConncetServerController
+                                        .currentPageRoute.value--;
+                                  });
+                                  await ConncetServerController.getRoute();
+                                  // MainController.renderPagination();
+                                  // MainController.tableData.value= await DB('${tableSelected}').paginate();
+                                }
+                              : null,
+                      child: Txt(
+                          '${AppController.of(context)!.value('previous')}',
+                          color:
+                              ConncetServerController.currentPageRoute.value > 1
+                                  ? whiteColor
+                                  : color3),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  if (totalPages > 5) ...[
+                    box(1, tableSelected),
+                    box(2, tableSelected),
+                    SizedBox(width: 5),
+                    Container(
+                      margin: EdgeInsets.only(
+                          right: Directionality.of(context) == TextDirection.ltr
+                              ? 5
+                              : 0,
+                          left: Directionality.of(context) == TextDirection.rtl
+                              ? 5
+                              : 0),
+                      width: 40,
+                      height: 40,
+                      child: Center(child: Txt('...', fontSize: 20)),
+                    ),
+                    SizedBox(width: 5),
+                    box(totalPages - 1, tableSelected),
+                    box(totalPages, tableSelected),
+                  ] else ...[
+                    for (var i = 1; i <= totalPages; i++) box(i, tableSelected),
+                  ],
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: ConncetServerController.currentPageRoute.value <
+                              totalPages
+                          ? color3
+                          : color7,
+                    ),
+                    child: Container(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(15)),
+                        onPressed:
+                            ConncetServerController.currentPageRoute.value <
+                                    totalPages
+                                ? () async {
+                                    setState(() {
+                                      ConncetServerController
+                                          .currentPageRoute.value++;
+                                    });
+                                    await ConncetServerController.getRoute();
+
+                                    // MainController.renderPagination();
+                                    // MainController.tableData.value= await DB('${tableSelected}').paginate();
+                                  }
+                                : null,
+                        child: Txt(
+                          '${AppController.of(context)!.value('next')}',
+                          color:
+                              ConncetServerController.currentPageRoute.value <
+                                      totalPages
+                                  ? whiteColor
+                                  : color3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      )
+            )
     ];
-
   }
-
 }

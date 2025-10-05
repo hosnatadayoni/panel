@@ -616,10 +616,8 @@ class ViewController extends GetxController {
     } else if (type == 'select' || type == 'radiobutton') {
       child = InkWell(
         onDoubleTap: () async {
-          await copyClipboard(MainController.tableData[indexRow]['${name}'] !=
-                  null
-              ? '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}'
-              : '');
+          print('ViewController.generateDataColumn');
+          await copyClipboard(MainController.tableData[indexRow]['${name}'] != null ? '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}' : '');
         },
         child: Txt(
           MainController.tableData[indexRow]['${name}'] != null
@@ -1798,15 +1796,17 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
       type = tableData['columns'][indexColumn]['type'];
     }
+
     var dataModel = MainController.tableData.value[indexRow]['${name}'];
+
     return dataModel != null && dataModel.length != 0
         ? Column(
             children: [
               Center(
                   child: Image.network(
                 type == 'file'
-                    ? baseUrl
-                    : baseUrlPvFile + '${dataModel}',
+                    ? '${baseUrl}' + '${dataModel}'
+                    : '${baseUrlPvFile}' + '${dataModel}',
                 width: 60,
                 height: 60,
                 fit: BoxFit.fill,
@@ -1847,7 +1847,9 @@ class ViewController extends GetxController {
                 for (var data in dataModel)
                   Center(
                       child: Image.network(
-                    type=='multiFile'?baseUrl:baseUrlPvFile + '${data['path']}',
+                    type == 'multiFile'
+                        ? baseUrl
+                        : baseUrlPvFile + '${data['path']}',
                     width: 50,
                     height: 50,
                     fit: BoxFit.fill,
@@ -1925,6 +1927,7 @@ class ViewController extends GetxController {
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
+    ViewController.request[name] =   data != null && data[name+'_name'] != null ? '${data[name+'_name']}' : '';
     List<dynamic> filesSelectedList = [];
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
     return Obx(() {
@@ -1960,7 +1963,9 @@ class ViewController extends GetxController {
                               height: 20,
                             ),
                             Image.network(
-                              type=='file'?baseUrl :baseUrlPvFile + '${file}',
+                              type == 'file'
+                                  ? baseUrl + '${file}'
+                                  : baseUrlPvFile + '${file}',
                               width: 40,
                               height: 40,
                               fit: BoxFit.fill,
@@ -2029,6 +2034,7 @@ class ViewController extends GetxController {
 
   static Widget generateEditMultiFileBox(
       var data, var column, Rx<bool>? isSeletedFile) {
+    ViewController.request[column['name']]=[];
     String name = column['name'];
     String type = column['type'];
     Map<String, List<dynamic>> selectedFilesMap = {};
@@ -2037,8 +2043,11 @@ class ViewController extends GetxController {
     }
     RxList<String> filesSelectedList = <String>[].obs;
     RxList<dynamic> filesList = [].obs;
+
     if (data != null && data.length != 0) {
-      if (data[name + '_name'] != null && data[name + '_name'].length != 0) {}
+      if (data[name + '_name'] != null && data[name + '_name'].length != 0) {
+          ViewController.request[column['name']].add(data[name + '_name']);
+      }
       if (data[name] != null && data[name].length != 0) {
         filesList.addAll(data[name + '_multi']);
 
@@ -2099,7 +2108,10 @@ class ViewController extends GetxController {
                                         child: Column(
                                       children: [
                                         Image.network(
-                                          type=='multiFile'?baseUrl:baseUrlPvFile + '${file['path']}',
+                                          type == 'multiFile'
+                                              ? baseUrl +'${file['path']}'
+                                              : baseUrlPvFile +
+                                                  '${file['path']}',
                                           width: 70,
                                           height: 70,
                                           fit: BoxFit.fill,
@@ -2190,8 +2202,11 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateSelectFileBox(String type,RxList<String> fileSelectedList,
-      RxMap<String, List<dynamic>> fileInfo, var index) {
+  static Widget generateSelectFileBox(
+      String type,
+      RxList<String> fileSelectedList,
+      RxMap<String, List<dynamic>> fileInfo,
+      var index) {
     return Obx(() {
       var fileData = fileInfo[fileSelectedList[index]];
       var totalChunks = 1;
@@ -2212,7 +2227,9 @@ class ViewController extends GetxController {
           children: [
             chunkName.isNotEmpty
                 ? Image.network(
-                    type.endsWith('pv')?baseUrlPvFile:baseUrl + '${chunkName['path']}',
+                    type.endsWith('pv')
+                        ? baseUrlPvFile + '${chunkName['path']}'
+                        : baseUrl + '${chunkName['path']}',
                     width: 70,
                     height: 70,
                     fit: BoxFit.fill,

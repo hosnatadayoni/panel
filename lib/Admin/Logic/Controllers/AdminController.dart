@@ -294,7 +294,8 @@ class AdminController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          userModel.value = UserModel.fromJson(response!.data['data']);
+          userModel.value = UserModel.fromJson(response!.data['data']['data']);
+          MainController.apiKey.value=response.data['data']['api_key'];
         },
         printResponse: true,
         errorCallback: () {

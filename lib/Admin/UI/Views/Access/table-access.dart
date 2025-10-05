@@ -71,7 +71,7 @@ class _TableAccessState extends State<TableAccess> {
                         children: [
                           Expanded(
                               child: Txt(
-                            'مدیریت مسیرها',
+                            'مدیریت دسترسی ها',
                             fontSize: 24,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
