@@ -112,6 +112,7 @@ class ConncetServerController extends GetxController {
 
     }, printResponse: true);
   }
+
   static updateField(Map<String, dynamic> request,var id) async {
     var body= {
       'id': id,
@@ -123,13 +124,14 @@ class ConncetServerController extends GetxController {
 
     }, printResponse: true);
   }
+
   static deleteField(Map<String, dynamic> json) async {
     var response = await RestApi.post(deleteFieldUrl, body: json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
-
     }, printResponse: true);
   }
+
   static listField(Map<String, dynamic> json) async {
     var response = await RestApi.post(listFieldUrl, body:json);
     RestApi.responseHandler(
@@ -145,13 +147,14 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {}, printResponse: true);
   }
+
   static listValidate(Map<String, dynamic> json) async {
     var s = await Token.getToken();
     var response = await RestApi.post(listValidateUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
           print('listValidate a>>>${response!.data['data']}');
-      listValidateRes=response!.data['data'];
+      listValidateRes=response.data['data'];
     }, printResponse: true);
   }
   static createValidate(Map<String, dynamic> json) async {

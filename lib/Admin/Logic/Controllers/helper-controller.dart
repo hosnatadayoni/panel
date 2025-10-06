@@ -241,6 +241,7 @@ class HelperController extends GetxController {
 
       if (table['table-name'] == 'schema') {
         for(String key in ViewController.request.keys){
+          if(key=='name')
           if(ViewController.request[key] is String)
             ViewController.request[key] = ViewController.request[key].trim().replaceAll(' ', '_');
         }

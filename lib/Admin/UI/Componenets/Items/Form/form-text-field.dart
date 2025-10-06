@@ -26,6 +26,7 @@ class FormTextField extends StatefulWidget {
   bool? isValidate;
   String name;
  GlobalKey<FormBuilderState>? fbKey;
+  GlobalKey<FormBuilderFieldState>? textFieldKey;
  var column;
   var maxValidator;
   var minValidator;
@@ -33,7 +34,7 @@ class FormTextField extends StatefulWidget {
 
 
    FormTextField({this.lable,  this.hint , this.onChange,this.updateChange , this.isNumberInt =false , this.isNumberDouble =  false, this.initValue , this.isMobile = false , this.isLoginPage = false , this.isPassword = false ,
-     this.fbKey , this.isLongTxt = false , this.isValidate= true , required this.name , this.column , this.isEmail});
+     this.fbKey ,this.textFieldKey , this.isLongTxt = false , this.isValidate= true , required this.name , this.column , this.isEmail});
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -252,7 +253,8 @@ class _FormTextFieldState extends State<FormTextField> {
           FormBuilder(
             key: widget.fbKey,
             child: FormBuilderTextField(
-              key: textFieldKey,
+
+              key: widget.textFieldKey??textFieldKey,
               // focusNode: _focusNode,
               controller: widget.initValue == null ? _formConroller : null,
               obscureText: widget.isPassword == true  && UserController.isVisibility.value == false? true : false,
