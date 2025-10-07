@@ -571,7 +571,7 @@ class MainController extends GetxController {
     if (token != '') {
       // apiKey.value = token;
       await AdminController.getAdmin();
-      Get.to(() => DashboardPage());
+
     } else {
       Get.to(() => SetTokenPage());
     }

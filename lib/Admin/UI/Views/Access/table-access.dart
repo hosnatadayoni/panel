@@ -242,9 +242,7 @@ class _TableAccessState extends State<TableAccess> {
                           HeaderCell('عملیات'),
                         ],
                       );
-
                       // ردیف‌های دیتا
-
                       return Obx(
                         () {
                           rows.value = (AdminController.getAccessRes.value)
@@ -277,7 +275,6 @@ class _TableAccessState extends State<TableAccess> {
                                         : color1,
                                   ),
                                 ),
-
                                 // عملیات
                                 Padding(
                                   padding: const EdgeInsets.all(8),

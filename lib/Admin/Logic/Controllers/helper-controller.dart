@@ -191,6 +191,7 @@ class HelperController extends GetxController {
     tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
     } else {
+      print('HelperController.editFunction>>${request}');
       await DB('${MainController.tableInfo['schema']['name']}')
           .where('_id', '\$eq', '${id}').updateRecords(request);
       // await MainController.loadData(

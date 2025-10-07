@@ -2426,7 +2426,8 @@ class ViewController extends GetxController {
               empty.add(listItems[i][field]);
             }
             a.add(empty.join('%'));
-          } else {
+          }
+          else {
             a.add(listItems[i]['title']);
           }
         }
@@ -2444,7 +2445,8 @@ class ViewController extends GetxController {
             empty.add(listItems[field]);
           }
           a.add(empty.join('%'));
-        } else {
+        }
+        else {
           a.add(listItems['title']);
         }
       }

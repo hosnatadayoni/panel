@@ -85,7 +85,8 @@ class _EditPageState extends State<EditPage> {
                               fontWeight: FontWeight.w400,
                             ),
                                 onClick: () async {
-                                  if(ViewController.request.length!=0) {
+                                  print('_EditPageState.build ViewController.request>>${ViewController.request}');
+                                        if(ViewController.request.length!=0) {
                                     HelperController.editFunction('${MainController.tableInfo['schema']['name']}',id:'${widget.data!['_id']}' ,request:ViewController.request );
                                   }
                                   else{

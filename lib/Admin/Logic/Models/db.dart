@@ -42,7 +42,7 @@ class DB {
           e[key] = d.data[key] == null
               ? ''
               : await General(this.tableName!)
-              .withFormat(type, d.data[key], key);
+                  .withFormat(type, d.data[key], key);
         }
       }
       newData.add(e);
@@ -54,18 +54,17 @@ class DB {
     var type;
     List<Map<String, dynamic>> newData = <Map<String, dynamic>>[];
 
-      Map<String, dynamic> e = <String, dynamic>{};
-      for (var key in data.data.keys) {
-        type = MainController.getTypeOfField(this.tableName!, key);
-        if (type != null) {
-          e['_id'] = data.id;
-          e[key] = data.data[key] == null
-              ? ''
-              : await General(this.tableName!)
-              .withFormat(type, data.data[key], key);
-        }
+    Map<String, dynamic> e = <String, dynamic>{};
+    for (var key in data.data.keys) {
+      type = MainController.getTypeOfField(this.tableName!, key);
+      if (type != null) {
+        e['_id'] = data.id;
+        e[key] = data.data[key] == null
+            ? ''
+            : await General(this.tableName!)
+                .withFormat(type, data.data[key], key);
       }
-
+    }
 
     return e;
   }
@@ -113,7 +112,8 @@ class DB {
     // MainController.tableData.value =[];
     MainController.endIndex.value = 0;
     MainController.startIndex.value = 0;
-    var infoTable= await MainController.getInfoTable('${this.tableName}')['schema'];
+    var infoTable =
+        await MainController.getInfoTable('${this.tableName}')['schema'];
     int countShowRow = infoTable['countShowRow'];
     int currentPage = infoTable['currentPage'];
     int perPage = countShowRow != null ? countShowRow : 10;
@@ -125,19 +125,20 @@ class DB {
     MainController.startIndex.value = s;
     var endBycondition = end >= totalItems ? totalItems : end;
     MainController.endIndex.value = endBycondition;
-    var data=[];
-    if(infoTable['online']==true){
-      data=getRecord;
-    }
-    else {
-      MainController.totalItems.value=totalItems;
+    var data = [];
+    if (infoTable['online'] == true) {
+      data = getRecord;
+    } else {
+      MainController.totalItems.value = totalItems;
       data = getRecord.skip(s).take(perPage).toList();
     }
     return data;
   }
 
   infoPage() async {
-    int countShowRow = await MainController.getInfoTable('${this.tableName}')['schema']['countShowRow'];
+    int countShowRow =
+        await MainController.getInfoTable('${this.tableName}')['schema']
+            ['countShowRow'];
     int perPage = countShowRow != null ? countShowRow : 10;
     int totalItems = MainController.totalItems.value;
     int totalPage = (totalItems / perPage).ceil();
@@ -150,16 +151,16 @@ class DB {
     List<Map<String, dynamic>> dataItems = [];
     Box box;
     List<Map<String, dynamic>> data = [];
-    ConncetServerController.getRecordRes.value=[];
-    int index = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == '${this.tableName}');
+    ConncetServerController.getRecordRes.value = [];
+    int index = MainController.SubMenuList.indexWhere(
+        (element) => element['schema']['name'] == '${this.tableName}');
 
-    data=[];
-    if (MainController.SubMenuList[index]['schema']['online'] == true ) {
+    data = [];
+    if (MainController.SubMenuList[index]['schema']['online'] == true) {
       if (parentItem.length != 0) {
-
-       where('parent_id', '\$eq', parentItem['parent_id']);
+        where('parent_id', '\$eq', parentItem['parent_id']);
         print('DB.getRecords where list is>>>${this.whereList}');
-      }else {
+      } else {
         where('parent_id', '\$eq', null);
         print('DB.getRecords where list is2>>>${this.whereList}');
         // await ConncetServerController.getRecordGeneral('${tableName}');
@@ -169,39 +170,41 @@ class DB {
         //   print(s['parent_id'].runtimeType);
         // }
       }
-      if(this.whereList.length==0 && this.orWhereList.length==0) {
-       List< Map<String, dynamic>> dataItems=[];
-       await ConncetServerController.getRecordGeneral('${tableName}');
-       dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+      if (this.whereList.length == 0 && this.orWhereList.length == 0) {
+        List<Map<String, dynamic>> dataItems = [];
+        await ConncetServerController.getRecordGeneral('${tableName}');
+        dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
         if (dataItems.isNotEmpty) {
           data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
-          box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
-          var boxList=box.values.toList();
-
-          for(var item in boxList){
-            if(item.data['sync']=='false') {
+          box = await Hive.openBox<DataModel>(
+              MainController.apiKey.value + '${tableInfo['schema']['name']}');
+          var boxList = box.values.toList();
+          print('DB.getRecords>>${boxList}');
+          for (var item in boxList) {
+            if (item.data['sync'] == 'false') {
               data.add(await getDataTypeOfFieldItem(item));
             }
           }
-        }else{
+        } else {
           var tableInfo = MainController.SubMenuList[index];
-          box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
-          data=(await getDataTypeOfFieldList(box.values.toList()));
+          box = await Hive.openBox<DataModel>(
+              MainController.apiKey.value + '${tableInfo['schema']['name']}');
+          data = (await getDataTypeOfFieldList(box.values.toList()));
         }
-
-
-      }else{
+      } else {
         var tableInfo = MainController.SubMenuList[index];
-        box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
+        box = await Hive.openBox<DataModel>(
+            MainController.apiKey.value + '${tableInfo['schema']['name']}');
         data.addAll(await getDataTypeOfFieldList(box.values.toList()));
       }
-    }
-    else {
+    } else {
       var tableInfo = MainController.SubMenuList[index];
-      box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${tableInfo['schema']['name']}');
+      box = await Hive.openBox<DataModel>(
+          MainController.apiKey.value + '${tableInfo['schema']['name']}');
       data = await getDataTypeOfFieldList(box.values.toList());
     }
+    print('DB.getRecords>>>${data}');
     if (index != -1) {
       // if (parentItem.length != 0) {
       //   data = data
@@ -215,8 +218,7 @@ class DB {
           if (ConncetServerController.filterRecordRes.isNotEmpty) {
             dataItems = ConncetServerController.filterRecordRes;
           }
-        }
-        else {
+        } else {
           if (data.length != 0) {
             for (var d in data) {
               bool flag = true;
@@ -227,39 +229,39 @@ class DB {
                         orWhereList[j]!.operator == null) {
                       if (d['${orWhereList[j]!.fieldName}'] is List) {
                         if (d['${orWhereList[j]!.fieldName}']
-                            .contains(orWhereList[j]!.value) &&
+                                .contains(orWhereList[j]!.value) &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (MainController.getTypeOfField(
-                            this.tableName!, orWhereList[j]!.fieldName!) ==
+                                this.tableName!, orWhereList[j]!.fieldName!) ==
                             'Date') {
                           if (HelperController.filterDate(
-                              d['${orWhereList[j]!.fieldName}'],
-                              orWhereList[j]!.value,
-                              "==") ==
-                              true &&
+                                      d['${orWhereList[j]!.fieldName}'],
+                                      orWhereList[j]!.value,
+                                      "==") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else if (MainController.getTypeOfField(
-                            this.tableName!, orWhereList[j]!.fieldName!) ==
+                                this.tableName!, orWhereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${orWhereList[j]!.fieldName}'],
-                              orWhereList[j]!.value,
-                              "==") ==
-                              true &&
+                                      d['${orWhereList[j]!.fieldName}'],
+                                      orWhereList[j]!.value,
+                                      "==") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${orWhereList[j]!.fieldName}'] ==
-                              orWhereList[j]!.value &&
+                                  orWhereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -268,32 +270,32 @@ class DB {
                       }
                     } else if (orWhereList[j]!.operator == '\$gte') {
                       if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'Date') {
                         if (HelperController.filterDate(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            ">=") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    ">=") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
                         if (HelperController.filterTime(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            ">=") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    ">=") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (d['${orWhereList[j]!.fieldName}'] >=
-                            orWhereList[j]!.value &&
+                                orWhereList[j]!.value &&
                             flag == true) {
                           flag = true;
                         } else
@@ -301,32 +303,32 @@ class DB {
                       }
                     } else if (orWhereList[j]!.operator == '\$lte') {
                       if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'Date') {
                         if (HelperController.filterDate(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            "<=") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    "<=") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
                         if (HelperController.filterTime(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            "<=") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    "<=") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (d['${orWhereList[j]!.fieldName}'] <=
-                            orWhereList[j]!.value &&
+                                orWhereList[j]!.value &&
                             flag == true) {
                           flag = true;
                         } else
@@ -334,20 +336,20 @@ class DB {
                       }
                     } else if (orWhereList[j]!.operator == '\$nq') {
                       if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
                         if (HelperController.filterTime(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            "!=") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    "!=") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (d['${orWhereList[j]!.fieldName}'] !=
-                            orWhereList[j]!.value &&
+                                orWhereList[j]!.value &&
                             flag == true) {
                           flag = true;
                         } else
@@ -355,20 +357,20 @@ class DB {
                       }
                     } else if (orWhereList[j]!.operator == '\$lt') {
                       if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
                         if (HelperController.filterTime(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            "<") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    "<") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (d['${orWhereList[j]!.fieldName}'] <
-                            orWhereList[j]!.value &&
+                                orWhereList[j]!.value &&
                             flag == true) {
                           flag = true;
                         } else
@@ -376,20 +378,20 @@ class DB {
                       }
                     } else if (orWhereList[j]!.operator == '\$gt') {
                       if (MainController.getTypeOfField(
-                          this.tableName!, orWhereList[j]!.fieldName!) ==
+                              this.tableName!, orWhereList[j]!.fieldName!) ==
                           'time') {
                         if (HelperController.filterTime(
-                            d['${orWhereList[j]!.fieldName}'],
-                            orWhereList[j]!.value,
-                            ">") ==
-                            true &&
+                                    d['${orWhereList[j]!.fieldName}'],
+                                    orWhereList[j]!.value,
+                                    ">") ==
+                                true &&
                             flag == true) {
                           flag = true;
                         } else
                           flag = false;
                       } else {
                         if (d['${orWhereList[j]!.fieldName}'] >
-                            orWhereList[j]!.value &&
+                                orWhereList[j]!.value &&
                             flag == true) {
                           flag = true;
                         } else
@@ -407,63 +409,68 @@ class DB {
             }
           }
         }
-
       } else {
         if (this.whereList.length != 0) {
-          print('DB.getRecords whereList>>${MainController.SubMenuList[index]['schema']['online']}>>>${ ConnectionController.checkConnection.value}');
-          if (MainController.SubMenuList[index]['schema']['online'] == true && ConnectionController.checkConnection.value==true) {
+          print(
+              'DB.getRecords whereList>>${MainController.SubMenuList[index]['schema']['online']}>>>${ConnectionController.checkConnection.value}');
+          if (MainController.SubMenuList[index]['schema']['online'] == true &&
+              ConnectionController.checkConnection.value == true) {
             await ConncetServerController.filterRecordGeneral(
                 this.whereList, this.tableName!, '\$and');
             if (ConncetServerController.filterRecordRes.isNotEmpty) {
               dataItems = ConncetServerController.filterRecordRes;
             }
-
           } else {
-            if(data.length!=0){
+            if (data.length != 0) {
               for (var d in data) {
                 bool flag = true;
                 for (int j = 1; j <= whereList.length; j++) {
                   if (whereList[j]!.fieldName != '_id')
-                    whereList[j]!.value=await General(this.tableName!).withFormat(MainController.getTypeOfField(this.tableName!, whereList[j]!.fieldName!),whereList[j]!.value,whereList[j]!.fieldName!);
+                    whereList[j]!.value = await General(this.tableName!)
+                        .withFormat(
+                            MainController.getTypeOfField(
+                                this.tableName!, whereList[j]!.fieldName!),
+                            whereList[j]!.value,
+                            whereList[j]!.fieldName!);
                   if (d['${whereList[j]!.fieldName}'] != null) {
                     if (whereList[j]!.value != '') {
                       if (whereList[j]!.operator == '\$eq' ||
                           whereList[j]!.operator == null) {
                         if (d['${whereList[j]!.fieldName}'] is List) {
                           if (d['${whereList[j]!.fieldName}']
-                              .contains(whereList[j]!.value) &&
+                                  .contains(whereList[j]!.value) &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (MainController.getTypeOfField(
-                              this.tableName!, whereList[j]!.fieldName!) ==
+                                  this.tableName!, whereList[j]!.fieldName!) ==
                               'Date') {
                             if (HelperController.filterDate(
-                                d['${whereList[j]!.fieldName}'],
-                                whereList[j]!.value,
-                                "==") ==
-                                true &&
+                                        d['${whereList[j]!.fieldName}'],
+                                        whereList[j]!.value,
+                                        "==") ==
+                                    true &&
                                 flag == true) {
                               flag = true;
                             } else
                               flag = false;
                           } else if (MainController.getTypeOfField(
-                              this.tableName!, whereList[j]!.fieldName!) ==
+                                  this.tableName!, whereList[j]!.fieldName!) ==
                               'time') {
                             if (HelperController.filterTime(
-                                d['${whereList[j]!.fieldName}'],
-                                whereList[j]!.value,
-                                "==") ==
-                                true &&
+                                        d['${whereList[j]!.fieldName}'],
+                                        whereList[j]!.value,
+                                        "==") ==
+                                    true &&
                                 flag == true) {
                               flag = true;
                             } else
                               flag = false;
                           } else {
                             if (d['${whereList[j]!.fieldName}'] ==
-                                whereList[j]!.value &&
+                                    whereList[j]!.value &&
                                 flag == true) {
                               flag = true;
                             } else
@@ -472,32 +479,32 @@ class DB {
                         }
                       } else if (whereList[j]!.operator == '\$gte') {
                         if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'Date') {
                           if (HelperController.filterDate(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              ">=") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      ">=") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              ">=") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      ">=") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${whereList[j]!.fieldName}'] >=
-                              whereList[j]!.value &&
+                                  whereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -505,32 +512,32 @@ class DB {
                         }
                       } else if (whereList[j]!.operator == '\$lte') {
                         if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'Date') {
                           if (HelperController.filterDate(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              "<=") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      "<=") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              "<=") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      "<=") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${whereList[j]!.fieldName}'] <=
-                              whereList[j]!.value &&
+                                  whereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -538,20 +545,20 @@ class DB {
                         }
                       } else if (whereList[j]!.operator == '\$nq') {
                         if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              "!=") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      "!=") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${whereList[j]!.fieldName}'] !=
-                              whereList[j]!.value &&
+                                  whereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -559,20 +566,20 @@ class DB {
                         }
                       } else if (whereList[j]!.operator == '\$lt') {
                         if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              "<") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      "<") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${whereList[j]!.fieldName}'] <
-                              whereList[j]!.value &&
+                                  whereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -580,20 +587,20 @@ class DB {
                         }
                       } else if (whereList[j]!.operator == '\$gt') {
                         if (MainController.getTypeOfField(
-                            this.tableName!, whereList[j]!.fieldName!) ==
+                                this.tableName!, whereList[j]!.fieldName!) ==
                             'time') {
                           if (HelperController.filterTime(
-                              d['${whereList[j]!.fieldName}'],
-                              whereList[j]!.value,
-                              ">") ==
-                              true &&
+                                      d['${whereList[j]!.fieldName}'],
+                                      whereList[j]!.value,
+                                      ">") ==
+                                  true &&
                               flag == true) {
                             flag = true;
                           } else
                             flag = false;
                         } else {
                           if (d['${whereList[j]!.fieldName}'] >
-                              whereList[j]!.value &&
+                                  whereList[j]!.value &&
                               flag == true) {
                             flag = true;
                           } else
@@ -1064,7 +1071,7 @@ class DB {
   //     return data;
   //   }
   // }
-  parent ({String parentTable = "", String parentId = ""}) {
+  parent({String parentTable = "", String parentId = ""}) {
     parentItem = <String, dynamic>{};
     if (parentTable != "" && parentId != "") {
       var json = {'parent_table': parentTable, 'parent_id': parentId};
@@ -1087,8 +1094,8 @@ class DB {
       if (ValidatorController.validateByType(newRequest, '${this.tableName}') ==
           true) {
         print('DB.storeRecord request>>>${newRequest}>>>>${request}');
-        List<dynamic> columns = MainController.getColumnsList(
-            '${this.tableName}');
+        List<dynamic> columns =
+            MainController.getColumnsList('${this.tableName}');
         for (var column in columns) {
           if (!newRequest.keys.contains(column)) {
             newRequest.addAll({'${column}': null});
@@ -1102,22 +1109,24 @@ class DB {
           "server error": "Dont sync this record!",
         });
 
-        DataModel newData = DataModel(id: newRequest.keys.contains('_id')
-            ? request['_id'].toString()
-            : '${Id}', data: newRequest);
+        DataModel newData = DataModel(
+            id: newRequest.keys.contains('_id')
+                ? request['_id'].toString()
+                : '${Id}',
+            data: newRequest);
         var beforValidate = HelperController.beforeStoreValidation(newData);
         if (beforValidate['status'] == false) {
           showSnackbar(snackTypes.error, beforValidate['message']);
         } else {
           if (await RecordController.validate(this.tableName!, newData,
-              MainController.getInfoTable(this.tableName!)) ==
+                  MainController.getInfoTable(this.tableName!)) ==
               false) {
             var before = await HelperController.beforeStore(newData);
             if (before['status'] == false) {
               showSnackbar(snackTypes.error, before['message']);
             } else {
-              DataModel customData = await HelperController.beforeStore(
-                  newData)['data'];
+              DataModel customData =
+                  await HelperController.beforeStore(newData)['data'];
               if (customData.data.keys.contains('_id')) {
                 customData.data['_id'] = null;
               }
@@ -1131,16 +1140,15 @@ class DB {
                     MainController.apiKey.value + '${this.tableName}');
                 if (ConncetServerController.storeRecordRes.isNotEmpty) {
                   if (request.containsKey('_id')) {
-                    var tableDataIndex = box.values.toList().indexWhere((
-                        element) => element.id == request['_id']);
+                    var tableDataIndex = box.values
+                        .toList()
+                        .indexWhere((element) => element.id == request['_id']);
                     if (tableDataIndex != -1) {
                       await box.deleteAt(tableDataIndex);
                       // MainController.renderData(operation.delete,box.values.toList()[tableDataIndex].data);
-
                     } else {
                       DataModel recordStored = DataModel(
-                          id: '${ConncetServerController
-                              .storeRecordRes['_id']}',
+                          id: '${ConncetServerController.storeRecordRes['_id']}',
                           data: ConncetServerController.storeRecordRes);
                       await box.add(recordStored);
                       // MainController.renderData(operation.store,recordStored.data);
@@ -1152,20 +1160,18 @@ class DB {
                     await box.add(recordStored);
                     // MainController.renderData(operation.store,recordStored.data);
                   }
-                }
-                else {
+                } else {
                   customData.data['sync'] = 'false';
                   if (request.containsKey('_id')) {
-                    if (box.values.toList().indexWhere((element) =>
-                    element.id == request['_id']) == -1) {
+                    if (box.values.toList().indexWhere(
+                            (element) => element.id == request['_id']) ==
+                        -1) {
                       await box.add(customData);
                       // MainController.renderData(operation.store,customData.data);
-
                     }
                   } else {
                     print(
-                        'DB.storeRecord customData is>>${customData}>>>${customData
-                            .data}');
+                        'DB.storeRecord customData is>>${customData}>>>${customData.data}');
                     await box.add(customData);
                     // MainController.renderData(operation.store,customData.data);
                   }
@@ -1173,7 +1179,6 @@ class DB {
               } else {
                 await box.add(customData);
                 // MainController.renderData(operation.store,customData.data);
-
               }
               var afterData = await HelperController.afterStore(
                   this.tableName!, newRequest, customData);
@@ -1191,19 +1196,19 @@ class DB {
                 "${AppController.of(Get.context!)!.value('error')}");
           }
         }
-      }
-      else {
+      } else {
         showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
       }
       AppController.finishLoading('store-record');
     } catch (err) {
-      showSnackbar(snackTypes.error,'عملیات با خطا مواجه شد');
+      showSnackbar(snackTypes.error, 'عملیات با خطا مواجه شد');
     }
   }
 
-  convertFormatUpdate(var value,var key,var a){
+  convertFormatUpdate(var value, var key, var a) {
     if (value is List) {
-      var sourceItem = MainController.getDetailsOfField('${this.tableName}', key)['source_items'];
+      var sourceItem = MainController.getDetailsOfField(
+          '${this.tableName}', key)['source_items'];
       if (sourceItem == 'custom') {
         List<String> idList = [];
         for (int i = 0; i < value.length; i++) {
@@ -1233,16 +1238,26 @@ class DB {
     AppController.startLoading('update-records');
     List<dynamic> records = await getRecords();
     ViewController.isClickedEditBtn.value = true;
-    Box box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${this.tableName}');
+    Box box = await Hive.openBox<DataModel>(
+        MainController.apiKey.value + '${this.tableName}');
     Map<String, dynamic> a = {};
 
     List<Map<String, dynamic>> toAdd = [];
+    print('DB.updateRecords>>>val>>}${request.keys} ');
 
     for (var data in records) {
       a = data;
+      for (var item in request.keys) {
+        if (!a.containsKey(item)) {
+          a[item] = request[item];
+        }
+      }
+      print('DB.updateRecords containsKey>>${a}');
+
       a.forEach((key, value) {
-        if( MainController.getDetailsOfField(
-            '${this.tableName}', key)!=null) {
+        print('DB.updateRecords>>>${key} val>>${value}');
+        if (MainController.getDetailsOfField('${this.tableName}', key) !=
+            null) {
           if (value is List) {
             var sourceItem = MainController.getDetailsOfField(
                 '${this.tableName}', key)['source_items'];
@@ -1287,9 +1302,9 @@ class DB {
     }
 
     final record = DataModel(id: a['_id'], data: a);
-    if(ValidatorController.validateByType(a, '${this.tableName}')==true) {
-      var beforeValidate = await HelperController.beforeUpdateValidation(
-          record);
+    if (ValidatorController.validateByType(a, '${this.tableName}') == true) {
+      var beforeValidate =
+          await HelperController.beforeUpdateValidation(record);
       if (beforeValidate['status'] == false) {
         showSnackbar(snackTypes.error, beforeValidate['message']);
       } else {
@@ -1300,8 +1315,10 @@ class DB {
           if (before['status'] == false) {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
-            var customUpdate = await HelperController.beforeUpdate(record)['data'];
-            var allDataIndex = records.indexWhere((element) => element['_id'] == a['_id']);
+            var customUpdate =
+                await HelperController.beforeUpdate(record)['data'];
+            var allDataIndex =
+                records.indexWhere((element) => element['_id'] == a['_id']);
             if (MainController.getStatusTable(this.tableName!) == true) {
               await ConncetServerController.setDatabaseme(customUpdate.data);
               Map<String, dynamic> setRecord = {
@@ -1319,17 +1336,15 @@ class DB {
               } else {
                 await box.putAt(allDataIndex, customUpdate);
                 MainController.renderData(operation.update, customUpdate.data);
-
               }
             } else {
               await box.putAt(allDataIndex, customUpdate);
               MainController.renderData(operation.update, customUpdate.data);
-
             }
 
             MainController.isClickedItem.value = true;
-            var after =
-            await HelperController.afterUpdate(this.tableName!, customUpdate);
+            var after = await HelperController.afterUpdate(
+                this.tableName!, customUpdate);
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
@@ -1337,13 +1352,11 @@ class DB {
           }
         } else {
           showSnackbar(snackTypes.error,
-              '${AppController.of(Get.context!)!.value(
-                  'The operation encountered an error.')}');
+              '${AppController.of(Get.context!)!.value('The operation encountered an error.')}');
         }
       }
-    }
-    else{
-    showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
+    } else {
+      showSnackbar(snackTypes.error, 'داده ها دارای مقادیر نادرستی هستند');
     }
     AppController.finishLoading('update-records');
   }
@@ -1420,11 +1433,13 @@ class DB {
   deleteRecord() async {
     AppController.startLoading('delete-record');
     List<dynamic> records = await getRecords();
-    Box box = await Hive.openBox<DataModel>(MainController.apiKey.value+'${this.tableName}');
-    var boxList=box.values.toList();
+    Box box = await Hive.openBox<DataModel>(
+        MainController.apiKey.value + '${this.tableName}');
+    var boxList = box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
     for (var data in records) {
-      var tableDataIndex = boxList.indexWhere((element) => element.id == data['_id']);
+      var tableDataIndex =
+          boxList.indexWhere((element) => element.id == data['_id']);
       // var before = await HelperController.beforeDelete(tableDataIndex);
       //
       // if (before['status'] == false) {
@@ -1432,13 +1447,11 @@ class DB {
       // }
       // else {
       if (MainController.getStatusTable(this.tableName!) == true) {
-
-        await ConncetServerController.deleteRecordGeneral({
-          "table_name": '${this.tableName}',
-          'record_id': data['_id']
-        });
+        await ConncetServerController.deleteRecordGeneral(
+            {"table_name": '${this.tableName}', 'record_id': data['_id']});
         if (ConncetServerController.deleteRecordRes == true) {
-          if (relations['schema']['relations']!=null && relations['schema']['relations'].length != 0) {
+          if (relations['schema']['relations'] != null &&
+              relations['schema']['relations'].length != 0) {
             for (var relation in relations['schema']['relations']) {
               // DB(relation['schema']['name'])
               //     .where('parent_id', '\$eq', data['_id'])
@@ -1451,22 +1464,22 @@ class DB {
           if (tableDataIndex != -1) {
             box.deleteAt(tableDataIndex);
           }
-          MainController.renderData(operation.delete,data);
+          MainController.renderData(operation.delete, data);
           // await MainController.loadData();
         } else {
           showSnackbar(snackTypes.error, 'error');
         }
-      }
-      else {
+      } else {
         if (tableDataIndex != -1) {
           box.deleteAt(tableDataIndex);
           if (relations['schema']['relations'].length != 0) {
             for (var relation in relations['schema']['relations']) {
-              DB(relation).where(
-                  'parent_id', '\$eq', data['_id']).deleteRecord();
+              DB(relation)
+                  .where('parent_id', '\$eq', data['_id'])
+                  .deleteRecord();
             }
           }
-          MainController.renderData(operation.delete,data);
+          MainController.renderData(operation.delete, data);
         }
       }
       // DataModel item = box.values.toList()[tableDataIndex];

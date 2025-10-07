@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/ServerModel/user.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
+import 'package:finance/Admin/UI/Views/set-token-page.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../Public/api-urls.dart';
 import '../../UI/Views/dashboard.dart';
 import '../Helpers/api-methods.dart';
@@ -63,7 +63,7 @@ class AdminController extends GetxController {
           print('AdminController.getNameAccess>>>${response!.data['data']}');
           getNameAccessRes.value = [];
           getNameAccessRes.value =
-              response!.data['data'].length != 0 ? response.data['data'] : [];
+              response.data['data'].length != 0 ? response.data['data'] : [];
         },
         printResponse: true);
   }
@@ -296,10 +296,13 @@ class AdminController extends GetxController {
         successCallback: () async {
           userModel.value = UserModel.fromJson(response!.data['data']['data']);
           MainController.apiKey.value=response.data['data']['api_key'];
+          Navigator.push(Get.context!, MaterialPageRoute(builder: (context) =>  DashboardPage()));
         },
         printResponse: true,
         errorCallback: () {
+          print('AdminController.getAdmin');
           getAdminRes.value = [];
+          Navigator.push(Get.context!, MaterialPageRoute(builder: (context) =>  SetTokenPage()));
         });
   }
 
