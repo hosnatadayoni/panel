@@ -275,8 +275,7 @@ class HelperController extends GetxController {
               ViewController.request['name'].trim().replaceAll(' ', '_');
         }
         var Id = Uuid().v4();
-        DataModel newData =
-            DataModel(id: '${Id}', data: ViewController.request);
+        DataModel newData = DataModel(id: '${Id}', data: ViewController.request);
         if (await RecordController.validate(table['table-name'], newData,
                 ViewCustomController.getDataTable(table['table-name'])) ==
             false) {

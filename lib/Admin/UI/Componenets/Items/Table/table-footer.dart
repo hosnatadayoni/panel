@@ -22,7 +22,6 @@ var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.va
 class _TableFooterState extends State<TableFooter> {
   @override
   Widget build(BuildContext context) {
-    print('HelperController.pageInateFunction 2>>${MainController.totalItems.value}>>${ MainController.totalPages.value}');
 
     var size = MediaQuery.of(context).size;
     return Obx((){
