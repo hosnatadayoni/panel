@@ -173,7 +173,8 @@ class DB {
       if (this.whereList.length == 0 && this.orWhereList.length == 0) {
         List<Map<String, dynamic>> dataItems = [];
         await ConncetServerController.getRecordGeneral('${tableName}');
-        dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+        dataItems =
+            ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
         if (dataItems.isNotEmpty) {
           data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
@@ -411,8 +412,7 @@ class DB {
         }
       } else {
         if (this.whereList.length != 0) {
-          print(
-              'DB.getRecords whereList>>${MainController.SubMenuList[index]['schema']['online']}>>>${ConnectionController.checkConnection.value}');
+          print('DB.getRecords whereList>>${MainController.SubMenuList[index]['schema']['online']}>>>${ConnectionController.checkConnection.value}');
           if (MainController.SubMenuList[index]['schema']['online'] == true &&
               ConnectionController.checkConnection.value == true) {
             await ConncetServerController.filterRecordGeneral(
@@ -423,6 +423,8 @@ class DB {
           } else {
             if (data.length != 0) {
               for (var d in data) {
+                print('DB.getRecords else >>${d}');
+
                 bool flag = true;
                 for (int j = 1; j <= whereList.length; j++) {
                   if (whereList[j]!.fieldName != '_id')
@@ -433,7 +435,9 @@ class DB {
                             whereList[j]!.value,
                             whereList[j]!.fieldName!);
                   if (d['${whereList[j]!.fieldName}'] != null) {
-                    if (whereList[j]!.value != '') {
+                    if (whereList[j]!.value != '' &&
+                        whereList[j]!.value != null &&
+                        whereList[j]!.value != 'null') {
                       if (whereList[j]!.operator == '\$eq' ||
                           whereList[j]!.operator == null) {
                         if (d['${whereList[j]!.fieldName}'] is List) {
@@ -608,7 +612,7 @@ class DB {
                         }
                       }
                     } else
-                      flag = false;
+                      flag = true;
                   } else
                     flag = false;
                 }
@@ -617,6 +621,7 @@ class DB {
                 }
               }
             }
+            print('DB.getRecords dataItems>>${dataItems}');
           }
         } else {
           dataItems = data;
@@ -1071,9 +1076,9 @@ class DB {
   //     return data;
   //   }
   // }
-  parent({String parentTable = "", String parentId = ""}) {
+  parent({var parentTable = null, var parentId = null}) {
     parentItem = <String, dynamic>{};
-    if (parentTable != "" && parentId != "") {
+    if (parentTable != null && parentId != null) {
       var json = {'parent_table': parentTable, 'parent_id': parentId};
       parentItem = json;
     } else
@@ -1091,11 +1096,24 @@ class DB {
       var Id = Uuid().v4();
 
       Map<String, dynamic> newRequest = Map.from(request);
-      if (ValidatorController.validateByType(newRequest, '${this.tableName}') ==
-          true) {
-        print('DB.storeRecord request>>>${newRequest}>>>>${request}');
-        List<dynamic> columns =
-            MainController.getColumnsList('${this.tableName}');
+      var columns = MainController.getColumnsTable('${this.tableName}');
+      for (var col in columns) {
+        if (newRequest.containsKey(col['name'])) {
+          if (col['type'] == 'select' || col['type'] == 'radioButton') {
+            if(newRequest[col['name']] is Map){
+              if(col['source_items']=='custom'){
+                newRequest[col['name']]=newRequest[col['name']]['value'];
+              }
+            }
+          }
+        }
+      }
+      newRequest['parent_table']=newRequest['parent_table']==""?null:newRequest['parent_table'];
+      newRequest['parent_id']=newRequest['parent_id']==""?null:newRequest['parent_id'];
+      print('DB.storeRecord newRequest>>${newRequest}');
+      if (ValidatorController.validateByType(newRequest, '${this.tableName}') == true) {
+        print('DB.storeRecord request>>>${newRequest}');
+        List<dynamic> columns = MainController.getColumnsList('${this.tableName}');
         for (var column in columns) {
           if (!newRequest.keys.contains(column)) {
             newRequest.addAll({'${column}': null});
@@ -1108,7 +1126,7 @@ class DB {
           "sync": "false",
           "server error": "Dont sync this record!",
         });
-
+        print('DB.storeRecord 1 ');
         DataModel newData = DataModel(
             id: newRequest.keys.contains('_id')
                 ? request['_id'].toString()
@@ -1118,15 +1136,14 @@ class DB {
         if (beforValidate['status'] == false) {
           showSnackbar(snackTypes.error, beforValidate['message']);
         } else {
-          if (await RecordController.validate(this.tableName!, newData,
-                  MainController.getInfoTable(this.tableName!)) ==
-              false) {
+          print('DB.storeRecord 2 ');
+
+          if (await RecordController.validate(this.tableName!, newData, MainController.getInfoTable(this.tableName!)) == false) {
             var before = await HelperController.beforeStore(newData);
             if (before['status'] == false) {
               showSnackbar(snackTypes.error, before['message']);
             } else {
-              DataModel customData =
-                  await HelperController.beforeStore(newData)['data'];
+              DataModel customData = await HelperController.beforeStore(newData)['data'];
               if (customData.data.keys.contains('_id')) {
                 customData.data['_id'] = null;
               }
@@ -1135,10 +1152,14 @@ class DB {
                 "record": json.encode(customData.data).toString(),
               };
               if (MainController.getStatusTable(this.tableName!) == true) {
+                print('DB.storeRecord 3 ');
+
                 await ConncetServerController.storeRecordGeneral(setRecord);
                 Box box = await Hive.openBox<DataModel>(
                     MainController.apiKey.value + '${this.tableName}');
                 if (ConncetServerController.storeRecordRes.isNotEmpty) {
+                  print('DB.storeRecord 4 >>>${ConncetServerController.storeRecordRes}');
+
                   if (request.containsKey('_id')) {
                     var tableDataIndex = box.values
                         .toList()
@@ -1161,22 +1182,23 @@ class DB {
                     // MainController.renderData(operation.store,recordStored.data);
                   }
                 } else {
+                  print('DB.storeRecord 5 ');
+
                   customData.data['sync'] = 'false';
+                  print('DB.storeRecord customData is 2>>${customData}>>>${customData.data}');
+
                   if (request.containsKey('_id')) {
-                    if (box.values.toList().indexWhere(
-                            (element) => element.id == request['_id']) ==
-                        -1) {
+                    if (box.values.toList().indexWhere((element) => element.id == request['_id']) == -1) {
                       await box.add(customData);
                       // MainController.renderData(operation.store,customData.data);
                     }
                   } else {
-                    print(
-                        'DB.storeRecord customData is>>${customData}>>>${customData.data}');
                     await box.add(customData);
                     // MainController.renderData(operation.store,customData.data);
                   }
                 }
-              } else {
+              }
+              else {
                 await box.add(customData);
                 // MainController.renderData(operation.store,customData.data);
               }

@@ -394,6 +394,7 @@ class MainController extends GetxController {
 
   static Future<void> loadData(
       {var tableData = null, var tableDataItems}) async {
+    ViewController.request={};
     if (MainController.selectedSubItem.value != -1) {
       if (tableData == null || tableData.length == 0) {
         MainController.tableInfo.value =
@@ -568,6 +569,7 @@ class MainController extends GetxController {
 
   static getInitData() async {
     var token = await Token.getToken();
+    print('MainController.getInitData>>${token}');
     if (token != '') {
       // apiKey.value = token;
       await AdminController.getAdmin();

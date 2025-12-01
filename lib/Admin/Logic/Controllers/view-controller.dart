@@ -34,6 +34,7 @@ import 'package:uuid/uuid.dart';
 import '../../Public/config.dart';
 import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
+import '../Models/general.dart';
 import 'connect-server-controller.dart';
 
 class ViewController extends GetxController {
@@ -42,7 +43,7 @@ class ViewController extends GetxController {
   static Rx<bool> isClickedEditBtn = false.obs;
   static Map<String, List<int>> fileSizeList = {};
   static Map<String, dynamic> request = {};
-  static List<Map<String, dynamic>> requestFilter = [];
+  // static Map<String, dynamic> requestFilter ={};
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
   static RxInt totalPage = 0.obs;
@@ -684,7 +685,7 @@ class ViewController extends GetxController {
       dataModel = false;
     }
     return CheckBox(
-      defaultValue: dataModel,
+      defaultValue: dataModel=="true"?true:false,
       checkBoxTitle: '',
       onChange: (text) async {
         await DB('${MainController.tableInfo['schema']['name']}')
@@ -801,15 +802,18 @@ class ViewController extends GetxController {
 
   static Widget generateFormTextFieldFilter(
       var column, var filterInfo, var type, String initValue) {
+    print('ViewController.generateFormTextFieldFilter>>${column['type']}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Txt(
-            '${column['title']} (${filterInfo['operator']})',
+          return Directionality(
+            textDirection: TextDirection.ltr,
+            child:Txt(
+            '${column['title']} (${General.oprator('${filterInfo['operator']}')})',
             color:
-                MainController.isLightMode.value == true ? whiteColor : color2,
-          );
+            MainController.isLightMode.value == true ? whiteColor : color2,
+          ) ,);
         }),
         SizedBox(
           height: 10,
@@ -827,19 +831,18 @@ class ViewController extends GetxController {
             onChange: (text) {
               if (text != null && text != '') {
                 if (column['type'] == 'Number int') {
-                  ViewController
-                      .request['${column['name']}${filterInfo['operator']}'] = {
+                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${int.parse('${text}')}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
                   };
                 } else if (column['type'] == 'Number double') {
-                  ViewController
-                      .request['${column['name']}${filterInfo['operator']}'] = {
+                  ViewController.request['${column['name']}${filterInfo['operator']}'] = {
                     'value': '${double.parse('${text}')}',
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
                   };
+                  print('ViewController.generateFormTextFieldFilter>>${  ViewController.request}');
                 } else {
                   ViewController
                       .request['${column['name']}${filterInfo['operator']}'] = {
@@ -1848,8 +1851,7 @@ class ViewController extends GetxController {
                   Center(
                       child: Image.network(
                     type == 'multiFile'
-                        ? baseUrl
-                        : baseUrlPvFile + '${data['path']}',
+                        ? baseUrl + '${data['path']}' : baseUrlPvFile + '${data['path']}',
                     width: 50,
                     height: 50,
                     fit: BoxFit.fill,

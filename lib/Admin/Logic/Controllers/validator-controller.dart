@@ -196,8 +196,7 @@ class ValidatorController extends GetxController {
                   return false;
                 }
               }
-              if (column['type'] == 'select' ||
-                  column['type'] == 'radioButton') {
+              if (column['type'] == 'select' || column['type'] == 'radioButton') {
                 if (request[key] is String == false) {
                   return false;
                 }

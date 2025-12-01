@@ -38,8 +38,11 @@ class AdminController extends GetxController {
 
       successCallback: () async {
         var user = response!.data['data'];
+
         if (user != null) {
-          await Token.setToken(user['token']!);
+           await Token.setToken( '${response.data['data']['token']}');
+           var t=await Token.getToken();
+         print('AdminController.login>>${t}');
           Get.to(DashboardPage());
         }
       },

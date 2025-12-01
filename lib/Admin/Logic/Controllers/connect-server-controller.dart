@@ -10,7 +10,7 @@ import 'app-controller.dart';
 
 class ConncetServerController extends GetxController {
   static RxList<dynamic> listTableNames=[].obs;
-  static Map<String, dynamic>storeRecordRes={};
+  static Map<String, dynamic> storeRecordRes ={};
   static Map<String, dynamic> updateRecordRes={};
   static List<Map<String, dynamic>>filterRecordRes=[];
   static bool deleteRecordRes=false;
@@ -66,13 +66,17 @@ class ConncetServerController extends GetxController {
   }
 
   static storeRecordGeneral (var json) async {
+    storeRecordRes={};
     var response = await RestApi.post(storeRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           storeRecordRes={};
           storeRecordRes=response!.data['data'];
-        },printResponse: true);
+        }
+        ,printResponse: true,errorCallback: (){
+      storeRecordRes={};
+    });
     // AppController.finishLoading('store-record');
     // AppController.finishLoading('get-records');
   }

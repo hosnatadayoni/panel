@@ -119,5 +119,25 @@ class General{
        showSnackbar(snackTypes.error, ' error format value');
      }
    }
+   static oprator(String type){
+    switch(type){
+      case '\$eq':
+        return '==';
+      case '\$gte':
+        return '>=';
+      case '\$gt':
+        return '>';
+      case '\$lt':
+        return '<';
+      case '\$nq':
+        return '!=';
+      case '\$lte':
+        return '<=';
+      default:'==';
+
+
+    }
+
+   }
 
 }

@@ -149,14 +149,19 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
-                                        HelperController
-                                            .editPageFunction(
-                                            MainController.tableData
-                                                .value[i]);
+                                        HelperController.editPageFunction(MainController.tableData.value[i]);
                                       });
                                     }
                                     if(value=='refresh'){
-                                      await DB('${MainController.tableInfo['schema']['name']}').storeRecord(MainController.tableData.value[i]);}
+                                      await DB('${MainController.tableInfo['schema']['name']}').storeRecord(MainController.tableData.value[i]);
+                                      await MainController.loadData(
+                                          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
+                                      if (ViewController.isClickedBtn.value == false) {
+                                        var table = MainController.getInfoTable(MainController.tableName.value);
+                                        MainController.goToTablePage(table, loadData: false);
+                                      }
+                                      // DB('${MainController.tableInfo['schema']['name']}').getRecords();
+                                    }
                                     if(value=='remove'){
                                       showDialog(
                                           context: context,
