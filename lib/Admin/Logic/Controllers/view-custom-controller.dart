@@ -291,7 +291,7 @@ class ViewCustomController extends GetxController{
   static Map<String,dynamic> getDataTable(String tableName){
     Map<String,dynamic> dataTableName={};
     for(var subMenu in MainController.SubMenuList){
-      if(subMenu['table-name'] == tableName){
+      if(subMenu['schema']['name'] == tableName){
         dataTableName = subMenu;
       }
     }
@@ -310,12 +310,12 @@ class ViewCustomController extends GetxController{
     var colorBox;
     var fileBox;
     var timeBox;
-
     for (var j = 0; j < columns.length; j++) {
       if (columns[j]['is-show-store'] == true) {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
+
 
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();

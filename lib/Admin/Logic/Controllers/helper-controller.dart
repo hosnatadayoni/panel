@@ -1,5 +1,6 @@
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/UI/Componenets/page-custom/order/order-create.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -121,8 +122,16 @@ class HelperController extends GetxController {
   }
   static createPageFunction(String tableName) async {
     var table = MainController.getInfoTable(tableName);
-    if (table['schema']['view'] == 'custom') {
+    print('table clicked>>>${table}');
+    print('${'table name clicked>>>${table['schema']['name']}'}');
+    //before
+    // if (table['schema']['view'] == 'custom') {
+    //add(after)
+    if(table['schema']['name'] == 'Orders'){
+      await Get.to(() => OrderCreatePage());
+      //end add(after)
     } else {
+      print('default');
       await Get.to(() => CreatePage(tableName));
     }
   }
