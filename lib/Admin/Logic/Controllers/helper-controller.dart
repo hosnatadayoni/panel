@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../Models/dataModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 import 'main-controller.dart';
+import 'package:finance/Admin/Logic/Models/order-item.dart';
 
 class HelperController extends GetxController {
   //store
@@ -22,6 +24,31 @@ class HelperController extends GetxController {
   }
 
   static afterStore(String tableName, dataJson, DataModel customData) async {
+    if (tableName == 'Order') {
+      if (OrderItem.orderItemsList.length != 0) {
+        // for (var key in OrderItem.orderItemsList.keys) {
+        //   OrderItem.orderItemsList[key] = {...OrderItem.orderItemsList[key]!, 'سفارش': customData.id};
+        // }
+        for (var list in OrderItem.orderItemsList.values) {
+          // await DB('order-itemss').parent(parentTable: 'order',parentId: customData.id!).storeRecord(list);
+          await DB('Order_Details')
+              .parent(parentTable: 'Order', parentId: customData.id!)
+              .storeRecord(list);
+        }
+      }
+    }
+
+    // if (tableName == 'fields') {
+    //   Map<String, dynamic> parent = await DB.parentItem;
+    //   await ConncetServerController.createField({
+    //     'table': '${parent['parent_id']}',
+    //     'name': '${customData.data['name']}',
+    //     'title': '${customData.data['title']}',
+    //     'typeField': '${customData.data['type_filed']}',
+    //     'sourceItems': '${customData.data['sourceItems']}',
+    //     'sourceTable': '${customData.data['sourceTable']}'
+    //   });
+    // }
     return AppController.responceHelper(customData, true);
   }
   //end store
@@ -73,7 +100,8 @@ class HelperController extends GetxController {
       var table = MainController.getInfoTable(MainController.tableName.value);
       MainController.tableInfo.value = table;
       print('HelperController.backFunction>>${MainController.tableName.value}>>${MainController.SubMenuList[indexNew]}>>${table}>>${ MainController.tableInfo}>>${MainController.SubMenuList[index]}');
-      if (table['view'] == 'custom') {
+      // if (table['view'] == 'custom') {
+      if (table['table-name'] == 'Orders') {
         MainController.endIndex.value = 0;
         MainController.startIndex.value = 0;
       }
@@ -230,6 +258,16 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
       MainController.endIndex.value = 0;
       MainController.startIndex.value = 0;
+
+      //add
+      if(table['view']=='custom'){
+        MainController.endIndex.value = 0;
+        MainController.startIndex.value = 0;
+
+
+      }
+      //end add
+
     } else {
       MainController.tableData.value =
       await DB('${MainController.tableName.value}').paginate();

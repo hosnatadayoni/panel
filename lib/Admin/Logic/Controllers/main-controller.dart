@@ -551,9 +551,9 @@ class MainController extends GetxController {
       var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
       HelperController.pageInateFunction();
-      Navigator.push(
-          Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
-      // HelpegrController.tablePageFunction(table: table);
+      // Navigator.push(
+      //     Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
+      HelperController.tablePageFunction(table: table);
     } else {
       if (loadData == true)
         await MainController.loadData(
