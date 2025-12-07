@@ -7,7 +7,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-date.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-multiSelect.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/Admin/UI/Componenets/page-custom/orderItem/form-edit-orderItem-custom.dart';
+import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -17,14 +17,14 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
-import '../../Public/styles.dart';
-import '../../UI/Componenets/General/txt.dart';
-import '../../UI/Componenets/Items/Form/form-color.dart';
-import '../../UI/Componenets/Items/Form/form-file.dart';
-import '../../UI/Componenets/Items/Form/form-radio-button.dart';
-import '../../UI/Componenets/Items/Form/form-time.dart';
-import '../Models/db.dart';
-import '../Models/order-item.dart';
+import '../../../Admin/Public/styles.dart';
+import '../../../Admin/UI/Componenets/General/txt.dart';
+import '../../../Admin/UI/Componenets/Items/Form/form-color.dart';
+import '../../../Admin/UI/Componenets/Items/Form/form-file.dart';
+import '../../../Admin/UI/Componenets/Items/Form/form-radio-button.dart';
+import '../../../Admin/UI/Componenets/Items/Form/form-time.dart';
+import '../../../Admin/Logic/Models/db.dart';
+import '../../../Admin/Logic/Models/order-item.dart';
 
 class ViewCustomController extends GetxController{
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
@@ -49,35 +49,105 @@ class ViewCustomController extends GetxController{
   }
 
   // select order
+  static Future<Widget> generateSelectOrder(var column) async{
+    List<dynamic> items = await ViewController.itemsList(column);
+    String initailValue = '';
+    String hintText = '';
+    Rx<bool> isSeleted = false.obs;
+    return column['source_items'] != 'custom'
+        ? SelectBox(
+        name: '${column['title']}',
+        column: column,
+        items: [
+          DropdownMenuItem(
+              child: Obx(() {
+                return Txt(
+                  '${AppController.of(Get.context!)!.value('not selected')}',
+                  color: MainController.isLightMode.value == true
+                      ? whiteColor
+                      : primaryDark,
+                );
+              }),
+              value: ''),
+          for (var item in items)
+            DropdownMenuItem(
+                child: Obx(() {
+                  return Txt(
+                    '${ViewController.itemsShowSelectItem(item, column)}',
+                    color:
+                    MainController.isLightMode.value == true
+                        ? whiteColor
+                        : primaryDark,
+                  );
+                }),
+                value: item['_id'].toString()),
+        ],
+        initalValue: initailValue == '' || initailValue == null
+            ? ""
+            : initailValue,
+        onChanged: (value) async {
+          if (value != '') {
+            ViewController.request[column['name']] = value;
+          } else {
+            ViewController.request[column['name']] = '';
+          }
+        },
+        hintText: hintText,
+        isSeleted: isSeleted,
+        selectedValue: '')
+        : SelectBox(
+        name: '${column['title']}',
+        column: column,
+        items: [
+          for (var item in items)
+            DropdownMenuItem(
+                child: Obx(() {
+                  return Txt(
+                    '${item['title']}',
+                    color:
+                    MainController.isLightMode.value == true
+                        ? whiteColor
+                        : primaryDark,
+                  );
+                }),
+                value: item['value']),
+        ],
+        initalValue: initailValue == '' || initailValue == null
+            ? items.first['value']
+            : initailValue,
+        onChanged: (value) async {
+          for (var item in items) {
+            if (item['title'] == value) {
+              if (item['value'] == '') {
+                value = null;
+              }
+            }
+          }
+          if (value != '') {
+            ViewController.request[column['name']] = value;
+          } else {
+            ViewController.request[column['name']] = '';
+          }
+        },
+        hintText: hintText,
+        isSeleted: isSeleted,
+        selectedValue: '');
+  }
   static Future<Map<String, dynamic>> getSelectBoxData(Map<String, dynamic> column) async {
     List<dynamic> items=[];
     var initValue;
     // Map<String, dynamic> selectedItem={};
     String selectedItem='';
-    if(column['type'] == 'select' || column['type'] == 'radiobutton'){
+
 
       items = await ViewController.itemsList(column);
-      // initValue = await ViewController.getInitValue(column, items);
-      if(column['type'] == 'radiobutton'){
-      }
-      if(items.length != 0){
-        for(var item in items){
-          selectedItem = ViewController.itemsShowSelectItem(item, column);
-        }
-        // selectedItem = items.firstWhere(
-        //         (element) => element['value'] == ViewController.request[column['name']],
-        //     orElse: () => items.first);
 
-        // if(selectedItem['value'] != null){
-        //   initValue = selectedItem['value'];
-        // }
-      }
-    }
+    print('after items>>>${items}');
 
     return {
       'items': items,
-      'initValue': '',
-      'hint' :selectedItem
+      // 'initValue': '',
+      // 'hint' :selectedItem
     };
   }
 
@@ -311,11 +381,10 @@ class ViewCustomController extends GetxController{
     var fileBox;
     var timeBox;
     for (var j = 0; j < columns.length; j++) {
-      if (columns[j]['is-show-store'] == true) {
+      if (columns[j]['is_show_store'] == true) {
         var column = columns[j];
         var type = column['type'];
         String name = column['title'];
-
 
         GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
         GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
@@ -342,8 +411,10 @@ class ViewCustomController extends GetxController{
           children.add(textField);
         }
         if (type == 'select') {
+          print('type of select');
           var initValue;
           List<dynamic> items = await ViewController.itemsList(column);
+          print('items select>>>${items}');
           selectBox = await generateStoreFormSelectBox(
               column, items, '', '', false.obs);
           children.add(SizedBox(
@@ -401,14 +472,14 @@ class ViewCustomController extends GetxController{
       }
     }
     return Row(
-        mainAxisAlignment: MainAxisAlignment.start, children: children);
+        mainAxisAlignment: MainAxisAlignment.start , crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
   static Widget generateStoreFormSelectBox(var column, List<dynamic> items,
       String hintText, String initailValue, Rx<bool> isSeleted) {
     if (initailValue == '' || initailValue == null) {
       ViewController.request[column['name']] = null;
     }
-    print('items klmn>>>${items}');
+    print('xaddd>>>${column['source_items'] }');
 
     return items.length != 0
         ? new Column(
@@ -425,9 +496,9 @@ class ViewCustomController extends GetxController{
         SizedBox(
           height: 10,
         ),
-        column['sourceItems'] != 'custom' ?
+        column['source_items'] != 'custom' ?
         Container(
-          width: column['name'] == 'مشتری'  ? 150:100,
+          width: column['name'] == 'Customer'  ? 150:100,
           child: SelectBox(
               name: '${column['title']}',
               column: column,
@@ -469,7 +540,7 @@ class ViewCustomController extends GetxController{
               selectedValue: ''),
         )
             : Container(
-          width: column['name'] == 'مشتری'  ? 150:100,
+          width: column['name'] == 'Customer'  ? 300:100,
           child: SelectBox(
               name: '${column['title']}',
               column: column,
@@ -491,6 +562,7 @@ class ViewCustomController extends GetxController{
                   ? items.first['value']
                   : initailValue,
               onChanged: (value) async {
+                print('value customer>>>${value} ${value.runtimeType}');
                 for (var item in items) {
                   if (item['title'] == value) {
                     if (item['value'] == '') {
@@ -964,7 +1036,6 @@ class ViewCustomController extends GetxController{
           height: 10,
         ),
         Container(
-          width: 300,
           child: FormFile(
             fileInfo: <String, List<dynamic>>{}.obs,
             columnName: column['title'],
@@ -1461,6 +1532,116 @@ class ViewCustomController extends GetxController{
     }
   }
   //end edit order page
+
+  //create order item
+  static Future<Widget> generateStoreFormOrderItemView(var columns) async {
+    var children = <Widget>[];
+    var textField;
+    var selectBox;
+    var checkBox;
+    var radioButtonBox;
+    var dateBox;
+    var multiSelectBox;
+    var colorBox;
+    var fileBox;
+    var timeBox;
+    for (var j = 0; j < columns.length; j++) {
+      if (columns[j]['is_show_store'] == true) {
+        var column = columns[j];
+        var type = column['type'];
+        String name = column['title'];
+        GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+        // GlobalKey<FormBuilderState> _fbKey2 = GlobalKey<FormBuilderState>();
+        // GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>(debugLabel: '$instanceId-form-$j');
+        var maxValidator;
+        var minValidator;
+        if (column['validators'] != null) {
+          maxValidator = column['validators'].firstWhere(
+                  (validator) => validator['type'] == 'max',
+              orElse: () => null);
+          minValidator = column['validators'].firstWhere(
+                  (validator) => validator['type'] == 'min',
+              orElse: () => null);
+        }
+        if (type == 'string' ||
+            type == 'int' ||
+            type == 'Number double' ||
+            type == 'Number int' ||
+            type == 'email' ||
+            type == 'mobile') {
+          textField = generateFormTextField(_fbKey, column, type, '');
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(textField);
+        }
+        if (type == 'select') {
+
+          var initValue;
+          List<dynamic> items = await ViewController.itemsList(column);
+          print('type of select order item form');
+          print('items of select box order item view>>>${items}');
+          selectBox = await generateStoreFormSelectBox(
+              column, items, '', '', false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(selectBox);
+        }
+        else if (type == 'checkbox') {
+          checkBox = generateFormCheckBox(column, false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(checkBox);
+        }
+        else if (type == 'radiobutton') {
+          var initValue;
+          List<dynamic> items = await ViewController.itemsList(column);
+          radioButtonBox = generateFormRadioButton(column, items, '', false.obs);
+          children.add(SizedBox(width: 20,));
+          children.add(radioButtonBox);
+        }
+        else if (type == 'date') {
+          dateBox = generateFormDateBox(column, Jalali.now(), false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(dateBox);
+        }
+        else if (type == 'multiSelect') {
+
+          multiSelectBox = await genarateStoreFormMuiltiSelectBox(column, RxString(''), <dynamic>[].obs, false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(multiSelectBox);
+
+        } else if (type == 'color') {
+          colorBox = generateFormColorBox(column, Colors.blue, false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(colorBox);
+        } else if (type == 'file') {
+          fileBox = generateFileBox('', column, false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(fileBox);
+        } else if (type == 'time') {
+          timeBox = generateFormTimeBox(column, TimeOfDay.now(), false.obs);
+          children.add(SizedBox(
+            width: 20,
+          ));
+          children.add(timeBox);
+        }
+      }
+    }
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.start , crossAxisAlignment: CrossAxisAlignment.start, children: children);
+  }
+  //end create order item
 
   static Future<Widget> getOrderItems(var data) async {
     // List<dynamic>items=await DB('order-itemss').parent(parentId:  "${data['id']}",parentTable: 'order').getRecords();

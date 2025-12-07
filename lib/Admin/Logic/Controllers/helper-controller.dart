@@ -1,7 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/UI/Componenets/page-custom/order/order-create.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
+import 'package:finance/custom/UI/Components/page-custom/order/order-create.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -101,8 +101,7 @@ class HelperController extends GetxController {
       var table = MainController.getInfoTable(MainController.tableName.value);
       MainController.tableInfo.value = table;
       print('HelperController.backFunction>>${MainController.tableName.value}>>${MainController.SubMenuList[indexNew]}>>${table}>>${ MainController.tableInfo}>>${MainController.SubMenuList[index]}');
-      // if (table['view'] == 'custom') {
-      if (table['table-name'] == 'Orders') {
+      if (table['view'] == 'custom') {
         MainController.endIndex.value = 0;
         MainController.startIndex.value = 0;
       }
@@ -125,11 +124,8 @@ class HelperController extends GetxController {
     print('table clicked>>>${table}');
     print('${'table name clicked>>>${table['schema']['name']}'}');
     //before
-    // if (table['schema']['view'] == 'custom') {
-    //add(after)
-    if(table['schema']['name'] == 'Orders'){
+    if (table['schema']['view'] == 'custom') {
       await Get.to(() => OrderCreatePage());
-      //end add(after)
     } else {
       print('default');
       await Get.to(() => CreatePage(tableName));
@@ -260,23 +256,39 @@ class HelperController extends GetxController {
     Navigator.pop(Get.context!);
   }
 
+  // static pageInateFunction() async {
+  //   var table = MainController.getInfoTable(MainController.tableName.value);
+  //   MainController.tableInfo = table;
+  //   var tableName = table['schema']['name'];
+  //   if (table['schema']['view'] == 'custom') {
+  //     MainController.endIndex.value = 0;
+  //     MainController.startIndex.value = 0;
+  //
+  //     //add
+  //     if(table['view']=='custom'){
+  //       MainController.endIndex.value = 0;
+  //       MainController.startIndex.value = 0;
+  //
+  //
+  //     }
+  //     //end add
+  //
+  //   } else {
+  //     MainController.tableData.value =
+  //     await DB('${MainController.tableName.value}').paginate();
+  //     MainController.allData.value = MainController.tableData.value;
+  //   }
+  // }
+
   static pageInateFunction() async {
     var table = MainController.getInfoTable(MainController.tableName.value);
-    MainController.tableInfo = table;
+    MainController.tableInfo.value = table;
     var tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
+      MainController.tableData.value =
+      await DB('${MainController.tableName.value}').paginate();
       MainController.endIndex.value = 0;
       MainController.startIndex.value = 0;
-
-      //add
-      if(table['view']=='custom'){
-        MainController.endIndex.value = 0;
-        MainController.startIndex.value = 0;
-
-
-      }
-      //end add
-
     } else {
       MainController.tableData.value =
       await DB('${MainController.tableName.value}').paginate();
@@ -284,7 +296,8 @@ class HelperController extends GetxController {
     }
   }
 
-  static pageInateItems(
+
+    static pageInateItems(
       {var perPage = 10, var currentPage = 1, List<dynamic>? listItems}) async {
     var totalItems = listItems!.length;
     int s = (currentPage - 1) * perPage;
