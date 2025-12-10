@@ -25,8 +25,9 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormEditOrderCustom extends StatefulWidget {
 
-  FormEditOrderCustom({this.data});
+  FormEditOrderCustom( this.items , {this.data});
   var data;
+  List<dynamic> items;
 
   @override
   State<FormEditOrderCustom> createState() => _FormEditOrderCustomState();
@@ -36,46 +37,18 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
   Color? colorChanged;
   // Map<String, Future<Map<String, dynamic>>>  _future={};
   Map<String , dynamic> dataJson = {};
-  late Future<Widget> _future;
 
 
   void initState() {
     super.initState();
-    // _loadData();
-    print('widget.data>>>${widget.data}');
-    _future = ViewCustomController.generateEditFormOrderView(widget.data);
   }
-  // Future<void> _loadData() async {
-  //   for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
-  //     String columnName = MainController.tableInfo['columns'][j]['name'];
-  //     if (MainController.tableInfo['columns'][j]['type'] == 'select' ||
-  //         MainController.tableInfo['columns'][j]['type'] == 'radiobutton') {
-  //       _future[columnName] = ViewCustomController.getSelectBoxData(MainController.tableInfo['columns'][j]);
-  //     }
-  //     if (MainController.tableInfo['columns'][j]['type'] == 'multiSelect') {
-  //       // ذخیره Future در متغیر
-  //       final multiSelectFuture = ViewCustomController.getMultiSelectBoxData(
-  //           MainController.tableInfo['columns'][j],
-  //           dataModel: widget.data
-  //       );
-  //
-  //       // اختصاص Future به map
-  //       _future[columnName] = multiSelectFuture;
-  //
-  //       // چاپ نتیجه پس از resolve شدن Future
-  //       final result = await multiSelectFuture;
-  //       print('csdfffgga>>>${result['items']}');
-  //     }
-  //   }
-  // }
 
 
   @override
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    print('form edit order custom');
-    print('this.data d>>>${widget.data}');
+
     return  Container(
       width: size.width,
       child: Column(
@@ -113,32 +86,32 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      // await DB('order').where('id', '\$eq', '${widget.data!['id']}').updateRecord(ViewController.request);
+                      await DB('Orders').where('id', '\$eq', '${widget.data!['id']}').updateRecords(ViewController.request);
 
                       // var orderItems=await DB('order-itemss').where('parent_id', '\$eq', '${widget.data!['id']}').getRecords();
-                      var orderItems=await DB('itemsOrder2').where('parent_id', '\$eq', '${widget.data!['_id']}').getRecords();
+                      var orderItems=await DB('Order_Details').where('parent_id', '\$eq', '${widget.data!['_id']}').getRecords();
                       for(var orderItem in  orderItems){
                         if(OrderItem.orderItemsList.containsKey(orderItem['_id'])){
                           // DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
-                          DB('itemsOrder2').where('id', '\$eq', '${orderItem['_id']}').updateRecord(OrderItem.orderItemsList[orderItem['_id']]);
+                          DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').updateRecords(OrderItem.orderItemsList[orderItem['_id']]);
                         }
                         else{
                           // DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').deleteRecord();
-                          DB('itemsOrder2').where('id', '\$eq', '${orderItem['_id']}').deleteRecord();
+                          DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').deleteRecord();
                         }
                       }
                       if (OrderItem.orderItemsList2.values.length != 0) {
                         for (var list in OrderItem.orderItemsList2.values) {
                           if(list.isNotEmpty){
                             // await DB('order-itemss').parent(parentId:'${widget.data['id']}' ,parentTable: 'order').storeRecord(list);
-                            await DB('itemsOrder2').parent(parentId:'${widget.data['_id']}' ,parentTable: 'order3').storeRecord(list);
+                            await DB('Order_Details').parent(parentId:'${widget.data['_id']}' ,parentTable: 'Orders').storeRecord(list);
 
                           }
                         }
                       }
-                      await MainController.loadData(tableData:ViewCustomController.getDataTable('order3') );
+                      await MainController.loadData(tableData:ViewCustomController.getDataTable('Orders') );
                       // MainController.renderPagination();
-                      MainController.goToTablePage('Orders');
+                      MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -723,21 +696,263 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
               //                        )
               //   ],
               // ),
+              // child: Container(
+              //     child: FutureBuilder<Widget>(
+              //       future: _future,
+              //       builder: (BuildContext context,
+              //           AsyncSnapshot<Widget> snapshot) {
+              //         if (snapshot.connectionState ==
+              //             ConnectionState.waiting) {
+              //           return CircularProgressIndicator();
+              //         } else if (snapshot.hasError) {
+              //           return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
+              //         } else {
+              //           return snapshot.data ?? Container();
+              //         }
+              //       },
+              //     )),
               child: Container(
-                  child: FutureBuilder<Widget>(
-                    future: _future,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<Widget> snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-                      } else {
-                        return snapshot.data ?? Container();
-                      }
-                    },
-                  )),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'کد ورودی',
+                            color:
+                            MainController.isLightMode.value == true ? whiteColor : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 80,
+                          child: FormTextField(
+                            name: 'کد ورودی',
+                            hint: 'کد ورودی',
+                            lable: '',
+                            initValue: '${widget.data['Input_Code'] != null ? widget.data['Input_Code']: ''}',
+                            column: MainController.getInfoTable('Orders')['columns'][2],
+                            onChange: (text) {
+                              widget.data['Input_Code']= text;
+                            },
+                            isNumberInt:true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 20,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'شماره نقشه',
+                            color:
+                            MainController.isLightMode.value == true ? whiteColor : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 80,
+                          child: FormTextField(
+                            name: 'شماره نقشه',
+                            hint: 'شماره نقشه',
+                            lable: '',
+                            initValue: '${widget.data['Drawing_Number'] != null ? widget.data['Drawing_Number']: ''}',
+                            column: MainController.getInfoTable('Orders')['columns'][3],
+                            onChange: (text) {
+                                widget.data['Drawing_Number']= text;
+                            },
+                            isNumberInt:true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 20,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'شماره نقشه(مشتری)',
+                            color:
+                            MainController.isLightMode.value == true ? whiteColor : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 80,
+                          child: FormTextField(
+                            name: 'شماره نقشه(مشتری)',
+                            hint: 'شماره نقشه(مشتری)',
+                            initValue: '${widget.data['Drawing_Number(customer)'] != null ? widget.data['Drawing_Number(customer)']: ''}',
+                            column: MainController.getInfoTable('Orders')['columns'][4],
+                            lable: '',
+                            onChange: (text) {
+                              widget.data['Drawing_Number(customer)']= text;
+                            },
+                            isNumberInt:true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 20,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'نوع',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 100,
+                          child: SelectBox(
+                              name: 'نوع',
+                              column: MainController.getInfoTable('Orders')['columns'][5],
+                              items: [
+                                DropdownMenuItem(
+                                    child: Obx(() {
+                                      return Txt(
+                                        '${AppController.of(Get.context!)!.value('not selected')}',
+                                        color: MainController.isLightMode.value == true
+                                            ? whiteColor
+                                            : primaryDark,
+                                      );
+                                    }),
+                                    value: ''),
+                                for (var item in MainController.getInfoTable('Orders')['columns'][5]['items'])
+                                  DropdownMenuItem(
+                                      child: Obx(() {
+                                        return Txt(
+                                          '${item['title']}',
+                                          color:
+                                          MainController.isLightMode.value == true
+                                              ? whiteColor
+                                              : primaryDark,
+                                        );
+                                      }),
+                                      value: item['value']),
+                              ],
+                              initalValue: '${widget.data['Type']['value'] != null ? widget.data['Type']['value']: ''}',
+                              onChanged: (value) async {
+                                if (value != '') {
+                                  widget.data['Type']['value'] = value;
+                                } else {
+                                  widget.data['Type']['value'] = '';
+                                }
+                              },
+                              hintText: '',
+                              isSeleted: widget.data['Type']['value'] != null ? true.obs : false.obs,
+                              selectedValue: ''),
+                        )
+                      ],
+                    ),
+                    SizedBox(width: 20,),
+                    ViewCustomController.generateEditFileBoxOrderView(widget.data, MainController.getInfoTable('Orders')['columns'][6], widget.data['Picture'] != null ? true.obs : false.obs),
+                    SizedBox(width: 20,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'مشتری',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 250,
+                          child: SelectBox(
+                              name: 'مشتری',
+                              column: MainController.getInfoTable('Orders')['columns'][7],
+                              items: [
+                                DropdownMenuItem(
+                                    child: Obx(() {
+                                      return Txt(
+                                        '${AppController.of(Get.context!)!.value('not selected')}',
+                                        color: MainController.isLightMode.value == true
+                                            ? whiteColor
+                                            : primaryDark,
+                                      );
+                                    }),
+                                    value: ''),
+                                for (var item in widget.items)
+                                  DropdownMenuItem(
+                                      child: Obx(() {
+                                        return Txt(
+                                          '${ViewController.itemsShowSelectItem(item, MainController.getInfoTable('Orders')['columns'][7])}',
+                                          color:
+                                          MainController.isLightMode.value == true
+                                              ? whiteColor
+                                              : primaryDark,
+                                        );
+                                      }),
+                                      value: item['_id'].toString()),
+                              ],
+                              initalValue:'${widget.data['Customer']['_id']}',
+                              onChanged: (value) async {
+                                if (value != '') {
+                                  widget.data['Customer']['_id'] = value;
+                                } else {
+                                  widget.data['Customer']['_id'] = '';
+                                }
+                              },
+                              hintText: '',
+                              isSeleted:  widget.data['Customer'] !=null ? true.obs : false.obs,
+                              selectedValue: ''),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 20,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(() {
+                          return Txt(
+                            'تاریخ',
+                            color:
+                            MainController.isLightMode.value == true ? whiteColor : color2,
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 120,
+                          child: DateBox(
+                            selectedDate:  Jalali.now(),
+                            isSeletedDate: widget.data['Date'] !=null ? true.obs : false.obs,
+                            onDateChanged: (date) {
+                              widget.data['Date'] = date;
+                            },
+                            column: MainController.getInfoTable('Orders')['columns'][8],
+                          ),
+                        ),
+                      ],
+                    )
+
+                  ],
+                ),
+              ),
             ),
           ),
         ],

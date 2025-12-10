@@ -34,16 +34,12 @@ class FormCreateOrderItemCustom extends StatefulWidget {
 class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
   Color? colorChanged;
   Map<String, Future<Map<String, dynamic>>>  _future={};
-  // var getDataTable = ViewCustomController.getDataTable('order-itemss');
   var getDataTable = ViewCustomController.getDataTable('Order_Details');
-  late Future<Widget> _futureWidget2;
-  Rx<Widget> _future2test = Row().obs;
 
   void initState() {
     super.initState();
     // _futureWidget2 = ViewCustomController.generateStoreFormOrderItemView(
     //     getDataTable['columns']);
-    addWidget();
     // _loadData();
   }
   void _loadData() {
@@ -60,12 +56,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
 
         }
       }
-  }
-  addWidget() async {
-    Future.delayed(Duration.zero, () async {
-      _future2test.value = await ViewCustomController.generateStoreFormOrderItemView(
-          getDataTable['columns']);
-    });
   }
   // List<Widget> containers = [];
   Map<String, Widget> containers = {};
@@ -87,7 +77,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
       var Id = Uuid().v4();
       String newKey = Id;
       containers[newKey] = buildContainer(newKey);
-      OrderItem.orderItemsList[newKey] = {};
+      OrderItem.orderItemsList[newKey]= ViewController.request2;
     });
   }
   void _removeContainer(String key) {
@@ -102,7 +92,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
     return Column(
       children: [
         if(MainController.selectedSubItem.value != -1)
-          if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'Order')
+          if(MainController.SubMenuList[MainController.selectedSubItem.value]['table-name'] != 'Orders')
             SizedBox(height: 20,),
         Obx((){
           return Container(
@@ -678,7 +668,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
             //   ),
             // ),
             FutureBuilder<Widget>(
-              future: ViewCustomController.generateStoreFormOrderItemView(getDataTable['columns']),
+              future: ViewCustomController.generateStoreFormOrderItemView(getDataTable['columns'] , key),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SizedBox(

@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
@@ -16,7 +17,10 @@ import 'form-create-order-custom.dart';
 import '../orderItem/form-create-orderItem-custom.dart';
 
 class OrderCreatePage extends StatelessWidget {
-  OrderCreatePage();
+  String tableName;
+  List<dynamic> items;
+  OrderCreatePage(this.tableName , this.items);
+
 
 
   @override
@@ -107,19 +111,7 @@ class OrderCreatePage extends StatelessWidget {
                                               },
                                               child: InkWell(
                                                 onTap: () async{
-                                                  await DB('${MainController.tableInfo['schema']['name']}').storeRecord(ViewController.request);
-                                                  for (var i = MainController.startIndex.value; i < MainController.endIndex.value; i++){
-                                                  }
-                                                  // print('sasdddfvv>>>${await DB('sample').getRecords()}');
-                                                  // await DB('order3').storeRecord({'price':6000 ,
-                                                  //   'sampleSelect' : '8a4049b9-c6d2-4e9b-a00d-064195b9dcb8' ,
-                                                  //   'type' : ['1'] , 'checkBox' : true , 'radiobutton' : '1'});
-                                                  // List<dynamic> orderList = await DB('order3').getRecords();
-                                                  // await DB('itemsOrder2').parent(parentId: '${orderList.last['_id']}', parentTable: 'order3').storeRecord({'title': 'order item 1' ,
-                                                  //   'description' : 'desription  order item 1-1'});
-                                                  // await DB('itemsOrder2').parent(parentId: '${orderList.last['_id']}', parentTable: 'order3').storeRecord({'title': 'order item 2' ,
-                                                  //   'description' : 'desription  order item 2-1'});
-
+                                                  HelperController.createFunction(this.tableName);
 
                                                   if(ViewController.isClickedBtn.value == false){
                                                     // Get.to(() => TablePage());
@@ -151,7 +143,7 @@ class OrderCreatePage extends StatelessWidget {
                             SizedBox(height: 10,),
                             Column(
                               children: [
-                                FormCreateOrderCustom(),
+                                FormCreateOrderCustom(this.items),
                                 SizedBox(height: 20,),
                                 FormCreateOrderItemCustom(),
                               ],

@@ -1,4 +1,3 @@
-
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
@@ -36,18 +35,17 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Map<String, Future<Map<String, dynamic>>>  _future={};
   Map<String, Future<Map<String, dynamic>>>  _future2={};
 
-  // var getDataTable = ViewCustomController.getDataTable('order-itemss');
-  var getDataTable = ViewCustomController.getDataTable('itemsOrder2');
+  var getDataTable = ViewCustomController.getDataTable('Order_Details');
 
 
   void initState() {
     super.initState();
     for (var j = 0; j < getDataTable['columns'].length; j++) {
-      _loadData(getDataTable['columns'][j]);
+      // _loadData(getDataTable['columns'][j]);
     }
-    for (var j = 0; j < getDataTable['columns'].length; j++) {
-      _loadDataRequest();
-    }
+    // for (var j = 0; j < getDataTable['columns'].length; j++) {
+    //   _loadDataRequest();
+    // }
   }
   void _loadData(var column) {
     String columnName = column['name'];
@@ -99,8 +97,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
 
   @override
   Widget build(BuildContext context) {
-    for(int i=0;i<getDataTable['columns'].length;i++){
-    }
     var size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -133,7 +129,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                   for(int i=0;i<OrderItem.orderItemsList.values.toList().length;i++)
                     Container(
                       width: size.width,
-                      key: ValueKey(OrderItem.orderItemsList.values.toList()[i]['id']),
+                      key: ValueKey(OrderItem.orderItemsList.values.toList()[i]['_id']),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child:
@@ -141,9 +137,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             for (var j = 0; j < getDataTable['columns'].length; j++)
-                              if(getDataTable['columns'][j]['is-show-edit'] == true || getDataTable['columns'][j]['is-show-edit'] == null)
+                              if(getDataTable['columns'][j]['is_show_edit'] == true)
                                 if (getDataTable['columns'][j]['type'] == 'string' ||
-                                    getDataTable['columns'][j]['type'] == 'number' ||
+                                    getDataTable['columns'][j]['type'] == 'Number double' ||
+                                    getDataTable['columns'][j]['type'] == 'Number int' ||
                                     getDataTable['columns'][j]['type'] == 'mobile' ||
                                     getDataTable['columns'][j]['type'] == 'email')
                                   Row(
@@ -160,23 +157,26 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                               );
                                             }),
                                             SizedBox(height: 10),
-                                            FormTextField(
-                                              name: '${getDataTable['columns'][j]['title']}',
-                                              hint: '${getDataTable['columns'][j]['title']}',
-                                              lable: '',
-                                              initValue: '${OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null ? OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] : ''}',
-                                              isNumberInt: getDataTable['columns'][j]['type'] == 'Number int' ? true : false,
-                                              isNumberDouble: getDataTable['columns'][j]['type'] == 'Number double' ? true : false,
-                                              isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
-                                              isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
-                                              onChange: (text) {
-                                                // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
-                                                // print('getDataTable>>>${ViewController.request2['${getDataTable['columns'][j]['name']}']}');
-                                                // OrderItem.orderItemsList[item['id']] ??= {};
-                                                OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] = text;
-                                                print('OrderItem.orderItemsList[item>>>${ OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}']}');
-                                              },
-                                              column: getDataTable['columns'][j],
+                                            Container(
+                                              width: 80,
+                                              child: FormTextField(
+                                                name: '${getDataTable['columns'][j]['title']}',
+                                                hint: '${getDataTable['columns'][j]['title']}',
+                                                lable: '',
+                                                initValue: '${OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] != null ? OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] : ''}',
+                                                isNumberInt: getDataTable['columns'][j]['type'] == 'Number int' ? true : false,
+                                                isNumberDouble: getDataTable['columns'][j]['type'] == 'Number double' ? true : false,
+                                                isEmail: getDataTable['columns'][j]['type'] == 'email' ? true : false,
+                                                isMobile: getDataTable['columns'][j]['type'] == 'mobile' ? true : false,
+                                                onChange: (text) {
+                                                  // ViewController.request2['${getDataTable['columns'][j]['name']}'] = text;
+                                                  // print('getDataTable>>>${ViewController.request2['${getDataTable['columns'][j]['name']}']}');
+                                                  // OrderItem.orderItemsList[item['id']] ??= {};
+                                                  OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] = text;
+                                                  print('OrderItem.orderItemsList[item>>>${ OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}']}');
+                                                },
+                                                column: getDataTable['columns'][j],
+                                              ),
                                             )
                                           ],
                                         ),
@@ -363,83 +363,86 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                     );
                                                   }),
                                                   SizedBox(height: 10),
-                                                  FutureBuilder(
-                                                    future: _future[getDataTable['columns'][j]['title']],
-                                                    builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return CircularProgressIndicator();
-                                                      } else if (snapshot.hasError) {
-                                                        if (snapshot.data != null) {
-                                                          return Txt('${AppController.of(context)!.value('error')}');
+                                                  Container(
+                                                    width: 250,
+                                                    child: FutureBuilder(
+                                                      future: _future[getDataTable['columns'][j]['title']],
+                                                      builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                                          return CircularProgressIndicator();
+                                                        } else if (snapshot.hasError) {
+                                                          if (snapshot.data != null) {
+                                                            return Txt('${AppController.of(context)!.value('error')}');
+                                                          } else {
+                                                            return Container();
+                                                          }
                                                         } else {
-                                                          return Container();
-                                                        }
-                                                      } else {
-                                                        var data = snapshot.data!;
-                                                        return data['items'].length != 0
-                                                            ? Obx(() {
-                                                          return Container(
-                                                            width: 250,
-                                                            child: MultiSelectDropdown(
-                                                              items: [
-                                                                for (var item in data['items'])
-                                                                  DropdownMenuItem(
-                                                                    value: item['value'],
-                                                                    child: Obx(() {
-                                                                      return Row(
-                                                                        children: [
-                                                                          Container(
-                                                                            height: 100,
-                                                                            child: SizedBox(
-                                                                              width: 50,
-                                                                              height: 50,
-                                                                              child: Checkbox(
-                                                                                activeColor: colorBtn,
-                                                                                value: data['selectedItemsList'].contains(item['value']),
-                                                                                onChanged: (isChecked) {
-                                                                                  if (isChecked != null) {
-                                                                                    if (!data['selectedItemsList'].contains(item['value'])) {
-                                                                                      data['selectedItemsList'].add(item['value']);
-                                                                                    } else {
-                                                                                      data['selectedItemsList'].remove(item['value']);
+                                                          var data = snapshot.data!;
+                                                          return data['items'].length != 0
+                                                              ? Obx(() {
+                                                            return Container(
+                                                              width: 250,
+                                                              child: MultiSelectDropdown(
+                                                                items: [
+                                                                  for (var item in data['items'])
+                                                                    DropdownMenuItem(
+                                                                      value: item['value'],
+                                                                      child: Obx(() {
+                                                                        return Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 100,
+                                                                              child: SizedBox(
+                                                                                width: 50,
+                                                                                height: 50,
+                                                                                child: Checkbox(
+                                                                                  activeColor: colorBtn,
+                                                                                  value: data['selectedItemsList'].contains(item['value']),
+                                                                                  onChanged: (isChecked) {
+                                                                                    if (isChecked != null) {
+                                                                                      if (!data['selectedItemsList'].contains(item['value'])) {
+                                                                                        data['selectedItemsList'].add(item['value']);
+                                                                                      } else {
+                                                                                        data['selectedItemsList'].remove(item['value']);
+                                                                                      }
+                                                                                      if (item['value'] == '-1') {
+                                                                                        data['selectedItemsList'].remove(item['value']);
+                                                                                      }
+                                                                                      if (data['selectedItemsList'].isEmpty) {
+                                                                                        data['isSelectedItem'].value = false;
+                                                                                      } else {
+                                                                                        data['isSelectedItem'].value = true;
+                                                                                      }
+                                                                                      data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
+                                                                                      OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
                                                                                     }
-                                                                                    if (item['value'] == '-1') {
-                                                                                      data['selectedItemsList'].remove(item['value']);
-                                                                                    }
-                                                                                    if (data['selectedItemsList'].isEmpty) {
-                                                                                      data['isSelectedItem'].value = false;
-                                                                                    } else {
-                                                                                      data['isSelectedItem'].value = true;
-                                                                                    }
-                                                                                    data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
-                                                                                    OrderItem.orderItemsList.values.toList()[i]['${getDataTable['columns'][j]['name']}'] = data['selectedItemsList'];
-                                                                                  }
-                                                                                },
+                                                                                  },
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                          Txt(item['title'], color: MainController.isLightMode.value ? whiteColor : primaryDark),
-                                                                        ],
-                                                                      );
-                                                                    }),
-                                                                  ),
-                                                              ],
-                                                              hintText: data['hintTxt'].value.isNotEmpty ? data['hintTxt'].value : data['items'][0]['title'],
-                                                              selectedItems: data['selectedItemsList'],
-                                                              isSelectedItem: data['isSelectedItem'],
-                                                              onChanged: (selectedList) {
-                                                                data['selectedItemsList'].value = selectedList;
-                                                                // OrderItem.orderItemsList[item['id']] ??= {};
-                                                                OrderItem.orderItemsList.values.toList()[i]![getDataTable['columns'][j]['name']] = selectedList;
-                                                                data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], selectedList);
-                                                              },
-                                                              column: getDataTable['columns'][j],
-                                                            ),
-                                                          );
-                                                        })
-                                                            : Container();
-                                                      }
-                                                    },
+                                                                            Txt(item['title'], color: MainController.isLightMode.value ? whiteColor : primaryDark),
+                                                                          ],
+                                                                        );
+                                                                      }),
+                                                                    ),
+                                                                ],
+                                                                hintText: data['hintTxt'].value.isNotEmpty ? data['hintTxt'].value : data['items'][0]['title'],
+                                                                selectedItems: data['selectedItemsList'],
+                                                                isSelectedItem: data['isSelectedItem'],
+                                                                onChanged: (selectedList) {
+                                                                  data['selectedItemsList'].value = selectedList;
+                                                                  // OrderItem.orderItemsList[item['id']] ??= {};
+                                                                  OrderItem.orderItemsList.values.toList()[i]![getDataTable['columns'][j]['name']] = selectedList;
+                                                                  data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], selectedList);
+                                                                },
+                                                                column: getDataTable['columns'][j],
+                                                              ),
+                                                            );
+                                                          })
+                                                              : Container();
+                                                        }
+                                                      },
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -561,6 +564,22 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                     ),
                 ],
               ),
+              // FutureBuilder<Widget>(
+              //   future: ViewCustomController.getOrderItems(widget.data),
+              //   builder: (context, snapshot) {
+              //     print('snapshot>>>${snapshot}');
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return SizedBox(
+              //         width: 200,
+              //         child: Center(child: CircularProgressIndicator()),
+              //       );
+              //     } else if (snapshot.hasError) {
+              //       return Txt('${AppController.of(context)!.value('error')}');
+              //     } else {
+              //       return snapshot.data ?? Container();
+              //     }
+              //   },
+              // ),
               // Container(
               //   child: ListView.builder(
               //     shrinkWrap: true,
@@ -597,7 +616,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var j = 0; j < getDataTable['columns'].length; j++)
-              if(getDataTable['columns'][j]['is-show-edit'] == true || getDataTable['columns'][j]['is-show-edit'] == null)
+              if(getDataTable['columns'][j]['is_show_edit'] == true)
                 if (getDataTable['columns'][j]['type'] == 'string' ||
                     getDataTable['columns'][j]['type'] == 'Number double' || getDataTable['columns'][j]['type'] == 'Number int' ||
                     getDataTable['columns'][j]['type'] == 'mobile' ||

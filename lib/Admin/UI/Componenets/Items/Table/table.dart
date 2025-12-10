@@ -141,7 +141,7 @@ class _TableBoxState extends State<TableBox> {
                                       HelperController.relationFunction(table: relation, index: i);
                                     }
                                     if(value=='edit'){
-                                      setState(() {
+                                      setState(() async {
                                         MainController.isClickedItem
                                             .value = false;
                                         ViewController
@@ -149,6 +149,7 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
+                                        print('yujjjj>>>${await DB('Customer').getRecords()}');
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
                                       });
                                     }

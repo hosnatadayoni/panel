@@ -24,7 +24,7 @@ class _DateBoxState extends State<DateBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
-    if(widget.column['validators'] != null){
+    if(widget.column['validators'].length  != 0){
       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       errorMessage = inputRequired['message'];
     }
