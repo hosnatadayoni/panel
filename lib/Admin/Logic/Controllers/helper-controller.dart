@@ -233,9 +233,7 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['schema']['view'] == 'custom') {
       if(table['schema']['name'] =='Orders'){
-        print('ikijhh>>>${await DB('Customer').getRecords()}');
         List<dynamic> items= await DB('Customer').parent(parentTable: null , parentId: null).getRecords();
-        print('jjjjjjjj>>>${items}');
         await Get.to(() => OrderEditPge(data: data ,  items,));
       }
 

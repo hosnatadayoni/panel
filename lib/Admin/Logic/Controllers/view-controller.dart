@@ -1881,6 +1881,7 @@ class ViewController extends GetxController {
     }
     List<dynamic> filesSelectedList = [];
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+    print('selecetdFiles1>>>${selecetdFiles}');
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1898,12 +1899,16 @@ class ViewController extends GetxController {
           columnName: column['title'],
           onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
+            print('file info>>>${file}');
             if (column['type'] == 'file' || column['type'] == 'file_pv') {
               ViewController.request[column['name']] = file;
+              selecetdFiles = file;
             } else {
               filesSelectedList.add(file);
               ViewController.request[column['name']] = filesSelectedList;
             }
+            print('filesSelectedList>>>${filesSelectedList}');
+            print('selecetdFiles2>>>${selecetdFiles}');
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt:
@@ -1922,8 +1927,7 @@ class ViewController extends GetxController {
       var data, var column, Rx<bool>? isSeletedFile) {
     String name = column['name'];
     String type = column['type'];
-    RxString file =
-        data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
+    RxString file = data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
 
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
@@ -2214,6 +2218,10 @@ class ViewController extends GetxController {
       var totalChunks = 1;
       var currentChunk = 0;
       RxMap<String, dynamic>? chunkName = <String, dynamic>{}.obs;
+      print('fileInfo>>>${fileInfo}');
+      print('fileSelectedList>>>${fileSelectedList}');
+      print('fileInfo[fileSelectedList[index]]>>>${fileInfo[fileSelectedList[index]]}');
+      print('chunkName>>>${chunkName}');
       if (fileInfo[fileSelectedList[index]] != null) {
         totalChunks = fileData?[0] ?? 1;
         currentChunk = fileData?[1] ?? 0;

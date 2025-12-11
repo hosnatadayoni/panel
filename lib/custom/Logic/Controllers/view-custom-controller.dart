@@ -37,7 +37,6 @@ class ViewCustomController extends GetxController{
 
   static Jalali parseDate(String dateString) {
     List<String> dateParts = dateString.split('/');
-    print('dateParts>>>${dateString}');
     int year = int.parse(dateParts[0]);
     int month = int.parse(dateParts[1]);
     int day = int.parse(dateParts[2]);

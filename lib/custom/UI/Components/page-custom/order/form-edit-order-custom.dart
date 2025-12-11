@@ -34,10 +34,6 @@ class FormEditOrderCustom extends StatefulWidget {
 }
 
 class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
-  Color? colorChanged;
-  // Map<String, Future<Map<String, dynamic>>>  _future={};
-  Map<String , dynamic> dataJson = {};
-
 
   void initState() {
     super.initState();
@@ -86,32 +82,28 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                   SizedBox(width: 5,),
                   InkWell(
                     onTap: ()async{
-                      await DB('Orders').where('id', '\$eq', '${widget.data!['id']}').updateRecords(ViewController.request);
-
-                      // var orderItems=await DB('order-itemss').where('parent_id', '\$eq', '${widget.data!['id']}').getRecords();
-                      var orderItems=await DB('Order_Details').where('parent_id', '\$eq', '${widget.data!['_id']}').getRecords();
-                      for(var orderItem in  orderItems){
-                        if(OrderItem.orderItemsList.containsKey(orderItem['_id'])){
-                          // DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').updateRecord(OrderItem.orderItemsList[orderItem['id']]);
-                          DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').updateRecords(OrderItem.orderItemsList[orderItem['_id']]);
-                        }
-                        else{
-                          // DB('order-itemss').where('id', '\$eq', '${orderItem['id']}').deleteRecord();
-                          DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').deleteRecord();
-                        }
-                      }
-                      if (OrderItem.orderItemsList2.values.length != 0) {
-                        for (var list in OrderItem.orderItemsList2.values) {
-                          if(list.isNotEmpty){
-                            // await DB('order-itemss').parent(parentId:'${widget.data['id']}' ,parentTable: 'order').storeRecord(list);
-                            await DB('Order_Details').parent(parentId:'${widget.data['_id']}' ,parentTable: 'Orders').storeRecord(list);
-
-                          }
-                        }
-                      }
-                      await MainController.loadData(tableData:ViewCustomController.getDataTable('Orders') );
-                      // MainController.renderPagination();
-                      MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
+                      // await DB('Orders').where('id', '\$eq', '${widget.data!['id']}').updateRecords(ViewController.request);
+                      //
+                      // var orderItems=await DB('Order_Details').where('parent_id', '\$eq', '${widget.data!['_id']}').getRecords();
+                      // for(var orderItem in  orderItems){
+                      //   if(OrderItem.orderItemsList.containsKey(orderItem['_id'])){
+                      //     DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').updateRecords(OrderItem.orderItemsList[orderItem['_id']]);
+                      //   }
+                      //   else{
+                      //     DB('Order_Details').where('id', '\$eq', '${orderItem['_id']}').deleteRecord();
+                      //   }
+                      // }
+                      // if (OrderItem.orderItemsList2.values.length != 0) {
+                      //   for (var list in OrderItem.orderItemsList2.values) {
+                      //     if(list.isNotEmpty){
+                      //       await DB('Order_Details').parent(parentId:'${widget.data['_id']}' ,parentTable: 'Orders').storeRecord(list);
+                      //
+                      //     }
+                      //   }
+                      // }
+                      // await MainController.loadData(tableData:ViewCustomController.getDataTable('Orders') );
+                      // // MainController.renderPagination();
+                      // MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -135,582 +127,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              // child: Row(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   // runSpacing: 5,
-              //   // spacing: 20,
-              //   children: [
-              //     for (var j = 0; j < MainController.tableInfo['columns'].length; j++)
-              //        if (MainController.tableInfo['columns'][j]['type'] == 'string' ||
-              //           MainController.tableInfo['columns'][j]['type'] == 'number' ||
-              //           MainController.tableInfo['columns'][j]['type'] == 'mobile'||
-              //           MainController.tableInfo['columns'][j]['type'] == 'email'
-              //       )
-              //         Row(
-              //           children: [
-              //             Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: [
-              //                 Obx(() {
-              //                   return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                 }),
-              //                 SizedBox(height: 10,),
-              //                 Container(
-              //                   width: 80,
-              //                   // width: 150,
-              //                   // height: 100,
-              //                   child: FormTextField(
-              //                     name: '${MainController.tableInfo['columns'][j]['title']}',
-              //                     hint: '${MainController.tableInfo['columns'][j]['title']}',
-              //                     lable: '',
-              //                     initValue: '${ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] != null ?
-              //                     ViewController.request['${MainController.tableInfo['columns'][j]['name']}']:
-              //                     ''}',
-              //                     isNumberInt:MainController.tableInfo['columns'][j]['type'] == 'Number int' ? true : false ,
-              //                     isNumberDouble:MainController.tableInfo['columns'][j]['type'] == 'Number Number double' ? true : false ,
-              //                     isEmail:MainController.tableInfo['columns'][j]['type'] == 'email' ? true:false,
-              //                     isMobile: MainController.tableInfo['columns'][j]['type'] == 'mobile' ? true : false,
-              //                     onChange: (text) {
-              //                       ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
-              //                     },
-              //                     column: MainController.tableInfo['columns'][j],
-              //                   ),
-              //                 )
-              //               ],
-              //             ),
-              //             SizedBox(width: 20,),
-              //           ],
-              //         )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'checkbox')
-              //            Row(
-              //           children: [
-              //             Container(
-              //               width: 150,
-              //               child: CheckBox(
-              //                 checkBoxName: '${MainController.tableInfo['columns'][j]['title']}',
-              //                 checkBoxTitle: '${MainController.tableInfo['columns'][j]['title']}',
-              //                 defaultValue: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'],
-              //                 isClickedBtn: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs:true.obs,
-              //                 onChange: (text) {
-              //                   ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = text;
-              //                 },
-              //                 column: MainController.tableInfo['columns'][j],
-              //
-              //               ),
-              //             ),
-              //             SizedBox(width: 20,),
-              //           ],
-              //         )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'color')
-              //            Row(
-              //              children: [
-              //                Column(
-              //                  crossAxisAlignment: CrossAxisAlignment.start,
-              //                  children: [
-              //                    Obx(() {
-              //                      return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                    }),
-              //                    SizedBox(height: 10,),
-              //                    Container(
-              //                      child: ColorPickerBox(
-              //                        selectedColor: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] != null
-              //                            ? Color(int.parse('${ViewController.request['${MainController.tableInfo['columns'][j]['name']}']}'))
-              //                            : Colors.blue,
-              //                        isSeletedColor: ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs : true.obs,
-              //                        onChanged: (color) {
-              //                          colorChanged = color;
-              //                          String hexColor =
-              //                              '0x${colorChanged!.value.toRadixString(16).padLeft(8, '0')}';
-              //                          // dataJson[columnName] = hexColor;
-              //                          ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = hexColor;
-              //                        },
-              //                        column: MainController.tableInfo['columns'][j],
-              //                      ),
-              //                    ),
-              //                  ],
-              //                ),
-              //                SizedBox(width: 20,),
-              //              ],
-              //            )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'date')
-              //             Row(
-              //               children: [
-              //                 Column(
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Obx(() {
-              //                       return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                     }),
-              //                     SizedBox(height: 10,),
-              //                     Container(
-              //                       width: 120,
-              //                       child:
-              //                       DateBox(
-              //                         selectedDate:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == ''?Jalali.now() : ViewCustomController.parseDate(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']),
-              //                         isSeletedDate:ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] == '' ? false.obs : true.obs,
-              //                         onDateChanged: (date) {
-              //                           ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = date;
-              //                         },
-              //                         column: MainController.tableInfo['columns'][j],
-              //                       )
-              //                     )
-              //                   ],
-              //                 ),
-              //                 SizedBox(width: 20,)
-              //               ],
-              //             )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'select')
-              //             Row(
-              //               children: [
-              //                 Column(
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Obx(() {
-              //                       return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                     }),
-              //                     SizedBox(height: 10,),
-              //                     FutureBuilder(
-              //                         future: _future[MainController.tableInfo['columns'][j]['title']],
-              //                         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot){
-              //                           if (snapshot.connectionState == ConnectionState.waiting) {
-              //                             return CircularProgressIndicator();
-              //                           } else if (snapshot.hasError) {
-              //                             if(snapshot.data != null){
-              //                               return Txt('${AppController.of(context)!.value('error')}');
-              //                             }
-              //                             else{
-              //                               return Container();
-              //                             }
-              //                           }
-              //                           else{
-              //                             if (snapshot.hasData){
-              //                               var data = snapshot.data!;
-              //                               return Container(
-              //                                 width: MainController.tableInfo['columns'][j]['name'] == 'مشتری'  ? 150:100,
-              //                                 // width: 150,
-              //                                 // height: 100,
-              //                                 child: SelectBox(
-              //                                   name: '${MainController.tableInfo['columns'][j]['title']}',
-              //                                   column: MainController.tableInfo['columns'][j],
-              //                                   items: data['items'].map<DropdownMenuItem<String>>((item) {
-              //
-              //                                     return DropdownMenuItem<String>(
-              //                                       value: item['value'].toString(),
-              //                                       child: Obx(() {
-              //                                         return Txt(
-              //                                           '${item['title']}',
-              //                                           color: MainController.isLightMode.value == true
-              //                                               ? whiteColor
-              //                                               : primaryDark,
-              //                                         );
-              //                                       }),
-              //                                     );
-              //                                   }).toList(),
-              //                                   initalValue: data['initValue'],
-              //                                   onChanged: (value) async {
-              //                                     for (var item in data['items']) {
-              //                                       if (item['title'] == value) {
-              //                                         if (item['value'] == '-1') {
-              //                                           value = null;
-              //                                         }
-              //                                       }
-              //                                     }
-              //                                     if (value != '-1') {
-              //                                       ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
-              //                                     } else {
-              //                                       ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
-              //                                     }
-              //                                   },
-              //                                   hintText: data['hint'],
-              //                                   isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null ? false.obs : true.obs,
-              //                                   selectedValue: '',
-              //                                 ),
-              //                               );
-              //                             }
-              //                             else{
-              //                               return Container();
-              //                             }
-              //                           }
-              //                         }
-              //                     )
-              //                   ],
-              //                 ),
-              //                 SizedBox(width: 20,)
-              //               ],
-              //             )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'multiSelect')
-              //              // Row(
-              //              //   children: [
-              //              //     Column(
-              //              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //              //       children: [
-              //              //         Obx(() {
-              //              //           return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //              //         }),
-              //              //         SizedBox(height: 10,),
-              //              //         FutureBuilder(
-              //              //           future: _future[MainController.tableInfo['columns'][j]['title']],
-              //              //           builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-              //              //             if (snapshot.connectionState == ConnectionState.waiting) {
-              //              //               return CircularProgressIndicator();
-              //              //             } else if (snapshot.hasError) {
-              //              //               if(snapshot.data != null){
-              //              //                 return Txt('${AppController.of(context)!.value('error')}');
-              //              //               }
-              //              //               else{
-              //              //                 return Container();
-              //              //               }
-              //              //
-              //              //             } else {
-              //              //               var data = snapshot.data!;
-              //              //               return data['items'].length != 0 ? Obx(() {
-              //              //                 return Container(
-              //              //                   width: 250,
-              //              //                   child: MultiSelectDropdown(
-              //              //                     items: [
-              //              //                       for (var item in data['items'])
-              //              //                         DropdownMenuItem(
-              //              //                           value: item['value'],
-              //              //                           child: Obx(() {
-              //              //                             return Row(
-              //              //                               children: [
-              //              //                                 Container(
-              //              //                                   height: 100,
-              //              //                                   child: SizedBox(
-              //              //                                     width: 50,
-              //              //                                     height: 50,
-              //              //                                     child: Checkbox(
-              //              //                                       activeColor: colorBtn,
-              //              //                                       value: data['selectedItemsList'].contains(item['value']),
-              //              //                                       onChanged: (isChecked) {
-              //              //                                         if (isChecked != null) {
-              //              //                                           if (!data['selectedItemsList'].contains(item['value'])) {
-              //              //                                             data['selectedItemsList'].add(item['value']); // اضافه کردن آیتم به لیست
-              //              //                                           } else {
-              //              //                                             data['selectedItemsList'].remove(item['value']); // حذف آیتم از لیست
-              //              //                                           }
-              //              //                                           if (item['value'] == '-1') {
-              //              //                                             data['selectedItemsList'].remove(item['value']); // حذف آیتم نامعتبر
-              //              //                                           }
-              //              //                                           if (data['selectedItemsList'].isEmpty) {
-              //              //                                             data['isSelectedItem'].value = false;
-              //              //                                           } else {
-              //              //                                             data['isSelectedItem'].value = true;
-              //              //                                           }
-              //              //                                           data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], data['selectedItemsList']);
-              //              //                                           ViewController.request[MainController.tableInfo['columns'][j]['name']] = data['selectedItemsList'];
-              //              //                                         }
-              //              //                                       },
-              //              //                                     ),
-              //              //                                   ),
-              //              //                                 ),
-              //              //                                 Txt(item['title'], color: MainController.isLightMode.value ? whiteColor : primaryDark),
-              //              //                               ],
-              //              //                             );
-              //              //                           }),
-              //              //                         ),
-              //              //                     ],
-              //              //                     hintText: data['hintTxt'].value.isNotEmpty ? data['hintTxt'].value : data['items'][0]['title'],
-              //              //                     selectedItems: data['selectedItemsList'],
-              //              //                     isSelectedItem: data['isSelectedItem'],
-              //              //                     onChanged: (selectedList) {
-              //              //                       data['selectedItemsList'].value = selectedList;
-              //              //                       ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedList;
-              //              //                       data['hintTxt'].value = ViewController.hintMultiSelectBox(data['items'], selectedList);
-              //              //                     },
-              //              //                     column: MainController.tableInfo['columns'][j],
-              //              //                   ),
-              //              //                 );
-              //              //               }) : Container();
-              //              //             }
-              //              //           },
-              //              //         )
-              //              //       ],
-              //              //     ),
-              //              //     SizedBox(width: 20,),
-              //              //   ],
-              //              // )
-              //              //     Row(
-              //              //       children: [
-              //              //         Container(
-              //              //           width: 400,
-              //              //           child: FutureBuilder<Widget>(
-              //              //             future: ViewController.genarateEditFormMuiltiSelectBox(
-              //              //                 MainController.tableInfo['columns'][j],
-              //              //                 _future[MainController.tableInfo['columns'][j]['name']]?['selectedItemsList']?.isNotEmpty == true
-              //              //                     ? RxString(_future[MainController.tableInfo['columns'][j]['name']]?['selectedItemsList']?.join(' , ') ?? '')
-              //              //                     : RxString(''),
-              //              //                 _future[MainController.tableInfo['columns'][j]['name']]?['items']?.isNotEmpty == true
-              //              //                     ? RxList(_future[MainController.tableInfo['columns'][j]['name']]?['items'] ?? [])
-              //              //                     : RxList<dynamic>([]),
-              //              //                 false.obs
-              //              //             ),
-              //              //             builder: (context, snapshot) {
-              //              //               if (snapshot.connectionState == ConnectionState.waiting) {
-              //              //                 return CircularProgressIndicator();
-              //              //               } else if (snapshot.hasError) {
-              //              //                 return Text('Error loading multi-select');
-              //              //               } else {
-              //              //                 return snapshot.data ?? Container();
-              //              //               }
-              //              //             },
-              //              //           ),
-              //              //         ),
-              //              //         SizedBox(width: 20)
-              //              //       ],
-              //              //     )
-              //                  Row(
-              //                    children: [
-              //                      Column(
-              //                        crossAxisAlignment: CrossAxisAlignment.start,
-              //                        children: [
-              //                          FutureBuilder(
-              //                            future: _future[MainController.tableInfo['columns'][j]['name']],
-              //                            builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-              //                              if (snapshot.connectionState == ConnectionState.waiting) {
-              //                                return CircularProgressIndicator();
-              //                              } else if (snapshot.hasError) {
-              //                                if (snapshot.data != null) {
-              //                                  return Txt('${AppController.of(context)!.value('error')}');
-              //                                } else {
-              //                                  return Container();
-              //                                }
-              //                              } else {
-              //                                if (snapshot.hasData) {
-              //                                  var data = snapshot.data!;
-              //                                  // Check if data['items'] exists and is not empty
-              //                                  if (data['items'] != null && data['items'].isNotEmpty) {
-              //                                    return Column(
-              //                                      crossAxisAlignment: CrossAxisAlignment.start,
-              //                                      children: [
-              //                                        Container(
-              //                                          width: 400,
-              //                                          // height: 100,
-              //                                          child:Column(
-              //                                            crossAxisAlignment: CrossAxisAlignment.start,
-              //                                            children: [
-              //                                              Obx(() {
-              //                                                return Txt(
-              //                                                  '${column['title']}',
-              //                                                  color: MainController.isLightMode.value == true
-              //                                                      ? whiteColor
-              //                                                      : color2,
-              //                                                );
-              //                                              }),
-              //                                              Obx(() {
-              //                                                return MultiSelectDropdown(
-              //                                                  items: [
-              //                                                    for (var item in data['items'])
-              //                                                      DropdownMenuItem(
-              //                                                          value: item['_id'],
-              //                                                          child: Obx(() {
-              //                                                            return Row(
-              //                                                              children: [
-              //                                                                Container(
-              //                                                                  height: 100,
-              //                                                                  child: SizedBox(
-              //                                                                      width: 50,
-              //                                                                      height: 50,
-              //                                                                      child: Obx(() {
-              //                                                                        return Checkbox(
-              //                                                                            activeColor: colorBtn,
-              //                                                                            value: selectedItemId.contains(item['_id']),
-              //                                                                            onChanged: (isChecked) {
-              //                                                                              if (isChecked != null) {
-              //
-              //                                                                                data['hintTxt'].value = '';
-              //                                                                                if (!data['selectedItemsList'].any((element) => element['_id']==item['_id'])) {
-              //                                                                                  requestMultiSelect = item;
-              //                                                                                  selectedItemsList.add(item);
-              //                                                                                  selectedItemId.add(item['_id']);
-              //                                                                                } else {
-              //                                                                                  requestMultiSelect.removeWhere((key, value) => value == ['_id']);
-              //                                                                                  selectedItemsList.removeWhere( (element) => element['_id']==item['_id']);
-              //                                                                                  selectedItemId.remove(item['_id']);
-              //                                                                                }
-              //                                                                                if (item['_id'] == '') {
-              //                                                                                  selectedItemId.value.remove(item['_id']);
-              //                                                                                }
-              //                                                                                if (selectedItemId.value.length == 0) {
-              //                                                                                  isSelectedItem.value = false;
-              //                                                                                } else {
-              //                                                                                  isSelectedItem.value = true;
-              //                                                                                }
-              //                                                                                for (var r in selectedItemsList)
-              //                                                                                  hintTxt.value = hintTxt.value + itemsShowSelectItem(r, column);
-              //                                                                                ViewController.request[column['name']]= selectedItemId;
-              //                                                                              }
-              //                                                                            });
-              //                                                                      })),
-              //                                                                ),
-              //                                                                Txt(itemsShowSelectItem(item, column),
-              //                                                                    color: MainController.isLightMode.value
-              //                                                                        ? whiteColor
-              //                                                                        : primaryDark),
-              //                                                              ],
-              //                                                            );
-              //                                                          }))
-              //                                                  ],
-              //                                                  hintText: hintTxt.value != '' || hintTxt.value != null
-              //                                                      ? hintTxt.value
-              //                                                      : '${AppController.of(Get.context!)!.value('choice')}',
-              //                                                  selectedItems: selectedItemsList,
-              //                                                  isSelectedItem: isSelectedItem,
-              //                                                  column: column,
-              //                                                );
-              //                                              }),
-              //                                            ],
-              //                                          ),
-              //                                        ),
-              //                                      ],
-              //                                    );
-              //                                  } else {
-              //                                    // Return an empty container if data['items'] is empty or null
-              //                                    return Container();
-              //                                  }
-              //                                } else {
-              //                                  return Container();
-              //                                }
-              //                              }
-              //                            },
-              //                          ),
-              //                        ],
-              //                      ),
-              //                      SizedBox(width: 20,)
-              //                    ],
-              //                  )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'radiobutton')
-              //              Row(
-              //                children: [
-              //                  Column(
-              //                    crossAxisAlignment: CrossAxisAlignment.start,
-              //                    children: [
-              //                      Obx(() {
-              //                        return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                      }),
-              //                      SizedBox(height: 10,),
-              //                      FutureBuilder(
-              //                          future: _future[MainController.tableInfo['columns'][j]['title']],
-              //                          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot){
-              //                            if (snapshot.connectionState == ConnectionState.waiting) {
-              //                              return CircularProgressIndicator();
-              //                            } else if (snapshot.hasError) {
-              //                              if(snapshot.data != null){
-              //                                return Txt('${AppController.of(context)!.value('error')}');
-              //                              }
-              //                              else{
-              //                                return Container();
-              //                              }
-              //                            }
-              //                            else{
-              //                              var data = snapshot.data!;
-              //                              return Column(
-              //                                children: [
-              //                                  RadioButton(
-              //                                    name: '',
-              //                                    radioButtonItems: [
-              //                                      for (var radioButtonItem in data['items'])
-              //                                        FormBuilderChipOption(
-              //                                            value: '${radioButtonItem['value']}',
-              //                                            child: Obx(() {
-              //                                              return Txt(
-              //                                                '${radioButtonItem['title']}',
-              //                                                color: MainController.isLightMode.value
-              //                                                    ? whiteColor
-              //                                                    : primaryDark,
-              //                                              );
-              //                                            })),
-              //                                    ],
-              //                                    onChanged: (text) {
-              //                                      ViewController.request[MainController.tableInfo['columns'][j]['name']] = text;
-              //                                      // dataJson[columnName] = selectedRadioButton.value;
-              //                                    },
-              //                                    initalValue: data['initValue'],
-              //                                    column: MainController.tableInfo['columns'][j],
-              //                                    isSelectedItem: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' ? false.obs : true.obs,
-              //                                  ),
-              //                                  SizedBox(height: 20),
-              //                                ],
-              //                              );
-              //                            }
-              //                          }
-              //                      )
-              //                    ],
-              //                  ),
-              //                  SizedBox(width: 20,)
-              //                ],
-              //              )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'file')
-              //               Row(
-              //                 children: [
-              //                   Column(
-              //                     crossAxisAlignment: CrossAxisAlignment.start,
-              //                     children: [
-              //                       Obx(() {
-              //                         return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                       }),
-              //                       SizedBox(height: 10,),
-              //                       Container(
-              //                         width: 300,
-              //                         child: FormFile(
-              //                           columnName: MainController.tableInfo['columns'][j]['title'],
-              //                           onChanged: (selecetdFiles) {
-              //                             ViewController.request[MainController.tableInfo['columns'][j]['name']] = selecetdFiles;
-              //                           },
-              //                           filesSelected: ViewCustomController.getselectedFilesMap(MainController.tableInfo['columns'][j]),
-              //                           selectedFilesTxt: ViewController.request[MainController.tableInfo['columns'][j]['name']],
-              //                           isSeletedFile: ViewController.request[MainController.tableInfo['columns'][j]['name']] == null || ViewController.request[MainController.tableInfo['columns'][j]['name']] == ''? false.obs : true.obs,
-              //                           column: MainController.tableInfo['columns'][j],
-              //                         ),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   SizedBox(width: 20,)
-              //                 ],
-              //               )
-              //        else if(MainController.tableInfo['columns'][j]['type'] == 'time')
-              //               Row(
-              //                          children: [
-              //                            Column(
-              //                              crossAxisAlignment: CrossAxisAlignment.start,
-              //                              children: [
-              //                                Obx(() {
-              //                                  return Txt('${MainController.tableInfo['columns'][j]['title']}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
-              //                                }),
-              //                                SizedBox(height: 10,),
-              //                                Container(
-              //                                  width: 100,
-              //                                  child: TimePickerBox(
-              //                                    column: MainController.tableInfo['columns'][j] ,
-              //                                    selectedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']!= null ?  ViewCustomController.parseTime(ViewController.request['${MainController.tableInfo['columns'][j]['name']}']):TimeOfDay.now(),
-              //                                    isSeletedTime: ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== null || ViewController.request['${MainController.tableInfo['columns'][j]['name']}']== '' ? false.obs : true.obs,
-              //                                    onTimeChanged: (time) {
-              //                                      ViewController.request['${MainController.tableInfo['columns'][j]['name']}'] = time;
-              //                                    },
-              //                                  ),
-              //                                )
-              //                              ],
-              //                            ),
-              //                            SizedBox(width: 20),
-              //                          ],
-              //                        )
-              //   ],
-              // ),
-              // child: Container(
-              //     child: FutureBuilder<Widget>(
-              //       future: _future,
-              //       builder: (BuildContext context,
-              //           AsyncSnapshot<Widget> snapshot) {
-              //         if (snapshot.connectionState ==
-              //             ConnectionState.waiting) {
-              //           return CircularProgressIndicator();
-              //         } else if (snapshot.hasError) {
-              //           return Txt('${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-              //         } else {
-              //           return snapshot.data ?? Container();
-              //         }
-              //       },
-              //     )),
               child: Container(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -735,7 +151,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             hint: 'کد ورودی',
                             lable: '',
                             initValue: '${widget.data['Input_Code'] != null ? widget.data['Input_Code']: ''}',
-                            column: MainController.getInfoTable('Orders')['columns'][2],
+                            column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
                               widget.data['Input_Code']= text;
                             },
@@ -765,7 +181,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             hint: 'شماره نقشه',
                             lable: '',
                             initValue: '${widget.data['Drawing_Number'] != null ? widget.data['Drawing_Number']: ''}',
-                            column: MainController.getInfoTable('Orders')['columns'][3],
+                            column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
                                 widget.data['Drawing_Number']= text;
                             },
@@ -794,7 +210,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             name: 'شماره نقشه(مشتری)',
                             hint: 'شماره نقشه(مشتری)',
                             initValue: '${widget.data['Drawing_Number(customer)'] != null ? widget.data['Drawing_Number(customer)']: ''}',
-                            column: MainController.getInfoTable('Orders')['columns'][4],
+                            column: MainController.getDetailsOfField('Orders' , 'Drawing_Number(customer)'),
                             lable: '',
                             onChange: (text) {
                               widget.data['Drawing_Number(customer)']= text;
@@ -823,7 +239,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                           width: 100,
                           child: SelectBox(
                               name: 'نوع',
-                              column: MainController.getInfoTable('Orders')['columns'][5],
+                              column: MainController.getDetailsOfField('Orders' , 'Type'),
                               items: [
                                 DropdownMenuItem(
                                     child: Obx(() {
@@ -835,7 +251,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                       );
                                     }),
                                     value: ''),
-                                for (var item in MainController.getInfoTable('Orders')['columns'][5]['items'])
+                                for (var item in MainController.getDetailsOfField('Orders' , 'Type')['items'])
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(
@@ -863,7 +279,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                       ],
                     ),
                     SizedBox(width: 20,),
-                    ViewCustomController.generateEditFileBoxOrderView(widget.data, MainController.getInfoTable('Orders')['columns'][6], widget.data['Picture'] != null ? true.obs : false.obs),
+                    ViewController.generateEditFileBox(widget.data, MainController.getDetailsOfField('Orders' , 'Picture'), widget.data['Picture'] != null ? true.obs : false.obs),
                     SizedBox(width: 20,),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -883,7 +299,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                           width: 250,
                           child: SelectBox(
                               name: 'مشتری',
-                              column: MainController.getInfoTable('Orders')['columns'][7],
+                              column: MainController.getDetailsOfField('Orders' , 'Customer'),
                               items: [
                                 DropdownMenuItem(
                                     child: Obx(() {
@@ -899,7 +315,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(
-                                          '${ViewController.itemsShowSelectItem(item, MainController.getInfoTable('Orders')['columns'][7])}',
+                                          '${ViewController.itemsShowSelectItem(item, MainController.getDetailsOfField('Orders' , 'Customer'))}',
                                           color:
                                           MainController.isLightMode.value == true
                                               ? whiteColor
@@ -944,7 +360,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             onDateChanged: (date) {
                               widget.data['Date'] = date;
                             },
-                            column: MainController.getInfoTable('Orders')['columns'][8],
+                            column: MainController.getDetailsOfField('Orders' , 'Date'),
                           ),
                         ),
                       ],

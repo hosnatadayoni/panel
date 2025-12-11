@@ -31,9 +31,6 @@ class FormCreateOrderCustom extends StatefulWidget {
 }
 
 class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
-  Color? colorChanged;
-  Map<String, Future<Map<String, dynamic>>>  _future={};
-  Map<String , dynamic> dataJson = {};
 
   void initState()  {
     super.initState();
@@ -82,7 +79,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             name: 'کد ورودی',
                             hint: 'کد ورودی',
                             lable: '',
-                            column: MainController.getInfoTable('Orders')['columns'][2],
+                            column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
                               ViewController.request['Input_Code']= text;
                             },
@@ -111,7 +108,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             name: 'شماره نقشه',
                             hint: 'شماره نقشه',
                             lable: '',
-                            column: MainController.getInfoTable('Orders')['columns'][3],
+                            column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
                               ViewController.request['Drawing_Number']= text;
                             },
@@ -139,7 +136,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                           child: FormTextField(
                             name: 'شماره نقشه(مشتری)',
                             hint: 'شماره نقشه(مشتری)',
-                            column: MainController.getInfoTable('Orders')['columns'][4],
+                            column: MainController.getDetailsOfField('Orders' , 'Drawing_Number(customer)'),
                             lable: '',
                             onChange: (text) {
                               ViewController.request['Drawing_Number(customer)']= text;
@@ -168,7 +165,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                           width: 100,
                           child: SelectBox(
                               name: 'نوع',
-                              column: MainController.getInfoTable('Orders')['columns'][5],
+                              column: MainController.getDetailsOfField('Orders' , 'Type'),
                               items: [
                                 DropdownMenuItem(
                                     child: Obx(() {
@@ -180,7 +177,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                       );
                                     }),
                                     value: ''),
-                                for (var item in MainController.getInfoTable('Orders')['columns'][5]['items'])
+                                for (var item in MainController.getDetailsOfField('Orders' , 'Type')['items'])
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(
@@ -209,7 +206,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                       ],
                     ),
                     SizedBox(width: 20,),
-                    ViewCustomController.generateFileBox('', MainController.getInfoTable('Orders')['columns'][6], false.obs),
+                    ViewController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs),
                     SizedBox(width: 20,),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +226,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                           width: 250,
                           child: SelectBox(
                               name: 'مشتری',
-                              column: MainController.getInfoTable('Orders')['columns'][7],
+                              column: MainController.getDetailsOfField('Orders' , 'Customer'),
                               items: [
                                 DropdownMenuItem(
                                     child: Obx(() {
@@ -245,7 +242,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(
-                                          '${ViewController.itemsShowSelectItem(item, MainController.getInfoTable('Orders')['columns'][7])}',
+                                          '${ViewController.itemsShowSelectItem(item, MainController.getDetailsOfField('Orders' , 'Customer'))}',
                                           color:
                                           MainController.isLightMode.value == true
                                               ? whiteColor
@@ -291,7 +288,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               // dataJson[columnName] =  date;
                               ViewController.request['Date'] = date;
                             },
-                            column: MainController.getInfoTable('Orders')['columns'][8],
+                            column:MainController.getDetailsOfField('Orders' , 'Date'),
                           ),
                         ),
                       ],

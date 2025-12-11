@@ -222,8 +222,11 @@ class MainController extends GetxController {
   static getDetailsOfField(String tableName, String name) {
     var i;
     var column = getColumnsTable(tableName);
+    print('column table>>>${column}');
     for (var item in column) {
+      print('item of name>>>${item['name']}');
       if (item['name'] == name) {
+
         i = item;
         return i;
       }
