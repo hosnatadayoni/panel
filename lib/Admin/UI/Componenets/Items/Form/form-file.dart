@@ -111,7 +111,7 @@ class _FormFileState extends State<FormFile> {
               },
               child: IntrinsicWidth(
                 child: Container(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.only(top: 8 , bottom: 8 , right: 15 , left: 15),
                   decoration: BoxDecoration(
                     color: MainController.isLightMode.value == true
                         ? background

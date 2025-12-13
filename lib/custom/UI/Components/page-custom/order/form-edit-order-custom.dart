@@ -355,7 +355,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         Container(
                           width: 120,
                           child: DateBox(
-                            selectedDate:  Jalali.now(),
+                            selectedDate:  widget.data['Date'] != null ? ViewCustomController.parseDate('${widget.data['Date']}') : Jalali.now(),
                             isSeletedDate: widget.data['Date'] !=null ? true.obs : false.obs,
                             onDateChanged: (date) {
                               widget.data['Date'] = date;

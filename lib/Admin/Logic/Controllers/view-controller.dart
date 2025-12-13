@@ -2420,6 +2420,7 @@ class ViewController extends GetxController {
   }
 
   static String itemsShowSelectItem(var listItems, var column) {
+    print('kjmfkflf>>>${column}');
     var items = column['items'];
     List<dynamic> a = [];
     if (listItems is List) {

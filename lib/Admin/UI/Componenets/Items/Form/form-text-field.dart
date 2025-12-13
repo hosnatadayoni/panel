@@ -32,6 +32,7 @@ class FormTextField extends StatefulWidget {
   var maxValidator;
   var minValidator;
   bool? isEmail;
+  double height;
 
   FormTextField(
       {this.lable,
@@ -49,7 +50,9 @@ class FormTextField extends StatefulWidget {
       this.isValidate = true,
       required this.name,
       this.column,
-      this.isEmail});
+      this.isEmail,
+        this.height = 50,
+      });
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -239,100 +242,110 @@ class _FormTextFieldState extends State<FormTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilder(
+
             key: widget.fbKey,
-            child: FormBuilderTextField(
-              key: textFieldKey,
-              focusNode: _focusNode,
-              controller: widget.initValue == null ? _formConroller : null,
-              obscureText: widget.isPassword == true &&
-                      AdminController.isVisibility.value == false
-                  ? true
-                  : false,
-              keyboardType: widget.isLongTxt == true
-                  ? TextInputType.multiline
-                  : widget.isNumberInt! || widget.isNumberDouble!
-                      ? TextInputType.number
-                      : TextInputType.text,
-              minLines: 1,
-              maxLines: widget.isPassword == true ? 1 : 3,
-              inputFormatters: [
-                if (widget.isMobile == true) MobileNumberFormatter(),
-                if (widget.isMobile == true)
-                  LengthLimitingTextInputFormatter(11),
-                if (widget.isMobile == true)
-                  FilteringTextInputFormatter.digitsOnly,
-                if (widget.isNumberDouble == true)
-                  // FilteringTextInputFormatter.digitsOnly,
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                if (widget.isNumberInt == true)
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                // if(widget.isNumber == true)
-                //   ThousandSeparatorInputFormatter(),
-                if (widget.isMobile == true)
-                  FilteringTextInputFormatter.deny(
-                    RegExp(r'^0+'),
-                  ),
-              ],
-              initialValue: widget.initValue,
-              // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
-              style: TextStyle(
-                  color: widget.isLoginPage == false
-                      ? MainController.isLightMode.value == true
-                          ? whiteColor
-                          : primaryDark
-                      : primaryDark),
-              onChanged: (value) {
-                // if(widget.isNumberInt == true){
-                //   text.value = int.parse('${value!}');
-                // }
-                // else if(widget.isNumberDouble == true){
-                //   text.value = double.parse('${value!}');
-                // }
-                // else {
-                //   text.value = value!;
-                // }
-                // ViewController.request[widget.column['name']] = value;
-                if (widget.onChange != null) this.widget.onChange!(value);
-              },
-              onEditingComplete: () {},
-              onSubmitted: (value) {},
-              name: widget.name,
-              decoration: InputDecoration(
-                prefixIcon: widget.isPassword == true
-                    ? Obx(() {
-                        return InkWell(
-                            onTap: () {
-                              setState(() {
-                                AdminController.isVisibility.value =
-                                    !AdminController.isVisibility.value;
-                              });
-                            },
-                            child: Icon(
-                              AdminController.isVisibility.value == true
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              size: 15,
-                              color: MainController.isLightMode.value == true
-                                  ? whiteColor
-                                  : primaryDark,
-                            ));
-                      })
-                    : null,
-                labelText: '${this.widget.lable}',
-                labelStyle: TextStyle(
+            child: SizedBox(
+              height: widget.height,
+              child: FormBuilderTextField(
+
+                key: textFieldKey,
+                focusNode: _focusNode,
+                controller: widget.initValue == null ? _formConroller : null,
+                obscureText: widget.isPassword == true &&
+                        AdminController.isVisibility.value == false
+                    ? true
+                    : false,
+                keyboardType: widget.isLongTxt == true
+                    ? TextInputType.multiline
+                    : widget.isNumberInt! || widget.isNumberDouble!
+                        ? TextInputType.number
+                        : TextInputType.text,
+                minLines: 1,
+                maxLines: widget.isPassword == true ? 1 : 3,
+                inputFormatters: [
+                  if (widget.isMobile == true) MobileNumberFormatter(),
+                  if (widget.isMobile == true)
+                    LengthLimitingTextInputFormatter(11),
+                  if (widget.isMobile == true)
+                    FilteringTextInputFormatter.digitsOnly,
+                  if (widget.isNumberDouble == true)
+                    // FilteringTextInputFormatter.digitsOnly,
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                  if (widget.isNumberInt == true)
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  // if(widget.isNumber == true)
+                  //   ThousandSeparatorInputFormatter(),
+                  if (widget.isMobile == true)
+                    FilteringTextInputFormatter.deny(
+                      RegExp(r'^0+'),
+                    ),
+                ],
+                initialValue: widget.initValue,
+                // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
+                style: TextStyle(
                     color: widget.isLoginPage == false
                         ? MainController.isLightMode.value == true
                             ? whiteColor
                             : primaryDark
                         : primaryDark),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: colorBtn, width: 2.0),
+                onChanged: (value) {
+                  // if(widget.isNumberInt == true){
+                  //   text.value = int.parse('${value!}');
+                  // }
+                  // else if(widget.isNumberDouble == true){
+                  //   text.value = double.parse('${value!}');
+                  // }
+                  // else {
+                  //   text.value = value!;
+                  // }
+                  // ViewController.request[widget.column['name']] = value;
+                  if (widget.onChange != null) this.widget.onChange!(value);
+                },
+                onEditingComplete: () {},
+                onSubmitted: (value) {},
+                name: widget.name,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
+
+                  prefixIcon: widget.isPassword == true
+                      ? Obx(() {
+                          return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  AdminController.isVisibility.value =
+                                      !AdminController.isVisibility.value;
+                                });
+                              },
+                              child: Icon(
+                                AdminController.isVisibility.value == true
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                size: 15,
+                                color: MainController.isLightMode.value == true
+                                    ? whiteColor
+                                    : primaryDark,
+                              ));
+                        })
+                      : null,
+                  labelText: '${this.widget.lable}',
+                  labelStyle: TextStyle(
+                      color: widget.isLoginPage == false
+                          ? MainController.isLightMode.value == true
+                              ? whiteColor
+                              : primaryDark
+                          : primaryDark),
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorBtn, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: color3, width: 1.0),
+                  ),
+                  // errorText: _errorText,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: color3, width: 1.0),
-                ),
-                // errorText: _errorText,
               ),
             ),
           ),

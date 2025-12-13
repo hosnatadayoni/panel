@@ -16,9 +16,10 @@ import 'package:get/get.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class OrderEditPge extends StatefulWidget {
-  OrderEditPge(this.items , {this.data});
+  OrderEditPge(this.customerItems ,  this.productItems ,{this.data});
   var data;
-  List<dynamic> items;
+  List<dynamic> customerItems;
+  List<dynamic> productItems;
 
   @override
   State<OrderEditPge> createState() => _OrderEditPgeState();
@@ -102,9 +103,9 @@ class _OrderEditPgeState extends State<OrderEditPge> {
                       // }),
                       Column(
                         children: [
-                          FormEditOrderCustom(data: widget.data , widget.items ),
+                          FormEditOrderCustom(data: widget.data , widget.customerItems ),
                           SizedBox(height: 20,),
-                          // FormEditOrderItemCustom(data: widget.data),
+                          FormEditOrderItemCustom(widget.productItems),
                           // _future2.value,
                         ],
                       ),

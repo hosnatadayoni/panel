@@ -19,7 +19,8 @@ import '../orderItem/form-create-orderItem-custom.dart';
 class OrderCreatePage extends StatelessWidget {
   String tableName;
   List<dynamic> items;
-  OrderCreatePage(this.tableName , this.items);
+  List<dynamic> productItems;
+  OrderCreatePage(this.tableName , this.items , this.productItems);
 
 
 
@@ -145,7 +146,7 @@ class OrderCreatePage extends StatelessWidget {
                               children: [
                                 FormCreateOrderCustom(this.items),
                                 SizedBox(height: 20,),
-                                FormCreateOrderItemCustom(),
+                                FormCreateOrderItemCustom(this.productItems),
                               ],
                             )
                           ],

@@ -125,8 +125,9 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(tableName);
     if (table['schema']['view'] == 'custom') {
       if(table['schema']['name'] =='Orders'){
-        List<dynamic> items= await DB('Customer').getRecords();
-        await Get.to(() => OrderCreatePage(tableName , items));
+        List<dynamic> customerItems= await DB('Customer').getRecords();
+        List<dynamic> productItems= await DB('Product').getRecords();
+        await Get.to(() => OrderCreatePage(tableName , customerItems , productItems));
       }
     } else {
       await Get.to(() => CreatePage(tableName));
@@ -233,8 +234,9 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['schema']['view'] == 'custom') {
       if(table['schema']['name'] =='Orders'){
-        List<dynamic> items= await DB('Customer').parent(parentTable: null , parentId: null).getRecords();
-        await Get.to(() => OrderEditPge(data: data ,  items,));
+        List<dynamic> customerItems= await DB('Customer').parent(parentTable: null , parentId: null).getRecords();
+        List<dynamic> productItems= await DB('Product').parent(parentTable: null , parentId: null).getRecords();
+        await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems));
       }
 
     } else {

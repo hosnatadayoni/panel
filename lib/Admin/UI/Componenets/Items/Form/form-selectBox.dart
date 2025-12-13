@@ -18,6 +18,7 @@ class SelectBox extends StatefulWidget {
    String? initalValue;
   var column;
   Rx<bool>? isSeleted = false.obs;
+  double maxHeight;
   SelectBox({
      this.name,
     this.items,
@@ -27,6 +28,7 @@ class SelectBox extends StatefulWidget {
     this.initalValue,
     this.column,
     this.isSeleted,
+    this.maxHeight = 45,
   });
 
   @override
@@ -55,12 +57,12 @@ class _SelectBoxState extends State<SelectBox> {
               isExpanded: true,
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.only(right: 40),
-                contentPadding:EdgeInsets.only(right: 10 , top: 21,bottom: 21),
+                contentPadding:EdgeInsets.only(right: 10 ,),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
                 border: OutlineInputBorder(),
-                constraints: BoxConstraints(minHeight: 60),
+                constraints:  BoxConstraints(maxHeight: widget.maxHeight),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),

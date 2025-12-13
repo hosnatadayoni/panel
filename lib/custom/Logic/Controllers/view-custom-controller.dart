@@ -373,6 +373,18 @@ class ViewCustomController extends GetxController{
     return dataTableName;
   }
 
+  static getCalculateTotalArea(double firsDimension , double secondDimension , int quantity){
+    print('all data f>>>${firsDimension} ${secondDimension} ${quantity}');
+    double total = (firsDimension * secondDimension) * quantity;
+    print('total kkk>>>${total}');
+    return total;
+  }
+  static getCalculateTotalPrice(double price , double firsDimension , double secondDimension , int quantity){
+    double totalPrice = getCalculateTotalArea(firsDimension, secondDimension, quantity) * price;
+    return totalPrice;
+
+  }
+
   // create order page
   static Future<Widget> generateStoreFormOrderView(var columns) async {
     var children = <Widget>[];
@@ -2402,6 +2414,7 @@ class ViewCustomController extends GetxController{
   static Future<Widget> getOrderItems(var data) async {
     List<dynamic>items=await DB('Order_Details').parent(parentId:  "${data['_id']}",parentTable: 'Orders').getRecords();
     print('items as>>>${items}');
+    List<dynamic> productItems= await DB('Product').getRecords();
     for(var item in items){
       OrderItem.orderItemsList[item['_id']]=item;
 
@@ -2409,7 +2422,7 @@ class ViewCustomController extends GetxController{
     print('OrderItem.orderItemsList edit>>>${OrderItem.orderItemsList}');
     return Column(
       children: [
-        FormEditOrderItemCustom(),
+        FormEditOrderItemCustom(productItems),
       ],
     );
   }

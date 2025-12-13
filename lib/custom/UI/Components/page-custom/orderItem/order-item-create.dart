@@ -15,7 +15,8 @@ import 'package:finance/Admin/Public/styles.dart';
 import 'form-create-orderItem-custom.dart';
 
 class OrderItemCreatePage extends StatelessWidget {
-  OrderItemCreatePage();
+  List<dynamic> productItems;
+  OrderItemCreatePage(this.productItems);
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +123,7 @@ class OrderItemCreatePage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10,),
-                            FormCreateOrderItemCustom(),
+                            FormCreateOrderItemCustom(this.productItems),
                           ],
                         )
                     )

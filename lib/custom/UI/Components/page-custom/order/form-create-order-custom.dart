@@ -1,4 +1,3 @@
-
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
@@ -81,7 +80,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             lable: '',
                             column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
-                              ViewController.request['Input_Code']= text;
+                              ViewController.request['Input_Code']= int.parse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -110,7 +109,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             lable: '',
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
-                              ViewController.request['Drawing_Number']= text;
+                              ViewController.request['Drawing_Number']= int.parse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -139,7 +138,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number(customer)'),
                             lable: '',
                             onChange: (text) {
-                              ViewController.request['Drawing_Number(customer)']= text;
+                              ViewController.request['Drawing_Number(customer)']= int.parse('${text}');
                             },
                             isNumberInt:true,
                           ),
