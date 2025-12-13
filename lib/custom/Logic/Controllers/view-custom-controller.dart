@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
@@ -21,7 +20,6 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-
 import '../../../Admin/Public/styles.dart';
 import '../../../Admin/UI/Componenets/General/txt.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-color.dart';
@@ -374,15 +372,12 @@ class ViewCustomController extends GetxController{
   }
 
   static getCalculateTotalArea(double firsDimension , double secondDimension , int quantity){
-    print('all data f>>>${firsDimension} ${secondDimension} ${quantity}');
     double total = (firsDimension * secondDimension) * quantity;
-    print('total kkk>>>${total}');
     return total;
   }
   static getCalculateTotalPrice(double price , double firsDimension , double secondDimension , int quantity){
     double totalPrice = getCalculateTotalArea(firsDimension, secondDimension, quantity) * price;
     return totalPrice;
-
   }
 
   // create order page

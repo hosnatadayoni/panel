@@ -23,28 +23,10 @@ class FormCreateOrderItemCustom extends StatefulWidget {
 }
 
 class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
-  Color? colorChanged;
-  Map<String, Future<Map<String, dynamic>>>  _future={};
-  var getDataTable = ViewCustomController.getDataTable('Order_Details');
 
   void initState() {
     super.initState();
   }
-  void _loadData() {
-    if(getDataTable['columns'].length!=0)
-      for (var j = 0; j < getDataTable['columns'].length; j++) {
-        String columnName = getDataTable['columns'][j]['title'];
-        if (getDataTable['columns'][j]['type'] == 'select' ||
-            getDataTable['columns'][j]['type'] == 'radiobutton') {
-          _future['${columnName}'] = ViewCustomController.getSelectBoxOrderItemData(getDataTable['columns'][j] , null);
-        }
-        else if(getDataTable['columns'][j]['type'] == 'multiSelect'){
-          _future['${columnName}'] = ViewCustomController.getMultiSelectBoxOrderItemData(getDataTable['columns'][j] , null);
-
-        }
-      }
-  }
-  // List<Widget> containers = [];
   Map<String, Widget> containers = {};
 
   void _addContainer() {
@@ -52,7 +34,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
       var Id = Uuid().v4();
       String newKey = Id;
       containers[newKey] = buildContainer(newKey);
-      // OrderItem.orderItemsList[newKey]= ViewController.request2;
       OrderItem.orderItemsList[newKey] = {...ViewController.request2};
     });
   }
@@ -169,7 +150,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                       ],
                       initalValue: '',
                       onChanged: (value) async {
-                        print('value aaaa>>>${value}');
                         if (value != '') {
                           OrderItem.orderItemsList[key]!['Product_Name'] = value;
                         } else {
@@ -243,14 +223,10 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                     isNumberDouble:true,
                     column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
                     onChange: (text) {
-                      // dataJson[columnName] = text;
                       if (text != null && text != '') {
                         OrderItem.orderItemsList[key]!['First_Dimension'] = double.parse('${text}');
-
                       } else {
-
                         OrderItem.orderItemsList[key]!['First_Dimension']= 0.0;
-
                       }
                       OrderItem.orderItemsList.refresh();
                     },
@@ -282,12 +258,10 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                     isNumberDouble:true,
                     column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
                     onChange: (text) {
-                      // dataJson[columnName] = text;
                       if (text != null && text != '') {
                         OrderItem.orderItemsList[key]!['Second_Dimension'] = double.parse('${text}');
                       } else {
                         OrderItem.orderItemsList[key]!['Second_Dimension']= 0.0;
-
                       }
                       OrderItem.orderItemsList.refresh();
                     },
@@ -350,12 +324,10 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                     isNumberInt:true,
                     column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
                     onChange: (text) {
-                      // dataJson[columnName] = text;
                       if (text != null && text != '') {
                         OrderItem.orderItemsList[key]!['Quantity'] = int.parse('${text}');
                       } else {
                         OrderItem.orderItemsList[key]!['Quantity']= 0;
-
                       }
                       OrderItem.orderItemsList.refresh();
                     },
@@ -586,13 +558,13 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                         OrderItem.orderItemsList[key]!['Unit'] = int.parse('${text}');
                       } else {
                         OrderItem.orderItemsList[key]!['Unit']= '';
-
                       }
                     },
                   ),
                 ),
               ],
             ),
+            SizedBox(width: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -643,7 +615,6 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                 ),
               ],
             ),
-
           ],
         )
       ),
