@@ -14,6 +14,7 @@ import 'package:finance/Admin/Public/enums.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu-item.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/login-page.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
@@ -554,6 +555,7 @@ class MainController extends GetxController {
       var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
       if(table['schema']['name'] == 'Orders'){
+        ViewCustomController.containers =<String, Widget>{}.obs;
         // MainController.tableData.value = await DB('Orders').getRecords();
         // List<dynamic> ordersList = await DB('Orders').where('parent_id', '\$ne', 'null').getRecords();
         // MainController.tableData.addAll(ordersList);

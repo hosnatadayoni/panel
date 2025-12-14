@@ -15,6 +15,7 @@ class RecordController extends GetxController {
     for (var j = 0; j < columns.length; j++) {
       isValidator = await ValidatorController.checkInputValidation(j, newData.data,tableData: dataTable);
       isValidatorList.add(isValidator);
+      print('isValidatorList>>>${isValidatorList}');
     }
     bool isExsistsValidation = isValidatorList.contains(false);
     if (isExsistsValidation) {

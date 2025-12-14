@@ -41,9 +41,12 @@ class _SelectBoxState extends State<SelectBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
+    print('widget.column hffff>>>${widget.column}');
     if(widget.column!=null)
+      print('widget.column>>>${widget.column['validators']} ${widget.column['title']}');
     if(widget.column['validators'] != null && widget.column['validators'].length!=0){
-       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'reqiured', orElse: () => null);
+       print('inputRequired>>>${inputRequired}');
        errorMessage = inputRequired['message'];
     }
     return widget.items!.isNotEmpty? FormBuilder(
@@ -56,8 +59,7 @@ class _SelectBoxState extends State<SelectBox> {
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
               isExpanded: true,
               decoration: InputDecoration(
-                // contentPadding: EdgeInsets.only(right: 40),
-                contentPadding:EdgeInsets.only(right: 10 ,),
+                contentPadding:EdgeInsets.only(right: 10),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
@@ -70,7 +72,13 @@ class _SelectBoxState extends State<SelectBox> {
               items: widget.items!,
               onChanged: (value) {
               setState(() {
-                 widget.isSeleted!.value = true;
+                if(value == '' || value == null){
+                  widget.isSeleted!.value = false;
+                }
+                else {
+                  widget.isSeleted!.value = true;
+                }
+
                   widget.selectedValue = value!.toString();
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
@@ -80,7 +88,7 @@ class _SelectBoxState extends State<SelectBox> {
             ),
             SizedBox(height: 5,),
             if(inputRequired != null)
-              if(inputRequired['type'] == 'required')
+              if(inputRequired['type'] == 'reqiured')
                 ViewController.isClickedBtn.value == true && widget.isSeleted!.value == false ||  ViewController.isClickedEditBtn.value == true && widget.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
           ],

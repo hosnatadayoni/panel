@@ -2,7 +2,7 @@ import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
-import 'package:finance/Admin/Logic/Models/order-item.dart';
+import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -25,9 +25,9 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormEditOrderCustom extends StatefulWidget {
 
-  FormEditOrderCustom( this.items , {this.data});
+  FormEditOrderCustom( this.customerItems , {this.data});
   var data;
-  List<dynamic> items;
+  List<dynamic> customerItems;
 
   @override
   State<FormEditOrderCustom> createState() => _FormEditOrderCustomState();
@@ -311,7 +311,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                       );
                                     }),
                                     value: ''),
-                                for (var item in widget.items)
+                                for (var item in widget.customerItems)
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(

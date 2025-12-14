@@ -5,12 +5,11 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/Admin/UI/Views/table-page.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import '../../../../../Admin/UI/Componenets/General/column-scroll.dart';
 import 'form-create-order-custom.dart';
@@ -21,8 +20,7 @@ class OrderCreatePage extends StatelessWidget {
   List<dynamic> items;
   List<dynamic> productItems;
   OrderCreatePage(this.tableName , this.items , this.productItems);
-
-
+  final FocusNode _focusNode = FocusNode();
 
   @override
 
@@ -31,7 +29,30 @@ class OrderCreatePage extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
 
-    return Scaffold(
+    return RawKeyboardListener(
+        focusNode: _focusNode,
+        autofocus: true,
+        onKey: (event) {
+      if (event is RawKeyDownEvent) {
+        if (event.logicalKey == LogicalKeyboardKey.f1) {
+          print('f1 clicked');
+          HelperController.createFunction('Orders');
+          if (!ViewController.isClickedBtn.value) {
+            MainController.goToTablePage(
+              MainController.SubMenuList[
+              MainController.selectedSubItem.value
+              ],
+            );
+          }
+        }
+
+        if (event.logicalKey == LogicalKeyboardKey.f4) {
+          print('f4 clicked');
+          ViewCustomController.addContainer(context ,this.productItems );
+        }
+      }
+    },
+    child: Scaffold(
       body: Container(
           width: size.width,
           height: size.height,
@@ -129,7 +150,7 @@ class OrderCreatePage extends StatelessWidget {
                                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                                     color: colorBtn,
                                                   ),
-                                                  child: Txt('${AppController.of(context)!.value('save')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                                                  child: Txt('${AppController.of(context)!.value('save')} (F1)' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
                                                 ),
                                               ),
                                             ),
@@ -159,6 +180,7 @@ class OrderCreatePage extends StatelessWidget {
             ],
           )
       ),
+    )
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Views/table-page-custom.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/order-create.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/order-edit.dart';
@@ -14,7 +15,7 @@ import '../Models/dataModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 import 'main-controller.dart';
-import 'package:finance/Admin/Logic/Models/order-item.dart';
+import 'package:finance/custom/Logic/Models/order-item.dart';
 
 class HelperController extends GetxController {
   //store
@@ -142,11 +143,26 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['schema']['view'] == 'custom') {
       if(tableName == 'Orders'){
-        await DB('Orders').parent(parentId: '${ViewController.request['Customer']}', parentTable: 'Customer').storeRecord(ViewController.request);
-        List<dynamic> orderList = await DB('${MainController.tableInfo['schema']['name']}').getRecords();
-        print('ViewController.request2>>>${ViewController.request2}');
-        await DB('Order_Details').parent(parentId: '${orderList.last['_id']}', parentTable: '${MainController.tableInfo['schema']['name']}').storeRecord(ViewController.request2);
-        print('order detail record>>>${await DB('Order_Details').getRecords()}');
+        if(ViewCustomController.order['Date'] == null){
+          ViewCustomController.order['Date'] = Jalali.now();
+        }
+        if(ViewCustomController.order['Customer'] != null &&
+            ViewCustomController.order['Drawing_Number'] &&
+            ViewCustomController.order['Drawing_Number(customer)'] != null){
+          await DB('${tableName}').parent(parentId: '${ViewCustomController.order['Customer']}', parentTable: 'Customer').storeRecord(ViewCustomController.order);
+        }
+
+        List<dynamic> orderList = await DB('${tableName}').getRecords();
+        for(var i=0; i<OrderItem.orderItemsList.values.toList().length;i++){
+          var orderItem = OrderItem.orderItemsList.values.toList()[i];
+          if(orderItem['Product_Name']!= null &&
+              orderItem['First_Dimension']!= null &&
+              orderItem['Second_Dimension']!= null){
+            await DB('Order_Details').parent(parentId: '${orderList.last['_id']}', parentTable: '${tableName}').storeRecord(orderItem);
+          }
+        }
+        print('record order detail >>>${await DB('Order_Details').getRecords()}');
+
         await MainController.loadData(
             tableData: MainController.getInfoTable('Orders'));
       }

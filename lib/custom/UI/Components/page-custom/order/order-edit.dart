@@ -2,7 +2,7 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
-import 'package:finance/Admin/Logic/Models/order-item.dart';
+import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';

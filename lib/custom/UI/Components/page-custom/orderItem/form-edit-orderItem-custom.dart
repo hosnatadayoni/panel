@@ -1,7 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
-import 'package:finance/Admin/Logic/Models/order-item.dart';
+import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
@@ -47,32 +47,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
     // for (var j = 0; j < getDataTable['columns'].length; j++) {
     //   _loadDataRequest();
     // }
-  }
-  void _loadData(var column) {
-    String columnName = column['name'];
-    for(var item in OrderItem.orderItemsList.values.toList()){
-      String uniqueKey = '${columnName}_${item['id']}';
-      if (column['type'] == 'select' ||
-          column['type'] == 'radiobutton') {
-        _future[uniqueKey] = ViewCustomController.getSelectBoxOrderItemData(column,item);
-      }else if(column['type'] == 'multiSelect'){
-        _future['${columnName}'] = ViewCustomController.getMultiSelectBoxOrderItemData(column , item);
-      }
-    }
-  }
-  void _loadDataRequest() {
-    if(getDataTable['columns'].length!=0)
-      for (var j = 0; j < getDataTable['columns'].length; j++) {
-        String columnName = getDataTable['columns'][j]['title'];
-        if (getDataTable['columns'][j]['type'] == 'select' ||
-            getDataTable['columns'][j]['type'] == 'radiobutton') {
-          _future2['${columnName}'] = ViewCustomController.getSelectBoxOrderItemData(getDataTable['columns'][j] , null);
-        }
-        else if(getDataTable['columns'][j]['type'] == 'multiSelect'){
-          _future2['${columnName}'] = ViewCustomController.getMultiSelectBoxOrderItemData(getDataTable['columns'][j] , null);
-
-        }
-      }
   }
 
   Map<String, Widget> containers = {};

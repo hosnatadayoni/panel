@@ -1136,7 +1136,6 @@ class DB {
         if (beforValidate['status'] == false) {
           showSnackbar(snackTypes.error, beforValidate['message']);
         } else {
-          print('DB.storeRecord 2 ');
 
           if (await RecordController.validate(this.tableName!, newData, MainController.getInfoTable(this.tableName!)) == false) {
             var before = await HelperController.beforeStore(newData);

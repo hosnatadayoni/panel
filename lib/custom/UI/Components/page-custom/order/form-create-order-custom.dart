@@ -3,18 +3,12 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-checkBox.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-color.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-date.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-file.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-multiSelect.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -22,8 +16,8 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormCreateOrderCustom extends StatefulWidget {
 
-  List<dynamic> items;
-  FormCreateOrderCustom(this.items);
+  List<dynamic> customerItems;
+  FormCreateOrderCustom(this.customerItems);
 
   @override
   State<FormCreateOrderCustom> createState() => _FormCreateOrderCustomState();
@@ -38,8 +32,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
   @override
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
-    Rx<bool> isHoverBtnBack = false.obs;
-    return  Container(
+    return   Container(
       width: size.width,
       child: Column(
         children: [
@@ -80,7 +73,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             lable: '',
                             column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
-                              ViewController.request['Input_Code']= int.parse('${text}');
+                              ViewCustomController.order['Input_Code']= int.parse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -103,13 +96,21 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextField(
+                          child: FormTextFieldCustom(
                             name: 'شماره نقشه',
                             hint: 'شماره نقشه',
                             lable: '',
+
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
-                              ViewController.request['Drawing_Number']= int.parse('${text}');
+                              print('text hhh>>>${text}');
+                              if(text != null || text != ''){
+                                ViewCustomController.order['Drawing_Number']= int.tryParse(text);
+                              }
+                              // else{
+                              //   ViewCustomController.order['Drawing_Number']= null;
+                              // }
+
                             },
                             isNumberInt:true,
                           ),
@@ -132,13 +133,18 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextField(
+                          child: FormTextFieldCustom(
                             name: 'شماره نقشه(مشتری)',
                             hint: 'شماره نقشه(مشتری)',
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number(customer)'),
                             lable: '',
                             onChange: (text) {
-                              ViewController.request['Drawing_Number(customer)']= int.parse('${text}');
+                              if(text != null || text != ''){
+                                ViewCustomController.order['Drawing_Number(customer)']= int.tryParse(text);
+                              }
+                              else{
+                                ViewCustomController.order['Drawing_Number(customer)']= null;
+                              }
                             },
                             isNumberInt:true,
                           ),
@@ -166,16 +172,6 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               name: 'نوع',
                               column: MainController.getDetailsOfField('Orders' , 'Type'),
                               items: [
-                                DropdownMenuItem(
-                                    child: Obx(() {
-                                      return Txt(
-                                        '${AppController.of(Get.context!)!.value('not selected')}',
-                                        color: MainController.isLightMode.value == true
-                                            ? whiteColor
-                                            : primaryDark,
-                                      );
-                                    }),
-                                    value: ''),
                                 for (var item in MainController.getDetailsOfField('Orders' , 'Type')['items'])
                                   DropdownMenuItem(
                                       child: Obx(() {
@@ -189,13 +185,13 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                       }),
                                       value: item['value']),
                               ],
-                              initalValue: '',
+                              initalValue: '${MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value']}',
                               onChanged: (value) async {
                                 print('value aaaa>>>${value}');
                                 if (value != '') {
-                                  ViewController.request['Type'] = value;
+                                  ViewCustomController.order['Type'] = value;
                                 } else {
-                                  ViewController.request['Type'] = '';
+                                  ViewCustomController.order['Type'] = '';
                                 }
                               },
                               hintText: '',
@@ -205,7 +201,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                       ],
                     ),
                     SizedBox(width: 20,),
-                    ViewController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs),
+                    ViewCustomController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs),
                     SizedBox(width: 20,),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +233,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                       );
                                     }),
                                     value: ''),
-                                for (var item in widget.items)
+                                for (var item in widget.customerItems)
                                   DropdownMenuItem(
                                       child: Obx(() {
                                         return Txt(
@@ -253,9 +249,9 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               initalValue:'',
                               onChanged: (value) async {
                                 if (value != '') {
-                                  ViewController.request['Customer'] = value;
+                                  ViewCustomController.order['Customer'] = value;
                                 } else {
-                                  ViewController.request['Customer'] = '';
+                                  ViewCustomController.order['Customer'] = '';
                                 }
                               },
                               hintText: '',
@@ -284,15 +280,13 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             selectedDate: Jalali.now(),
                             isSeletedDate: false.obs,
                             onDateChanged: (date) {
-                              // dataJson[columnName] =  date;
-                              ViewController.request['Date'] = date;
+                              ViewCustomController.order['Date'] = date;
                             },
                             column:MainController.getDetailsOfField('Orders' , 'Date'),
                           ),
                         ),
                       ],
                     )
-
                   ],
                 ),
               ),
