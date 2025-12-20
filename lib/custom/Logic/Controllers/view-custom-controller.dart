@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../../../Admin/Public/styles.dart';
@@ -23,12 +24,14 @@ import '../../../Admin/UI/Componenets/General/txt.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-file.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-time.dart';
 import '../../../Admin/Logic/Models/db.dart';
+import '../../UI/Components/Items/Forms/thousand-separatorInput-formatter.dart';
 import '../Models/order-item.dart';
 
 class ViewCustomController extends GetxController{
   static Map<String, dynamic> order = {};
   static Map<String, dynamic> orderItem = {};
   static RxMap<String, Widget> containers = <String, Widget>{}.obs;
+
 
   static Jalali parseDate(String dateString) {
     List<String> dateParts = dateString.split('/');
@@ -67,9 +70,11 @@ class ViewCustomController extends GetxController{
     double total = firsDimension * secondDimension;
     return double.parse(total.toStringAsFixed(2));
   }
-  static getCalculateTotalPrice(double price , double firsDimension , double secondDimension , int quantity){
+  static getCalculateTotalPrice(int price , double firsDimension , double secondDimension , int quantity){
+    final formatter = NumberFormat('#,##0', 'en_US');
     double totalPrice = getCalculateTotalArea(firsDimension, secondDimension) * price * quantity;
-    return double.parse(totalPrice.toStringAsFixed(2));
+    double rounded = double.parse(totalPrice.toStringAsFixed(2));
+    return formatter.format(rounded);
   }
   static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
@@ -140,6 +145,8 @@ class ViewCustomController extends GetxController{
   }
   static Widget buildContainer(String key , BuildContext context , List<dynamic> productItems) {
     var size = MediaQuery.of(context).size;
+    final TextEditingController _controller = TextEditingController();
+    final formatter = NumberFormat('#,###');
     return Container(
       key: ValueKey(key),
       width: size.width,
@@ -149,7 +156,8 @@ class ViewCustomController extends GetxController{
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              if(productItems.length != 0)
+                 Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Obx(() {
@@ -228,18 +236,29 @@ class ViewCustomController extends GetxController{
                       name: 'قیمت',
                       hint: 'قیمت',
                       lable: '',
-                      isNumberDouble:true,
+                      isNumberInt:true,
                       height: 40,
                       column: MainController.getDetailsOfField('Order_Details' , 'Price'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Price'] = double.parse('${text}');
-                        } else {
-                          OrderItem.orderItemsList[key]!['Price']= 0.0;
-
+                          String cleanText = text.replaceAll(',', '');
+                          int value = int.tryParse(cleanText) ?? 0;
+                          OrderItem.orderItemsList[key]!['Price'] = value;
+                          String formatted = formatter.format(value);
+                          print('formatted>>>${formatted}');
+                          if (formatted != text) {
+                            print('sckfd');
+                            _controller.value = TextEditingValue(
+                              text: formatted,
+                              selection: TextSelection.collapsed(offset: formatted.length),
+                            );
+                          }
                         }
                         OrderItem.orderItemsList.refresh();
                       },
+                      inputFormatters: [
+                        ThousandSeparatorInputFormatter(),
+                      ],
                     ),
                   ),
                 ],
@@ -662,6 +681,21 @@ class ViewCustomController extends GetxController{
     }
 
     return sum;
+  }
+  static Future<double> calculateTotalArea(String orderId) async {
+    double sum = 0.0;
+
+    var orderDetailsList = await DB('Order_Details')
+        .parent(parentId: orderId, parentTable: 'Orders')
+        .getRecords();
+
+    for (var item in orderDetailsList) {
+      double firstDim = double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
+      double secondDim = double.tryParse('${item['Second_Dimension'] ?? 0}') ?? 0.0;
+      sum += ViewCustomController.getCalculateTotalArea(firstDim , secondDim);
+    }
+
+    return double.parse(sum.toStringAsFixed(2));
   }
 
 }

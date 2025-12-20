@@ -32,6 +32,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
   @override
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
+    print('id first of customer items>>>${widget.customerItems}');
     return   Container(
       width: size.width,
       child: Column(
@@ -203,11 +204,11 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                     SizedBox(width: 20,),
                     ViewCustomController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs),
                     SizedBox(width: 20,),
-                    Column(
+                    if(widget.customerItems.length != 0)
+                       Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Obx(() {
-                          print('t or f customer>>>${ViewCustomController.order['Customer'] != null}');
                           return Txt(
                             'مشتری',
                             color: MainController.isLightMode.value == true

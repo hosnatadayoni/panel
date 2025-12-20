@@ -33,6 +33,7 @@ class FormTextField extends StatefulWidget {
   var minValidator;
   bool? isEmail;
   double height;
+  List<TextInputFormatter>? inputFormatters;
 
   FormTextField(
       {this.lable,
@@ -52,6 +53,7 @@ class FormTextField extends StatefulWidget {
       this.column,
       this.isEmail,
         this.height = 50,
+        this.inputFormatters
       });
 
   @override
@@ -263,7 +265,7 @@ class _FormTextFieldState extends State<FormTextField> {
                         : TextInputType.text,
                 minLines: 1,
                 maxLines: widget.isPassword == true ? 1 : 3,
-                inputFormatters: [
+                inputFormatters: widget.inputFormatters != null ? widget.inputFormatters: [
                   if (widget.isMobile == true) MobileNumberFormatter(),
                   if (widget.isMobile == true)
                     LengthLimitingTextInputFormatter(11),

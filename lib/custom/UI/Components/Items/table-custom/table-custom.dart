@@ -20,13 +20,13 @@ class TableBoxCustom extends StatefulWidget {
 
 class _TableBoxCustomState extends State<TableBoxCustom> {
   late ScrollController _scrollController;
-  Rx<int> q=0.obs;
   RxMap<String, int> quantities = <String, int>{}.obs;
+  RxMap<String, double> areas = <String, double>{}.obs;
   f() async {
     for (var row in MainController.tableData){
       String id = row['_id'];
       quantities[id] = await ViewCustomController.calculateTotalQuantity(id);
-      print('quantities[id]>>>${quantities[id]}>>>${id}');
+      areas[id] = await ViewCustomController.calculateTotalArea(id);
     }
 
   }
@@ -36,34 +36,11 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    // _loadTotalQuantities();
-    // d();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await f();
     });
 
   }
-  // d(){
-  //   Future.delayed(Duration.zero, () async {
-  //     // for (var i = 0; i < MainController.tableData.length; i++){
-  //     //   _future.value = await ViewCustomController.calculateTotalQuantity(MainController.tableData[i]['_id']);
-  //     // }
-  //     for (var row in MainController.tableData) {
-  //       var id = row['_id'];
-  //       var total = await ViewCustomController.calculateTotalQuantity(id);
-  //       totalQuantities[id] = total;
-  //     }
-  //
-  //   });
-  // }
-  // Future<void> _loadTotalQuantities() async {
-  //   for (var row in MainController.tableData) {
-  //     var id = row['_id'];
-  //     var total = await ViewCustomController.calculateTotalQuantity(id);
-  //     totalQuantities[id] = total;
-  //   }
-  // }
-
 
   @override
   void dispose() {
@@ -73,7 +50,6 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
 
   @override
   Widget build(BuildContext context) {
-    // _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     // return Obx(() {
     //   return Container(
@@ -557,19 +533,19 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                         ),
                       ),
                     ),
-                    // Center(
-                    //   child: Container(
-                    //     padding: EdgeInsets.all(10),
-                    //     child: Txt(
-                    //       'متراژ',
-                    //       fontSize: 16,
-                    //       fontWeight: FontWeight.w700,
-                    //       color: MainController.isLightMode.value == true
-                    //           ? whiteColor
-                    //           : color2,
-                    //     ),
-                    //   ),
-                    // ),
+                    Center(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Txt(
+                          'متراژ',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: MainController.isLightMode.value == true
+                              ? whiteColor
+                              : color2,
+                        ),
+                      ),
+                    ),
                     Center(
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -676,46 +652,12 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                           ),
                         );
                       }),
-                      // Center(
-                      //   child: Txt(
-                      //     '${totalQuantities[MainController.tableData[i]['_id']] ?? 0}',
-                      //     fontSize: 14,
-                      //     fontWeight: FontWeight.w500,
-                      //     color: MainController.isLightMode.value ? whiteColor : color2,
-                      //     textAlign: TextAlign.center,
-                      //   ),
-                      // ),
-                      // Center(
-                      //   child: FutureBuilder<int>(
-                      //     future:
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.connectionState ==
-                      //           ConnectionState.waiting) {
-                      //         print('snapshot>>>${snapshot}');
-                      //         return SizedBox(
-                      //             width: 20,
-                      //             height: 20,
-                      //             child: CircularProgressIndicator(strokeWidth: 2));
-                      //       } else if (snapshot.hasError) {
-                      //         return Txt('Error', fontSize: 14);
-                      //       } else {
-                      //         return Txt(
-                      //           '${snapshot.data}',
-                      //           fontSize: 14,
-                      //           fontWeight: FontWeight.w500,
-                      //           color: MainController.isLightMode.value
-                      //               ? whiteColor
-                      //               : color2,
-                      //           textAlign: TextAlign.center,
-                      //         );
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
                       Obx((){
-                        return Txt('${quantities[MainController.tableData.value[i]['_id']] != 0 ? quantities[MainController.tableData.value[i]['_id']] :''}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2,textAlign: TextAlign.center);
+                        return Txt('${quantities[MainController.tableData.value[i]['_id']] != 0 ? quantities[MainController.tableData.value[i]['_id']] :0}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2,textAlign: TextAlign.center);
                       }),
-
+                      Obx((){
+                        return Txt('${areas[MainController.tableData.value[i]['_id']]}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2,textAlign: TextAlign.center);
+                      }),
                       Obx(() {
                         return Center(
                           child: Txt(
