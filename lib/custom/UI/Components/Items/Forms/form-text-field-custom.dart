@@ -176,8 +176,10 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
 
             if (widget.column['validators'] != null) {
               inputRequired = widget.column['validators'].firstWhere(
-                      (validator) => validator['type'] == 'required',
+                      (validator) => validator['type'] == 'reqiured',
+
                   orElse: () => null);
+              print('inputRequired>>>${inputRequired}');
               if (inputRequired != null) {
                 _errorText = inputRequired['message'];
               }

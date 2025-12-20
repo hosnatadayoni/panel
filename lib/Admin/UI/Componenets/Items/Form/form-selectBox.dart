@@ -41,6 +41,7 @@ class _SelectBoxState extends State<SelectBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
+    print('oooooozks>>>${widget.isSeleted!.value} ${widget.column['title']}');
     print('widget.column hffff>>>${widget.column}');
     if(widget.column!=null)
       print('widget.column>>>${widget.column['validators']} ${widget.column['title']}');

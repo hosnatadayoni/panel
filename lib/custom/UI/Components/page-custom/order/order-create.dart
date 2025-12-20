@@ -36,14 +36,15 @@ class OrderCreatePage extends StatelessWidget {
       if (event is RawKeyDownEvent) {
         if (event.logicalKey == LogicalKeyboardKey.f1) {
           print('f1 clicked');
+          ViewController.isClickedBtn.value =  true;
           HelperController.createFunction('Orders');
-          if (!ViewController.isClickedBtn.value) {
-            MainController.goToTablePage(
-              MainController.SubMenuList[
-              MainController.selectedSubItem.value
-              ],
-            );
-          }
+          // if (!ViewController.isClickedBtn.value) {
+          //   MainController.goToTablePage(
+          //     MainController.SubMenuList[
+          //     MainController.selectedSubItem.value
+          //     ],
+          //   );
+          // }
         }
 
         if (event.logicalKey == LogicalKeyboardKey.f4) {
@@ -133,16 +134,16 @@ class OrderCreatePage extends StatelessWidget {
                                               },
                                               child: InkWell(
                                                 onTap: () async{
+                                                  ViewController.isClickedBtn.value = true;
                                                   HelperController.createFunction(this.tableName);
 
-                                                  if(ViewController.isClickedBtn.value == false){
                                                     // Get.to(() => TablePage());
-                                                    MainController.goToTablePage(MainController
-                                                        .SubMenuList[
-                                                    MainController
-                                                        .selectedSubItem
-                                                        .value]);
-                                                  }
+                                                    // MainController.goToTablePage(MainController
+                                                    //     .SubMenuList[
+                                                    // MainController
+                                                    //     .selectedSubItem
+                                                    //     .value]);
+
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),

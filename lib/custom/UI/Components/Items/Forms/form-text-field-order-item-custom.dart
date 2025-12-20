@@ -1,14 +1,11 @@
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/mobile-format.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/thousand-separator-inputFormatter.dart';
-import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/Logic/Models/order-item.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/two-decimal-input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,6 +83,7 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
     if (widget.column != null) {
       if (widget.column['validators'] != null) {
         var inputRequired;
+
         if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == '' ||
             OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == null) {
           inputRequired = widget.column['validators'].firstWhere(
@@ -144,40 +142,41 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
   Widget build(BuildContext context) {
     return Obx(() {
       if (ViewController.isClickedBtn.value) {
-        if (widget.column != null) {
-          if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == '' ||
-              OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == null) {
-            var inputRequired;
+         if (widget.column != null) {
+            if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == '' ||
+                OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == null) {
+              var inputRequired;
 
-            if (widget.column['validators'] != null) {
-              inputRequired = widget.column['validators'].firstWhere(
-                      (validator) => validator['type'] == 'required',
-                  orElse: () => null);
-              if (inputRequired != null) {
-                _errorText = inputRequired['message'];
+              if (widget.column['validators'] != null) {
+                inputRequired = widget.column['validators'].firstWhere(
+                        (validator) => validator['type'] == 'reqiured',
+                    orElse: () => null);
+                if (inputRequired != null) {
+                  _errorText = inputRequired['message'];
+                }
               }
-            }
-          } else if (ViewCustomController.order[widget.column['name']] != '') {
-            if (widget.column['validators'] != null) {
-              if (widget.isNumberInt == true || widget.isNumberDouble == true) {
-                var maxValidator;
-                var minValidator;
-                maxValidator = widget.column['validators'].firstWhere(
-                        (validator) => validator['type'] == 'max',
-                    orElse: () => null);
-                minValidator = widget.column['validators'].firstWhere(
-                        (validator) => validator['type'] == 'min',
-                    orElse: () => null);
-                var number = ViewCustomController.order[widget.column['name']];
-                if (number != null) {
-                  if (minValidator != null && maxValidator != null) {
-                    if (number < minValidator['value']) {
-                      _errorText = minValidator['message'];
-                    } else {
-                      if (number > maxValidator['value']) {
-                        _errorText = maxValidator['message'];
+            } else if (ViewCustomController.order[widget.column['name']] != '') {
+              if (widget.column['validators'] != null) {
+                if (widget.isNumberInt == true || widget.isNumberDouble == true) {
+                  var maxValidator;
+                  var minValidator;
+                  maxValidator = widget.column['validators'].firstWhere(
+                          (validator) => validator['type'] == 'max',
+                      orElse: () => null);
+                  minValidator = widget.column['validators'].firstWhere(
+                          (validator) => validator['type'] == 'min',
+                      orElse: () => null);
+                  var number = ViewCustomController.order[widget.column['name']];
+                  if (number != null) {
+                    if (minValidator != null && maxValidator != null) {
+                      if (number < minValidator['value']) {
+                        _errorText = minValidator['message'];
                       } else {
-                        _errorText = null;
+                        if (number > maxValidator['value']) {
+                          _errorText = maxValidator['message'];
+                        } else {
+                          _errorText = null;
+                        }
                       }
                     }
                   }
@@ -185,13 +184,12 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
               }
             }
           }
-        }
+
       }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilder(
-
             key: widget.fbKey,
             child: SizedBox(
               height: widget.height,
@@ -211,19 +209,7 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
                 minLines: 1,
                 maxLines: widget.isPassword == true ? 1 : 3,
                 inputFormatters: [
-                  if (widget.isMobile == true) MobileNumberFormatter(),
-                  if (widget.isMobile == true)
-                    LengthLimitingTextInputFormatter(11),
-                  if (widget.isMobile == true)
-                    FilteringTextInputFormatter.digitsOnly,
-                  if (widget.isNumberDouble == true)
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                  if (widget.isNumberInt == true)
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  if (widget.isMobile == true)
-                    FilteringTextInputFormatter.deny(
-                      RegExp(r'^0+'),
-                    ),
+                  TwoDecimalInputFormatter(),
                 ],
                 initialValue: widget.initValue,
                 style: TextStyle(

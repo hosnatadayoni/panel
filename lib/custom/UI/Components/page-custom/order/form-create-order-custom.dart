@@ -73,7 +73,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             lable: '',
                             column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
-                              ViewCustomController.order['Input_Code']= int.parse('${text}');
+                              ViewCustomController.order['Input_Code']= int.tryParse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -207,6 +207,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Obx(() {
+                          print('t or f customer>>>${ViewCustomController.order['Customer'] != null}');
                           return Txt(
                             'مشتری',
                             color: MainController.isLightMode.value == true
@@ -223,16 +224,16 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               name: 'مشتری',
                               column: MainController.getDetailsOfField('Orders' , 'Customer'),
                               items: [
-                                DropdownMenuItem(
-                                    child: Obx(() {
-                                      return Txt(
-                                        '${AppController.of(Get.context!)!.value('not selected')}',
-                                        color: MainController.isLightMode.value == true
-                                            ? whiteColor
-                                            : primaryDark,
-                                      );
-                                    }),
-                                    value: ''),
+                                // DropdownMenuItem(
+                                //     child: Obx(() {
+                                //       return Txt(
+                                //         '${AppController.of(Get.context!)!.value('not selected')}',
+                                //         color: MainController.isLightMode.value == true
+                                //             ? whiteColor
+                                //             : primaryDark,
+                                //       );
+                                //     }),
+                                //     value: ''),
                                 for (var item in widget.customerItems)
                                   DropdownMenuItem(
                                       child: Obx(() {
@@ -246,7 +247,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                       }),
                                       value: item['_id'].toString()),
                               ],
-                              initalValue:'',
+                              initalValue:'${widget.customerItems.first['_id']}',
                               onChanged: (value) async {
                                 if (value != '') {
                                   ViewCustomController.order['Customer'] = value;
@@ -255,7 +256,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                                 }
                               },
                               hintText: '',
-                              isSeleted: false.obs,
+                              isSeleted: true.obs,
                               selectedValue: ''),
                         ),
                       ],

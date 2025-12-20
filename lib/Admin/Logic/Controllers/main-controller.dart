@@ -554,18 +554,15 @@ class MainController extends GetxController {
       var tableFields = null,
       var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
-      if(table['schema']['name'] == 'Orders'){
-        ViewCustomController.containers =<String, Widget>{}.obs;
-        // MainController.tableData.value = await DB('Orders').getRecords();
+      print('vbxjsks>>>${table['schema']['name']}');
+      // if(table['schema']['name'] == 'Orders'){
         // List<dynamic> ordersList = await DB('Orders').where('parent_id', '\$ne', 'null').getRecords();
         // MainController.tableData.addAll(ordersList);
 
 
       HelperController.pageInateFunction();
-      // Navigator.push(
-      //     Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
       HelperController.tablePageFunction(table: table);
-      }
+      // }
     } else {
       if (loadData == true)
         await MainController.loadData(

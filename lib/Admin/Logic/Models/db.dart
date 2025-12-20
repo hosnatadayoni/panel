@@ -1088,6 +1088,7 @@ class DB {
   }
 
   Future<void> storeRecord(Map<dynamic, dynamic> request) async {
+    print('request of record>>>${request}');
     AppController.startLoading('store-record');
     try {
       Box box = await Hive.openBox<DataModel>(
@@ -1111,8 +1112,10 @@ class DB {
       newRequest['parent_table']=newRequest['parent_table']==""?null:newRequest['parent_table'];
       newRequest['parent_id']=newRequest['parent_id']==""?null:newRequest['parent_id'];
       print('DB.storeRecord newRequest>>${newRequest}');
+      print('t or f>>>${ValidatorController.validateByType(newRequest, '${this.tableName}') == true}');
       if (ValidatorController.validateByType(newRequest, '${this.tableName}') == true) {
         print('DB.storeRecord request>>>${newRequest}');
+        print('this.tableName>>>${this.tableName}');
         List<dynamic> columns = MainController.getColumnsList('${this.tableName}');
         for (var column in columns) {
           if (!newRequest.keys.contains(column)) {
@@ -1136,8 +1139,9 @@ class DB {
         if (beforValidate['status'] == false) {
           showSnackbar(snackTypes.error, beforValidate['message']);
         } else {
-
           if (await RecordController.validate(this.tableName!, newData, MainController.getInfoTable(this.tableName!)) == false) {
+            print('validate check');
+
             var before = await HelperController.beforeStore(newData);
             if (before['status'] == false) {
               showSnackbar(snackTypes.error, before['message']);
@@ -1207,11 +1211,16 @@ class DB {
                 showSnackbar(snackTypes.error, afterData['message']);
               }
               // MainController.renderData(operation.store,data);
-
+              MainController.goToTablePage(MainController
+                  .SubMenuList[
+              MainController
+                  .selectedSubItem
+                  .value]);
               ViewController.isClickedBtn.value = false;
               request = {};
               newRequest = {};
             }
+
           } else {
             showSnackbar(snackTypes.error,
                 "${AppController.of(Get.context!)!.value('error')}");
@@ -1458,15 +1467,18 @@ class DB {
         MainController.apiKey.value + '${this.tableName}');
     var boxList = box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
+    print("relation del>>>${relations}");
+    // print("records >>>${records.length}");
+    print("this.tableName! >>>${this.tableName!}");
     for (var data in records) {
-      var tableDataIndex =
-          boxList.indexWhere((element) => element.id == data['_id']);
+      var tableDataIndex = boxList.indexWhere((element) => element.id == data['_id']);
       // var before = await HelperController.beforeDelete(tableDataIndex);
       //
       // if (before['status'] == false) {
       //   showSnackbar(snackTypes.error, before['message']);
       // }
       // else {
+      print("delete reord ${MainController.getStatusTable(this.tableName!)}");
       if (MainController.getStatusTable(this.tableName!) == true) {
         await ConncetServerController.deleteRecordGeneral(
             {"table_name": '${this.tableName}', 'record_id': data['_id']});
@@ -1509,8 +1521,8 @@ class DB {
       // if (after['status'] == false) {
       //   showSnackbar(snackTypes.error, after['message']);
       // }
-    }
     // }
+    }
     AppController.finishLoading('delete-record');
   }
 }

@@ -82,15 +82,13 @@ class _FormTextFieldState extends State<FormTextField> {
 
   void _validateInput() {
     if (widget.column != null) {
-      print('iiiiii>>>${widget.column['validators']}');
-      if (widget.column['validators'] != null) {
+      if (widget.column['validators'] != null || widget.column['validators'] != []) {
         var inputRequired;
         if (ViewController.request[widget.column['name']] == '' ||
             ViewController.request[widget.column['name']] == null) {
           inputRequired = widget.column['validators'].firstWhere(
               (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
-          print('${inputRequired['message']}');
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
               setState(() {

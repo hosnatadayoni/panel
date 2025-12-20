@@ -20,6 +20,7 @@ class ValidatorController extends GetxController {
     String name = column['name'];
 
     if (column['is_show_store'] == true) {
+      print('ggggg>>>${dataJson[name]} ${name}');
       if (column['type'] == 'multiSelect') {
         if (dataJson[name] != null) {
           if (dataJson[name].length == 0) {
@@ -54,14 +55,13 @@ class ValidatorController extends GetxController {
     } else {
       column = tableData['columns'][indexColumn];
     }
-
-    if (column['validators'] != null) {
+    if (column['validators'].length != 0) {
       var inputRequired = column['validators'].firstWhere(
-          (validator) => validator['type'] == 'required',
+          (validator) => validator['type'] == 'reqiured',
           orElse: () => null);
       String name = column['name'];
       if (inputRequired != null) {
-        if (inputRequired['type'] == 'required') {
+        if (inputRequired['type'] == 'reqiured') {
           if (column['type'] == 'multiSelect' ||
               column['type'] == 'select' ||
               column['type'] == 'radiobutton') {

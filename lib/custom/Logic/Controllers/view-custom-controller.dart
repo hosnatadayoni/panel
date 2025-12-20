@@ -37,6 +37,13 @@ class ViewCustomController extends GetxController{
     int day = int.parse(dateParts[2]);
     return Jalali(year, month, day);
   }
+  static String getDate(Jalali j){
+    int year = j.year;
+    int month= j.month;
+    int day = j.day;
+    String date = '${year}/${month}/${day}';
+    return date;
+  }
   static TimeOfDay parseTime(String dateString){
     List<String>? TimeParts;
     int hour = TimeOfDay.now().hour;
@@ -67,12 +74,14 @@ class ViewCustomController extends GetxController{
   static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
     Map<String, List<dynamic>> selectedFilesMap = {};
+    print('selecetdFiles>>>${selecetdFiles}');
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
-    List<dynamic> filesSelectedList;
+    List<dynamic> filesSelectedList=[];
     if (ViewCustomController.order[column['name']] != null) {
-      filesSelectedList = ViewCustomController.order[column['name']];
+      // filesSelectedList = ViewCustomController.order[column['name']];
+      filesSelectedList.add(ViewCustomController.order[column['name']]);
       for (var data in filesSelectedList) {
         selectedFilesMap['${column['name']}']!.add(data);
       }
@@ -106,150 +115,6 @@ class ViewCustomController extends GetxController{
       ],
     );
   }
-  static Widget generateFormTimeBox(var column, TimeOfDay selectedTime,
-      Rx<bool>? isSeletedTime) {
-    return new Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Obx(() {
-          return Txt(
-            '${column['title']}',
-            color:
-            MainController.isLightMode.value == true ? whiteColor : color2,
-          );
-        }),
-        SizedBox(
-          height: 10,
-        ),
-        Container(
-          width: 100,
-          child: TimePickerBox(
-            column: column,
-            selectedTime: selectedTime,
-            isSeletedTime: isSeletedTime,
-            onTimeChanged: (time) {
-              ViewController.request[column['name']] = time;
-            },
-          ),
-        ),
-      ],
-    );
-  }
-  static Widget generateEditFileBoxOrderView(
-      var data, var column, Rx<bool>? isSeletedFile) {
-    String name = column['name'];
-    String type = column['type'];
-    RxString file =
-    data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
-
-    Map<String, List<dynamic>> selectedFilesMap = {};
-    if (selectedFilesMap['${column['name']}'] == null) {
-      selectedFilesMap['${column['name']}'] = [];
-    }
-    data[name] =   data != null && data[name+'_name'] != null ? '${data[name+'_name']}' : '';
-    List<dynamic> filesSelectedList = [];
-    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
-    return Obx(() {
-      return new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Txt(
-            '${column['title']}',
-            color:
-            MainController.isLightMode.value == true ? whiteColor : color2,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          file.value != ''
-              ? IntrinsicWidth(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: MainController.isLightMode.value == true
-                        ? whiteColor
-                        : background,
-                    width: 0.5),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Image.network(
-                            type == 'file'
-                                ? baseUrl + '${file}'
-                                : baseUrlPvFile + '${file}',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.fill,
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
-                              return Image.asset(
-                                fileImage,
-                                width: 40,
-                                height: 40,
-                              ); // عکس جایگزین
-                            },
-                          ),
-                          Txt(
-                            '${data[name + '_name']}',
-                            color: MainController.isLightMode.value == true
-                                ? whiteColor
-                                : color2,
-                          ),
-                        ],
-                      )),
-                  Positioned(
-                      top: 0,
-                      left: 0,
-                      child: IconButton(
-                        color: redColor,
-                        onPressed: () async {
-                          ViewController.widgetDeletePopup(onChange: () async {
-                            var status =
-                            await MainController.deleteFileInChunks(
-                                data[name + '_name'],
-                                recordId: data['_id'],
-                                record: json
-                                    .encode({name: null}).toString());
-                            if (status == true) {
-                              file.value = '';
-                              Navigator.pop(Get.context!);
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          size: 25,
-                          color: redColor,
-                        ),
-                      ))
-                ],
-              ),
-            ),
-          )
-              : FormFile(
-            columnName: column['title'],
-            onChanged: (selecetdFiles) {
-              ViewController.request[name] = selecetdFiles;
-            },
-            filesSelected: selectedFilesMap,
-            // selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
-            selectedFilesTxt: '',
-            isSeletedFile: isSeletedFile,
-            column: column,
-            fileInfo: fileInfo,
-          ),
-        ],
-      );
-    });
-  }
   static Future<Widget> getOrderItems(var data) async {
     List<dynamic>items=await DB('Order_Details').parent(parentId:  "${data['_id']}",parentTable: 'Orders').getRecords();
     print('items as>>>${items}');
@@ -265,12 +130,12 @@ class ViewCustomController extends GetxController{
       ],
     );
   }
+
   //order item
   static  addContainer(BuildContext context , List<dynamic> productItems) {
       var Id = Uuid().v4();
       String newKey = Id;
       ViewCustomController.containers[newKey] = buildContainer(newKey , context ,productItems);
-      print('OrderItem.orderItemsList tttt>>>${ViewCustomController.orderItem}');
       OrderItem.orderItemsList[newKey] = {...ViewCustomController.orderItem};
   }
   static Widget buildContainer(String key , BuildContext context , List<dynamic> productItems) {
@@ -305,17 +170,17 @@ class ViewCustomController extends GetxController{
                         maxHeight: 38,
                         column: MainController.getDetailsOfField('Order_Details' , 'Product_Name'),
                         items: [
-                          DropdownMenuItem(
-                              child: Obx(() {
-                                return Txt(
-                                  '${AppController.of(Get.context!)!.value('not selected')}',
-                                  color: MainController.isLightMode.value == true
-                                      ? whiteColor
-                                      : primaryDark,
-                                  fontSize: 13,
-                                );
-                              }),
-                              value: ''),
+                          // DropdownMenuItem(
+                          //     child: Obx(() {
+                          //       return Txt(
+                          //         '${AppController.of(Get.context!)!.value('not selected')}',
+                          //         color: MainController.isLightMode.value == true
+                          //             ? whiteColor
+                          //             : primaryDark,
+                          //         fontSize: 13,
+                          //       );
+                          //     }),
+                          //     value: ''),
                           for (var item in productItems)
                             DropdownMenuItem(
                                 child: Obx(() {
@@ -329,7 +194,7 @@ class ViewCustomController extends GetxController{
                                 }),
                                 value: item['_id'].toString()),
                         ],
-                        initalValue: '',
+                        initalValue: '${productItems.first['_id']}',
                         onChanged: (value) async {
                           if (value != '') {
                             OrderItem.orderItemsList[key]!['Product_Name'] = value;
@@ -338,7 +203,7 @@ class ViewCustomController extends GetxController{
                           }
                         },
                         hintText: '',
-                        isSeleted: false.obs,
+                        isSeleted: true.obs,
                         selectedValue: ''),
                   ),
                 ],
@@ -359,7 +224,7 @@ class ViewCustomController extends GetxController{
                   ),
                   Container(
                     width: 100,
-                    child: FormTextFieldOrderItemCustom(
+                    child: FormTextField(
                       name: 'قیمت',
                       hint: 'قیمت',
                       lable: '',
@@ -784,5 +649,19 @@ class ViewCustomController extends GetxController{
     OrderItem.orderItemsList.remove(key);
   }
   //end order item
+
+  static Future<int> calculateTotalQuantity(String orderId) async {
+    int sum = 0;
+
+    var orderDetailsList = await DB('Order_Details')
+        .parent(parentId: orderId, parentTable: 'Orders')
+        .getRecords();
+
+    for (var item in orderDetailsList) {
+      sum += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
+    }
+
+    return sum;
+  }
 
 }
