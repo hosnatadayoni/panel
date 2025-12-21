@@ -1,5 +1,6 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/dataController.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
@@ -18,10 +19,11 @@ import 'package:get/get.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class OrderEditPge extends StatefulWidget {
-  OrderEditPge(this.customerItems ,  this.productItems ,{this.data});
+  OrderEditPge(this.customerItems ,  this.productItems , this.orderDetailItems ,{this.data});
   var data;
   List<dynamic> customerItems;
   List<dynamic> productItems;
+  List<dynamic> orderDetailItems;
 
   @override
   State<OrderEditPge> createState() => _OrderEditPgeState();
@@ -32,13 +34,20 @@ class _OrderEditPgeState extends State<OrderEditPge> {
   @override
   void initState() {
     super.initState();
+    addWidget();
   }
   final FocusNode _focusNode = FocusNode();
+  Rx<Widget> _future = Column().obs;
+  addWidget() async {
+    Future.delayed(Duration.zero, () async {
+      _future.value = await ViewCustomController.getOrderItems(widget.data);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    print('widget.data>>>${widget.data}');
     return RawKeyboardListener(
       focusNode: _focusNode,
       autofocus: true,
@@ -48,6 +57,7 @@ class _OrderEditPgeState extends State<OrderEditPge> {
             print('f1 clicked');
             ViewController.isClickedEditBtn.value =  true;
             //add edit function
+            // HelperController.editFunction('Orders',id:'${widget.data!['_id']}' , request:widget.data);
           }
 
           if (event.logicalKey == LogicalKeyboardKey.f4) {
@@ -84,7 +94,8 @@ class _OrderEditPgeState extends State<OrderEditPge> {
                           children: [
                             FormEditOrderCustom(data: widget.data , widget.customerItems ),
                             SizedBox(height: 20,),
-                            FormEditOrderItemCustom(widget.productItems),
+                            // FormEditOrderItemCustom(widget.productItems),
+                            Container(child: _future.value)
                           ],
                         ),
                         // InkWell(

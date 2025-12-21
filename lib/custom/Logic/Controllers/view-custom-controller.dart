@@ -10,6 +10,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-order-item-custom.dart';
+import 'package:finance/custom/UI/Components/page-custom/order/form-txt-price.dart';
 import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -122,17 +123,19 @@ class ViewCustomController extends GetxController{
     );
   }
   static Future<Widget> getOrderItems(var data) async {
-    List<dynamic>items=await DB('Order_Details').parent(parentId:  "${data['_id']}",parentTable: 'Orders').getRecords();
-    print('items as>>>${items}');
+    List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
+    print('items as>>>${orderDetailItems}');
     List<dynamic> productItems= await DB('Product').getRecords();
-    for(var item in items){
+
+    for(var item in orderDetailItems){
       OrderItem.orderItemsList[item['_id']]=item;
 
     }
+    print('productItems>>>${productItems}');
     print('OrderItem.orderItemsList edit>>>${OrderItem.orderItemsList}');
     return Column(
       children: [
-        FormEditOrderItemCustom(productItems),
+          FormEditOrderItemCustom(productItems),
       ],
     );
   }
@@ -148,6 +151,14 @@ class ViewCustomController extends GetxController{
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
     final formatter = NumberFormat('#,###');
+
+    if(OrderItem.orderItemsList[key] == null){
+      OrderItem.orderItemsList[key] = {};
+    }
+    final priceController = TextEditingController(text: formatter.format(
+      ViewCustomController.getProductPrice(
+        productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],) ?? 0,
+    ));
     return Container(
       key: ValueKey(key),
       width: size.width,
@@ -207,9 +218,12 @@ class ViewCustomController extends GetxController{
                         onChanged: (value) async {
                           if (value != '') {
                             OrderItem.orderItemsList[key]!['Product_Name'] = value;
+                            final newPrice = ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList[key]!['Product_Name']) ?? 0;
+                            priceController.text = formatter.format(newPrice);
                           } else {
                             OrderItem.orderItemsList[key]!['Product_Name'] = '';
                           }
+                          OrderItem.orderItemsList.refresh();
                         },
                         hintText: '',
                         isSeleted: true.obs,
@@ -231,37 +245,39 @@ class ViewCustomController extends GetxController{
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    width: 100,
-                    child: FormTextField(
-                      name: 'قیمت',
-                      hint: 'قیمت',
-                      lable: '',
-                      isNumberInt:true,
-                      height: 40,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Price'),
-                      onChange: (text) {
-                        if (text != null && text != '') {
-                          String cleanText = text.replaceAll(',', '');
-                          int value = int.tryParse(cleanText) ?? 0;
-                          OrderItem.orderItemsList[key]!['Price'] = value;
-                          String formatted = formatter.format(value);
-                          print('formatted>>>${formatted}');
-                          if (formatted != text) {
-                            print('sckfd');
-                            _controller.value = TextEditingValue(
-                              text: formatted,
-                              selection: TextSelection.collapsed(offset: formatted.length),
-                            );
-                          }
-                        }
-                        OrderItem.orderItemsList.refresh();
-                      },
-                      inputFormatters: [
-                        ThousandSeparatorInputFormatter(),
-                      ],
-                    ),
-                  ),
+                 Obx((){
+                   return  Container(
+                     width: 100,
+                     child: FormPriceTextField(
+                       name: 'قیمت',
+                       hint: 'قیمت',
+                       lable: '',
+                       controller: priceController,
+                       height: 40,
+                       column: MainController.getDetailsOfField('Order_Details' , 'Price'),
+                       onChange: (text) {
+                         if (text != null && text != '') {
+                           String cleanText = text.replaceAll(',', '');
+                           int value = int.tryParse(cleanText) ?? 0;
+                           OrderItem.orderItemsList[key]!['Price'] = value;
+                           String formatted = formatter.format(value);
+                           print('formatted>>>${formatted}');
+                           if (formatted != text) {
+                             print('sckfd');
+                             _controller.value = TextEditingValue(
+                               text: formatted,
+                               selection: TextSelection.collapsed(offset: formatted.length),
+                             );
+                           }
+                         }
+                         OrderItem.orderItemsList.refresh();
+                       },
+                       // inputFormatters: [
+                       //   ThousandSeparatorInputFormatter(),
+                       // ],
+                     ),
+                   );
+                 })
                 ],
               ),
               SizedBox(width: 10,),
@@ -629,7 +645,9 @@ class ViewCustomController extends GetxController{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Obx((){
-                          return Txt('${ViewCustomController.getCalculateTotalPrice(OrderItem.orderItemsList[key]?['Price'] ?? 0 ,
+                          return Txt('${ViewCustomController.getCalculateTotalPrice(
+                              ViewCustomController.getProductPrice(
+                                productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],),
                               OrderItem.orderItemsList[key]?['First_Dimension'] ?? 0,
                               OrderItem.orderItemsList[key]?['Second_Dimension'] ?? 0,
                               OrderItem.orderItemsList[key]?['Quantity'] ?? 0
@@ -673,9 +691,7 @@ class ViewCustomController extends GetxController{
   static Future<int> calculateTotalQuantity(String orderId) async {
     int sum = 0;
 
-    var orderDetailsList = await DB('Order_Details')
-        .parent(parentId: orderId, parentTable: 'Orders')
-        .getRecords();
+    var orderDetailsList = await ViewCustomController.getDataOrderDetailList(orderId);
 
     for (var item in orderDetailsList) {
       sum += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
@@ -686,9 +702,7 @@ class ViewCustomController extends GetxController{
   static Future<double> calculateTotalArea(String orderId) async {
     double sum = 0.0;
 
-    var orderDetailsList = await DB('Order_Details')
-        .parent(parentId: orderId, parentTable: 'Orders')
-        .getRecords();
+    var orderDetailsList = await ViewCustomController.getDataOrderDetailList(orderId);
 
     for (var item in orderDetailsList) {
       double firstDim = double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
@@ -697,6 +711,19 @@ class ViewCustomController extends GetxController{
     }
 
     return double.parse(sum.toStringAsFixed(2));
+  }
+  static getDataOrderDetailList(String parentId) async {
+    List<dynamic> orderDetailList = [];
+    orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    return orderDetailList;
+  }
+  static getProductPrice(List<dynamic> productItems , String productId) {
+    for(var product in productItems){
+      if(product['_id'] == productId){
+        print('price of product>>>${product['Price']}');
+        return product['Price'];
+      }
+    }
   }
 
   //order item edit page
@@ -767,7 +794,7 @@ class ViewCustomController extends GetxController{
                         // print('request of custom select>>>${OrderItem.orderItemsList[key]!['Product']}');
                       },
                       hintText: '',
-                      isSeleted: false.obs,
+                      isSeleted: true.obs,
                       selectedValue: ''),
                 ),
               ],
@@ -831,18 +858,16 @@ class ViewCustomController extends GetxController{
                     hint: 'بعد اول',
                     lable: '',
                     height: 40,
-                    initValue: '${OrderItem.orderItemsList2[key]?['First_Dimension'] ?? ''}',
                     isNumberInt:true,
                     keyOrderItem: key,
                     column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
                     onChange: (text) {
                       if (text != null && text != '') {
-                        OrderItem.orderItemsList2[key]?['First_Dimension'] = double.tryParse('${text}');
+                        OrderItem.orderItemsList2[key]!['First_Dimension'] = double.tryParse('${text}');
                       }
                       else {
-                        OrderItem.orderItemsList2[key]?['First_Dimension'] = null;
+                        OrderItem.orderItemsList2[key]!['First_Dimension'] = null;
                       }
-                      print('xxxxxxv>>>${OrderItem.orderItemsList2[key]?['First_Dimension']}');
                       OrderItem.orderItemsList2.refresh();
                     },
                   ),
@@ -872,7 +897,6 @@ class ViewCustomController extends GetxController{
                     height: 40,
                     isNumberInt:true,
                     keyOrderItem: key,
-                    initValue: '${OrderItem.orderItemsList2[key]?['Second_Dimension'] ?? ''}',
                     column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
                     onChange: (text) {
                       if (text != null && text != '') {

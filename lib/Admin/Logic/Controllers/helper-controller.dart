@@ -116,6 +116,8 @@ class HelperController extends GetxController {
         MainController.tableData.value =
         await DB('${MainController.tableName.value}').paginate();
         MainController.allData.value = MainController.tableData;
+        await Get.to(() => TablePage());
+
       }
       // Navigator.push(Get.context!, MaterialPageRoute(builder: (context)=>TablePage()));
       // await MainController.goToTablePage(MainController.SubMenuList[index]);
@@ -212,7 +214,7 @@ class HelperController extends GetxController {
 
     } else {
       Map<String, dynamic> parent = await DB.parentItem;
-      if (parent.length == 0) {
+      if (parent.containsKey(MainController.tableInfo['schema']['name'])&&parent[MainController.tableInfo['schema']['name']].length == 0) {
         await DB('${MainController.tableInfo['schema']['name']}')
             .storeRecord(ViewController.request);
       } else {
@@ -264,10 +266,10 @@ class HelperController extends GetxController {
           tableFields: MainController.getInfoTable(table['schema']['name']),);
       pageInateFunction();
     } else {
-      DB.parentItem = {
-        'parent_id': MainController.tableData[index]['_id'],
-        'parent_table': MainController.tableInfo['schema']['name']
-      };
+      // DB.parentItem = {
+      //   'parent_id': MainController.tableData[index]['_id'],
+      //   'parent_table': MainController.tableInfo['schema']['name']
+      // };
       var items = await DB('${table['schema']['name']}')
           .parent(
           parentId: MainController.tableData[index]['_id'],
@@ -323,7 +325,9 @@ class HelperController extends GetxController {
       if(table['schema']['name'] =='Orders'){
         List<dynamic> customerItems= await DB('Customer').parent(parentTable: null , parentId: null).getRecords();
         List<dynamic> productItems= await DB('Product').parent(parentTable: null , parentId: null).getRecords();
-        await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems));
+        List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
+        ViewCustomController.editContainers =<String, Widget>{}.obs;
+        await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems , orderDetailItems));
       }
 
     } else {

@@ -22,7 +22,7 @@ class DB {
   int? takeCount;
   int? skipCount;
   int? randomCount;
-  static Map<String, dynamic> parentItem = <String, dynamic>{};
+  static Map<String, Map<String,dynamic>> parentItem =<String,Map<String,dynamic>>{};
   int counter = 0;
   List<Where> w = [];
 
@@ -157,11 +157,11 @@ class DB {
 
     data = [];
     if (MainController.SubMenuList[index]['schema']['online'] == true) {
-      if (parentItem.length != 0) {
-        where('parent_id', '\$eq', parentItem['parent_id']);
+      if (parentItem.containsKey(this.tableName) && parentItem.length != 0) {
+        where('parent_id', '\$eq', parentItem[this.tableName]!['parent_id']);
         print('DB.getRecords where list is>>>${this.whereList}');
       } else {
-        where('parent_id', '\$eq', null);
+        // where('parent_id', '\$eq', null);
         print('DB.getRecords where list is2>>>${this.whereList}');
         // await ConncetServerController.getRecordGeneral('${tableName}');
         // dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
@@ -172,9 +172,9 @@ class DB {
       }
       if (this.whereList.length == 0 && this.orWhereList.length == 0) {
         List<Map<String, dynamic>> dataItems = [];
-        await ConncetServerController.getRecordGeneral('${tableName}');
+        await ConncetServerController.filterRecordGeneral([], this.tableName!, '\$or');
         dataItems =
-            ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+            ConncetServerController.filterRecordRes.cast<Map<String, dynamic>>();
         if (dataItems.isNotEmpty) {
           data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
@@ -1077,12 +1077,14 @@ class DB {
   //   }
   // }
   parent({var parentTable = null, var parentId = null}) {
-    parentItem = <String, dynamic>{};
+    parentItem = {};
     if (parentTable != null && parentId != null) {
-      var json = {'parent_table': parentTable, 'parent_id': parentId};
+      var json = {this.tableName!:
+        {'parent_table': parentTable, 'parent_id': parentId}
+      };
       parentItem = json;
     } else
-      parentItem = <String, dynamic>{};
+      parentItem = {};
 
     return this;
   }
@@ -1122,7 +1124,7 @@ class DB {
             newRequest.addAll({'${column}': null});
           }
         }
-        if (parentItem != {}) {
+        if (parentItem.containsKey(this.tableName)&&parentItem[this.tableName] != {}) {
           newRequest.addAll(parentItem);
         }
         newRequest.addAll({

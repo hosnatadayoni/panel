@@ -27,6 +27,7 @@ class FormEditOrderItemCustom extends StatefulWidget {
 
   FormEditOrderItemCustom(this.productItems);
   List<dynamic> productItems;
+ 
 
 
   @override
@@ -35,8 +36,6 @@ class FormEditOrderItemCustom extends StatefulWidget {
 
 class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Color? colorChanged;
-
-  var getDataTable = ViewCustomController.getDataTable('Order_Details');
 
 
   void initState() {
@@ -67,6 +66,11 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    print('OrderItem.orderItemsList.values.toList()>>>${OrderItem.orderItemsList.values.toList()}');
+    for(int i=0;i<OrderItem.orderItemsList.values.toList().length;i++){
+      print('ggggggg>>>${OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id']}');
+    }
+    print('widget.productItems>>>${widget.productItems}');
 
     return Column(
       children: [
@@ -108,38 +112,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Container(
-                                //   child: FutureBuilder<Widget>(
-                                //     future: _futureWidget2,
-                                //     builder: (BuildContext context,
-                                //         snapshot) {
-                                //       if (snapshot.connectionState ==
-                                //           ConnectionState.waiting) {
-                                //         return CircularProgressIndicator();
-                                //       } else if (snapshot.hasError) {
-                                //         return Txt(
-                                //             '${AppController.of(context)!.value('error')}: ${snapshot.requireData}');
-                                //       } else {
-                                //         return snapshot.data ?? Container();
-                                //       }
-                                //     },
-                                //   ),
-                                // ),
-                                // FutureBuilder<Widget>(
-                                //   future: ViewCustomController.generateStoreFormOrderItemView(getDataTable['columns'] , key),
-                                //   builder: (context, snapshot) {
-                                //     if (snapshot.connectionState == ConnectionState.waiting) {
-                                //       return SizedBox(
-                                //         width: 200,
-                                //         child: Center(child: CircularProgressIndicator()),
-                                //       );
-                                //     } else if (snapshot.hasError) {
-                                //       return Txt('${AppController.of(context)!.value('error')}');
-                                //     } else {
-                                //       return snapshot.data ?? Container();
-                                //     }
-                                //   },
-                                // ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -159,19 +131,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                       child: SelectBox(
                                           name: 'نام کالا',
                                           maxHeight: 38,
-                                          column: MainController.getDetailsOfField('Order_Details' , 'Product'),
+                                          column: MainController.getDetailsOfField('Order_Details' , 'Product_Name'),
                                           items: [
-                                            DropdownMenuItem(
-                                                child: Obx(() {
-                                                  return Txt(
-                                                    '${AppController.of(Get.context!)!.value('not selected')}',
-                                                    color: MainController.isLightMode.value == true
-                                                        ? whiteColor
-                                                        : primaryDark,
-                                                    fontSize: 13,
-                                                  );
-                                                }),
-                                                value: ''),
                                             for (var item in widget.productItems)
                                               DropdownMenuItem(
                                                   child: Obx(() {
@@ -185,20 +146,17 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['_id'].toString()),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Product_Name'] != null  ? OrderItem.orderItemsList.values.toList()[i]['Product_Name'] : ''}',
+                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id'] != null  ? OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id'] : ''}',
                                           onChanged: (value) async {
                                             print('value aaaa>>>${value}');
                                             if (value != '') {
-                                              // OrderItem.orderItemsList[key]!['Product_Name'] = value;
                                               OrderItem.orderItemsList.values.toList()[i]['Product_Name']  = value;
                                             } else {
-                                              // OrderItem.orderItemsList[key]!['Product_Name'] = '';
                                               OrderItem.orderItemsList.values.toList()[i]['Product_Name']  = '';
                                             }
-                                            // print('request of custom select>>>${OrderItem.orderItemsList[key]!['Product']}');
                                           },
                                           hintText: '',
-                                          isSeleted: false.obs,
+                                          isSeleted: true.obs,
                                           selectedValue: ''),
                                     ),
                                   ],
@@ -230,10 +188,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         onChange: (text) {
                                           // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Price'] = double.parse('${text}');
                                             OrderItem.orderItemsList.values.toList()[i]['Price']  = double.parse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['Price']= '';
                                             OrderItem.orderItemsList.values.toList()[i]['Price']  = '';
                                           }
                                         },
@@ -267,13 +223,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         isNumberInt:true,
                                         column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
                                         onChange: (text) {
-                                          // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['First_Dimension'] = double.parse('${text}');
-                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = double.parse('${text}');
+                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = double.tryParse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['First_Dimension']= '';
-                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = '';
+                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = null;
                                           }
                                         },
                                       ),
@@ -306,13 +259,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         OrderItem.orderItemsList.values.toList()[i]['Second_Dimension']:''}',
                                         column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
                                         onChange: (text) {
-                                          // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Second_Dimension'] = double.parse('${text}');
-                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = double.parse('${text}');
+                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = double.tryParse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['Second_Dimension']= '';
-                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = '';
+                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = null;
 
                                           }
                                         },
@@ -340,7 +290,11 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Txt('0', color: MainController.isLightMode.value == true ? whiteColor : color2,),
+                                          Obx((){
+                                            return Txt('${ViewCustomController.getCalculateTotalArea((OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                              (OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,)}',
+                                              color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                          })
                                         ],
                                       ),
                                     ),
@@ -372,9 +326,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         initValue: OrderItem.orderItemsList.values.toList()[i]['Quantity'].toString() != null ?
                                         OrderItem.orderItemsList.values.toList()[i]['Quantity'].toString() : '',
                                         onChange: (text) {
-                                          // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Quantity'] = int.parse('${text}');
                                             OrderItem.orderItemsList.values.toList()[i]['Quantity'] = int.tryParse('${text}');
                                           }
                                           OrderItem.orderItemsList.refresh();
@@ -418,15 +370,13 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['value']),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList().first['Cut_Pattern'] != null ?
-                                          OrderItem.orderItemsList.values.toList().first['Cut_Pattern'] : ''}',
+                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern']['value'] != null ?
+                                          OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern']['value'] : ''}',
                                           onChanged: (value) async {
                                             print('value aaaa>>>${value}');
                                             if (value != '') {
-                                              // ViewController.request['Cut_Pattern'] = value;
                                               OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern'] = value;
                                             } else {
-                                              // ViewController.request['Cut_Pattern'] = '';
                                               OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern'] = '';
                                             }
                                           },
@@ -471,16 +421,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['value']),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList().first['Manufacturing_Difficulty'] != null ?
-                                          OrderItem.orderItemsList.values.toList().first['Manufacturing_Difficulty']:''}',
+                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] != null ?
+                                          OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value']:''}',
                                           onChanged: (value) async {
                                             print('value aaaa>>>${value}');
                                             if (value != '') {
-                                              // ViewController.request['Manufacturing_Difficulty'] = value;
-                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty'] = value;
+                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] = value;
                                             } else {
-                                              // ViewController.request['Manufacturing_Difficulty'] = '';
-                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty'] = '';
+                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] = '';
                                             }
                                           },
                                           hintText: '',
@@ -515,11 +463,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         OrderItem.orderItemsList.values.toList()[i]['Block']:''}',
                                         column: MainController.getDetailsOfField('Order_Details' , 'Block'),
                                         onChange: (text) {
-                                          // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Block'] = int.parse('${text}');
+                                            OrderItem.orderItemsList.values.toList()[i]['Block'] = int.parse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['Block']= '';
+                                            OrderItem.orderItemsList.values.toList()[i]['Block']= '';
 
                                           }
                                         },
@@ -554,10 +501,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         column: MainController.getDetailsOfField('Order_Details' , 'Level'),
                                         onChange: (text) {
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Level'] = int.parse('${text}');
                                             OrderItem.orderItemsList.values.toList()[i]['Level'] = int.parse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['Level']= '';
                                             OrderItem.orderItemsList.values.toList()[i]['Level'] = '';
 
                                           }
@@ -593,10 +538,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         column: MainController.getDetailsOfField('Order_Details' , 'Unit'),
                                         onChange: (text) {
                                           if (text != null && text != '') {
-                                            // OrderItem.orderItemsList[key]!['Unit'] = int.parse('${text}');
                                             OrderItem.orderItemsList.values.toList()[i]['Unit'] = int.parse('${text}');
                                           } else {
-                                            // OrderItem.orderItemsList[key]!['Unit']= '';
                                             OrderItem.orderItemsList.values.toList()[i]['Unit'] = '';
                                           }
                                         },
@@ -623,7 +566,13 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Txt('0', color: MainController.isLightMode.value == true ? whiteColor : color2,),
+                                          Obx((){
+                                            return Txt('${ViewCustomController.getCalculateTotalPrice(OrderItem.orderItemsList.values.toList()[i]['Price'] ?? 0 ,
+                                                (OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                (OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                OrderItem.orderItemsList.values.toList()[i]['Quantity'] ?? 0
+                                            )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                          })
                                         ],
                                       ),
                                     ),
@@ -648,6 +597,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                   ],
                                 ),
+                               
+                                
 
                               ],
                             )

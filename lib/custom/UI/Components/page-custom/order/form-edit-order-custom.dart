@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
@@ -111,6 +112,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                       // await MainController.loadData(tableData:ViewCustomController.getDataTable('Orders') );
                       // // MainController.renderPagination();
                       // MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
+                      // HelperController.editFunction('Orders',id:'${widget.data!['_id']}' , request:widget.data);
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),

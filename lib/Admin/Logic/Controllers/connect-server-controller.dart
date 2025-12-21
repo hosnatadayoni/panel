@@ -178,6 +178,7 @@ class ConncetServerController extends GetxController {
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()
       });
+    if(wheres.length!=0)
     for(Where item in wheres.values){
       l.add({'column':'${item.fieldName}','operation': "${item.operator!=null?item.operator:"\$eq"}",'value': "${item.value}"});
       }
