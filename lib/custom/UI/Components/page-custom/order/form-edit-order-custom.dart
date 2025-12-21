@@ -15,6 +15,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/Admin/UI/Views/table-page.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -44,6 +45,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+    print('widget.data>>>${widget.data}');
 
     return  Container(
       width: size.width,
@@ -66,7 +68,12 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                     child: InkWell(
                       onTap: (){
                         MainController.isClickedItem.value = true;
-                        Get.to(() => TablePage());
+                        // Get.to(() => TablePage());
+                        MainController.goToTablePage(MainController
+                            .SubMenuList[
+                        MainController
+                            .selectedSubItem
+                            .value]);
                       },
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -111,7 +118,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         color: colorBtn,
                       ),
-                      child: Txt('${AppController.of(context)!.value('edit')}' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
+                      child: Txt('${AppController.of(context)!.value('edit')} (F1)' , color:whiteColor, fontSize: 16, fontWeight: FontWeight.w400,),
                     ),
                   ),
                 ],
@@ -176,7 +183,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextField(
+                          child: FormTextFieldCustom(
                             name: 'شماره نقشه',
                             hint: 'شماره نقشه',
                             lable: '',
@@ -206,7 +213,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextField(
+                          child: FormTextFieldCustom(
                             name: 'شماره نقشه(مشتری)',
                             hint: 'شماره نقشه(مشتری)',
                             initValue: '${widget.data['Drawing_Number(customer)'] != null ? widget.data['Drawing_Number(customer)']: ''}',
@@ -241,16 +248,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                               name: 'نوع',
                               column: MainController.getDetailsOfField('Orders' , 'Type'),
                               items: [
-                                DropdownMenuItem(
-                                    child: Obx(() {
-                                      return Txt(
-                                        '${AppController.of(Get.context!)!.value('not selected')}',
-                                        color: MainController.isLightMode.value == true
-                                            ? whiteColor
-                                            : primaryDark,
-                                      );
-                                    }),
-                                    value: ''),
                                 for (var item in MainController.getDetailsOfField('Orders' , 'Type')['items'])
                                   DropdownMenuItem(
                                       child: Obx(() {
@@ -301,16 +298,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                               name: 'مشتری',
                               column: MainController.getDetailsOfField('Orders' , 'Customer'),
                               items: [
-                                DropdownMenuItem(
-                                    child: Obx(() {
-                                      return Txt(
-                                        '${AppController.of(Get.context!)!.value('not selected')}',
-                                        color: MainController.isLightMode.value == true
-                                            ? whiteColor
-                                            : primaryDark,
-                                      );
-                                    }),
-                                    value: ''),
                                 for (var item in widget.customerItems)
                                   DropdownMenuItem(
                                       child: Obx(() {

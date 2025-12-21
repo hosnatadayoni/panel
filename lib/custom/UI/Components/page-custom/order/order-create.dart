@@ -17,9 +17,9 @@ import '../orderItem/form-create-orderItem-custom.dart';
 
 class OrderCreatePage extends StatelessWidget {
   String tableName;
-  List<dynamic> items;
+  List<dynamic> customerItems;
   List<dynamic> productItems;
-  OrderCreatePage(this.tableName , this.items , this.productItems);
+  OrderCreatePage(this.tableName , this.customerItems , this.productItems);
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -166,7 +166,7 @@ class OrderCreatePage extends StatelessWidget {
                             SizedBox(height: 10,),
                             Column(
                               children: [
-                                FormCreateOrderCustom(this.items),
+                                FormCreateOrderCustom(this.customerItems),
                                 SizedBox(height: 20,),
                                 FormCreateOrderItemCustom(this.productItems),
                               ],
