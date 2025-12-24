@@ -19,6 +19,8 @@ void main()async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(DataModelAdapter());
+
+
   // var box=await Hive.openBox<DataModel>('category');
   // var box2=await Hive.openBox<DataModel>('item');
   // var box3=await Hive.openBox<DataModel>('subItem');

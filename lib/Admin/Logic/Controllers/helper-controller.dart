@@ -172,6 +172,16 @@ class HelperController extends GetxController {
           List<bool> validatorOrderDetailList=[];
           for (var i = 0; i < OrderItem.orderItemsList.values.toList().length; i++) {
             var orderItem = OrderItem.orderItemsList.values.toList()[i];
+
+            if (orderItem['First_Dimension'] != null) {
+              orderItem['First_Dimension'] =
+                  (orderItem['First_Dimension'] as num).toDouble();
+            }
+
+            if (orderItem['Second_Dimension'] != null) {
+              orderItem['Second_Dimension'] =
+                  (orderItem['Second_Dimension'] as num).toDouble();
+            }
             if(orderItem['Cut_Pattern'] == null){
               orderItem['Cut_Pattern'] = MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value'];
             }
@@ -180,8 +190,9 @@ class HelperController extends GetxController {
             }
             if(orderItem['Product_Name'] == null){
               List<dynamic> productItems= await DB('Product').getRecords();
-              orderItem['Product_Name'] = ViewCustomController.order['Customer'] = productItems.first['_id'];
+              orderItem['Product_Name'] = productItems.first['_id'];
             }
+
             print('orderItem>>>${orderItem}');
             DataModel newDataOrderItem = DataModel(
                 id: '${Id}',
@@ -201,7 +212,6 @@ class HelperController extends GetxController {
                     parentTable: '${tableName}').storeRecord(orderItem);
               }
             }
-
           }
           else{
             showSnackbar(snackTypes.error, 'لطفا جزئیات سفارش را وارد کنید...');
@@ -249,18 +259,7 @@ class HelperController extends GetxController {
         print('order list>>>${orderList}');
       }
       if(tableName == 'Order_Details'){
-        print('MainController.tableData relation order_detail>>>${MainController.tableData}');
-        print('c1300>>>${await DB('Order_Details')
-            .parent(
-            parentId: MainController.tableData[index]['_id'],
-            parentTable:'Orders')
-            .getRecords()}');
-        var orderDetailsList = await DB('Order_Details')
-            .parent(
-            parentId: MainController.tableData[index]['_id'],
-            parentTable:'Orders')
-            .getRecords();
-        print('orderDetailsList>>>${orderDetailsList}');
+        var orderDetailsList = await ViewCustomController.getDataOrderDetailList(MainController.tableData[index]['_id']);
       }
       await MainController.goToTablePage(table,
           tableFields: MainController.getInfoTable(table['schema']['name']),);
@@ -306,6 +305,74 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
+      if(tableName == 'Orders') {
+
+        if (request['Date'] == null) {
+          request['Date'] = ViewCustomController.getDate(Jalali.now());
+        }
+        if(request['Type'] == null){
+          request['Type'] = MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value'];
+        }
+        if(request['Customer'] == null){
+          List<dynamic> customerItems= await DB('Customer').getRecords();
+          request['Customer'] = customerItems.first['_id'];
+        }
+        print('wqghhn>>>${request}');
+        Map<String, dynamic> result = {};
+        result.addAll(OrderItem.orderItemsList);
+        result.addAll(OrderItem.orderItemsList2);
+
+        var Id = Uuid().v4();
+        DataModel newData = DataModel(
+            id: '${Id}',
+            data: request);
+        bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
+        if(validate == false){
+          var Id = Uuid().v4();
+          List<bool> validatorOrderDetailList=[];
+          for (var i = 0; i < result.values.toList().length; i++) {
+            var orderItem = result.values.toList()[i];
+            if(orderItem['Cut_Pattern'] == null){
+              orderItem['Cut_Pattern'] = MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value'];
+            }
+            if(orderItem['Manufacturing_Difficulty'] == null){
+              orderItem['Manufacturing_Difficulty'] = MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty')['items'].first['value'];
+            }
+            if(orderItem['Product_Name'] == null){
+              List<dynamic> productItems= await DB('Product').getRecords();
+              orderItem['Product_Name'] = productItems.first['_id'];
+            }
+            print('orderItem edit>>>${orderItem}');
+            DataModel newDataOrderItem = DataModel(
+                id: '${Id}',
+                data: orderItem);
+
+            bool validateOrderDetail = await RecordController.validate('Order_Details', newDataOrderItem, MainController.getInfoTable('Order_Details'));
+            print('validateOrderDetail>>>${validateOrderDetail}');
+            validatorOrderDetailList.add(validateOrderDetail);
+          }
+          print('validatorOrderDetailList>>>${validatorOrderDetailList}');
+          if(validatorOrderDetailList.length != 0){
+            if(validatorOrderDetailList.every((e) => !e)){
+              // await DB('${tableName}').parent(parentId: '${request['parent_id']}', parentTable: 'Customer').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
+              var orderId = request['_id'];
+              for (var orderItem in result.values.toList()) {
+                await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
+              }
+              // MainController.goToTablePage(table);
+              // ViewController.isClickedEditBtn.value = false;
+            }
+
+          }
+          else{
+            showSnackbar(snackTypes.error, 'لطفا جزئیات سفارش را وارد کنید...');
+          }
+        }
+
+        // await MainController.loadData(
+        //     tableData: MainController.getInfoTable('Orders'));
+      }
+
     } else {
       print('HelperController.editFunction>>${request}');
       await DB('${MainController.tableInfo['schema']['name']}')
@@ -327,6 +394,7 @@ class HelperController extends GetxController {
         List<dynamic> productItems= await DB('Product').parent(parentTable: null , parentId: null).getRecords();
         List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
         ViewCustomController.editContainers =<String, Widget>{}.obs;
+        print('HelperController.editPageFunction>>>${data}');
         await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems , orderDetailItems));
       }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/connection-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/validator-controller.dart';
@@ -1125,7 +1126,7 @@ class DB {
           }
         }
         if (parentItem.containsKey(this.tableName)&&parentItem[this.tableName] != {}) {
-          newRequest.addAll(parentItem);
+          newRequest.addAll(parentItem[this.tableName]!);
         }
         newRequest.addAll({
           "sync": "false",
@@ -1315,24 +1316,33 @@ class DB {
             }
           }
           if (value is Map) {
+            print('value is map');
             var sourceItem = MainController.getDetailsOfField(
                 '${this.tableName}', key)['source_items'];
+            print('sourceItem>>>${sourceItem}');
             if (sourceItem == 'custom') {
               a[key] = value['value'];
+              print('a[key] before>>>${a[key]}>>>${sourceItem}');
             } else {
               a[key] = value['_id'];
+              print('a[key] before>>>${a[key]}>>>${sourceItem}');
             }
           }
         }
+        print('request.containsKey(key)>>>${request.containsKey(key)}');
         if (request.containsKey(key)) {
-          a[key] = request[key];
+          print('a[key] after>>>${a[key]}');
+          // a[key] = request[key];
+          request[key] = a[key];
+
+          print('request[key]>>>${request[key]}');
         } else {
           // check key exist in records if not add!.
           toAdd.add({request.keys.first: request.values.first});
         }
       });
     }
-
+    print('a record>>>${a}');
     final record = DataModel(id: a['_id'], data: a);
     if (ValidatorController.validateByType(a, '${this.tableName}') == true) {
       var beforeValidate =
@@ -1342,6 +1352,7 @@ class DB {
       } else {
         var validate = await RecordController.validate(this.tableName!, record,
             MainController.getInfoTable(this.tableName!));
+
         if (validate == false) {
           var before = await HelperController.beforeUpdate(record);
           if (before['status'] == false) {
@@ -1380,7 +1391,7 @@ class DB {
             if (after['status'] == false) {
               showSnackbar(snackTypes.error, after['message']);
             }
-            ViewController.isClickedEditBtn.value = false;
+            // ViewController.isClickedEditBtn.value = false;
           }
         } else {
           showSnackbar(snackTypes.error,
@@ -1465,15 +1476,17 @@ class DB {
   deleteRecord() async {
     AppController.startLoading('delete-record');
     List<dynamic> records = await getRecords();
+    print('DB.deleteRecord>>>${records}');
     Box box = await Hive.openBox<DataModel>(
         MainController.apiKey.value + '${this.tableName}');
     var boxList = box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
-    print("relation del>>>${relations}");
+    print("relation del>>>${boxList}");
     // print("records >>>${records.length}");
     print("this.tableName! >>>${this.tableName!}");
     for (var data in records) {
       var tableDataIndex = boxList.indexWhere((element) => element.id == data['_id']);
+      print('tableDataIndex>>${tableDataIndex}');
       // var before = await HelperController.beforeDelete(tableDataIndex);
       //
       // if (before['status'] == false) {
@@ -1497,6 +1510,7 @@ class DB {
             }
           }
           if (tableDataIndex != -1) {
+            print('tableDataIndex delete is>>${tableDataIndex}');
             box.deleteAt(tableDataIndex);
           }
           MainController.renderData(operation.delete, data);

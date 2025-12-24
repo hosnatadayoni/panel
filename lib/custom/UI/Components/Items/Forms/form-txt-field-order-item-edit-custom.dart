@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class FormTextFieldOrderItemCustom extends StatefulWidget {
+class FormTextFieldOrderItemEditCustom extends StatefulWidget {
   String? lable;
   String? hint;
   Function? onChange, updateChange;
@@ -28,7 +28,7 @@ class FormTextFieldOrderItemCustom extends StatefulWidget {
   double height;
   String keyOrderItem;
 
-  FormTextFieldOrderItemCustom(
+  FormTextFieldOrderItemEditCustom(
       {this.lable,
         this.hint,
         this.onChange,
@@ -45,10 +45,10 @@ class FormTextFieldOrderItemCustom extends StatefulWidget {
       });
 
   @override
-  State<FormTextFieldOrderItemCustom> createState() => _FormTextFieldOrderItemCustomState();
+  State<FormTextFieldOrderItemEditCustom> createState() => _FormTextFieldOrderItemEditCustomState();
 }
 
-class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCustom> {
+class _FormTextFieldOrderItemEditCustomState extends State<FormTextFieldOrderItemEditCustom> {
   final textFieldKey = GlobalKey<FormBuilderFieldState>();
   var txt = null;
   final FocusNode _focusNode = FocusNode();
@@ -74,8 +74,8 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
       if (widget.column['validators'] != null) {
         var inputRequired;
 
-        if (OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column['name']] == '' ||
-            OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column['name']] == null) {
+        if (OrderItem.orderItemsList2[widget.keyOrderItem]?[widget.column['name']] == '' ||
+            OrderItem.orderItemsList2[widget.keyOrderItem]?[widget.column['name']] == null) {
           inputRequired = widget.column['validators'].firstWhere(
                   (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
@@ -103,42 +103,42 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (ViewController.isClickedBtn.value) {
-         if (widget.column != null) {
-            if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == '' ||
-                OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == null) {
-              var inputRequired;
+      print('ViewController.isClickedEditBtn.value>>>${ViewController.isClickedEditBtn.value}');
+      if (ViewController.isClickedEditBtn.value) {
+        if (widget.column != null) {
+          if (OrderItem.orderItemsList2[widget.keyOrderItem]![widget.column['name']] == '' ||
+              OrderItem.orderItemsList2[widget.keyOrderItem]![widget.column['name']] == null) {
+            var inputRequired;
 
-              if (widget.column['validators'] != null) {
-                inputRequired = widget.column['validators'].firstWhere(
-                        (validator) => validator['type'] == 'reqiured',
-                    orElse: () => null);
-                if (inputRequired != null) {
-                  _errorText = inputRequired['message'];
-                }
+            if (widget.column['validators'] != null) {
+              inputRequired = widget.column['validators'].firstWhere(
+                      (validator) => validator['type'] == 'reqiured',
+                  orElse: () => null);
+              if (inputRequired != null) {
+                _errorText = inputRequired['message'];
               }
-            } else if (ViewCustomController.order[widget.column['name']] != '') {
-              if (widget.column['validators'] != null) {
-                if (widget.isNumberInt == true || widget.isNumberDouble == true) {
-                  var maxValidator;
-                  var minValidator;
-                  maxValidator = widget.column['validators'].firstWhere(
-                          (validator) => validator['type'] == 'max',
-                      orElse: () => null);
-                  minValidator = widget.column['validators'].firstWhere(
-                          (validator) => validator['type'] == 'min',
-                      orElse: () => null);
-                  var number = ViewCustomController.order[widget.column['name']];
-                  if (number != null) {
-                    if (minValidator != null && maxValidator != null) {
-                      if (number < minValidator['value']) {
-                        _errorText = minValidator['message'];
+            }
+          } else if (ViewCustomController.order[widget.column['name']] != '') {
+            if (widget.column['validators'] != null) {
+              if (widget.isNumberInt == true || widget.isNumberDouble == true) {
+                var maxValidator;
+                var minValidator;
+                maxValidator = widget.column['validators'].firstWhere(
+                        (validator) => validator['type'] == 'max',
+                    orElse: () => null);
+                minValidator = widget.column['validators'].firstWhere(
+                        (validator) => validator['type'] == 'min',
+                    orElse: () => null);
+                var number = ViewCustomController.order[widget.column['name']];
+                if (number != null) {
+                  if (minValidator != null && maxValidator != null) {
+                    if (number < minValidator['value']) {
+                      _errorText = minValidator['message'];
+                    } else {
+                      if (number > maxValidator['value']) {
+                        _errorText = maxValidator['message'];
                       } else {
-                        if (number > maxValidator['value']) {
-                          _errorText = maxValidator['message'];
-                        } else {
-                          _errorText = null;
-                        }
+                        _errorText = null;
                       }
                     }
                   }
@@ -146,6 +146,7 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
               }
             }
           }
+        }
 
       }
       return Column(
@@ -159,9 +160,8 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
                 key: textFieldKey,
                 focusNode: _focusNode,
                 controller: widget.initValue == null ? _formConroller : null,
-
                 keyboardType:
-                     widget.isNumberInt! || widget.isNumberDouble!
+                widget.isNumberInt! || widget.isNumberDouble!
                     ? TextInputType.number
                     : TextInputType.text,
                 minLines: 1,
@@ -170,7 +170,7 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
                 ],
                 initialValue: widget.initValue,
                 style: TextStyle(
-                    color:  MainController.isLightMode.value == true
+                    color: MainController.isLightMode.value == true
                         ? whiteColor
                         : primaryDark),
                 onChanged: (value) {
@@ -187,7 +187,7 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
 
                   labelText: '${this.widget.lable}',
                   labelStyle: TextStyle(
-                      color:  MainController.isLightMode.value == true
+                      color: MainController.isLightMode.value == true
                           ? whiteColor
                           : primaryDark),
                   border: OutlineInputBorder(),

@@ -66,47 +66,47 @@ class _FormPriceTextFieldState extends State<FormPriceTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormBuilder(
-          key: widget.fbKey,
-          child: SizedBox(
-            height: widget.height,
-            child: FormBuilderTextField(
-              key: textFieldKey,
-              focusNode: _focusNode,
-              controller:widget.controller,
-              minLines: 1,
-              readOnly: true,
-              maxLines: widget.isPassword == true ? 1 : 3,
-              initialValue: widget.initValue,
-              style: TextStyle(color: MainController.isLightMode.value == true ? whiteColor : primaryDark),
-              onChanged: (value) {
-                if (widget.onChange != null) this.widget.onChange!(value);
-              },
-              name: widget.name,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 12,
+        Obx((){
+          return FormBuilder(
+            key: widget.fbKey,
+            child: SizedBox(
+              height: widget.height,
+              child: FormBuilderTextField(
+                key: textFieldKey,
+                focusNode: _focusNode,
+                controller:widget.controller,
+                minLines: 1,
+                readOnly: true,
+                maxLines: widget.isPassword == true ? 1 : 3,
+                initialValue: widget.initValue,
+                style: TextStyle(color: MainController.isLightMode.value == true ? whiteColor : primaryDark),
+                onChanged: (value) {
+                  if (widget.onChange != null) this.widget.onChange!(value);
+                },
+                name: widget.name,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
+                  labelText: '${this.widget.lable}',
+                  labelStyle: TextStyle(
+                      color: MainController.isLightMode.value == true
+                          ? whiteColor
+                          : primaryDark),
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorBtn, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: color3, width: 1.0),
+                  ),
+                  // errorText: _errorText,
                 ),
-                labelText: '${this.widget.lable}',
-                labelStyle: TextStyle(
-                    color: widget.isLoginPage == false
-                        ? MainController.isLightMode.value == true
-                        ? whiteColor
-                        : primaryDark
-                        : primaryDark),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: colorBtn, width: 2.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: color3, width: 1.0),
-                ),
-                // errorText: _errorText,
               ),
             ),
-          ),
-        ),
+          );
+        }),
         SizedBox(
           height: 5,
         ),

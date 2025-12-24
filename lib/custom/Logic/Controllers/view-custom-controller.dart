@@ -10,6 +10,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-order-item-custom.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/form-txt-field-order-item-edit-custom.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/form-txt-price.dart';
 import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,7 @@ class ViewCustomController extends GetxController{
     print('OrderItem.orderItemsList edit>>>${OrderItem.orderItemsList}');
     return Column(
       children: [
-          FormEditOrderItemCustom(productItems),
+          FormEditOrderItemCustom(productItems , orderDetailItems),
       ],
     );
   }
@@ -410,6 +411,9 @@ class ViewCustomController extends GetxController{
                       onChange: (text) {
                         if (text != null && text != '') {
                           OrderItem.orderItemsList[key]!['Quantity'] = int.tryParse('${text}');
+                        }
+                        else{
+                          OrderItem.orderItemsList[key]!['Quantity'] = 0;
                         }
                         OrderItem.orderItemsList.refresh();
                       },
@@ -715,6 +719,17 @@ class ViewCustomController extends GetxController{
   static getDataOrderDetailList(String parentId) async {
     List<dynamic> orderDetailList = [];
     orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    for (var item in orderDetailList) {
+      if (item['First_Dimension'] != null) {
+        item['First_Dimension'] =
+            (item['First_Dimension'] as num).toDouble();
+      }
+
+      if (item['Second_Dimension'] != null) {
+        item['Second_Dimension'] =
+            (item['Second_Dimension'] as num).toDouble();
+      }
+    }
     return orderDetailList;
   }
   static getProductPrice(List<dynamic> productItems , String productId) {
@@ -737,6 +752,10 @@ class ViewCustomController extends GetxController{
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
     final formatter = NumberFormat('#,###');
+    final priceController = TextEditingController(text: formatter.format(
+      ViewCustomController.getProductPrice(
+        productItems, OrderItem.orderItemsList2[key]?['Product_Name']['_id'] ?? productItems.first['_id'],) ?? 0,
+    ));
     return Container(
       width: size.width,
       key: ValueKey(key),
@@ -784,14 +803,12 @@ class ViewCustomController extends GetxController{
                       onChanged: (value) async {
                         print('value aaaa>>>${value}');
                         if (value != '') {
-                          // OrderItem.orderItemsList[key]!['Product_Name'] = value;
-
                           OrderItem.orderItemsList2[key]?['Product_Name']  = value;
+                          final newPrice = ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name']) ?? 0;
+                          priceController.text = formatter.format(newPrice);
                         } else {
-                          // OrderItem.orderItemsList[key]!['Product_Name'] = '';
                           OrderItem.orderItemsList2[key]?['Product_Name']  = '';
                         }
-                        // print('request of custom select>>>${OrderItem.orderItemsList[key]!['Product']}');
                       },
                       hintText: '',
                       isSeleted: true.obs,
@@ -813,28 +830,35 @@ class ViewCustomController extends GetxController{
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  width: 100,
-                  child: FormTextField(
-                    name: 'قیمت',
-                    hint: 'قیمت',
-                    lable: '',
-                    initValue: '${OrderItem.orderItemsList2[key]?['Price'] ?? ''}',
-                    isNumberDouble:true,
-                    height: 40,
-                    column: MainController.getDetailsOfField('Order_Details' , 'Price'),
-                    onChange: (text) {
-                      // dataJson[columnName] = text;
-                      if (text != null && text != '') {
-                        // OrderItem.orderItemsList[key]!['Price'] = double.parse('${text}');
-                        OrderItem.orderItemsList2[key]?['Price']  = double.parse('${text}');
-                      } else {
-                        // OrderItem.orderItemsList[key]!['Price']= '';
-                        OrderItem.orderItemsList2[key]?['Price']  = '';
-                      }
-                    },
-                  ),
-                ),
+                Obx((){
+                  return  Container(
+                    width: 100,
+                    child: FormPriceTextField(
+                      name: 'قیمت',
+                      hint: 'قیمت',
+                      lable: '',
+                      controller: priceController,
+                      height: 40,
+                      column: MainController.getDetailsOfField('Order_Details' , 'Price'),
+                      onChange: (text) {
+                        if (text != null && text != '') {
+                          String cleanText = text.replaceAll(',', '');
+                          int value = int.tryParse(cleanText) ?? 0;
+                          OrderItem.orderItemsList2[key]!['Price'] = value;
+                          String formatted = formatter.format(value);
+                          print('formatted>>>${formatted}');
+                          if (formatted != text) {
+                            _controller.value = TextEditingValue(
+                              text: formatted,
+                              selection: TextSelection.collapsed(offset: formatted.length),
+                            );
+                          }
+                        }
+                        OrderItem.orderItemsList2.refresh();
+                      },
+                    ),
+                  );
+                })
               ],
             ),
             SizedBox(width: 10,),
@@ -853,7 +877,7 @@ class ViewCustomController extends GetxController{
                 ),
                 Container(
                   width: 60,
-                  child: FormTextFieldOrderItemCustom(
+                  child: FormTextFieldOrderItemEditCustom(
                     name: 'بعد اول',
                     hint: 'بعد اول',
                     lable: '',
@@ -890,7 +914,7 @@ class ViewCustomController extends GetxController{
                 ),
                 Container(
                   width: 60,
-                  child: FormTextFieldOrderItemCustom(
+                  child: FormTextFieldOrderItemEditCustom(
                     name: 'بعد دوم',
                     hint: 'بعد دوم',
                     lable: '',
@@ -930,8 +954,10 @@ class ViewCustomController extends GetxController{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Txt('${ViewCustomController.getCalculateTotalArea(OrderItem.orderItemsList[key]?['First_Dimension'] ?? 0,
-                          OrderItem.orderItemsList[key]?['Second_Dimension'] ?? 0)}', color: MainController.isLightMode.value == true ? whiteColor : color2,),
+                     Obx((){
+                       return  Txt('${ViewCustomController.getCalculateTotalArea(OrderItem.orderItemsList2[key]?['First_Dimension'] ?? 0,
+                           OrderItem.orderItemsList2[key]?['Second_Dimension'] ?? 0)}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                     })
                     ],
                   ),
                 ),
@@ -962,10 +988,11 @@ class ViewCustomController extends GetxController{
                     column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
                     initValue: '${OrderItem.orderItemsList2[key]?['Quantity'] ?? ''}',
                     onChange: (text) {
-                      // dataJson[columnName] = text;
                       if (text != null && text != '') {
-                        // OrderItem.orderItemsList[key]!['Quantity'] = int.parse('${text}');
                         OrderItem.orderItemsList2[key]?['Quantity'] = int.tryParse('${text}');
+                      }
+                      else{
+                        OrderItem.orderItemsList2[key]?['Quantity'] = 0;
                       }
                       OrderItem.orderItemsList2.refresh();
                     },
@@ -1210,7 +1237,15 @@ class ViewCustomController extends GetxController{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Txt('0', color: MainController.isLightMode.value == true ? whiteColor : color2,),
+                      Obx((){
+
+                        return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
+                            productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']),
+                            (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                            (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                            OrderItem.orderItemsList2[key]?['Quantity'] ?? 0
+                        )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                      })
                     ],
                   ),
                 ),

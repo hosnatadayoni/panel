@@ -36,6 +36,7 @@ class _TableBoxState extends State<TableBox> {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
+      print('MainController.tableData>>>${MainController.tableData}');
       return Container(
           color: MainController.isLightMode.value == true
               ? background

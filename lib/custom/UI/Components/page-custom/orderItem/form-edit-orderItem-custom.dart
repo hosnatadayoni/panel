@@ -14,20 +14,22 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-radio-button.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-order-item-custom.dart';
+import 'package:finance/custom/UI/Components/page-custom/order/form-txt-price.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormEditOrderItemCustom extends StatefulWidget {
 
-  FormEditOrderItemCustom(this.productItems);
+  FormEditOrderItemCustom(this.productItems , this.orderDetailItems);
   List<dynamic> productItems;
- 
+  List<dynamic> orderDetailItems;
 
 
   @override
@@ -36,10 +38,32 @@ class FormEditOrderItemCustom extends StatefulWidget {
 
 class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Color? colorChanged;
+  final Map<String, TextEditingController> priceControllers = {};
+  final formatter = NumberFormat('#,###');
+
 
 
   void initState() {
     super.initState();
+    _initPriceControllers();
+  }
+  void _initPriceControllers() {
+    for (var item in widget.orderDetailItems) {
+      print('item of order detail>>>${item}');
+      final id = item['_id'];
+
+      final price = ViewCustomController.getProductPrice(
+        widget.productItems,
+        item['Product_Name']?['_id'],
+      ) ??
+          0;
+
+      priceControllers[id] = TextEditingController(
+        text: formatter.format(price),
+      );
+
+      item['Price'] = price;
+    }
   }
 
   // Map<String, Widget> containers = {};
@@ -66,11 +90,18 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print('OrderItem.orderItemsList.values.toList()>>>${OrderItem.orderItemsList.values.toList()}');
-    for(int i=0;i<OrderItem.orderItemsList.values.toList().length;i++){
-      print('ggggggg>>>${OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id']}');
+    final TextEditingController _controller = TextEditingController();
+    print('a1000>>>${widget.orderDetailItems}');
+    print('a2000>>>${widget.orderDetailItems}');
+
+    for(int i=0;i<widget.orderDetailItems.length;i++){
+      print('qqqqqqqq>>>${widget.orderDetailItems[i]}');
     }
-    print('widget.productItems>>>${widget.productItems}');
+    for(var x in widget.productItems){
+      print('x[id]>>>${x['_id']}');
+    }
+
+
 
     return Column(
       children: [
@@ -101,10 +132,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                 SizedBox(height: 20,),
                 Column(
                   children: [
-                    for(int i=0;i<OrderItem.orderItemsList.values.toList().length;i++)
+                    for(int i=0;i<widget.orderDetailItems.length;i++)
                       Container(
                         width: size.width,
-                        key: ValueKey(OrderItem.orderItemsList.values.toList()[i]['_id']),
+                        key: ValueKey(widget.orderDetailItems[i]['_id']),
                         child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child:
@@ -146,14 +177,18 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['_id'].toString()),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id'] != null  ? OrderItem.orderItemsList.values.toList()[i]['Product_Name']['_id'] : ''}',
+                                          initalValue: '${widget.orderDetailItems[i]['Product_Name']['_id'] != null  ? widget.orderDetailItems[i]['Product_Name']['_id'] : ''}',
                                           onChanged: (value) async {
-                                            print('value aaaa>>>${value}');
-                                            if (value != '') {
-                                              OrderItem.orderItemsList.values.toList()[i]['Product_Name']  = value;
-                                            } else {
-                                              OrderItem.orderItemsList.values.toList()[i]['Product_Name']  = '';
-                                            }
+                                            setState(() {
+                                              print('value aaaa>>>${value}');
+                                              if (value != '') {
+                                                widget.orderDetailItems[i]['Product_Name']['_id']  = value;
+                                                final newPrice = ViewCustomController.getProductPrice(widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id']) ?? 0;
+                                                priceControllers['${widget.orderDetailItems[i]['_id']}']!.text = formatter.format(newPrice);
+                                              } else {
+                                                widget.orderDetailItems[i]['Product_Name']  = '';
+                                              }
+                                            });
                                           },
                                           hintText: '',
                                           isSeleted: true.obs,
@@ -177,21 +212,28 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                     Container(
                                       width: 100,
-                                      child: FormTextField(
+                                      child: FormPriceTextField(
                                         name: 'قیمت',
                                         hint: 'قیمت',
                                         lable: '',
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['Price']}',
-                                        isNumberDouble:true,
+                                        controller: priceControllers['${widget.orderDetailItems[i]['_id']}']!,
                                         height: 40,
                                         column: MainController.getDetailsOfField('Order_Details' , 'Price'),
                                         onChange: (text) {
-                                          // dataJson[columnName] = text;
                                           if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Price']  = double.parse('${text}');
-                                          } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['Price']  = '';
+                                            String cleanText = text.replaceAll(',', '');
+                                            int value = int.tryParse(cleanText) ?? 0;
+                                            widget.orderDetailItems[i]['Price'] = value;
+                                            String formatted = formatter.format(value);
+                                            print('formatted>>>${formatted}');
+                                            if (formatted != text) {
+                                              _controller.value = TextEditingValue(
+                                                text: formatted,
+                                                selection: TextSelection.collapsed(offset: formatted.length),
+                                              );
+                                            }
                                           }
+                                          OrderItem.orderItemsList.refresh();
                                         },
                                       ),
                                     ),
@@ -213,21 +255,26 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                     Container(
                                       width: 60,
-                                      child: FormTextField(
+                                      child: FormTextFieldOrderItemCustom(
                                         name: 'بعد اول',
                                         hint: 'بعد اول',
                                         lable: '',
                                         height: 40,
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['First_Dimension']:''}',
-                                        isNumberInt:true,
+                                        initValue: '${widget.orderDetailItems[i]['First_Dimension'] != null ?
+                                        widget.orderDetailItems[i]['First_Dimension']:''}',
+                                        isNumberDouble:true,
+                                        keyOrderItem: widget.orderDetailItems[i]['_id'],
                                         column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
                                         onChange: (text) {
-                                          if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = double.tryParse('${text}');
-                                          } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] = null;
-                                          }
+                                          setState(() {
+                                            if (text != null && text != '') {
+                                              widget.orderDetailItems[i]['First_Dimension'] = double.tryParse('${text}');
+                                            } else {
+                                              widget.orderDetailItems[i]['First_Dimension'] = null;
+                                            }
+                                            print('nvbfg>>>${widget.orderDetailItems[i]['First_Dimension']}');
+                                          });
+                                          // OrderItem.orderItemsList.refresh();
                                         },
                                       ),
                                     ),
@@ -249,22 +296,26 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                     Container(
                                       width: 60,
-                                      child: FormTextField(
+                                      child: FormTextFieldOrderItemCustom(
                                         name: 'بعد دوم',
                                         hint: 'بعد دوم',
                                         lable: '',
                                         height: 40,
-                                        isNumberInt:true,
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['Second_Dimension']:''}',
+                                        isNumberDouble:true,
+                                        keyOrderItem: widget.orderDetailItems[i]['_id'],
+                                        initValue: '${widget.orderDetailItems[i]['Second_Dimension'] != null ?
+                                        widget.orderDetailItems[i]['Second_Dimension']:''}',
                                         column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
                                         onChange: (text) {
-                                          if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = double.tryParse('${text}');
-                                          } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] = null;
+                                          setState(() {
+                                            if (text != null && text != '') {
+                                              widget.orderDetailItems[i]['Second_Dimension'] = double.tryParse('${text}');
+                                            } else {
+                                              widget.orderDetailItems[i]['Second_Dimension'] = null;
 
-                                          }
+                                            }
+                                          });
+                                          // OrderItem.orderItemsList.refresh();
                                         },
                                       ),
                                     ),
@@ -291,8 +342,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Obx((){
-                                            return Txt('${ViewCustomController.getCalculateTotalArea((OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                              (OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,)}',
+                                            return Txt('${ViewCustomController.getCalculateTotalArea((widget.orderDetailItems[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                              (widget.orderDetailItems[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,)}',
                                               color: MainController.isLightMode.value == true ? whiteColor : color2,);
                                           })
                                         ],
@@ -323,13 +374,18 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         height: 40,
                                         isNumberInt:true,
                                         column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
-                                        initValue: OrderItem.orderItemsList.values.toList()[i]['Quantity'].toString() != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['Quantity'].toString() : '',
+                                        initValue: widget.orderDetailItems[i]['Quantity'].toString() != null ?
+                                        widget.orderDetailItems[i]['Quantity'].toString() : '',
                                         onChange: (text) {
-                                          if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Quantity'] = int.tryParse('${text}');
-                                          }
-                                          OrderItem.orderItemsList.refresh();
+                                          setState(() {
+                                            if (text != null && text != '') {
+                                              widget.orderDetailItems[i]['Quantity'] = int.tryParse('${text}');
+                                            }
+                                            else{
+                                              widget.orderDetailItems[i]['Quantity'] = 0;
+                                            }
+                                          });
+                                          // OrderItem.orderItemsList.refresh();
                                         },
                                       ),
                                     ),
@@ -370,14 +426,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['value']),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern']['value'] != null ?
-                                          OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern']['value'] : ''}',
+                                          initalValue: '${widget.orderDetailItems[i]['Cut_Pattern']['value'] != null ?
+                                          widget.orderDetailItems[i]['Cut_Pattern']['value'] : ''}',
                                           onChanged: (value) async {
                                             print('value aaaa>>>${value}');
                                             if (value != '') {
-                                              OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern'] = value;
+                                              widget.orderDetailItems[i]['Cut_Pattern'] = value;
                                             } else {
-                                              OrderItem.orderItemsList.values.toList()[i]['Cut_Pattern'] = '';
+                                              widget.orderDetailItems[i]['Cut_Pattern'] = '';
                                             }
                                           },
                                           hintText: '',
@@ -421,14 +477,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                   }),
                                                   value: item['value']),
                                           ],
-                                          initalValue: '${OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] != null ?
-                                          OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value']:''}',
+                                          initalValue: '${widget.orderDetailItems[i]['Manufacturing_Difficulty']['value'] != null ?
+                                          widget.orderDetailItems[i]['Manufacturing_Difficulty']['value']:''}',
                                           onChanged: (value) async {
                                             print('value aaaa>>>${value}');
                                             if (value != '') {
-                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] = value;
+                                              widget.orderDetailItems[i]['Manufacturing_Difficulty']['value'] = value;
                                             } else {
-                                              OrderItem.orderItemsList.values.toList()[i]['Manufacturing_Difficulty']['value'] = '';
+                                              widget.orderDetailItems[i]['Manufacturing_Difficulty']['value'] = '';
                                             }
                                           },
                                           hintText: '',
@@ -459,14 +515,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         lable: '',
                                         height: 40,
                                         isNumberInt:true,
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['Block'] != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['Block']:''}',
+                                        initValue: '${widget.orderDetailItems[i]['Block'] != null ?
+                                        widget.orderDetailItems[i]['Block']:''}',
                                         column: MainController.getDetailsOfField('Order_Details' , 'Block'),
                                         onChange: (text) {
                                           if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Block'] = int.parse('${text}');
+                                            widget.orderDetailItems[i]['Block'] = int.parse('${text}');
                                           } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['Block']= '';
+                                            widget.orderDetailItems[i]['Block']= '';
 
                                           }
                                         },
@@ -496,14 +552,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         lable: '',
                                         height: 40,
                                         isNumberInt:true,
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['Level'] != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['Level']:''}',
+                                        initValue: '${widget.orderDetailItems[i]['Level'] != null ?
+                                        widget.orderDetailItems[i]['Level']:''}',
                                         column: MainController.getDetailsOfField('Order_Details' , 'Level'),
                                         onChange: (text) {
                                           if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Level'] = int.parse('${text}');
+                                            widget.orderDetailItems[i]['Level'] = int.parse('${text}');
                                           } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['Level'] = '';
+                                            widget.orderDetailItems[i]['Level'] = '';
 
                                           }
                                         },
@@ -532,15 +588,15 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         hint: 'واحد',
                                         lable: '',
                                         isNumberInt:true,
-                                        initValue: '${OrderItem.orderItemsList.values.toList()[i]['Unit'] != null ?
-                                        OrderItem.orderItemsList.values.toList()[i]['Unit']:''}',
+                                        initValue: '${widget.orderDetailItems[i]['Unit'] != null ?
+                                        widget.orderDetailItems[i]['Unit']:''}',
                                         height: 40,
                                         column: MainController.getDetailsOfField('Order_Details' , 'Unit'),
                                         onChange: (text) {
                                           if (text != null && text != '') {
-                                            OrderItem.orderItemsList.values.toList()[i]['Unit'] = int.parse('${text}');
+                                            widget.orderDetailItems[i]['Unit'] = int.parse('${text}');
                                           } else {
-                                            OrderItem.orderItemsList.values.toList()[i]['Unit'] = '';
+                                            widget.orderDetailItems[i]['Unit'] = '';
                                           }
                                         },
                                       ),
@@ -567,10 +623,11 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Obx((){
-                                            return Txt('${ViewCustomController.getCalculateTotalPrice(OrderItem.orderItemsList.values.toList()[i]['Price'] ?? 0 ,
-                                                (OrderItem.orderItemsList.values.toList()[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                                (OrderItem.orderItemsList.values.toList()[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                                OrderItem.orderItemsList.values.toList()[i]['Quantity'] ?? 0
+                                            return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
+                                              widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id'] ?? widget.productItems.first['_id'],) ,
+                                                (widget.orderDetailItems[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                (widget.orderDetailItems[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                widget.orderDetailItems[i]['Quantity'] ?? 0
                                             )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
                                           })
                                         ],

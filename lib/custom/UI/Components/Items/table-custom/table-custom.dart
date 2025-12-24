@@ -712,8 +712,7 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                                     ViewController.isClickedBtn.value = false;
                                     ViewController.isClickedEditBtn.value = false;
                                     ViewController.request = {};
-                                    HelperController.editPageFunction(
-                                        MainController.tableData.value[i]);
+                                    HelperController.editPageFunction(MainController.tableData.value[i]);
                                   });
                                 }
                                 if (value == 'refresh') {

@@ -617,6 +617,7 @@ class MainController extends GetxController {
           .indexWhere((element) => element['_id'] == data['_id']);
       if (index != -1) {
         MainController.tableData[index] = data;
+        print('MainController.renderData>>>${MainController.tableData[index]}');
         MainController.allData.value = MainController.tableData;
       }
     }

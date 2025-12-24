@@ -46,7 +46,9 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    print('widget.data>>>${widget.data}');
+
+    print('widget.data FormEditOrderCustom>>>${widget.data}');
+    print('table.data FormEditOrderCustom>>>${MainController.tableData}');
 
     return  Container(
       width: size.width,
@@ -112,7 +114,8 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                       // await MainController.loadData(tableData:ViewCustomController.getDataTable('Orders') );
                       // // MainController.renderPagination();
                       // MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                      // HelperController.editFunction('Orders',id:'${widget.data!['_id']}' , request:widget.data);
+                      ViewController.isClickedEditBtn.value =  true;
+                      HelperController.editFunction('Orders',id:'${widget.data!['_id']}' , request:widget.data);
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -265,6 +268,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                               ],
                               initalValue: '${widget.data['Type']['value'] != null ? widget.data['Type']['value']: ''}',
                               onChanged: (value) async {
+                                print('value of type>>>${value}');
                                 if (value != '') {
                                   widget.data['Type']['value'] = value;
                                 } else {
@@ -322,7 +326,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                                 }
                               },
                               hintText: '',
-                              isSeleted:  widget.data['Customer'] !=null ? true.obs : false.obs,
+                              isSeleted:  widget.data['Customer']['_id'] !=null ? true.obs : false.obs,
                               selectedValue: ''),
                         ),
                       ],

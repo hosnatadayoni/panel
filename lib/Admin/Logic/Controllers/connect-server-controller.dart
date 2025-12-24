@@ -198,6 +198,8 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           filterRecordRes=response!.data['data']['data']!=null?response.data['data']['data'].cast<Map<String, dynamic>>():[];
           MainController.totalItems.value=response.data['data']['count'];
+          int perPage = int.parse(json["perPage"]);
+          ViewController.totalPage.value =(MainController.totalItems.value/perPage).ceil();
         },printResponse: true);
   }
 
