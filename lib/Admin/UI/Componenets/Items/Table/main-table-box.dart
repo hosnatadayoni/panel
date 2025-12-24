@@ -103,7 +103,6 @@ class _MainTableBoxState extends State<MainTableBox> {
                                       '${filter['operator']}', filter['value']);
                                 }
                               } else {
-                                print('elseeeeee');
                               }
                             }
                           }

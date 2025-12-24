@@ -223,9 +223,7 @@ class MainController extends GetxController {
   static getDetailsOfField(String tableName, String name) {
     var i;
     var column = getColumnsTable(tableName);
-    print('column table>>>${column}');
     for (var item in column) {
-      print('item of name>>>${item['name']}');
       if (item['name'] == name) {
 
         i = item;
@@ -294,7 +292,6 @@ class MainController extends GetxController {
     var index = SubMenuList.indexWhere(
         (element) => element['schema']['name'] == tableName);
     var items = SubMenuList[index];
-    print('MainController.setRelations>>>${index}>>${SubMenuList[index]}');
 
     if (items['schema']['relations'] != null &&
         items['schema']['relations'].length != 0) {
@@ -309,7 +306,6 @@ class MainController extends GetxController {
       }
       SubMenuList[index]['relations'] = relates;
     }
-    print('MainController.changeRelations>>${SubMenuList[index]['relations']}');
     return items['relations'];
   }
 
@@ -343,7 +339,6 @@ class MainController extends GetxController {
     for (var table in SubMenuList) {
       list.add(table['schema']['name']);
     }
-    print('MainController.tableNames>>${list}');
 
     return list;
   }
@@ -554,7 +549,6 @@ class MainController extends GetxController {
       var tableFields = null,
       var tableData = null}) async {
     if (table['schema']['view'] == 'custom') {
-      print('vbxjsks>>>${table['schema']['name']}');
       // if(table['schema']['name'] == 'Orders'){
         // List<dynamic> ordersList = await DB('Orders').where('parent_id', '\$ne', 'null').getRecords();
         // MainController.tableData.addAll(ordersList);
@@ -578,7 +572,6 @@ class MainController extends GetxController {
 
   static getInitData() async {
     var token = await Token.getToken();
-    print('MainController.getInitData>>${token}');
     if (token != '') {
       // apiKey.value = token;
       await AdminController.getAdmin();
@@ -617,7 +610,6 @@ class MainController extends GetxController {
           .indexWhere((element) => element['_id'] == data['_id']);
       if (index != -1) {
         MainController.tableData[index] = data;
-        print('MainController.renderData>>>${MainController.tableData[index]}');
         MainController.allData.value = MainController.tableData;
       }
     }
@@ -629,7 +621,6 @@ class MainController extends GetxController {
     var filePath = null;
     if (singleFile == null) return null;
 
-    print('MainController.uploadFileInChunks>>${column}');
     final path = singleFile.path!;
     final file = File(path);
     final totalLength = await file.length();
@@ -662,7 +653,6 @@ class MainController extends GetxController {
             response: response,
             successCallback: () async {
               filePath = response!.data['data'];
-              print('MainController.uploadFileInChunks>>${filePath}');
               if (filePath != null) {
                 chunkName = filePath;
                 if (chunkName.isNotEmpty) {
@@ -676,7 +666,6 @@ class MainController extends GetxController {
               }
             },
             errorCallback: () {
-              print('Failed to upload chunk $chunkIndex');
               showSnackbar(snackTypes.error,response!.data['error'] );
               return null;
             },
@@ -685,12 +674,10 @@ class MainController extends GetxController {
         chunkIndex++;
       }
     } catch (e) {
-      print('Error during upload: $e');
       return null;
     } finally {
       raf.closeSync();
     }
-    print('Upload finished.>>>$filePath');
 
     return filePath['name'];
   }
@@ -732,7 +719,6 @@ class MainController extends GetxController {
                   operation.update, response.data['data'].first);
           }
           status = true;
-          print('MainController.deleteFileInChunks>>$status');
         },
         errorCallback: () {
           status = false;

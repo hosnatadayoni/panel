@@ -91,10 +91,8 @@ class SetTokenPage extends StatelessWidget {
                             SizedBox(height: 20,),
                             InkWell(
                               onTap: () async {
-                                print('SetTokenPage.build>>>${token}');
                                 if(token!=null && token!.trim().length!=0) {
                                   MainController.apiKey.value =token!;
-                                  print('SetTokenPage.build iss>>>${ MainController.apiKey.value }');
                                   // await MainController.loadJson();
                                   // await MainController.loadData();
                                   Get.to(() => LoginPage());

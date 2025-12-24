@@ -94,7 +94,6 @@ class ConncetServerController extends GetxController {
   }
 
   static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
-    print('ConncetServerController.getRecordGeneral');
     var info=await MainController.getInfoTable(tableName);
     var perPage=perpage??info['schema']['countShowRow'];
     var currentPage=page??info['schema']['currentPage'];
@@ -135,7 +134,6 @@ class ConncetServerController extends GetxController {
           var endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
           MainController.endIndex.value = endBycondition;
           ViewController.totalPage.value =(MainController.totalItems.value/countShowRowRoute.value).ceil();
-          print('ConncetServerController.getRoute${ MainController.totalPages.value}');
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }

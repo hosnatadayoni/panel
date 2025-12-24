@@ -115,7 +115,6 @@ class General{
          }
        }
      }catch(error){
-       print('>>>>>>>>>>>>>>>>Error>>>>>>>>>>>>>>>>${error}');
        showSnackbar(snackTypes.error, ' error format value');
      }
    }

@@ -236,7 +236,6 @@ class _TableRoleState extends State<TableRole> {
                         // ردیف‌های دیتا
 
                         return Obx( () {
-                          print(AdminController.getRoleRes);
                            rows.value = (AdminController.getRoleRes)
                                 .map<TableRow>((row) {
                                   return TableRow(
@@ -795,7 +794,6 @@ class _TableFooterRoleState extends State<TableFooterRole> {
           setState(() {
             AdminController.currentPageRole.value = i;
           });
-          print('_TableFooterState.box currentPage>>>${ AdminController.currentPageRole.value}');
           await AdminController.getRoles();
 
         },
@@ -818,7 +816,6 @@ class _TableFooterRoleState extends State<TableFooterRole> {
   }
 
   List<Widget> pagenationBox(totalPages , tableSelected){
-    print('_TableFooterRoleState.pagenationBox${totalPages}');
     var size = MediaQuery.of(context).size;
 
     return [

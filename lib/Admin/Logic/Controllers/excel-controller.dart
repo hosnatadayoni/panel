@@ -38,9 +38,7 @@ class ExcelController extends GetxController {
     if(MainController.tableInfo['schema']['online']==true){
       await ConncetServerController.getRecordGeneral(MainController.tableInfo['schema']['name'],page: 0,perpage: 0);
       Data=ConncetServerController.getRecordRes;
-      print('ExcelController.createExel>>>${Data}>>>${MainController.tableInfo['schema']['online']}');
     }else{
-      print('ExcelController.createExel else');
       Data= await DB('${MainController.tableInfo['schema']['name']}').getRecords();
     }
     for (var data in Data) {
@@ -68,7 +66,6 @@ class ExcelController extends GetxController {
             if (data[name] != null) {
               title =
                   ViewController.itemsShowSelectItem(data['${name}'], column);
-              print('ExcelController.createExel>>${title}');
             }
             // else {
             //   title = '';
@@ -204,10 +201,8 @@ class ExcelController extends GetxController {
     if (excel != null && excel.tables != null) {
       for (var table in excel.tables.keys) {
         for (var row in excel.tables[table]!.rows) {
-          print('MainController.readExcelFile row>>${row}');
           if (counter == 0) {
             for (var cell in row) {
-              print('MainController.readExcelFile cell 1>>${cell}');
               excelColumns.add(cell?.value.toString());
             }
           } else {
@@ -215,7 +210,6 @@ class ExcelController extends GetxController {
             Map<String, dynamic> rowDataTest = {};
             int counterColumn = 0;
             for (var cell in row) {
-              print('MainController.readExcelFile cell 2>>${cell}');
 
               var columnName = excelColumns[counterColumn];
               var columnType = MainController.tableInfo['columns'].firstWhere(
@@ -320,20 +314,16 @@ class ExcelController extends GetxController {
       }
     }
 
-    print('MainController.readExcelFile counter>>${counter}');
     var columnPrime = MainController.getColumnPrime();
 
     for (var data in rowdetail) {
       var findIndexRecord = findByColumn(data, columnPrime);
-      print('MainController.readExcelFile>>${findIndexRecord}');
       //create data json
       //function generate json record with columns name and data excel
       var excelJson = await generateJsonExcel(data, findIndexRecord);
       excelJson.removeWhere((key, value) => key=='sync');
       excelJson.removeWhere((key, value) => key=='server error');
-      print('MainController.readExcelFile issss$excelJson');
       if (findIndexRecord != -1) {
-        print('MainController.readExcelFile>>${findIndexRecord}>>${MainController.tableData.value[findIndexRecord]}>>${MainController.tableInfo['schema']['name']}');
         await DB('${MainController.tableInfo['schema']['name']}')
             .where('_id', '\$eq', '${data['id']}')
             .updateRecords(excelJson);
@@ -418,7 +408,6 @@ class ExcelController extends GetxController {
 
           if (dataRowExcel[name] != null) {
             if (type == 'select' || type == 'radiobutton') {
-              print('MainController.generateJsonExcel');
               // dataExlJson[name]=null;
             }else if (type == 'multiSelect' ) {
               // dataExlJson[name]=null;
@@ -468,7 +457,6 @@ class ExcelController extends GetxController {
             if (type == 'file') {
               dataExlJson[name] = [];
             }  else if (type == 'select' || type == 'radiobutton') {
-              print('MainController.generateJsonExcel');
               // dataExlJson[name]=null;
             }else if (type == 'multiSelect' ) {
               // dataExlJson[name]=null;

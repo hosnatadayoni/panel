@@ -79,7 +79,6 @@ class _FormTextFieldOrderItemEditCustomState extends State<FormTextFieldOrderIte
           inputRequired = widget.column['validators'].firstWhere(
                   (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
-          print('${inputRequired['message']}');
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
               setState(() {
@@ -103,7 +102,6 @@ class _FormTextFieldOrderItemEditCustomState extends State<FormTextFieldOrderIte
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      print('ViewController.isClickedEditBtn.value>>>${ViewController.isClickedEditBtn.value}');
       if (ViewController.isClickedEditBtn.value) {
         if (widget.column != null) {
           if (OrderItem.orderItemsList2[widget.keyOrderItem]![widget.column['name']] == '' ||

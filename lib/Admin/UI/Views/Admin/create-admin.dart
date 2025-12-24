@@ -66,7 +66,6 @@ class CreateAdmin extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                               ),
                                   onClick: () async {
-                                    print('_CreateAdminState.build>>>${json.encode(ViewController.request)}');
                                     if(ViewController.request.length!=0) {
                                       AdminController.storeAdmin(ViewController.request);
                                     }

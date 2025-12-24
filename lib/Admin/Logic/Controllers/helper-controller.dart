@@ -99,16 +99,13 @@ class HelperController extends GetxController {
                 return element == MainController.tableName.value;
     }):element==null);
     if (index != -1) {
-      print('HelperController.backFunction${MainController.SubMenuList[index]}');
 
       MainController.selectedSubItem.value = index;
       MainController.tableName.value = MainController.SubMenuList[index]['schema']['name'];
       var indexNew = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == MainController.tableName.value);
       var table = MainController.getInfoTable(MainController.tableName.value);
       MainController.tableInfo.value = table;
-      print('HelperController.backFunction>>${MainController.tableName.value}>>${MainController.SubMenuList[indexNew]}>>${table}>>${ MainController.tableInfo}>>${MainController.SubMenuList[index]}');
       if (table['view'] == 'custom') {
-        print('table page custom');
         MainController.endIndex.value = 0;
         MainController.startIndex.value = 0;
       }
@@ -193,7 +190,6 @@ class HelperController extends GetxController {
               orderItem['Product_Name'] = productItems.first['_id'];
             }
 
-            print('orderItem>>>${orderItem}');
             DataModel newDataOrderItem = DataModel(
                 id: '${Id}',
                 data: orderItem);
@@ -245,18 +241,15 @@ class HelperController extends GetxController {
   static relationFunction({var table = null, var index}) async {
     table = MainController.getInfoTable('${MainController.tableName.value}');
     var tableName = table['schema']['name'];
-    print('table relation>>>${table}');
     if (table['schema']['view'] == 'custom') {
       var orderList=[];
       if(tableName == 'Orders'){
-        print('MainController.tableData relation orders>>>${MainController.tableData}');
         orderList = await DB('${table['schema']['name']}')
             .parent(
             parentId: MainController.tableData[index]['_id'],
             parentTable: MainController.tableInfo['schema']['name'])
             .getRecords();
 
-        print('order list>>>${orderList}');
       }
       if(tableName == 'Order_Details'){
         var orderDetailsList = await ViewCustomController.getDataOrderDetailList(MainController.tableData[index]['_id']);
@@ -275,7 +268,6 @@ class HelperController extends GetxController {
           parentTable: MainController.tableInfo['schema']['name'])
           .getRecords();
 
-      print('HelperController.relationFunction>>>${DB.parentItem}>>');
 
       await MainController.goToTablePage(table,
           tableFields: MainController.getInfoTable(table['schema']['name']),
@@ -317,7 +309,6 @@ class HelperController extends GetxController {
           List<dynamic> customerItems= await DB('Customer').getRecords();
           request['Customer'] = customerItems.first['_id'];
         }
-        print('wqghhn>>>${request}');
         Map<String, dynamic> result = {};
         result.addAll(OrderItem.orderItemsList);
         result.addAll(OrderItem.orderItemsList2);
@@ -342,16 +333,13 @@ class HelperController extends GetxController {
               List<dynamic> productItems= await DB('Product').getRecords();
               orderItem['Product_Name'] = productItems.first['_id'];
             }
-            print('orderItem edit>>>${orderItem}');
             DataModel newDataOrderItem = DataModel(
                 id: '${Id}',
                 data: orderItem);
 
             bool validateOrderDetail = await RecordController.validate('Order_Details', newDataOrderItem, MainController.getInfoTable('Order_Details'));
-            print('validateOrderDetail>>>${validateOrderDetail}');
             validatorOrderDetailList.add(validateOrderDetail);
           }
-          print('validatorOrderDetailList>>>${validatorOrderDetailList}');
           if(validatorOrderDetailList.length != 0){
             if(validatorOrderDetailList.every((e) => !e)){
               // await DB('${tableName}').parent(parentId: '${request['parent_id']}', parentTable: 'Customer').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
@@ -374,7 +362,6 @@ class HelperController extends GetxController {
       }
 
     } else {
-      print('HelperController.editFunction>>${request}');
       await DB('${MainController.tableInfo['schema']['name']}')
           .where('_id', '\$eq', '${id}').updateRecords(request);
       // await MainController.loadData(
@@ -394,7 +381,6 @@ class HelperController extends GetxController {
         List<dynamic> productItems= await DB('Product').parent(parentTable: null , parentId: null).getRecords();
         List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
         ViewCustomController.editContainers =<String, Widget>{}.obs;
-        print('HelperController.editPageFunction>>>${data}');
         await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems , orderDetailItems));
       }
 
@@ -412,7 +398,6 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
       if(tableName == 'Orders'){
         await DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
-        print('orderssssss delete ${id}');
       }
     } else {
       DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();

@@ -815,7 +815,6 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
           setState(() {
             ConncetServerController.currentPageRoute.value = i;
           });
-          print('_TableFooterState.box currentPage>>>${ ConncetServerController.currentPageRoute.value}');
           await ConncetServerController.getRoute();
 
         },

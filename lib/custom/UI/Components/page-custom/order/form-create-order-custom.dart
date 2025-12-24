@@ -32,7 +32,6 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
   @override
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
-    print('id first of customer items>>>${widget.customerItems}');
     return   Container(
       width: size.width,
       child: Column(
@@ -104,7 +103,6 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
 
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
-                              print('text hhh>>>${text}');
                               if(text != null || text != ''){
                                 ViewCustomController.order['Drawing_Number']= int.tryParse(text);
                               }
@@ -188,7 +186,6 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               ],
                               initalValue: '${MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value']}',
                               onChanged: (value) async {
-                                print('value aaaa>>>${value}');
                                 if (value != '') {
                                   ViewCustomController.order['Type'] = value;
                                 } else {

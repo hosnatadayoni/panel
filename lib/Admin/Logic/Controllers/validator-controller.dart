@@ -20,7 +20,6 @@ class ValidatorController extends GetxController {
     String name = column['name'];
 
     if (column['is_show_store'] == true) {
-      print('ggggg>>>${dataJson[name]} ${name}');
       if (column['type'] == 'multiSelect') {
         if (dataJson[name] != null) {
           if (dataJson[name].length == 0) {

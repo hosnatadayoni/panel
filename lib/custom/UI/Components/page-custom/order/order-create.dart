@@ -35,7 +35,6 @@ class OrderCreatePage extends StatelessWidget {
         onKey: (event) {
       if (event is RawKeyDownEvent) {
         if (event.logicalKey == LogicalKeyboardKey.f1) {
-          print('f1 clicked');
           ViewController.isClickedBtn.value =  true;
           HelperController.createFunction('Orders');
           // if (!ViewController.isClickedBtn.value) {
@@ -48,7 +47,6 @@ class OrderCreatePage extends StatelessWidget {
         }
 
         if (event.logicalKey == LogicalKeyboardKey.f4) {
-          print('f4 clicked');
           ViewCustomController.addContainer(context ,this.productItems );
         }
       }

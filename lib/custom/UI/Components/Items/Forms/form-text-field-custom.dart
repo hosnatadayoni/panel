@@ -70,7 +70,6 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
     super.initState();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        print('widget.isValidate>>>${widget.isValidate}');
         if (widget.isValidate == true) _validateInput();
 
         if (widget.updateChange != null) {
@@ -82,16 +81,13 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
 
   void _validateInput() {
     if (widget.column != null) {
-      print('iiiiii>>>${widget.column['validators']}');
       if (widget.column['validators'] != null) {
         var inputRequired;
-        print('hhhhh>>>${ViewCustomController.order[widget.column['name']]}');
         if (ViewCustomController.order[widget.column['name']] == '' ||
             ViewCustomController.order[widget.column['name']] == null) {
           inputRequired = widget.column['validators'].firstWhere(
                   (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
-          print('${inputRequired['message']}');
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
               setState(() {
@@ -179,7 +175,6 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
                       (validator) => validator['type'] == 'reqiured',
 
                   orElse: () => null);
-              print('inputRequired>>>${inputRequired}');
               if (inputRequired != null) {
                 _errorText = inputRequired['message'];
               }

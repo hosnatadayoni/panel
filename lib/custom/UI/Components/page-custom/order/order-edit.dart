@@ -47,22 +47,18 @@ class _OrderEditPgeState extends State<OrderEditPge> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print('table data>>>${MainController.tableData}');
-    print('widget.data OrderEditPge>>>${widget.data}');
     return RawKeyboardListener(
       focusNode: _focusNode,
       autofocus: true,
       onKey: (event) {
         if (event is RawKeyDownEvent) {
           if (event.logicalKey == LogicalKeyboardKey.f1) {
-            print('f1 clicked');
             ViewController.isClickedEditBtn.value =  true;
             //add edit function
             HelperController.editFunction('Orders',id:'${widget.data!['_id']}' , request:widget.data);
           }
 
           if (event.logicalKey == LogicalKeyboardKey.f4) {
-            print('f4 clicked');
             ViewCustomController.addEditContainer(context ,widget.productItems );
           }
         }

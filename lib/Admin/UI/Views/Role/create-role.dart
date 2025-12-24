@@ -65,7 +65,6 @@ class CreateRole extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                               ),
                                   onClick: () async {
-                                    print('_CreateRoleState.build>>>${json.encode(ViewController.request)}');
                                     if(ViewController.request.length!=0) {
                                       AdminController.storeRole(ViewController.request);
                                     }

@@ -82,7 +82,6 @@ class ViewCustomController extends GetxController{
   static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
     Map<String, List<dynamic>> selectedFilesMap = {};
-    print('selecetdFiles>>>${selecetdFiles}');
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
     }
@@ -125,15 +124,12 @@ class ViewCustomController extends GetxController{
   }
   static Future<Widget> getOrderItems(var data) async {
     List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
-    print('items as>>>${orderDetailItems}');
     List<dynamic> productItems= await DB('Product').getRecords();
 
     for(var item in orderDetailItems){
       OrderItem.orderItemsList[item['_id']]=item;
 
     }
-    print('productItems>>>${productItems}');
-    print('OrderItem.orderItemsList edit>>>${OrderItem.orderItemsList}');
     return Column(
       children: [
           FormEditOrderItemCustom(productItems , orderDetailItems),
@@ -262,9 +258,7 @@ class ViewCustomController extends GetxController{
                            int value = int.tryParse(cleanText) ?? 0;
                            OrderItem.orderItemsList[key]!['Price'] = value;
                            String formatted = formatter.format(value);
-                           print('formatted>>>${formatted}');
                            if (formatted != text) {
-                             print('sckfd');
                              _controller.value = TextEditingValue(
                                text: formatted,
                                selection: TextSelection.collapsed(offset: formatted.length),
@@ -459,7 +453,6 @@ class ViewCustomController extends GetxController{
                         ],
                         initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
                         onChanged: (value) async {
-                          print('value aaaa>>>${value}');
                           if (value != '') {
                             OrderItem.orderItemsList[key]!['Cut_Pattern'] = value;
                           } else {
@@ -510,7 +503,6 @@ class ViewCustomController extends GetxController{
                         ],
                         initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty')['items'].first['value']}',
                         onChanged: (value) async {
-                          print('value aaaa>>>${value}');
                           if (value != '') {
                             OrderItem.orderItemsList[key]!['Manufacturing_Difficulty'] = value;
                           } else {
@@ -735,7 +727,6 @@ class ViewCustomController extends GetxController{
   static getProductPrice(List<dynamic> productItems , String productId) {
     for(var product in productItems){
       if(product['_id'] == productId){
-        print('price of product>>>${product['Price']}');
         return product['Price'];
       }
     }
@@ -801,7 +792,6 @@ class ViewCustomController extends GetxController{
                       ],
                       initalValue: '${productItems.first['_id'] ?? ''}',
                       onChanged: (value) async {
-                        print('value aaaa>>>${value}');
                         if (value != '') {
                           OrderItem.orderItemsList2[key]?['Product_Name']  = value;
                           final newPrice = ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name']) ?? 0;
@@ -846,7 +836,6 @@ class ViewCustomController extends GetxController{
                           int value = int.tryParse(cleanText) ?? 0;
                           OrderItem.orderItemsList2[key]!['Price'] = value;
                           String formatted = formatter.format(value);
-                          print('formatted>>>${formatted}');
                           if (formatted != text) {
                             _controller.value = TextEditingValue(
                               text: formatted,
@@ -1037,7 +1026,6 @@ class ViewCustomController extends GetxController{
                       ],
                       initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
                       onChanged: (value) async {
-                        print('value aaaa>>>${value}');
                         if (value != '') {
                           // ViewController.request['Cut_Pattern'] = value;
                           OrderItem.orderItemsList2[key]?['Cut_Pattern'] = value;
@@ -1089,7 +1077,6 @@ class ViewCustomController extends GetxController{
                       ],
                       initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
                       onChanged: (value) async {
-                        print('value aaaa>>>${value}');
                         if (value != '') {
                           // ViewController.request['Manufacturing_Difficulty'] = value;
                           OrderItem.orderItemsList2[key]?['Manufacturing_Difficulty'] = value;

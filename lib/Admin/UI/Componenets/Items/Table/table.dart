@@ -36,7 +36,6 @@ class _TableBoxState extends State<TableBox> {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     return Obx(() {
-      print('MainController.tableData>>>${MainController.tableData}');
       return Container(
           color: MainController.isLightMode.value == true
               ? background
@@ -132,7 +131,6 @@ class _TableBoxState extends State<TableBox> {
                                   elevation: 0,
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
-                                    print('_TableBoxState.build PopupMenuButton>>>${value}');
                                     var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
                                         .firstWhere((item) => item == value, orElse: () => null):null;
                                     if(relation!=null){
@@ -150,7 +148,6 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
-                                        print('yujjjj>>>${await DB('Customer').getRecords()}');
                                         HelperController.editPageFunction(MainController.tableData.value[i]);
                                       });
                                     }

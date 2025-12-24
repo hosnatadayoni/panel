@@ -49,7 +49,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   }
   void _initPriceControllers() {
     for (var item in widget.orderDetailItems) {
-      print('item of order detail>>>${item}');
       final id = item['_id'];
 
       final price = ViewCustomController.getProductPrice(
@@ -91,14 +90,10 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
-    print('a1000>>>${widget.orderDetailItems}');
-    print('a2000>>>${widget.orderDetailItems}');
 
     for(int i=0;i<widget.orderDetailItems.length;i++){
-      print('qqqqqqqq>>>${widget.orderDetailItems[i]}');
     }
     for(var x in widget.productItems){
-      print('x[id]>>>${x['_id']}');
     }
 
 
@@ -180,7 +175,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                           initalValue: '${widget.orderDetailItems[i]['Product_Name']['_id'] != null  ? widget.orderDetailItems[i]['Product_Name']['_id'] : ''}',
                                           onChanged: (value) async {
                                             setState(() {
-                                              print('value aaaa>>>${value}');
                                               if (value != '') {
                                                 widget.orderDetailItems[i]['Product_Name']['_id']  = value;
                                                 final newPrice = ViewCustomController.getProductPrice(widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id']) ?? 0;
@@ -225,7 +219,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                             int value = int.tryParse(cleanText) ?? 0;
                                             widget.orderDetailItems[i]['Price'] = value;
                                             String formatted = formatter.format(value);
-                                            print('formatted>>>${formatted}');
                                             if (formatted != text) {
                                               _controller.value = TextEditingValue(
                                                 text: formatted,
@@ -272,7 +265,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                             } else {
                                               widget.orderDetailItems[i]['First_Dimension'] = null;
                                             }
-                                            print('nvbfg>>>${widget.orderDetailItems[i]['First_Dimension']}');
                                           });
                                           // OrderItem.orderItemsList.refresh();
                                         },
@@ -429,7 +421,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                           initalValue: '${widget.orderDetailItems[i]['Cut_Pattern']['value'] != null ?
                                           widget.orderDetailItems[i]['Cut_Pattern']['value'] : ''}',
                                           onChanged: (value) async {
-                                            print('value aaaa>>>${value}');
                                             if (value != '') {
                                               widget.orderDetailItems[i]['Cut_Pattern'] = value;
                                             } else {
@@ -480,7 +471,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                           initalValue: '${widget.orderDetailItems[i]['Manufacturing_Difficulty']['value'] != null ?
                                           widget.orderDetailItems[i]['Manufacturing_Difficulty']['value']:''}',
                                           onChanged: (value) async {
-                                            print('value aaaa>>>${value}');
                                             if (value != '') {
                                               widget.orderDetailItems[i]['Manufacturing_Difficulty']['value'] = value;
                                             } else {

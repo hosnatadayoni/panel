@@ -61,7 +61,6 @@ class ViewController extends GetxController {
               (filter) => ViewController.generateFilterView(filter))
           .toList();
       filters.value = await Future.wait(futures);
-      print('ViewController.callFilterView>>>${filters.value}');
     }
   }
 
@@ -386,7 +385,6 @@ class ViewController extends GetxController {
         var maxValidator;
         var minValidator;
         List<dynamic> items = [];
-        print('dataModel d>>>${dataModel['${name}']}');
         if (column['validators'] != null) {
           maxValidator = column['validators'].firstWhere(
               (validator) => validator['type'] == 'max',
@@ -617,7 +615,6 @@ class ViewController extends GetxController {
     } else if (type == 'select' || type == 'radiobutton') {
       child = InkWell(
         onDoubleTap: () async {
-          print('ViewController.generateDataColumn');
           await copyClipboard(MainController.tableData[indexRow]['${name}'] != null ? '${itemsShowSelectItem(MainController.tableData[indexRow]['${name}'], MainController.tableInfo['columns'][indexColumn])}' : '');
         },
         child: Txt(
@@ -802,7 +799,6 @@ class ViewController extends GetxController {
 
   static Widget generateFormTextFieldFilter(
       var column, var filterInfo, var type, String initValue) {
-    print('ViewController.generateFormTextFieldFilter>>${column['type']}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -842,7 +838,6 @@ class ViewController extends GetxController {
                     'column': '${column['name']}',
                     'operator': '${filterInfo['operator']}',
                   };
-                  print('ViewController.generateFormTextFieldFilter>>${  ViewController.request}');
                 } else {
                   ViewController
                       .request['${column['name']}${filterInfo['operator']}'] = {
@@ -1195,7 +1190,6 @@ class ViewController extends GetxController {
 
   static Widget generateFormRadioButton(var column, List<dynamic> items,
       String initalValue, Rx<bool> isSelectedItem) {
-    print('ViewController.generateFormRadioButton>>${items}');
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1881,7 +1875,6 @@ class ViewController extends GetxController {
     }
     List<dynamic> filesSelectedList = [];
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
-    print('selecetdFiles1>>>${selecetdFiles}');
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1899,7 +1892,6 @@ class ViewController extends GetxController {
           columnName: column['title'],
           onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
-            print('file info>>>${file}');
             if (column['type'] == 'file' || column['type'] == 'file_pv') {
               ViewController.request[column['name']] = file;
               selecetdFiles = file;
@@ -1907,8 +1899,6 @@ class ViewController extends GetxController {
               filesSelectedList.add(file);
               ViewController.request[column['name']] = filesSelectedList;
             }
-            print('filesSelectedList>>>${filesSelectedList}');
-            print('selecetdFiles2>>>${selecetdFiles}');
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt:
@@ -2218,10 +2208,6 @@ class ViewController extends GetxController {
       var totalChunks = 1;
       var currentChunk = 0;
       RxMap<String, dynamic>? chunkName = <String, dynamic>{}.obs;
-      print('fileInfo>>>${fileInfo}');
-      print('fileSelectedList>>>${fileSelectedList}');
-      print('fileInfo[fileSelectedList[index]]>>>${fileInfo[fileSelectedList[index]]}');
-      print('chunkName>>>${chunkName}');
       if (fileInfo[fileSelectedList[index]] != null) {
         totalChunks = fileData?[0] ?? 1;
         currentChunk = fileData?[1] ?? 0;
@@ -2420,7 +2406,6 @@ class ViewController extends GetxController {
   }
 
   static String itemsShowSelectItem(var listItems, var column) {
-    print('kjmfkflf>>>${column}');
     var items = column['items'];
     List<dynamic> a = [];
     if (listItems is List) {

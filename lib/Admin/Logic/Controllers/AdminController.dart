@@ -42,7 +42,6 @@ class AdminController extends GetxController {
         if (user != null) {
            await Token.setToken( '${response.data['data']['token']}');
            var t=await Token.getToken();
-         print('AdminController.login>>${t}');
           Get.to(DashboardPage());
         }
       },
@@ -63,7 +62,6 @@ class AdminController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          print('AdminController.getNameAccess>>>${response!.data['data']}');
           getNameAccessRes.value = [];
           getNameAccessRes.value =
               response.data['data'].length != 0 ? response.data['data'] : [];
@@ -222,7 +220,6 @@ class AdminController extends GetxController {
           } else {
             accessRoles.value = {};
           }
-          print('AdminController.getAccessRole>>${accessRoles.value}');
           MainController.totalItems.value = response.data['data']['count'];
           int s = (currentPageRole.value - 1) * countShowRowRole.value;
           var end = s + countShowRowRole.value;
@@ -303,7 +300,6 @@ class AdminController extends GetxController {
         },
         printResponse: true,
         errorCallback: () {
-          print('AdminController.getAdmin');
           getAdminRes.value = [];
           Navigator.push(Get.context!, MaterialPageRoute(builder: (context) =>  SetTokenPage()));
         });

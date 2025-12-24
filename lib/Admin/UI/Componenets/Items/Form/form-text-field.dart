@@ -72,7 +72,6 @@ class _FormTextFieldState extends State<FormTextField> {
     super.initState();
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        print('widget.isValidate>>>${widget.isValidate}');
         if (widget.isValidate == true) _validateInput();
 
         if (widget.updateChange != null) {

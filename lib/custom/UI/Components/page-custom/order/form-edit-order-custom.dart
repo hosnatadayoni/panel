@@ -47,8 +47,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
 
-    print('widget.data FormEditOrderCustom>>>${widget.data}');
-    print('table.data FormEditOrderCustom>>>${MainController.tableData}');
 
     return  Container(
       width: size.width,
@@ -268,7 +266,6 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                               ],
                               initalValue: '${widget.data['Type']['value'] != null ? widget.data['Type']['value']: ''}',
                               onChanged: (value) async {
-                                print('value of type>>>${value}');
                                 if (value != '') {
                                   widget.data['Type']['value'] = value;
                                 } else {

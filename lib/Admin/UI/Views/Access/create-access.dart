@@ -66,7 +66,6 @@ class CreateAccess extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                               ),
                                   onClick: () async {
-                                    print('_CreateRouteState.build>>>${json.encode(ViewController.request)}');
                                     if(ViewController.request.length!=0) {
                                       AdminController.storeAccess(ViewController.request);
                                     }

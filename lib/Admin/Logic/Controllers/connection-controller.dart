@@ -12,27 +12,19 @@ class ConnectionController extends GetxController {
   static checkConnectivity() async {
     final ConnectivityResult result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.wifi) {
-      print('Connected to a wifi network');
       checkConnection.value=true;
-      print("checkConnection1 ${checkConnection}");
 
     } else if (result == ConnectivityResult.mobile) {
-      print('Connected to a mobile network');
       checkConnection.value=true;
-      print("checkConnection2 ${checkConnection}");
     }else if (result == ConnectivityResult.ethernet) {
-      print('Connected to a mobile network');
       checkConnection.value=true;
-      print("checkConnection2 ${checkConnection}");
     } else {
       checkConnection.value=false;
-      print("checkConnection3 ${checkConnection}");
       // Navigator.push(Get.context!, MaterialPageRoute(builder: (context) =>  ConnectionError()));
     }
     connectivityResult = result;
     subscription=Connectivity().onConnectivityChanged.listen((result){
        result=result;
-        print("result${result}");
     });
   }
 
@@ -55,7 +47,6 @@ class ConnectionController extends GetxController {
     connectivityResult = result;
     subscription=Connectivity().onConnectivityChanged.listen((result){
        result=result;
-        print("result${result}");
      update();
 
     });

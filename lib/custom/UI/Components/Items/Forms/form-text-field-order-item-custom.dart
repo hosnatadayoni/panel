@@ -79,7 +79,6 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
           inputRequired = widget.column['validators'].firstWhere(
                   (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
-          print('${inputRequired['message']}');
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
               setState(() {
