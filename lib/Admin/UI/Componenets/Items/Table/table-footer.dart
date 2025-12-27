@@ -21,7 +21,7 @@ class _TableFooterState extends State<TableFooter> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['name'];
-
+    print('_TableFooterState.build>>${ViewController.totalPage.value}');
 
     return Obx((){
       return Container(

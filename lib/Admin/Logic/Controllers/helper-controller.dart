@@ -109,19 +109,15 @@ class HelperController extends GetxController {
       await MainController.loadData(
           tableData: MainController.getInfoTable(''));
     } else {
-      Map<String, dynamic> parent = await DB.parentItem;
-      if (parent.length == 0) {
+      Map<String, Map<String,dynamic>> parent = await DB.parentItem;
+      if (parent.containsKey('${MainController.tableInfo['schema']['name']}') && parent['${MainController.tableInfo['schema']['name']}']!.length != 0) {
         await DB('${MainController.tableInfo['schema']['name']}')
-            .storeRecord(ViewController.request);
+            .parent(parentTable: '${parent[MainController.tableInfo['schema']['name']]!['parent_table']}', parentId: '${parent['${MainController.tableInfo['schema']['name']}']!['parent_id']}').storeRecord(ViewController.request);
       } else {
-        await DB('${MainController.tableInfo['schema']['name']}')
-            .parent(
-            parentTable: '${parent['parent_table']}',
-            parentId: '${parent['parent_id']}')
-            .storeRecord(ViewController.request);
+        await DB('${MainController.tableInfo['schema']['name']}').storeRecord(ViewController.request);
+
       }
-      await MainController.loadData(
-          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
+      await MainController.loadData(tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
       if (ViewController.isClickedBtn.value == false) {
         MainController.goToTablePage(table, loadData: false);
       }
@@ -134,21 +130,10 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
       pageInateFunction();
     } else {
-      DB.parentItem = {
-        'parent_id': MainController.tableData[index]['_id'],
-        'parent_table': MainController.tableInfo['schema']['name']
-      };
-      var items = await DB('${table['schema']['name']}')
-          .parent(
-          parentId: MainController.tableData[index]['_id'],
-          parentTable: MainController.tableInfo['schema']['name'])
-          .getRecords();
+      var items = await DB('${table['schema']['name']}').parent(parentId: MainController.tableData[index]['_id'], parentTable: MainController.tableInfo['schema']['name']).getRecords();
 
-      print('HelperController.relationFunction>>>${DB.parentItem}>>');
 
-      await MainController.goToTablePage(table,
-          tableFields: MainController.getInfoTable(table['schema']['name']),
-          tableData: items);
+      await MainController.goToTablePage(table, tableFields: MainController.getInfoTable(table['schema']['name']), tableData: items);
     }
   }
 
@@ -213,6 +198,7 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
+
     } else {
       DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
       pageInateFunction();
@@ -225,9 +211,10 @@ class HelperController extends GetxController {
 
   static pageInateFunction() async {
     var table = MainController.getInfoTable(MainController.tableName.value);
-    MainController.tableInfo = table;
+    MainController.tableInfo.value = table;
     var tableName = table['schema']['name'];
     if (table['schema']['view'] == 'custom') {
+      MainController.tableData.value = await DB('${MainController.tableName.value}').paginate();
       MainController.endIndex.value = 0;
       MainController.startIndex.value = 0;
     } else {

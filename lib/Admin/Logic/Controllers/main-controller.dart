@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
@@ -311,12 +312,12 @@ class MainController extends GetxController {
 
   static addsyncField(String tableName) {
     var index = SubMenuList.indexWhere(
-        (element) => element['schema']['name'] == tableName);
+        (element) => element.schema.name == tableName);
     var items = SubMenuList[index];
     if (items['schema']['view'] == null) {
-      items.addAll({'view': 'default'});
+      items['schema']['view'] = 'default';
     }
-    items['columns'].add({
+    items['columns'].columns.add({
       'name': 'sync',
       'title': 'sync',
       'type': 'string',
@@ -603,7 +604,8 @@ class MainController extends GetxController {
       MainController.allData.value = MainController.tableData;
       MainController.totalItems.value--;
       MainController.endIndex.value--;
-    } else if (type == operation.update) {
+    }
+    else if (type == operation.update) {
       var index = MainController.tableData
           .indexWhere((element) => element['_id'] == data['_id']);
       if (index != -1) {

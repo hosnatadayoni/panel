@@ -22,7 +22,7 @@ class DB {
   int? takeCount;
   int? skipCount;
   int? randomCount;
-  static Map<String, dynamic> parentItem = <String, dynamic>{};
+  static Map<String, Map<String,dynamic>> parentItem = <String, Map<String,dynamic>>{};
   int counter = 0;
   List<Where> w = [];
 
@@ -145,6 +145,17 @@ class DB {
     return totalPage;
   }
 
+  parent({var parentTable = null, var parentId = null}) {
+    parentItem = <String, Map<String,dynamic>>{};
+    if (parentTable != null && parentId != null) {
+      var json = {'parent_table': parentTable, 'parent_id': parentId};
+      parentItem = {"${this.tableName}":json};
+    } else
+      parentItem = <String, Map<String,dynamic>>{};
+
+    return this;
+  }
+
   getRecords() async {
     AppController.startLoading('get-records');
     await ConnectionController.checkConnectivity();
@@ -152,13 +163,12 @@ class DB {
     Box box;
     List<Map<String, dynamic>> data = [];
     ConncetServerController.getRecordRes.value = [];
-    int index = MainController.SubMenuList.indexWhere(
-        (element) => element['schema']['name'] == '${this.tableName}');
+    int index = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == '${this.tableName}');
 
     data = [];
     if (MainController.SubMenuList[index]['schema']['online'] == true) {
-      if (parentItem.length != 0) {
-        where('parent_id', '\$eq', parentItem['parent_id']);
+      if (parentItem.containsKey(this.tableName) && parentItem[this.tableName]!.length != 0) {
+        where('parent_id', '\$eq', parentItem[this.tableName]!['parent_id']);
         print('DB.getRecords where list is>>>${this.whereList}');
       } else {
         where('parent_id', '\$eq', null);
@@ -172,9 +182,8 @@ class DB {
       }
       if (this.whereList.length == 0 && this.orWhereList.length == 0) {
         List<Map<String, dynamic>> dataItems = [];
-        await ConncetServerController.getRecordGeneral('${tableName}');
-        dataItems =
-            ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+        await ConncetServerController.filterRecordGeneral([],'${tableName}', '\$or');
+        dataItems = ConncetServerController.filterRecordRes.cast<Map<String, dynamic>>();
         if (dataItems.isNotEmpty) {
           data = dataItems;
           var tableInfo = MainController.SubMenuList[index];
@@ -1076,16 +1085,7 @@ class DB {
   //     return data;
   //   }
   // }
-  parent({var parentTable = null, var parentId = null}) {
-    parentItem = <String, dynamic>{};
-    if (parentTable != null && parentId != null) {
-      var json = {'parent_table': parentTable, 'parent_id': parentId};
-      parentItem = json;
-    } else
-      parentItem = <String, dynamic>{};
 
-    return this;
-  }
 
   Future<void> storeRecord(Map<dynamic, dynamic> request) async {
     AppController.startLoading('store-record');
@@ -1119,8 +1119,8 @@ class DB {
             newRequest.addAll({'${column}': null});
           }
         }
-        if (parentItem != {}) {
-          newRequest.addAll(parentItem);
+        if (parentItem.containsKey(this.tableName) && parentItem[this.tableName] != {}) {
+          newRequest.addAll(parentItem[this.tableName]!);
         }
         newRequest.addAll({
           "sync": "false",
@@ -1314,10 +1314,10 @@ class DB {
             }
           }
         }
-        if (request.containsKey(key)) {
-          a[key] = request[key];
-        } else {
-          // check key exist in records if not add!.
+        if (!request.containsKey(key)) {
+        //   request[key]=a[key];
+        // } else {
+        //   // check key exist in records if not add!.
           toAdd.add({request.keys.first: request.values.first});
         }
       });
@@ -1460,8 +1460,7 @@ class DB {
     var boxList = box.values.toList();
     var relations = MainController.getInfoTable(this.tableName!);
     for (var data in records) {
-      var tableDataIndex =
-          boxList.indexWhere((element) => element.id == data['_id']);
+      var tableDataIndex = boxList.indexWhere((element) => element.id == data['_id']);
       // var before = await HelperController.beforeDelete(tableDataIndex);
       //
       // if (before['status'] == false) {
@@ -1469,8 +1468,7 @@ class DB {
       // }
       // else {
       if (MainController.getStatusTable(this.tableName!) == true) {
-        await ConncetServerController.deleteRecordGeneral(
-            {"table_name": '${this.tableName}', 'record_id': data['_id']});
+        await ConncetServerController.deleteRecordGeneral({"table_name": '${this.tableName}', 'record_id': data['_id']});
         if (ConncetServerController.deleteRecordRes == true) {
           if (relations['schema']['relations'] != null &&
               relations['schema']['relations'].length != 0) {

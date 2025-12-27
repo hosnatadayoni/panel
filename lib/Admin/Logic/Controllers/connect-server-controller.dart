@@ -5,6 +5,7 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
+import '../Models/ServerModel/tableModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 
@@ -41,7 +42,9 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           MainController.SubMenuList.value=[];
 
-          MainController.SubMenuList.value=response!.data['data'];
+
+            MainController.SubMenuList.value=response!.data["data"];
+
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
 
@@ -135,7 +138,6 @@ class ConncetServerController extends GetxController {
           var endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
           MainController.endIndex.value = endBycondition;
           ViewController.totalPage.value =(MainController.totalItems.value/countShowRowRoute.value).ceil();
-          print('ConncetServerController.getRoute${ MainController.totalPages.value}');
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }
@@ -197,6 +199,8 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           filterRecordRes=response!.data['data']['data']!=null?response.data['data']['data'].cast<Map<String, dynamic>>():[];
           MainController.totalItems.value=response.data['data']['count'];
+          int perPage = int.parse(json["perPage"]);
+          ViewController.totalPage.value =(MainController.totalItems.value/perPage).ceil();
         },printResponse: true);
   }
 

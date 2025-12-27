@@ -2462,6 +2462,7 @@ class ViewController extends GetxController {
     List<dynamic> dropDownListItems = [];
     if (type != 'custom') {
       if (dataModel == null || dataModel.isEmpty) {
+        print('ViewController.itemsList>>>${tableName}');
         // Future.delayed(Duration.zero, () async {
         List<dynamic> data = await DB('${tableName}').getRecords();
         data.removeWhere((element) => element['sync'] != null);
