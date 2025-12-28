@@ -134,7 +134,7 @@ class ViewCustomController extends GetxController{
     }
     return Column(
       children: [
-          FormEditOrderItemCustom(productItems , orderDetailItems),
+          FormEditOrderItemCustom(productItems , orderDetailItems , data),
       ],
     );
   }
@@ -150,6 +150,7 @@ class ViewCustomController extends GetxController{
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
     final formatter = NumberFormat('#,###');
+    print('key of row>>>${key}');
 
     if(OrderItem.orderItemsList[key] == null){
       OrderItem.orderItemsList[key] = {};
@@ -1197,6 +1198,7 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
+            SizedBox(width: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1259,15 +1261,16 @@ class ViewCustomController extends GetxController{
     );
   }
   static removeEditContainer(String key) {
-      if(OrderItem.orderItemsList.containsKey(key)){
-        OrderItem.orderItemsList.remove(key);
+      if(OrderItem.orderItemsList.value.containsKey(key)){
+        OrderItem.orderItemsList.value.remove(key);
+        OrderItem.orderItemsList.refresh();
       }
       ViewCustomController.editContainers.remove(key);
       OrderItem.orderItemsList2.remove(key);
   }
 // end order item edit page
 
-static checkOrder(context,productItems) async {
+  static checkOrder(context,productItems) async {
   if (ViewCustomController.order['Date'] == null) {
     ViewCustomController.order['Date'] = ViewCustomController.getDate(Jalali.now());
   }
@@ -1290,5 +1293,28 @@ static checkOrder(context,productItems) async {
     showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
   }
 }
+  static checkEditOrder(context,productItems , {var data}) async {
+    if (data['Date'] == null) {
+      data['Date'] = ViewCustomController.getDate(Jalali.now());
+    }
+    if(data['Type'] == null){
+      data['Type'] = MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value'];
+    }
+    if(data['Customer'] == null){
+      List<dynamic> customerItems= await DB('Customer').getRecords();
+      data['Customer'] = customerItems.first['_id'];
+    }
+    var Id = Uuid().v4();
+    DataModel newData = DataModel(
+        id: '${Id}',
+        data: data);
+    bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
+    if(validate == false){
+      ViewCustomController.addEditContainer(context ,productItems);
+    }
+    else{
+      showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
+    }
+  }
 
 }

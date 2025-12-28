@@ -27,9 +27,10 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormEditOrderItemCustom extends StatefulWidget {
 
-  FormEditOrderItemCustom(this.productItems , this.orderDetailItems);
+  FormEditOrderItemCustom(this.productItems , this.orderDetailItems , this.data);
   List<dynamic> productItems;
   List<dynamic> orderDetailItems;
+  var data;
 
 
   @override
@@ -114,7 +115,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                   children: [
                     InkWell(
                       onTap: (){
-                        ViewCustomController.addEditContainer(context , widget.productItems);
+                        // ViewCustomController.addEditContainer(context , widget.productItems);
+                        ViewCustomController.checkEditOrder(context, widget.productItems , data: widget.data);
                       },
                       child: Container(
                         padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
@@ -595,6 +597,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(width: 10,),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -640,6 +643,14 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     InkWell(
                                       onTap: (){
                                         // _removeContainer(key);
+                                        if(widget.orderDetailItems.length != 0){
+                                          for (var order in widget.orderDetailItems.toList()){
+                                            ViewCustomController.removeEditContainer(order['_id']);
+                                            widget.orderDetailItems.remove(order);
+                                          }
+                                        }
+
+
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),

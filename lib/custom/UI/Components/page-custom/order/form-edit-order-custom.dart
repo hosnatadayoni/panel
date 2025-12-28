@@ -17,6 +17,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/Admin/UI/Views/table-page.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/form-txt-field-edit-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -27,7 +28,7 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
 class FormEditOrderCustom extends StatefulWidget {
 
-  FormEditOrderCustom( this.customerItems , {this.data});
+  FormEditOrderCustom(this.customerItems , {this.data});
   var data;
   List<dynamic> customerItems;
 
@@ -46,6 +47,8 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
+    print('widget.data edit page>>>${widget.data}');
+    print('widget.data[Type][value]>>>${widget.data['Type']}');
 
 
     return  Container(
@@ -163,7 +166,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                             initValue: '${widget.data['Input_Code'] != null ? widget.data['Input_Code']: ''}',
                             column: MainController.getDetailsOfField('Orders' , 'Input_Code'),
                             onChange: (text) {
-                              widget.data['Input_Code']= text;
+                              widget.data['Input_Code']= int.tryParse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -186,14 +189,15 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextFieldCustom(
+                          child: FormTextFieldEditCustom(
                             name: 'شماره نقشه',
                             hint: 'شماره نقشه',
                             lable: '',
                             initValue: '${widget.data['Drawing_Number'] != null ? widget.data['Drawing_Number']: ''}',
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
+                            data: widget.data,
                             onChange: (text) {
-                                widget.data['Drawing_Number']= text;
+                                widget.data['Drawing_Number']= int.tryParse('${text}');
                             },
                             isNumberInt:true,
                           ),
@@ -216,14 +220,15 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                         ),
                         Container(
                           width: 80,
-                          child: FormTextFieldCustom(
+                          child: FormTextFieldEditCustom(
                             name: 'شماره نقشه(مشتری)',
                             hint: 'شماره نقشه(مشتری)',
                             initValue: '${widget.data['Drawing_Number(customer)'] != null ? widget.data['Drawing_Number(customer)']: ''}',
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number(customer)'),
                             lable: '',
+                            data: widget.data,
                             onChange: (text) {
-                              widget.data['Drawing_Number(customer)']= text;
+                              widget.data['Drawing_Number(customer)']= int.tryParse('${text}');
                             },
                             isNumberInt:true,
                           ),

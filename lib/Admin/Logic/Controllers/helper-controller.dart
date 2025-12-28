@@ -295,6 +295,7 @@ class HelperController extends GetxController {
 
     var table = MainController.getInfoTable(MainController.tableName.value);
     tableName = table['schema']['name'];
+
     if (table['schema']['view'] == 'custom') {
       if(tableName == 'Orders') {
 
@@ -337,20 +338,20 @@ class HelperController extends GetxController {
                 data: orderItem);
 
             bool validateOrderDetail = await RecordController.validate('Order_Details', newDataOrderItem, MainController.getInfoTable('Order_Details'));
+            print('validateOrderDetail>>>${validateOrderDetail}');
             validatorOrderDetailList.add(validateOrderDetail);
           }
           if(validatorOrderDetailList.length != 0){
-            print('validatorOrderDetailList>>>${validatorOrderDetailList}');
             if(validatorOrderDetailList.every((e) => !e)){
-
-              await DB('${tableName}').parent(parentId: '${request['parent_id']}', parentTable: 'Customer').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
+              await DB('${tableName}').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
               var orderId = request['_id'];
               for (var orderItem in result.values.toList()) {
-
-                await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
+                print('orderItem>>>${orderItem}');
+                print('type of order item>>>${orderItem['Price'].runtimeType} ${orderItem['First_Dimension'].runtimeType} ${orderItem['Second_Dimension'].runtimeType}');
+                await DB('Order_Details').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
               }
               // MainController.goToTablePage(table);
-              // ViewController.isClickedEditBtn.value = false;
+              ViewController.isClickedEditBtn.value = false;
             }
 
           }
@@ -379,11 +380,11 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table['schema']['view'] == 'custom') {
       if(table['schema']['name'] =='Orders'){
-        List<dynamic> customerItems= await DB('Customer').parent(parentTable: null , parentId: null).getRecords();
-        List<dynamic> productItems= await DB('Product').parent(parentTable: null , parentId: null).getRecords();
+        List<dynamic> customerItems= await DB('Customer').parent().getRecords();
+        List<dynamic> productItems= await DB('Product').parent().getRecords();
         List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
         ViewCustomController.editContainers =<String, Widget>{}.obs;
-        await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems , orderDetailItems));
+        await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems));
       }
 
     } else {

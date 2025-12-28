@@ -14,7 +14,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class FormTextFieldCustom extends StatefulWidget {
+class FormTextFieldEditCustom extends StatefulWidget {
   String? lable;
   String? hint;
   Function? onChange, updateChange;
@@ -27,10 +27,10 @@ class FormTextFieldCustom extends StatefulWidget {
   var column;
   var maxValidator;
   var minValidator;
-  bool? isEmail;
   double height;
+  var data;
 
-  FormTextFieldCustom(
+  FormTextFieldEditCustom(
       {this.lable,
         this.hint,
         this.onChange,
@@ -42,15 +42,15 @@ class FormTextFieldCustom extends StatefulWidget {
         this.isValidate = true,
         required this.name,
         this.column,
-        this.isEmail,
         this.height = 50,
+        this.data
       });
 
   @override
-  State<FormTextFieldCustom> createState() => _FormTextFieldCustomState();
+  State<FormTextFieldEditCustom> createState() => _FormTextFieldEditCustomState();
 }
 
-class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
+class _FormTextFieldEditCustomState extends State<FormTextFieldEditCustom> {
   final textFieldKey = GlobalKey<FormBuilderFieldState>();
   var txt = null;
   final FocusNode _focusNode = FocusNode();
@@ -75,8 +75,8 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
     if (widget.column != null) {
       if (widget.column['validators'] != null) {
         var inputRequired;
-        if (ViewCustomController.order[widget.column['name']] == '' ||
-            ViewCustomController.order[widget.column['name']] == null) {
+        if (widget.data[widget.column['name']] == '' ||
+            widget.data[widget.column['name']] == null) {
           inputRequired = widget.column['validators'].firstWhere(
                   (validator) => validator['type'] == 'reqiured',
               orElse: () => null);
@@ -102,7 +102,7 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
             var minValidator = widget.column['validators'].firstWhere(
                     (validator) => validator['type'] == 'min',
                 orElse: () => null);
-            var number = ViewCustomController.order[widget.column['name']];
+            var number = widget.data[widget.column['name']];
             if (number != null) {
               if (minValidator != null || maxValidator != null) {
                 if (number < minValidator['value']) {
@@ -131,10 +131,10 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (ViewController.isClickedBtn.value) {
+      if (ViewController.isClickedEditBtn.value) {
         if (widget.column != null) {
-          if (ViewCustomController.order[widget.column['name']] == '' ||
-              ViewCustomController.order[widget.column['name']] == null) {
+          if (widget.data[widget.column['name']] == '' ||
+              widget.data[widget.column['name']] == null) {
             var inputRequired;
 
             if (widget.column['validators'] != null) {
@@ -146,7 +146,7 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
                 _errorText = inputRequired['message'];
               }
             }
-          } else if (ViewCustomController.order[widget.column['name']] != '') {
+          } else if (widget.data[widget.column['name']] != '') {
             if (widget.column['validators'] != null) {
               if (widget.isNumberInt == true || widget.isNumberDouble == true) {
                 var maxValidator;
@@ -157,7 +157,7 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
                 minValidator = widget.column['validators'].firstWhere(
                         (validator) => validator['type'] == 'min',
                     orElse: () => null);
-                var number = ViewCustomController.order[widget.column['name']];
+                var number = widget.data[widget.column['name']];
                 if (number != null) {
                   if (minValidator != null && maxValidator != null) {
                     if (number < minValidator['value']) {
@@ -215,7 +215,7 @@ class _FormTextFieldCustomState extends State<FormTextFieldCustom> {
                 style: TextStyle(
                     color:  MainController.isLightMode.value == true
                         ? whiteColor
-                         :primaryDark),
+                        :primaryDark),
                 onChanged: (value) {
                   // if(widget.isNumberInt == true){
                   //   text.value = int.parse('${value!}');

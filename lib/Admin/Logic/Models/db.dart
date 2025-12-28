@@ -1263,10 +1263,12 @@ class DB {
 
     for (var data in records) {
       a = data;
+      print('a list>>>${a}');
       for (var item in request.keys) {
-        if (!a.containsKey(item)) {
+        // if (!a.containsKey(item)) {
           a[item] = request[item];
-        }
+        // }
+
       }
 
       a.forEach((key, value) {
@@ -1312,9 +1314,7 @@ class DB {
 
         if (request.containsKey(key)) {
           // a[key] = request[key];
-
           request[key] = a[key];
-
 
         } else {
           // check key exist in records if not add!.
@@ -1324,6 +1324,7 @@ class DB {
     }
     print('a order item>>>${a}');
     final record = DataModel(id: a['_id'], data: a);
+
     if (ValidatorController.validateByType(a, '${this.tableName}') == true) {
       var beforeValidate =
           await HelperController.beforeUpdateValidation(record);

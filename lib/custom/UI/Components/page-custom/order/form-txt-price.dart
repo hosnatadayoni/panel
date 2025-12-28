@@ -76,7 +76,6 @@ class _FormPriceTextFieldState extends State<FormPriceTextField> {
                 focusNode: _focusNode,
                 controller:widget.controller,
                 minLines: 1,
-                readOnly: true,
                 maxLines: widget.isPassword == true ? 1 : 3,
                 initialValue: widget.initValue,
                 style: TextStyle(color: MainController.isLightMode.value == true ? whiteColor : primaryDark),

@@ -11,23 +11,16 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/form-edit-order-custom.dart';
-import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
-import 'package:uuid/uuid.dart';
-import '../../../../../Admin/Logic/Controllers/record-controller.dart';
-import '../../../../../Admin/Logic/Models/dataModel.dart';
-import '../../../../../Admin/UI/Componenets/Popups/snackbar.dart';
 
 class OrderEditPge extends StatefulWidget {
   final dynamic data;
   final List<dynamic> customerItems;
   final List<dynamic> productItems;
-  final List<dynamic> orderDetailItems;
 
-  OrderEditPge(this.customerItems, this.productItems, this.orderDetailItems,
+  OrderEditPge(this.customerItems, this.productItems,
       {this.data});
 
   @override
@@ -58,19 +51,24 @@ class _OrderEditPgeState extends State<OrderEditPge> {
             id: '${widget.data!['_id']}', request: widget.data);
       }
       if (event.logicalKey == LogicalKeyboardKey.f4) {
-        var Id = Uuid().v4();
-        DataModel newData =
-        DataModel(id: Id, data: widget.data);
-
-        bool validate = await RecordController.validate(
-            'Orders', newData, MainController.getInfoTable('Orders'));
-        if (validate == false) {
-          ViewCustomController.addEditContainer(context, widget.productItems);
-        } else {
-          showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
-        }
+        // var Id = Uuid().v4();
+        // DataModel newData =
+        // DataModel(id: Id, data: widget.data);
+        //
+        // bool validate = await RecordController.validate(
+        //     'Orders', newData, MainController.getInfoTable('Orders'));
+        // if (validate == false) {
+        //   ViewCustomController.addEditContainer(context, widget.productItems);
+        // } else {
+        //   showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
+        // }
+        _handleF4(context);
       }
     }
+  }
+
+  Future<void> _handleF4(BuildContext context) async {
+    await ViewCustomController.checkEditOrder(context, widget.productItems , data: widget.data);
   }
 
   _loadWidgets() async {
