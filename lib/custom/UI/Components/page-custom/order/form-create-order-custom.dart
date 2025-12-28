@@ -100,16 +100,11 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                             name: 'شماره نقشه',
                             hint: 'شماره نقشه',
                             lable: '',
-
                             column: MainController.getDetailsOfField('Orders' , 'Drawing_Number'),
                             onChange: (text) {
                               if(text != null || text != ''){
                                 ViewCustomController.order['Drawing_Number']= int.tryParse(text);
                               }
-                              // else{
-                              //   ViewCustomController.order['Drawing_Number']= null;
-                              // }
-
                             },
                             isNumberInt:true,
                           ),
@@ -222,16 +217,6 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                               name: 'مشتری',
                               column: MainController.getDetailsOfField('Orders' , 'Customer'),
                               items: [
-                                // DropdownMenuItem(
-                                //     child: Obx(() {
-                                //       return Txt(
-                                //         '${AppController.of(Get.context!)!.value('not selected')}',
-                                //         color: MainController.isLightMode.value == true
-                                //             ? whiteColor
-                                //             : primaryDark,
-                                //       );
-                                //     }),
-                                //     value: ''),
                                 for (var item in widget.customerItems)
                                   DropdownMenuItem(
                                       child: Obx(() {

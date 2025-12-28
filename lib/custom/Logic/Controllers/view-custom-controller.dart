@@ -21,11 +21,13 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
+import '../../../Admin/Logic/Controllers/record-controller.dart';
 import '../../../Admin/Public/styles.dart';
 import '../../../Admin/UI/Componenets/General/txt.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-file.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-time.dart';
 import '../../../Admin/Logic/Models/db.dart';
+import '../../../Admin/UI/Componenets/Popups/snackbar.dart';
 import '../../UI/Components/Items/Forms/thousand-separatorInput-formatter.dart';
 import '../Models/order-item.dart';
 
@@ -187,17 +189,6 @@ class ViewCustomController extends GetxController{
                         maxHeight: 38,
                         column: MainController.getDetailsOfField('Order_Details' , 'Product_Name'),
                         items: [
-                          // DropdownMenuItem(
-                          //     child: Obx(() {
-                          //       return Txt(
-                          //         '${AppController.of(Get.context!)!.value('not selected')}',
-                          //         color: MainController.isLightMode.value == true
-                          //             ? whiteColor
-                          //             : primaryDark,
-                          //         fontSize: 13,
-                          //       );
-                          //     }),
-                          //     value: ''),
                           for (var item in productItems)
                             DropdownMenuItem(
                                 child: Obx(() {
@@ -267,9 +258,6 @@ class ViewCustomController extends GetxController{
                          }
                          OrderItem.orderItemsList.refresh();
                        },
-                       // inputFormatters: [
-                       //   ThousandSeparatorInputFormatter(),
-                       // ],
                      ),
                    );
                  })
@@ -366,14 +354,14 @@ class ViewCustomController extends GetxController{
                   Container(
                     width: 70,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Obx((){
-                          return Txt('${ViewCustomController.getCalculateTotalArea(OrderItem.orderItemsList[key]?['First_Dimension'] ?? 0,
-                              OrderItem.orderItemsList[key]?['Second_Dimension'] ?? 0)}',
+                          return Txt('${ViewCustomController.getCalculateTotalArea((OrderItem.orderItemsList[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                              (OrderItem.orderItemsList[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0)}',
                             color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                        })
+                        }),
                       ],
                     ),
                   ),
@@ -539,7 +527,6 @@ class ViewCustomController extends GetxController{
                       isNumberInt:true,
                       column: MainController.getDetailsOfField('Order_Details' , 'Block'),
                       onChange: (text) {
-                        // dataJson[columnName] = text;
                         if (text != null && text != '') {
                           OrderItem.orderItemsList[key]!['Block'] = int.parse('${text}');
                         } else {
@@ -636,20 +623,23 @@ class ViewCustomController extends GetxController{
                   ),
                   Container(
                     width: 80,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Obx((){
-                          return Txt('${ViewCustomController.getCalculateTotalPrice(
-                              ViewCustomController.getProductPrice(
-                                productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],),
-                              OrderItem.orderItemsList[key]?['First_Dimension'] ?? 0,
-                              OrderItem.orderItemsList[key]?['Second_Dimension'] ?? 0,
-                              OrderItem.orderItemsList[key]?['Quantity'] ?? 0
-                          )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                        })
-                      ],
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Obx((){
+                            return Txt('${ViewCustomController.getCalculateTotalPrice(
+                                ViewCustomController.getProductPrice(
+                                  productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],),
+                                (OrderItem.orderItemsList[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                (OrderItem.orderItemsList[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                OrderItem.orderItemsList[key]?['Quantity'] ?? 0
+                            )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -1020,6 +1010,7 @@ class ViewCustomController extends GetxController{
                                   MainController.isLightMode.value == true
                                       ? whiteColor
                                       : primaryDark,
+                                  fontSize: 13,
                                 );
                               }),
                               value: item['value']),
@@ -1071,6 +1062,7 @@ class ViewCustomController extends GetxController{
                                   MainController.isLightMode.value == true
                                       ? whiteColor
                                       : primaryDark,
+                                  fontSize: 13,
                                 );
                               }),
                               value: item['value']),
@@ -1220,20 +1212,23 @@ class ViewCustomController extends GetxController{
                 ),
                 Container(
                   width: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Obx((){
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Obx((){
 
-                        return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
-                            productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']),
-                            (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                            (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
-                            OrderItem.orderItemsList2[key]?['Quantity'] ?? 0
-                        )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                      })
-                    ],
+                          return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
+                              productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']),
+                              (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                              (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                              OrderItem.orderItemsList2[key]?['Quantity'] ?? 0
+                          )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                        })
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -1271,5 +1266,29 @@ class ViewCustomController extends GetxController{
       OrderItem.orderItemsList2.remove(key);
   }
 // end order item edit page
+
+static checkOrder(context,productItems) async {
+  if (ViewCustomController.order['Date'] == null) {
+    ViewCustomController.order['Date'] = ViewCustomController.getDate(Jalali.now());
+  }
+  if(ViewCustomController.order['Type'] == null){
+    ViewCustomController.order['Type'] = MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value'];
+  }
+  if(ViewCustomController.order['Customer'] == null){
+    List<dynamic> customerItems= await DB('Customer').getRecords();
+    ViewCustomController.order['Customer'] = customerItems.first['_id'];
+  }
+  var Id = Uuid().v4();
+  DataModel newData = DataModel(
+      id: '${Id}',
+      data: ViewCustomController.order);
+  bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
+  if(validate == false){
+    ViewCustomController.addContainer(context ,productItems);
+  }
+  else{
+    showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
+  }
+}
 
 }

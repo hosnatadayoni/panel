@@ -30,24 +30,17 @@ class OrderItemCreatePage extends StatelessWidget {
           height: size.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
             color: MainController.isLightMode.value == false ? color6 :color9,
           ),
           child: Stack(
             children: [
               Obx(() {
                 return  Positioned(
-                  // right:MainController.isClickedItem.value == true ? 300 :50,
-
-                  //   right: size.width > 800 ? MainController.isClickedItem.value == true ? 300 :50 : 50,
-
                     right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
                     left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
                     child: Container(
-                      // width: MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50,
                         width:size.width > 800 ? MainController.isClickedItem.value == true  ?(size.width) - 300:(size.width) - 50 : (size.width) - 50,
                         height: size.height,
-                        // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
                         color: MainController.isLightMode.value == false ? color6 :color9,
                         child: ColumnScroll(
                           children: [

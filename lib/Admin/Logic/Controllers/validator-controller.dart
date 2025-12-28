@@ -112,19 +112,20 @@ class ValidatorController extends GetxController {
           (validator) => validator['type'] == 'email',
           orElse: () => null);
     }
-    if (column['type'] == 'Number double' || column['type'] == 'Number int') {
+    if (column['type'] == 'Number int') {
       var number;
       if (dataJson[name] != null) {
         number = dataJson[name];
         if (column['type'] == 'Number double') {
-          if (!(number is double)) {
-            return false;
-          }
-        } else {
-          if (!(number is int)) {
-            return false;
-          }
+          // if (!(number is double)) {
+          //   return false;
+          // }
         }
+        // else {
+        //   if (!(number is int)) {
+        //     return false;
+        //   }
+        // }
 
         number = await General(tableName)
             .withFormat(column['type'], number, column['name']);

@@ -1,20 +1,19 @@
-import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
-import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import '../../../../../Admin/Logic/Controllers/record-controller.dart';
+import '../../../../../Admin/Logic/Models/dataModel.dart';
+import '../../../../../Admin/Logic/Models/db.dart';
+import '../../../../../Admin/UI/Componenets/Popups/snackbar.dart';
 
 class FormCreateOrderItemCustom extends StatefulWidget {
   List<dynamic> productItems;
@@ -65,8 +64,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: (){
-                          ViewCustomController.addContainer(context , widget.productItems);
+                      onTap: () async {
+                         ViewCustomController.checkOrder(context,widget.productItems);
                       },
                       child: Container(
                         padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),

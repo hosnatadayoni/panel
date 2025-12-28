@@ -367,7 +367,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                         isNumberInt:true,
                                         column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
                                         initValue: widget.orderDetailItems[i]['Quantity'].toString() != null ?
-                                        widget.orderDetailItems[i]['Quantity'].toString() : '',
+                                        widget.orderDetailItems[i]['Quantity'].toString() : '0',
                                         onChange: (text) {
                                           setState(() {
                                             if (text != null && text != '') {
@@ -414,6 +414,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                       MainController.isLightMode.value == true
                                                           ? whiteColor
                                                           : primaryDark,
+                                                      fontSize: 13,
                                                     );
                                                   }),
                                                   value: item['value']),
@@ -464,6 +465,7 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                                       MainController.isLightMode.value == true
                                                           ? whiteColor
                                                           : primaryDark,
+                                                      fontSize: 13,
                                                     );
                                                   }),
                                                   value: item['value']),
@@ -608,19 +610,22 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                     ),
                                     Container(
                                       width: 80,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Obx((){
-                                            return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
-                                              widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id'] ?? widget.productItems.first['_id'],) ,
-                                                (widget.orderDetailItems[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                                (widget.orderDetailItems[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                                widget.orderDetailItems[i]['Quantity'] ?? 0
-                                            )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                                          })
-                                        ],
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Obx((){
+                                              return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
+                                                widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id'] ?? widget.productItems.first['_id'],) ,
+                                                  (widget.orderDetailItems[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                  (widget.orderDetailItems[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
+                                                  widget.orderDetailItems[i]['Quantity'] ?? 0
+                                              )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                                            })
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],

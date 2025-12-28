@@ -1250,8 +1250,10 @@ class DB {
   }
 
   updateRecords(Map<String, dynamic> request) async {
+    print('request before>>>${request}');
     AppController.startLoading('update-records');
     List<dynamic> records = await getRecords();
+    print('records>>>${records}');
     ViewController.isClickedEditBtn.value = true;
     Box box = await Hive.openBox<DataModel>(
         MainController.apiKey.value + '${this.tableName}');
@@ -1270,6 +1272,7 @@ class DB {
       a.forEach((key, value) {
         if (MainController.getDetailsOfField('${this.tableName}', key) !=
             null) {
+          print('value aaaa>>>${value}');
           if (value is List) {
             var sourceItem = MainController.getDetailsOfField(
                 '${this.tableName}', key)['source_items'];
@@ -1293,7 +1296,10 @@ class DB {
               a[key] = idList;
             }
           }
+          print('request after>>>${request}');
+          print('a[key] by map>>>${a[key]}');
           if (value is Map) {
+
             var sourceItem = MainController.getDetailsOfField(
                 '${this.tableName}', key)['source_items'];
             if (sourceItem == 'custom') {
@@ -1303,9 +1309,12 @@ class DB {
             }
           }
         }
+
         if (request.containsKey(key)) {
           // a[key] = request[key];
+
           request[key] = a[key];
+
 
         } else {
           // check key exist in records if not add!.
@@ -1313,6 +1322,7 @@ class DB {
         }
       });
     }
+    print('a order item>>>${a}');
     final record = DataModel(id: a['_id'], data: a);
     if (ValidatorController.validateByType(a, '${this.tableName}') == true) {
       var beforeValidate =
@@ -1322,9 +1332,11 @@ class DB {
       } else {
         var validate = await RecordController.validate(this.tableName!, record,
             MainController.getInfoTable(this.tableName!));
+        print('validate item>>>${validate}');
 
         if (validate == false) {
           var before = await HelperController.beforeUpdate(record);
+          print('before[status]>>>${before['status']}');
           if (before['status'] == false) {
             showSnackbar(snackTypes.error, before['messsage']);
           } else {
@@ -1332,6 +1344,8 @@ class DB {
                 await HelperController.beforeUpdate(record)['data'];
             var allDataIndex =
                 records.indexWhere((element) => element['_id'] == a['_id']);
+            print('records update>>>${records}');
+            print('allDataIndex>>>${allDataIndex}');
             if (MainController.getStatusTable(this.tableName!) == true) {
               await ConncetServerController.setDatabaseme(customUpdate.data);
               Map<String, dynamic> setRecord = {

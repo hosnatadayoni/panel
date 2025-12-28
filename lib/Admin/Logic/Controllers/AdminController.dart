@@ -64,7 +64,7 @@ class AdminController extends GetxController {
         successCallback: () async {
           getNameAccessRes.value = [];
           getNameAccessRes.value =
-              response.data['data'].length != 0 ? response.data['data'] : [];
+              response!.data['data'].length != 0 ? response.data['data'] : [];
         },
         printResponse: true);
   }

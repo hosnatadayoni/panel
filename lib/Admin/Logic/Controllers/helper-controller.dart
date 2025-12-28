@@ -165,7 +165,7 @@ class HelperController extends GetxController {
             data: ViewCustomController.order);
         bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
         if(validate == false){
-          var Id = Uuid().v4();
+
           List<bool> validatorOrderDetailList=[];
           for (var i = 0; i < OrderItem.orderItemsList.values.toList().length; i++) {
             var orderItem = OrderItem.orderItemsList.values.toList()[i];
@@ -174,7 +174,6 @@ class HelperController extends GetxController {
               orderItem['First_Dimension'] =
                   (orderItem['First_Dimension'] as num).toDouble();
             }
-
             if (orderItem['Second_Dimension'] != null) {
               orderItem['Second_Dimension'] =
                   (orderItem['Second_Dimension'] as num).toDouble();
@@ -189,7 +188,7 @@ class HelperController extends GetxController {
               List<dynamic> productItems= await DB('Product').getRecords();
               orderItem['Product_Name'] = productItems.first['_id'];
             }
-
+            var Id = Uuid().v4();
             DataModel newDataOrderItem = DataModel(
                 id: '${Id}',
                 data: orderItem);
@@ -341,10 +340,13 @@ class HelperController extends GetxController {
             validatorOrderDetailList.add(validateOrderDetail);
           }
           if(validatorOrderDetailList.length != 0){
+            print('validatorOrderDetailList>>>${validatorOrderDetailList}');
             if(validatorOrderDetailList.every((e) => !e)){
-              // await DB('${tableName}').parent(parentId: '${request['parent_id']}', parentTable: 'Customer').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
+
+              await DB('${tableName}').parent(parentId: '${request['parent_id']}', parentTable: 'Customer').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
               var orderId = request['_id'];
               for (var orderItem in result.values.toList()) {
+
                 await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
               }
               // MainController.goToTablePage(table);
