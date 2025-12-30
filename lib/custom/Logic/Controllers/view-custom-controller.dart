@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
@@ -125,11 +126,14 @@ class ViewCustomController extends GetxController{
     );
   }
   static Future<Widget> getOrderItems(var data) async {
-    List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
+    RxList orderDetailItems = <dynamic>[].obs;
+    orderDetailItems.value = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
+    print('orderDetailItems.value hhhhhh>>>${orderDetailItems.value.length}');
     List<dynamic> productItems= await DB('Product').getRecords();
+    print('productItems>>>${productItems}');
 
     for(var item in orderDetailItems){
-      OrderItem.orderItemsList[item['_id']]=item;
+      OrderItem.orderItemsList.value[item['_id']]=item;
 
     }
     return Column(
@@ -702,8 +706,8 @@ class ViewCustomController extends GetxController{
     return double.parse(sum.toStringAsFixed(2));
   }
   static getDataOrderDetailList(String parentId) async {
-    List<dynamic> orderDetailList = [];
-    orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    RxList<dynamic> orderDetailList = [].obs;
+    orderDetailList.value = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
     for (var item in orderDetailList) {
       if (item['First_Dimension'] != null) {
         item['First_Dimension'] =
@@ -715,7 +719,8 @@ class ViewCustomController extends GetxController{
             (item['Second_Dimension'] as num).toDouble();
       }
     }
-    return orderDetailList;
+    print('orderDetailList>>>${orderDetailList}');
+    return orderDetailList.value;
   }
   static getProductPrice(List<dynamic> productItems , String productId) {
     for(var product in productItems){
@@ -1318,6 +1323,47 @@ class ViewCustomController extends GetxController{
     }
     else{
       showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
+    }
+  }
+  static goTableCustom({var table = null, var index}) async {
+    table = MainController.getInfoTable('${MainController.tableName.value}');
+    var tableName = table['schema']['name'];
+    if (table['schema']['view'] == 'custom') {
+      var orderList=[];
+      if(tableName == 'Orders'){
+        print('MainController.tableData[index]>>>${MainController.tableData[index]}');
+        print('table schema name>>>${table['schema']['name']}');
+        orderList = await DB('${table['schema']['name']}')
+            .parent(
+            parentId: MainController.tableData[index]['parent_id'],
+            parentTable: 'Customer')
+            .getRecords();
+        print('ID OF TABLE DATA>>>${MainController.tableData[index]['parent_id']}');
+        print('PARENT TABLE>>>${MainController.tableInfo['schema']['name']}');
+        print('orderList>>>${orderList}');
+
+      }
+      if(tableName == 'Order_Details'){
+        var orderDetailsList = await ViewCustomController.getDataOrderDetailList(MainController.tableData[index]['_id']);
+      }
+      await MainController.goToTablePage(table,
+        tableFields: MainController.getInfoTable(table['schema']['name']),);
+      HelperController.pageInateFunction();
+    } else {
+      // DB.parentItem = {
+      //   'parent_id': MainController.tableData[index]['_id'],
+      //   'parent_table': MainController.tableInfo['schema']['name']
+      // };
+      var items = await DB('${table['schema']['name']}')
+          .parent(
+          parentId: MainController.tableData[index]['_id'],
+          parentTable: MainController.tableInfo['schema']['name'])
+          .getRecords();
+
+
+      await MainController.goToTablePage(table,
+          tableFields: MainController.getInfoTable(table['schema']['name']),
+          tableData: items);
     }
   }
 

@@ -244,11 +244,16 @@ class HelperController extends GetxController {
     if (table['schema']['view'] == 'custom') {
       var orderList=[];
       if(tableName == 'Orders'){
+        print('MainController.tableData[index]>>>${MainController.tableData[index]}');
+        print('table schema name>>>${table['schema']['name']}');
         orderList = await DB('${table['schema']['name']}')
             .parent(
             parentId: MainController.tableData[index]['_id'],
             parentTable: MainController.tableInfo['schema']['name'])
             .getRecords();
+        print('ID OF TABLE DATA>>>${MainController.tableData[index]['_id']}');
+        print('PARENT TABLE>>>${MainController.tableInfo['schema']['name']}');
+        print('orderList>>>${orderList}');
 
       }
       if(tableName == 'Order_Details'){
@@ -311,8 +316,8 @@ class HelperController extends GetxController {
           request['Customer'] = customerItems.first['_id'];
         }
         Map<String, dynamic> result = {};
-        result.addAll(OrderItem.orderItemsList);
-        result.addAll(OrderItem.orderItemsList2);
+        result.addAll(OrderItem.orderItemsList.value);
+        result.addAll(OrderItem.orderItemsList2.value);
 
         var Id = Uuid().v4();
         DataModel newData = DataModel(
@@ -347,7 +352,10 @@ class HelperController extends GetxController {
               request['parent_id'] = request['Customer']['_id'];
               await DB('${tableName}').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
               var orderId = request['_id'];
+              print('result.values>>>${result.values.toList().length}');
+              print('OrderItem.orderItemsList.value>>>${OrderItem.orderItemsList.value}');
               for (var orderItem in result.values.toList()) {
+                print('orderItem of order detail>>>${orderItem}');
                 if(orderItem['_id'] == null){
                   await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').storeRecord(orderItem);
                 }
@@ -356,7 +364,14 @@ class HelperController extends GetxController {
                 }
 
               }
-              MainController.goToTablePage(table);
+              if(MainController.tableInfo['schema']['name'] == 'Customer'){
+                for (var i = 0; i < MainController.tableData.length; i++){
+                  ViewCustomController.goTableCustom(table: MainController.tableName.value,index: i);
+                }
+              }
+              else if(MainController.tableInfo['schema']['name'] == 'Orders'){
+                MainController.goToTablePage(table);
+              }
               ViewController.isClickedEditBtn.value = false;
             }
 

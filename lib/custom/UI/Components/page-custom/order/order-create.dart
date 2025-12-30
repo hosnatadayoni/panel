@@ -19,9 +19,9 @@ import 'form-create-order-custom.dart';
 import '../orderItem/form-create-orderItem-custom.dart';
 
 class OrderCreatePage extends StatefulWidget {
-   String tableName;
-   List<dynamic> customerItems;
-   List<dynamic> productItems;
+  final String tableName;
+  final List<dynamic> customerItems;
+  final List<dynamic> productItems;
   OrderCreatePage(this.tableName, this.customerItems, this.productItems);
 
   @override
@@ -109,6 +109,102 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
                             : color9,
                         child: ColumnScroll(
                           children: [
+                            const SizedBox(height: 80),
+                            Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Txt(
+                                  '${AppController.of(context)!.value('add')}',
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: MainController.isLightMode.value == true
+                                      ? whiteColor
+                                      : primaryDark,
+                                ),
+                                SizedBox(width: 5),
+                                Txt(
+                                  '${MainController.tableInfo['schema']['title']}',
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: MainController.isLightMode.value == true
+                                      ? whiteColor
+                                      : primaryDark,
+                                ),
+                              ],
+                            ),
+                            Obx(() {
+                              return Row(
+                                children: [
+                                  MouseRegion(
+                                    onEnter: (_) {
+                                      isHoverBtnBack.value = true;
+                                    },
+                                    onExit: (_) {
+                                      isHoverBtnBack.value = false;
+                                    },
+                                    child: InkWell(
+                                      onTap: () {
+                                        MainController.goToTablePage(
+                                            MainController.SubMenuList[
+                                            MainController
+                                                .selectedSubItem.value]);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          border:
+                                          Border.all(color: colorBtn, width: 1),
+                                          color: isHoverBtnBack.value == false
+                                              ? Colors.transparent
+                                              : colorBtn,
+                                        ),
+                                        child: Txt(
+                                          '${AppController.of(context)!.value('back')}',
+                                          color: isHoverBtnBack.value == false
+                                              ? colorBtn
+                                              : whiteColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  MouseRegion(
+                                    onEnter: (_) {},
+                                    onExit: (_) {},
+                                    child: InkWell(
+                                      onTap: () async {
+                                        ViewController.isClickedBtn.value = true;
+                                        HelperController.createFunction(widget.tableName);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          color: colorBtn,
+                                        ),
+                                        child: Txt(
+                                          '${AppController.of(context)!.value('save')} (F1)',
+                                          color: whiteColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
                             const SizedBox(height: 80),
                             Column(
                               children: [

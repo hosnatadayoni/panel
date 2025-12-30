@@ -133,6 +133,7 @@ class _TableBoxState extends State<TableBox> {
                                   onSelected: (String value) async {
                                     var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
                                         .firstWhere((item) => item == value, orElse: () => null):null;
+                                    print('relation ddd>>>${relation}');
                                     if(relation!=null){
                                       MainController
                                           .tableName.value =

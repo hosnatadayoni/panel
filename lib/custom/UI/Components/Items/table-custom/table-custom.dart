@@ -588,9 +588,12 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                         );
                       }),
                       Obx(() {
+                        final type = MainController.tableData.value[i]['Customer'];
                         return Center(
                           child: Txt(
-                            '${MainController.tableData.value[i]['Customer'] != null ? MainController.tableData.value[i]['Customer']['Name_and_lastName'] :''}',
+                            '${type != null && type is Map && type['_id'] != null
+                                ? type['Name_and_lastName']
+                                : ''}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -640,9 +643,12 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                         );
                       }),
                       Obx(() {
+                        final type = MainController.tableData.value[i]['Type'];
                         return Center(
                           child: Txt(
-                            '${MainController.tableData.value[i]['Type'] != null ? MainController.tableData.value[i]['Type']['title']:''}',
+                            '${ type != null && type is Map && type['title'] != null
+                                ? type['title']
+                                : ''}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -701,6 +707,7 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                                     : null;
                                 if (relation != null) {
                                   MainController.tableName.value = relation;
+                                  print('relation bbbb>>>${relation}');
                                   print(
                                       'data of relation>>>${MainController.tableData} ${relation}');
                                   HelperController.relationFunction(
