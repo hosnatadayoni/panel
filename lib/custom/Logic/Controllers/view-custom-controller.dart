@@ -144,7 +144,9 @@ class ViewCustomController extends GetxController{
       var Id = Uuid().v4();
       String newKey = Id;
       ViewCustomController.containers[newKey] = buildContainer(newKey , context ,productItems);
-      OrderItem.orderItemsList[newKey] = {...ViewCustomController.orderItem};
+      ViewCustomController.containers.refresh();
+      OrderItem.orderItemsList.value[newKey] = {...ViewCustomController.orderItem};
+      OrderItem.orderItemsList.refresh();
   }
   static Widget buildContainer(String key , BuildContext context , List<dynamic> productItems) {
     var size = MediaQuery.of(context).size;
@@ -633,7 +635,7 @@ class ViewCustomController extends GetxController{
                           Obx((){
                             return Txt('${ViewCustomController.getCalculateTotalPrice(
                                 ViewCustomController.getProductPrice(
-                                  productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],),
+                                  productItems, OrderItem.orderItemsList[key]?['Product_Name'] ?? productItems.first['_id'],),
                                 (OrderItem.orderItemsList[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 (OrderItem.orderItemsList[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 OrderItem.orderItemsList[key]?['Quantity'] ?? 0
@@ -670,7 +672,7 @@ class ViewCustomController extends GetxController{
     );
   }
   static  removeContainer(String key) {
-    ViewCustomController.containers.remove(key);
+    containers.remove(key);
     OrderItem.orderItemsList.remove(key);
   }
   //end order item
@@ -1267,6 +1269,8 @@ class ViewCustomController extends GetxController{
       }
       ViewCustomController.editContainers.remove(key);
       OrderItem.orderItemsList2.remove(key);
+      // ViewCustomController.editContainers.refresh();
+      // OrderItem.orderItemsList2.refresh();
   }
 // end order item edit page
 

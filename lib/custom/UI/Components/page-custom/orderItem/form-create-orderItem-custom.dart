@@ -3,6 +3,7 @@ import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,8 +27,10 @@ class FormCreateOrderItemCustom extends StatefulWidget {
 class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
 
   void initState() {
+
   }
   // Map<String, Widget> containers = {};
+
 
   // void _addContainer() {
   //   setState(() {
@@ -46,6 +49,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
         if(MainController.selectedSubItem.value != -1)
@@ -65,7 +69,7 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                   children: [
                     InkWell(
                       onTap: () async {
-                         ViewCustomController.checkOrder(context,widget.productItems);
+                        await ViewCustomController.checkOrder(context,widget.productItems);
                       },
                       child: Container(
                         padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
@@ -80,8 +84,8 @@ class _FormCreateOrderItemCustomState extends State<FormCreateOrderItemCustom> {
                 Container(
                   child: Column(
                     children: [
-                      for (var key in ViewCustomController.containers.keys)
-                        ViewCustomController.containers[key]!,
+                      for (var container in ViewCustomController.containers.entries)
+                        ViewCustomController.containers.value['${container.key}']!,
                     ],
                   ),
                 ),

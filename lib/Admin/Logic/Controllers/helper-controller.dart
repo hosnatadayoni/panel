@@ -131,7 +131,8 @@ class HelperController extends GetxController {
       if(table['schema']['name'] =='Orders'){
         List<dynamic> customerItems= await DB('Customer').getRecords();
         List<dynamic> productItems= await DB('Product').getRecords();
-        ViewCustomController.containers =<String, Widget>{}.obs;
+        ViewCustomController.containers.value = <String, Widget>{}.obs;
+        OrderItem.orderItemsList.value = <String, Map<String, dynamic>>{}.obs;
         await Get.to(() => OrderCreatePage(tableName , customerItems , productItems));
       }
     } else {
@@ -343,14 +344,19 @@ class HelperController extends GetxController {
           }
           if(validatorOrderDetailList.length != 0){
             if(validatorOrderDetailList.every((e) => !e)){
+              request['parent_id'] = request['Customer']['_id'];
               await DB('${tableName}').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
               var orderId = request['_id'];
               for (var orderItem in result.values.toList()) {
-                print('orderItem>>>${orderItem}');
-                print('type of order item>>>${orderItem['Price'].runtimeType} ${orderItem['First_Dimension'].runtimeType} ${orderItem['Second_Dimension'].runtimeType}');
-                await DB('Order_Details').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
+                if(orderItem['_id'] == null){
+                  await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').storeRecord(orderItem);
+                }
+                else{
+                  await DB('Order_Details').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
+                }
+
               }
-              // MainController.goToTablePage(table);
+              MainController.goToTablePage(table);
               ViewController.isClickedEditBtn.value = false;
             }
 
@@ -383,15 +389,13 @@ class HelperController extends GetxController {
         List<dynamic> customerItems= await DB('Customer').parent().getRecords();
         List<dynamic> productItems= await DB('Product').parent().getRecords();
         List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
-        ViewCustomController.editContainers =<String, Widget>{}.obs;
+        ViewCustomController.editContainers.value =<String, Widget>{}.obs;
         await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems));
       }
 
     } else {
       await Get.to(() => EditPage(data: data));
     }
-
-    await Get.to(() => EditPage(data: data));
   }
 
   static deleteFunction(var id) async {
