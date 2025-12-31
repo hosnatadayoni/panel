@@ -126,15 +126,11 @@ class ViewCustomController extends GetxController{
     );
   }
   static Future<Widget> getOrderItems(var data) async {
-    RxList orderDetailItems = <dynamic>[].obs;
-    orderDetailItems.value = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
-    print('orderDetailItems.value hhhhhh>>>${orderDetailItems.value.length}');
+    List<dynamic> orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
     List<dynamic> productItems= await DB('Product').getRecords();
-    print('productItems>>>${productItems}');
 
     for(var item in orderDetailItems){
       OrderItem.orderItemsList.value[item['_id']]=item;
-
     }
     return Column(
       children: [
@@ -706,8 +702,9 @@ class ViewCustomController extends GetxController{
     return double.parse(sum.toStringAsFixed(2));
   }
   static getDataOrderDetailList(String parentId) async {
-    RxList<dynamic> orderDetailList = [].obs;
-    orderDetailList.value = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    List<dynamic> orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    print('orderDetailList test>>>${orderDetailList.length}');
+    print('OrderItem.orderItemsList test>>>${OrderItem.orderItemsList.length}');
     for (var item in orderDetailList) {
       if (item['First_Dimension'] != null) {
         item['First_Dimension'] =
@@ -719,8 +716,8 @@ class ViewCustomController extends GetxController{
             (item['Second_Dimension'] as num).toDouble();
       }
     }
-    print('orderDetailList>>>${orderDetailList}');
-    return orderDetailList.value;
+    print('list of order detail>>>${orderDetailList}');
+    return orderDetailList;
   }
   static getProductPrice(List<dynamic> productItems , String productId) {
     for(var product in productItems){
@@ -1268,8 +1265,8 @@ class ViewCustomController extends GetxController{
     );
   }
   static removeEditContainer(String key) {
-      if(OrderItem.orderItemsList.value.containsKey(key)){
-        OrderItem.orderItemsList.value.remove(key);
+      if(OrderItem.orderItemsList.containsKey(key)){
+        OrderItem.orderItemsList.remove(key);
         OrderItem.orderItemsList.refresh();
       }
       ViewCustomController.editContainers.remove(key);

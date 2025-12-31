@@ -316,8 +316,11 @@ class HelperController extends GetxController {
           request['Customer'] = customerItems.first['_id'];
         }
         Map<String, dynamic> result = {};
+        print('OrderItem.orderItemsList.value for result>>>${OrderItem.orderItemsList.value}');
+        print('OrderItem.orderItemsList2.value for result>>>${OrderItem.orderItemsList2.value}');
         result.addAll(OrderItem.orderItemsList.value);
         result.addAll(OrderItem.orderItemsList2.value);
+        print('result of order item>>>${result}');
 
         var Id = Uuid().v4();
         DataModel newData = DataModel(
@@ -352,14 +355,32 @@ class HelperController extends GetxController {
               request['parent_id'] = request['Customer']['_id'];
               await DB('${tableName}').where('_id', '\$eq', '${request['_id']}').updateRecords(request);
               var orderId = request['_id'];
-              print('result.values>>>${result.values.toList().length}');
-              print('OrderItem.orderItemsList.value>>>${OrderItem.orderItemsList.value}');
+              List<dynamic> orderDetailItems = await ViewCustomController.getDataOrderDetailList('${orderId}');
+              final formIds = result.values
+                  .where((e) => e['_id'] != null)
+                  .map((e) => e['_id'])
+                  .toSet();
+              for (var orderDetail in orderDetailItems) {
+                if (!formIds.contains(orderDetail['_id'])) {
+                  await DB('Order_Details').where('_id', '\$eq', '${orderDetail['_id']}').deleteRecord();
+                }
+              }
               for (var orderItem in result.values.toList()) {
                 print('orderItem of order detail>>>${orderItem}');
+                if(orderItem['_id'] == null){
+                  print('order item is not id and create>>>${orderItem}');
+                }
+                else{
+                  print('order item is not id and update>>>${orderItem}');
+                }
                 if(orderItem['_id'] == null){
                   await DB('Order_Details').parent(parentId: '${orderId}', parentTable: '${tableName}').storeRecord(orderItem);
                 }
                 else{
+
+                  print('xxxxxxxxxxxxxaaaa>>>${orderDetailItems.length}' '${orderDetailItems}');
+                  print('yyyyyyyy>>>${result.length}' '${result}');
+
                   await DB('Order_Details').where('_id', '\$eq', '${orderItem['_id']}').updateRecords(orderItem);
                 }
 
@@ -405,6 +426,8 @@ class HelperController extends GetxController {
         List<dynamic> productItems= await DB('Product').parent().getRecords();
         List orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
         ViewCustomController.editContainers.value =<String, Widget>{}.obs;
+        OrderItem.orderItemsList.value = <String, Map<String, dynamic>>{}.obs;
+        OrderItem.orderItemsList2.value = <String, Map<String, dynamic>>{}.obs;
         await Get.to(() => OrderEditPge(data: data ,  customerItems, productItems));
       }
 
