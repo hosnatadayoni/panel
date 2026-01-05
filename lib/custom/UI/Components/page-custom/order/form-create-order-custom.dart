@@ -24,6 +24,7 @@ class FormCreateOrderCustom extends StatefulWidget {
 }
 
 class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
+  Widget file = ViewCustomController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs);
 
   void initState()  {
     super.initState();
@@ -194,7 +195,7 @@ class _FormCreateOrderCustomState extends State<FormCreateOrderCustom> {
                       ],
                     ),
                     SizedBox(width: 20,),
-                    ViewCustomController.generateFileBox('', MainController.getDetailsOfField('Orders' , 'Picture'), false.obs),
+                    file,
                     SizedBox(width: 20,),
                     if(widget.customerItems.length != 0)
                        Column(

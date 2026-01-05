@@ -37,6 +37,8 @@ class ViewCustomController extends GetxController{
   static Map<String, dynamic> orderItem = {};
   static RxMap<String, Widget> containers = <String, Widget>{}.obs;
   static RxMap<String, Widget> editContainers = <String, Widget>{}.obs;
+  static RxList<dynamic> allOrderDetailsSelected = [].obs;
+  static RxMap<String, bool> checkboxStatus = <String, bool>{}.obs;
 
 
   static Jalali parseDate(String dateString) {
@@ -124,6 +126,121 @@ class ViewCustomController extends GetxController{
         ),
       ],
     );
+  }
+  static Widget generateEditFileBox(
+      var data, var column, Rx<bool>? isSeletedFile) {
+    String name = column['name'];
+    String type = column['type'];
+    RxString file = data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
+
+    Map<String, List<dynamic>> selectedFilesMap = {};
+    if (selectedFilesMap['${column['name']}'] == null) {
+      selectedFilesMap['${column['name']}'] = [];
+    }
+    // ViewController.request[name] =   data != null && data[name+'_name'] != null ? '${data[name+'_name']}' : '';
+    List<dynamic> filesSelectedList = [];
+    RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
+    return Obx(() {
+      return new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Txt(
+            '${column['title']}',
+            color:
+            MainController.isLightMode.value == true ? whiteColor : color2,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          file.value != ''
+              ? IntrinsicWidth(
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : background,
+                    width: 0.5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Image.network(
+                            type == 'file'
+                                ? baseUrl + '${file}'
+                                : baseUrlPvFile + '${file}',
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.fill,
+                            errorBuilder: (BuildContext context, Object error,
+                                StackTrace? stackTrace) {
+                              return Image.asset(
+                                fileImage,
+                                width: 40,
+                                height: 40,
+                              ); // عکس جایگزین
+                            },
+                          ),
+                          Txt(
+                            '${data[name + '_name']}',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : color2,
+                          ),
+                        ],
+                      )),
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      child: IconButton(
+                        color: redColor,
+                        onPressed: () async {
+                          ViewController.widgetDeletePopup(onChange: () async {
+                            var status =
+                            await MainController.deleteFileInChunks(
+                                data[name + '_name'],
+                                recordId: data['_id'],
+                                record: json
+                                    .encode({name: null}).toString());
+                            if (status == true) {
+                              file.value = '';
+                              Navigator.pop(Get.context!);
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          size: 25,
+                          color: redColor,
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          )
+              : FormFile(
+            columnName: column['title'],
+            onChanged: (selecetdFiles) {
+              print('selecetdFiles file of picture>>>${selecetdFiles}');
+              data = selecetdFiles;
+            },
+            filesSelected: selectedFilesMap,
+            // selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
+            selectedFilesTxt: '',
+            isSeletedFile: isSeletedFile,
+            column: column,
+            fileInfo: fileInfo,
+          ),
+        ],
+      );
+    });
   }
   static Future<Widget> getOrderItems(var data) async {
     List<dynamic> orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
@@ -703,8 +820,6 @@ class ViewCustomController extends GetxController{
   }
   static getDataOrderDetailList(String parentId) async {
     List<dynamic> orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
-    print('orderDetailList test>>>${orderDetailList.length}');
-    print('OrderItem.orderItemsList test>>>${OrderItem.orderItemsList.length}');
     for (var item in orderDetailList) {
       if (item['First_Dimension'] != null) {
         item['First_Dimension'] =
@@ -716,7 +831,6 @@ class ViewCustomController extends GetxController{
             (item['Second_Dimension'] as num).toDouble();
       }
     }
-    print('list of order detail>>>${orderDetailList}');
     return orderDetailList;
   }
   static getProductPrice(List<dynamic> productItems , String productId) {
@@ -1362,6 +1476,14 @@ class ViewCustomController extends GetxController{
           tableFields: MainController.getInfoTable(table['schema']['name']),
           tableData: items);
     }
+  }
+  static getDrawingNumberOrder(String orderDetailParentId , List<dynamic> orders){
+   for(var order in orders){
+     if(order['_id'] == orderDetailParentId){
+       return order['Drawing_Number'];
+     }
+   }
+
   }
 
 }

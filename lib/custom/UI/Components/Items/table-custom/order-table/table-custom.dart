@@ -414,6 +414,7 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
     //             )),
     //       ));
     // });
+    
     return Obx((){
       return Container(
         color: MainController.isLightMode.value == true ? background : whiteColor,

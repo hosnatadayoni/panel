@@ -4,7 +4,8 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
-import 'package:finance/custom/UI/Components/Views/table-page-custom.dart';
+import 'package:finance/custom/UI/Components/Views/order-page-custom/table-page-custom.dart';
+import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/order-create.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/order-edit.dart';
 import 'package:flutter/material.dart';
@@ -208,6 +209,15 @@ class HelperController extends GetxController {
                     parentTable: '${tableName}').storeRecord(orderItem);
               }
             }
+            if(MainController.tableInfo['schema']['name'] == 'Customer'){
+              for (var i = 0; i < MainController.tableData.length; i++){
+                ViewCustomController.goTableCustom(table: MainController.tableName.value,index: i);
+              }
+            }
+            else if(MainController.tableInfo['schema']['name'] == 'Orders'){
+              MainController.goToTablePage(table);
+            }
+            ViewController.isClickedBtn.value = false;
           }
           else{
             showSnackbar(snackTypes.error, 'لطفا جزئیات سفارش را وارد کنید...');
@@ -292,6 +302,11 @@ class HelperController extends GetxController {
     if(table['schema']['name'] == 'Order_Details'){
       Navigator.push(
           Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
+    }
+    if(table['schema']['name'] == 'Order_Output'){
+      List<dynamic> ordersList = await DB('Orders').getRecords();
+      Navigator.push(
+          Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderCustom(ordersList)));
     }
 
   }

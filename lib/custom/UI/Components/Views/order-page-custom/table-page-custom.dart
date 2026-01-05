@@ -3,7 +3,7 @@ import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/Admin/UI/Views/main-table.dart';
-import 'package:finance/custom/UI/Components/Views/main-table-custom.dart';
+import 'package:finance/custom/UI/Components/Views/order-page-custom/main-table-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';

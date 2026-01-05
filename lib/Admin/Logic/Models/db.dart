@@ -143,6 +143,7 @@ class DB {
     int perPage = countShowRow != null ? countShowRow : 10;
     int totalItems = MainController.totalItems.value;
     int totalPage = (totalItems / perPage).ceil();
+    print('ghghh>>>${perPage}' '${totalItems}' '${totalPage}');
     return totalPage;
   }
 
@@ -1196,12 +1197,12 @@ class DB {
                 showSnackbar(snackTypes.error, afterData['message']);
               }
               // MainController.renderData(operation.store,data);
-              MainController.goToTablePage(MainController
-                  .SubMenuList[
-              MainController
-                  .selectedSubItem
-                  .value]);
-              ViewController.isClickedBtn.value = false;
+              // MainController.goToTablePage(MainController
+              //     .SubMenuList[
+              // MainController
+              //     .selectedSubItem
+              //     .value]);
+              // ViewController.isClickedBtn.value = false;
               request = {};
               newRequest = {};
             }

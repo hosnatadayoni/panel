@@ -5,7 +5,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-box.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart';
-import 'package:finance/custom/UI/Components/Items/table-custom/main-table-box-custom.dart';
+import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';

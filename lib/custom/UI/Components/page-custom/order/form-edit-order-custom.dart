@@ -37,9 +37,11 @@ class FormEditOrderCustom extends StatefulWidget {
 }
 
 class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
+  late Widget file;
 
   void initState() {
     super.initState();
+    file = ViewCustomController.generateEditFileBox(widget.data, MainController.getDetailsOfField('Orders' , 'Picture'), widget.data['Picture'] != null ? true.obs : false.obs);
   }
 
 
@@ -283,7 +285,7 @@ class _FormEditOrderCustomState extends State<FormEditOrderCustom> {
                       ],
                     ),
                     SizedBox(width: 20,),
-                    ViewController.generateEditFileBox(widget.data, MainController.getDetailsOfField('Orders' , 'Picture'), widget.data['Picture'] != null ? true.obs : false.obs),
+                    file,
                     SizedBox(width: 20,),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -83,6 +83,7 @@ class _OrderEditPgeState extends State<OrderEditPge> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    print('data order>>>${widget.data}');
 
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
