@@ -64,5 +64,8 @@
   "Enter the token": "توکن را وارد کنید",
   "refresh": "به روز رسانی",
   "Select file": "انتخاب فایل",
-  "access": "دسترسی"
+  "access": "دسترسی",
+  "input": "ورودی",
+  "register selected orders for checkout": "ثبت خروج سفارشات انتخاب شده",
+  "order list": "لیست سفارشات"
 }

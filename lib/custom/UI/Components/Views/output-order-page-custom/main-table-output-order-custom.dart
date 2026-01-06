@@ -13,6 +13,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart'
 import 'package:finance/custom/Logic/Controllers/main-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-table/main-table-box-output-order-custom.dart';
+import 'package:finance/custom/UI/Components/Items/table-header/table-header.dart';
 import 'package:finance/custom/UI/Components/Views/output-order-item-page-custom/table-output-order-item-page-custom.dart';
 import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,7 +58,7 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Txt('لیست سفارشات',
+                              Txt('${AppController.of(context)!.value('order list')}',
                                 fontSize: 24,
                                 fontWeight: FontWeight.w500,
                                 color: MainController.isLightMode.value == true
@@ -80,96 +81,14 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                                   Container(
                                     padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
                                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.orange,),
-                                    child: Center(child: Txt('ثبت خروج سفارشات انتخاب شده')),
+                                    child: Center(child: Txt('${AppController.of(context)!.value('register selected orders for checkout')}')),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                           SizedBox(height: 10,),
-                          Container(
-                            padding: EdgeInsets.only(left: 10 , right: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 200,
-                                  child: FormTextField(
-                                      name: 'search',
-                                      lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                                    MainCustomController.searchOutPutOrder(text , widget.ordersList);
-                                    setState(() {
-                                      MainController.tableInfo['schema']['currentPage'] = 1;
-                                    });
-
-                                  }),
-                                ),
-                              Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async{
-                                          count.value++;
-                                          MainController.tableInfo['schema']['countShowRow'] = count.value;
-                                          MainController.startIndex.value = (MainController.tableInfo['schema']['currentPage']-1) * MainController.tableInfo['schema']['countShowRow'];
-                                          MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['schema']['countShowRow']}');
-                                          MainController.tableInfo['schema']['currentPage'] = 1;
-                                          widget.ordersList= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                                          ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
-                                          },
-                                            child: Icon(Icons.arrow_drop_up , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
-                                          ),
-                                          SizedBox(height: 0),
-                                          InkWell(
-                                            onTap: () async {
-                                              count.value--;
-                                              if(count.value < 10){
-                                              count.value =  10;
-                                              };
-                                              MainController.tableInfo['schema']['countShowRow'] = count.value;
-                                              MainController.startIndex.value = (MainController.tableInfo['schema']['currentPage']-1) * MainController.tableInfo['schema']['countShowRow'];
-                                              MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['schema']['countShowRow']}');
-                                              MainController.tableInfo['schema']['currentPage'] = 1;
-                                              widget.ordersList= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                                              ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
-                                            },
-                                            child: Icon(Icons.arrow_drop_down , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: 5),
-                                      Obx((){
-                                        return Container(
-                                          width: 25,
-                                          child: Text(
-                                            '${count.value}',
-                                             textAlign: TextAlign.center,
-                                             style: TextStyle(color: MainController.isLightMode.value == true?  whiteColor:color1,fontSize: 15),
-                                          ),
-                                        );
-                                      })
-                                    ],
-                                  ),
-                                  SizedBox(width: 5,),
-                                  Row(
-                                    children: [
-                                      Txt('${AppController.of(context)!.value('show')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
-                                      SizedBox(width: 5,),
-                                      Txt('ورودی' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-
-                              ],
-                            ),
-                          ),
+                          TableOutPutHeader(),
                           SizedBox(height: 25,),
                           MainTableBoxOutPutOrderCustom(widget.ordersList),
                         ],

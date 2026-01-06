@@ -281,10 +281,11 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                         );
                       }),
                       Center(child: Obx((){
-                        String orderId = orderDetail['_id'];
-                        bool isChecked = ViewCustomController.checkboxStatus[orderId] ?? false;
+                        String orderDetailId = orderDetail['_id'];
+                        bool isChecked = ViewCustomController.checkboxOrderItemStatus.value[orderDetailId] ?? false;
+                        print('isChecked>>>${isChecked}');
                         return FormBuilderCheckbox(
-                          key: Key('${i}'),
+                          key: ValueKey('item_${orderDetailId}_$isChecked'),
                           decoration: InputDecoration(border: InputBorder.none),
                           activeColor: colorBtn,
                           initialValue: isChecked,
@@ -293,7 +294,16 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                               width: 1.5,
                               strokeAlign: 2.5
                           ),
-                          onChanged: (checked) async {
+                          onChanged: (isChecked) async {
+                            if(isChecked ==  true){
+                              ViewCustomController.checkboxOrderItemStatus[orderDetailId] = true;
+
+                            }
+                            else{
+                              ViewCustomController.checkboxOrderItemStatus[orderDetailId] = false;
+                            }
+                            ViewCustomController.checkboxOrderItemStatus.refresh();
+
 
                           }, name: '', title: Txt(''),
 
@@ -354,7 +364,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '',
+                            '${ViewCustomController.calculateTotalAreaOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension'])}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -367,7 +377,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '',
+                            '${orderDetail['Quantity']}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -445,7 +455,9 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '',
+                            '${ViewCustomController.
+                            calculateTotalPriceOrderDetail(orderDetail['First_Dimension'] ,
+                                orderDetail['Second_Dimension'] , orderDetail['Quantity'] , orderDetail['Product_Name']['Price'])}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true

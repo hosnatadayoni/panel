@@ -39,6 +39,7 @@ class ViewCustomController extends GetxController{
   static RxMap<String, Widget> editContainers = <String, Widget>{}.obs;
   static RxList<dynamic> allOrderDetailsSelected = [].obs;
   static RxMap<String, bool> checkboxStatus = <String, bool>{}.obs;
+  static RxMap<String, bool> checkboxOrderItemStatus = <String, bool>{}.obs;
 
 
   static Jalali parseDate(String dateString) {
@@ -1483,6 +1484,31 @@ class ViewCustomController extends GetxController{
        return order['Drawing_Number'];
      }
    }
+
+  }
+  static calculateTotalAreaOrderDetail(double firstDimension , double secondDimension){
+    double result = firstDimension * secondDimension;
+    return double.parse(result.toStringAsFixed(3));
+  }
+  static calculateTotalPriceOrderDetail(double firstDimension , double secondDimension , int quantity , int price){
+    final formatter = NumberFormat('#,##0', 'en_US');
+    double totlalAreaOrderDetail = ViewCustomController.calculateTotalAreaOrderDetail(firstDimension , secondDimension);
+    double totalPrice = totlalAreaOrderDetail* quantity * price;
+    double rounded = double.parse(totalPrice.toStringAsFixed(2));
+    return formatter.format(rounded);
+  }
+  static registerCheckout() async {
+    for (var i=0;i<ViewCustomController.allOrderDetailsSelected.length;i++)
+      for(var orderDetail in ViewCustomController.allOrderDetailsSelected[i]){
+        String orderDetailId = orderDetail['_id'];
+        if (ViewCustomController.checkboxOrderItemStatus.containsKey(orderDetailId)){
+          print('orderDetail selected>>>${orderDetail}');
+          print('order-item-id>>>${orderDetail['_id']}');
+          print('order-id>>>${orderDetail['parent_id']}');
+
+        }
+
+      }
 
   }
 

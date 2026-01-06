@@ -134,6 +134,9 @@ const alertBorderDark = Color(0xffadb5bd);
 
 //output order table page
 const notCheckedOutBtnColor   = Color(0xff17a3bb);
+const outPutBackBtnColor   = Color(0xffffc106);
+const cancelBtnColor   = Color(0xff0882a8);
+const previewBtnColor   = Color(0xff31393d);
 
 
 

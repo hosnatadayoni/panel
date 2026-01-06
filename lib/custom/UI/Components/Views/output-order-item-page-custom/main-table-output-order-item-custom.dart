@@ -11,9 +11,11 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-box.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart';
 import 'package:finance/custom/Logic/Controllers/main-custom-controller.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-item-table/main-table-box-output-order-item-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-table/main-table-box-output-order-custom.dart';
+import 'package:finance/custom/UI/Components/Items/table-header/table-header.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -66,66 +68,66 @@ class _MainTableOutPutOrderItemCustomState extends State<MainTableOutPutOrderIte
                             ],
                           ),
                           SizedBox(height: 10,),
-                          Obx((){
-                            // String orderId = widget.ordersList[i]['_id'];
-                            // bool isChecked = ViewCustomController.checkboxStatus[orderId] ?? false;
-                            return FormBuilderCheckbox(
-                              // key: Key('${i}'),
-                              decoration: InputDecoration(border: InputBorder.none),
-                              activeColor: colorBtn,
-                              // initialValue: isChecked,
-                              side:  BorderSide(
-                                  color: MainController.isLightMode.value ? whiteColor : primaryDark,
-                                  width: 1.5,
-                                  strokeAlign: 2.5
-                              ),
-                              onChanged: (checked) async {
-                                // var orderDetailSelected = await ViewCustomController.getDataOrderDetailList(widget.ordersList[i]['_id']);
-                                // print('orderDetailSelected>>>${orderDetailSelected}');
-                                // if(checked == true){
-                                //   ViewCustomController.allOrderDetailsSelected.add(orderDetailSelected);
-                                //   ViewCustomController.checkboxStatus[orderId] = true;
-                                // }
-                                // else{
-                                //   ViewCustomController.allOrderDetailsSelected.removeWhere(
-                                //         (orderDetails) => orderDetails.any(
-                                //           (y) => y['parent_id'] == widget.ordersList[i]['_id'],
-                                //     ),
-                                //   );
-                                //   ViewCustomController.checkboxStatus[orderId] = false;
-                                //
-                                // }
-                                // ViewCustomController.checkboxStatus.refresh();
-                              }, name: '', title: Txt('همه موارد', fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: MainController.isLightMode.value == true
-                                  ? whiteColor
-                                  : color2,),
+                          Obx(() {
+                          bool isChecked = ViewCustomController.allOrderDetailsSelected
+                              .expand((e) => e)
+                              .every((orderDetail) =>
+                          ViewCustomController.checkboxOrderItemStatus[orderDetail['_id']] == true);
 
-                            );
-                          }),
-                          Container(
-                            padding: EdgeInsets.only(left: 10 , right: 10),
+                          return Center(
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: 200,
-                                  child: FormTextField(
-                                      name: 'search',
-                                      lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                                    setState(() {
-                                      MainController.tableInfo['schema']['currentPage'] = 1;
-                                    });
-
-                                  }),
+                                Theme(
+                                  data: Theme.of(context).copyWith(
+                                    unselectedWidgetColor: MainController.isLightMode.value ? whiteColor : primaryDark,
+                                  ),
+                                  child: Checkbox(
+                                    value: isChecked,
+                                    onChanged: (val) {
+                                      bool newValue = val ?? false;
+                                      for (var list in ViewCustomController.allOrderDetailsSelected) {
+                                        for (var orderDetail in list) {
+                                          ViewCustomController.checkboxOrderItemStatus[orderDetail['_id']] =
+                                              newValue;
+                                        }
+                                      }
+                                      ViewCustomController.checkboxOrderItemStatus.refresh();
+                                    },
+                                    activeColor: colorBtn,
+                                    checkColor: whiteColor,
+                                    side: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 2), // border
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
                                 ),
 
-
+                                const SizedBox(width: 8),
+                                InkWell(
+                                  onTap: () {
+                                    bool newValue = !isChecked;
+                                    for (var list in ViewCustomController.allOrderDetailsSelected) {
+                                      for (var orderDetail in list) {
+                                        ViewCustomController.checkboxOrderItemStatus[orderDetail['_id']] =
+                                            newValue;
+                                      }
+                                    }
+                                    ViewCustomController.checkboxOrderItemStatus.refresh();
+                                  },
+                                  child: Txt(
+                                    'همه موارد',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: MainController.isLightMode.value ? whiteColor : color2,
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
+                          );
+                        }),
+                          TableOutPutHeader(),
                           SizedBox(height: 25,),
                           MainTableBoxOutPutOrderItemCustom(widget.orderList),
                         ],
