@@ -592,8 +592,8 @@ class _TableHeaderRouteState extends State<TableHeaderRoute> {
                         // setState(() {
                           ConncetServerController.countShowRowRoute.value = value;
                           selectedCount = value;
-                          MainController.startIndex.value = (ConncetServerController.currentPageRoute.value-1) * ConncetServerController.countShowRowRoute.value;
-                          MainController.endIndex.value = MainController.startIndex.value +ConncetServerController.countShowRowRoute.value;
+                          MainController.pageInfo[tableName]!.start = (ConncetServerController.currentPageRoute.value-1) * ConncetServerController.countShowRowRoute.value;
+                          MainController.pageInfo[tableName]!.end = MainController.pageInfo[tableName]!.start! +ConncetServerController.countShowRowRoute.value;
                           ConncetServerController.currentPageRoute.value = 1;
                         //   // MainController.renderPagination();
                         // });
@@ -698,8 +698,8 @@ class _TableHeaderRouteState extends State<TableHeaderRoute> {
 
                           ConncetServerController.countShowRowRoute.value = value;
                           selectedCount = value;
-                          MainController.startIndex.value = (ConncetServerController.currentPageRoute.value-1) *10;
-                          MainController.endIndex.value = MainController.startIndex.value + 10;
+                          MainController.pageInfo[tableName]!.start = (ConncetServerController.currentPageRoute.value-1) *10;
+                          MainController.pageInfo[tableName]!.end = MainController.pageInfo[tableName]!.start! + 10;
                           ConncetServerController.currentPageRoute.value =1;
 
                         await ConncetServerController.getRoute();
@@ -781,23 +781,23 @@ class TableFooterRoute extends StatefulWidget {
   @override
   State<TableFooterRoute> createState() => _TableFooterRouteState();
 }
-
+var tableSelected = 'route';
+String tableName=tableSelected+'_'+MainController.apiKey.value;
 class _TableFooterRouteState extends State<TableFooterRoute> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = 'route';
 
     return Obx((){
       return Container(
         child: size.width > 556 ?
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          children: pagenationBox(MainController.pageInfo[tableName]!.totalPage , tableSelected),
         ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: pagenationBox(ViewController.totalPage.value , tableSelected),
+          children: pagenationBox(MainController.pageInfo[tableName]!.totalPage , tableSelected),
         ),);
     });
   }
@@ -852,7 +852,7 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
                 color: color3,),
               Txt('${ConncetServerController.getRouteRes.value.length == 0
                   ? 0
-                  : MainController.startIndex.value + 1}',
+                  : MainController.pageInfo[tableName]!.start! + 1}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
@@ -860,14 +860,14 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              Txt('${MainController.endIndex.value}', fontSize: 16,
+              Txt('${MainController.pageInfo[tableName]!.end}', fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
               Txt('${AppController.of(context)!.value('from')}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              Txt('${MainController.totalItems.value}',
+              Txt('${MainController.pageInfo[tableName]!.totalRecords}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),

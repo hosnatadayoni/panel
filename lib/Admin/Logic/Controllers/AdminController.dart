@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/ServerModel/user.dart';
+import 'package:finance/Admin/Logic/Models/paginate.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/set-token-page.dart';
 import 'package:flutter/material.dart';
@@ -83,17 +83,14 @@ class AdminController extends GetxController {
           getAccessRes.value = response!.data['data']['data'].length != 0
               ? response.data['data']['data']
               : [];
-          MainController.totalItems.value = response.data['data']['count'];
+          String name='access_'+MainController.apiKey.value;
+
+          var tRec = int.parse(response.data['data']['count'].toString());
           int s = (currentPageAccess.value - 1) * countShowRowAccess.value;
           var end = s + countShowRowAccess.value;
-          MainController.startIndex.value = s;
-          var endBycondition = end >= MainController.totalItems.value
-              ? MainController.totalItems.value
-              : end;
-          MainController.endIndex.value = endBycondition;
-          ViewController.totalPage.value =
-              (MainController.totalItems.value / countShowRowAccess.value)
-                  .ceil();
+          var endBycondition = end >= tRec ? tRec : end;
+          int tPage =(tRec/ countShowRowAccess.value).ceil();
+          MainController.pageInfo[name]=PageInfo(start: s,end:endBycondition,totalPage:tPage,totalRecords: tRec  );
         },
         printResponse: true, errorCallback: () {
       getAccessRes.value = [];
@@ -158,16 +155,14 @@ class AdminController extends GetxController {
           getRoleRes.value = response!.data['data']['data'].length != 0
               ? response.data['data']['data']
               : [];
-          MainController.totalItems.value = response.data['data']['count'];
+          String name='role_'+MainController.apiKey.value;
+
+         int tRc = int.parse(response.data['data']['count'].toString());
           int s = (currentPageRole.value - 1) * countShowRowRole.value;
           var end = s + countShowRowRole.value;
-          MainController.startIndex.value = s;
-          var endBycondition = end >= MainController.totalItems.value
-              ? MainController.totalItems.value
-              : end;
-          MainController.endIndex.value = endBycondition;
-          ViewController.totalPage.value =
-              (MainController.totalItems.value / countShowRowRole.value).ceil();
+          var endBycondition = end >= tRc ? tRc : end;
+          int totalPages= (tRc / countShowRowRole.value).ceil();
+          MainController.pageInfo[name]=PageInfo(start: s,end: endBycondition,totalRecords: tRc,totalPage: totalPages);
         },
         printResponse: true, errorCallback: () {
       getRoleRes.value = [];
@@ -222,17 +217,13 @@ class AdminController extends GetxController {
           } else {
             accessRoles.value = {};
           }
-          print('AdminController.getAccessRole>>${accessRoles.value}');
-          MainController.totalItems.value = response.data['data']['count'];
+          String name='access_role_'+MainController.apiKey.value;
+          int tRec= int.parse(response.data['data']['count'].toString());
           int s = (currentPageRole.value - 1) * countShowRowRole.value;
           var end = s + countShowRowRole.value;
-          MainController.startIndex.value = s;
-          var endBycondition = end >= MainController.totalItems.value
-              ? MainController.totalItems.value
-              : end;
-          MainController.endIndex.value = endBycondition;
-          ViewController.totalPage.value =
-              (MainController.totalItems.value / countShowRowRole.value).ceil();
+          var endBycondition = end >= tRec ? tRec : end;
+          int tPage = (tRec / countShowRowRole.value).ceil();
+          MainController.pageInfo[name]=PageInfo(start: s,end: endBycondition,totalPage: tPage,totalRecords: tRec);
         },
         printResponse: true, errorCallback: () {
       accessRoles.value = {};
@@ -274,17 +265,14 @@ class AdminController extends GetxController {
                   response.data['data']['data'].length != 0
               ? response.data['data']['data']
               : [];
-          MainController.totalItems.value = response.data['data']['count'];
+          String name='admin_'+MainController.apiKey.value;
+
+          int tRec= int.parse(response.data['data']['count'].toString());
           int s = (currentPageAdmin.value - 1) * countShowRowAdmin.value;
           var end = s + countShowRowAdmin.value;
-          MainController.startIndex.value = s;
-          var endBycondition = end >= MainController.totalItems.value
-              ? MainController.totalItems.value
-              : end;
-          MainController.endIndex.value = endBycondition;
-          ViewController.totalPage.value =
-              (MainController.totalItems.value / countShowRowAdmin.value)
-                  .ceil();
+          var endBycondition = end >= tRec ? tRec : end;
+          int tPage = (tRec / countShowRowAdmin.value).ceil();
+          MainController.pageInfo[name]=PageInfo(start: s,end: endBycondition,totalPage: tPage,totalRecords: tRec);
         },
         printResponse: true,
         errorCallback: () {
@@ -355,7 +343,7 @@ class AdminController extends GetxController {
 
   static logout() async {
     await Token.removeToken();
-    MainController.SubMenuList.value = [];
+    MainController.menuList.value = [];
     getRoleRes.value = [];
     getAdminRes.value = [];
   }

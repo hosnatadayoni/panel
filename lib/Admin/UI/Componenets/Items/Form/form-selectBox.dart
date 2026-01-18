@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class SelectBox extends StatefulWidget {
   String? selectedValue;
    Function(String?)? onChanged;
    String? initalValue;
-  var column;
+  ColumnModel? column;
   Rx<bool>? isSeleted = false.obs;
   SelectBox({
      this.name,
@@ -40,8 +41,8 @@ class _SelectBoxState extends State<SelectBox> {
     var inputRequired;
     String? errorMessage;
     if(widget.column!=null)
-    if(widget.column['validators'] != null && widget.column['validators'].length!=0){
-       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+    if(widget.column!.validators.length!=0){
+       inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
        errorMessage = inputRequired['message'];
     }
     return widget.items!.isNotEmpty? FormBuilder(

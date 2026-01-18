@@ -1,7 +1,6 @@
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/UI/Componenets/Headers/header-create.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Public/styles.dart';
 import '../Componenets/General/column-scroll.dart';
-import '../Componenets/General/txt.dart';
 
 class CreatePage extends StatefulWidget {
   String tableName;
@@ -24,13 +22,12 @@ class _CreatePageState extends State<CreatePage> {
   DateTime? startTime;
 
   DateTime? endTime;
-  Rx<Widget> _future = Column().obs;
+  Rx<Widget> _future = Container().obs;
   Map<String, dynamic> dataJson = {};
 
   addWidget() async {
     Future.delayed(Duration.zero, () async {
-      _future.value = await ViewController.generateStoreFormView(
-          MainController.tableInfo['columns']);
+      _future.value = await ViewController.generateStoreFormView(MainController.infoSchema.value.columns);
     });
   }
 
@@ -96,125 +93,7 @@ class _CreatePageState extends State<CreatePage> {
                             SizedBox(
                               height: 80,
                             ),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Txt(
-                                        '${AppController.of(context)!.value('add')}',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            MainController.isLightMode.value ==
-                                                    true
-                                                ? whiteColor
-                                                : primaryDark,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Txt(
-                                        '${MainController.tableInfo['schema']['title'] != null ? MainController.tableInfo['schema']['title'] : ''}',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            MainController.isLightMode.value ==
-                                                    true
-                                                ? whiteColor
-                                                : primaryDark,
-                                      ),
-                                    ],
-                                  ),
-                                  // if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
-                                  Obx(() {
-                                    return Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            MouseRegion(
-                                              onEnter: (_) {
-                                                isHoverBtnBack.value = true;
-                                              },
-                                              onExit: (_) {
-                                                isHoverBtnBack.value = false;
-                                              },
-                                              child: InkWell(
-                                                onTap: () {
-                                                  MainController.goToTablePage(
-                                                      MainController
-                                                              .SubMenuList[
-                                                          MainController
-                                                              .selectedSubItem
-                                                              .value]);
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10)),
-                                                    border: Border.all(
-                                                        color: colorBtn,
-                                                        width: 1),
-                                                    color:
-                                                        isHoverBtnBack.value ==
-                                                                false
-                                                            ? Colors.transparent
-                                                            : colorBtn,
-                                                  ),
-                                                  child: Txt(
-                                                    '${AppController.of(context)!.value('back')}',
-                                                    color:
-                                                        isHoverBtnBack.value ==
-                                                                false
-                                                            ? colorBtn
-                                                            : whiteColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            MouseRegion(
-                                              onEnter: (_) {},
-                                              onExit: (_) {},
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  HelperController
-                                                      .createFunction(
-                                                          widget.tableName);
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(Radius.circular(10)),
-                                                    color: colorBtn,
-                                                  ),
-                                                  child: Txt(
-                                                    '${AppController.of(context)!.value('save')}',
-                                                    color: whiteColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
+                          HeaderCreate(widget.tableName),
                             SizedBox(
                               height: 10,
                             ),

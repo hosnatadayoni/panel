@@ -9,7 +9,7 @@ class ConnectionController extends GetxController {
   static RxBool checkConnection=false.obs;
   static StreamSubscription? subscription;
 
-  static checkConnectivity() async {
+  static Future<bool> checkConnectivity() async {
     final ConnectivityResult result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.wifi) {
       print('Connected to a wifi network');
@@ -34,6 +34,7 @@ class ConnectionController extends GetxController {
        result=result;
         print("result${result}");
     });
+    return checkConnection.value;
   }
 
   void checkConnectivityRetry() async {

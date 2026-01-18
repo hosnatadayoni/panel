@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/mobile-format.dart';
@@ -28,7 +29,7 @@ class FormTextField extends StatefulWidget {
   bool? isValidate;
   String name;
   GlobalKey<FormBuilderState>? fbKey;
-  var column;
+  ColumnModel? column;
   var maxValidator;
   var minValidator;
   bool? isEmail;
@@ -78,11 +79,11 @@ class _FormTextFieldState extends State<FormTextField> {
 
   void _validateInput() {
     if (widget.column != null) {
-      if (widget.column['validators'] != null) {
+      if (widget.column!.validators != []) {
         var inputRequired;
-        if (ViewController.request[widget.column['name']] == '' ||
-            ViewController.request[widget.column['name']] == null) {
-          inputRequired = widget.column['validators'].firstWhere(
+        if (ViewController.request[widget.column!.name] == '' ||
+            ViewController.request[widget.column!.name] == null) {
+          inputRequired = widget.column!.validators.firstWhere(
               (validator) => validator['type'] == 'required',
               orElse: () => null);
           if (inputRequired != null) {
@@ -101,13 +102,13 @@ class _FormTextFieldState extends State<FormTextField> {
             _errorText = null;
           });
           if (widget.isNumberInt == true || widget.isNumberDouble == true) {
-            var maxValidator = widget.column['validators'].firstWhere(
+            var maxValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'max',
                 orElse: () => null);
-            var minValidator = widget.column['validators'].firstWhere(
+            var minValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'min',
                 orElse: () => null);
-            var number = ViewController.request[widget.column['name']];
+            var number = ViewController.request[widget.column!.name];
             if (number != null) {
               if (minValidator != null || maxValidator != null) {
                 if (number < minValidator['value']) {
@@ -128,20 +129,20 @@ class _FormTextFieldState extends State<FormTextField> {
               }
             }
           } else if (widget.isEmail == true) {
-            var emailValidator = widget.column['validators'].firstWhere(
+            var emailValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'email',
                 orElse: () => null);
             final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
             setState(() {
               if (!emailRegex
-                  .hasMatch(ViewController.request[widget.column['name']])) {
+                  .hasMatch(ViewController.request[widget.column!.name])) {
                 _errorText = emailValidator['message'];
               } else {
                 _errorText = null;
               }
             });
           } else if (widget.isMobile == true) {
-            var mobileValidator = widget.column['validators'].firstWhere(
+            var mobileValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'mobile',
                 orElse: () => null);
             // setState(() {
@@ -163,30 +164,30 @@ class _FormTextFieldState extends State<FormTextField> {
     return Obx(() {
       if (ViewController.isClickedBtn.value) {
         if (widget.column != null) {
-          if (ViewController.request[widget.column['name']] == '' ||
-              ViewController.request[widget.column['name']] == null) {
+          if (ViewController.request[widget.column!.name] == '' ||
+              ViewController.request[widget.column!.name] == null) {
             var inputRequired;
 
-            if (widget.column['validators'] != null) {
-              inputRequired = widget.column['validators'].firstWhere(
+            if (widget.column!.validators != []) {
+              inputRequired = widget.column!.validators.firstWhere(
                   (validator) => validator['type'] == 'required',
                   orElse: () => null);
               if (inputRequired != null) {
                 _errorText = inputRequired['message'];
               }
             }
-          } else if (ViewController.request[widget.column['name']] != '') {
-            if (widget.column['validators'] != null) {
+          } else if (ViewController.request[widget.column!.name] != '') {
+            if (widget.column!.validators != []) {
               if (widget.isNumberInt == true || widget.isNumberDouble == true) {
                 var maxValidator;
                 var minValidator;
-                maxValidator = widget.column['validators'].firstWhere(
+                maxValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'max',
                     orElse: () => null);
-                minValidator = widget.column['validators'].firstWhere(
+                minValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'min',
                     orElse: () => null);
-                var number = ViewController.request[widget.column['name']];
+                var number = ViewController.request[widget.column!.name];
                 if (number != null) {
                   if (minValidator != null && maxValidator != null) {
                     if (number < minValidator['value']) {
@@ -211,19 +212,19 @@ class _FormTextFieldState extends State<FormTextField> {
                   }
                 }
               } else if (widget.isEmail == true) {
-                var emailValidator = widget.column['validators'].firstWhere(
+                var emailValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'email',
                     orElse: () => null);
                 final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
                 if (!emailRegex
-                    .hasMatch(ViewController.request[widget.column['name']])) {
+                    .hasMatch(ViewController.request[widget.column!.name])) {
                   _errorText = emailValidator['message'];
                 } else {
                   _errorText = null;
                 }
               } else if (widget.isMobile == true) {
-                var mobileValidator = widget.column['validators'].firstWhere(
+                var mobileValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'mobile',
                     orElse: () => null);
               }
@@ -239,7 +240,7 @@ class _FormTextFieldState extends State<FormTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilder(
-            key: widget.fbKey,
+            key: UniqueKey(),
             child: FormBuilderTextField(
               key: textFieldKey,
               focusNode: _focusNode,
@@ -291,7 +292,7 @@ class _FormTextFieldState extends State<FormTextField> {
                 // else {
                 //   text.value = value!;
                 // }
-                // ViewController.request[widget.column['name']] = value;
+                // ViewController.request[widget.column.name] = value;
                 if (widget.onChange != null) this.widget.onChange!(value);
               },
               onEditingComplete: () {},

@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:hive/hive.dart';
 import '../Controllers/main-controller.dart';
@@ -34,14 +35,14 @@ class General{
            List<dynamic> dataBox = [];
            var data;
            var dataItem;
-           List<dynamic> columnList = MainController.getColumnsTable(
+           List<ColumnModel> columnList = MainController.getColumnsTable(
                '${this.tableName}');
-           for (var column in columnList) {
+           for (ColumnModel column in columnList) {
              Box box2;
-             if (column['name'] == cloumnName) {
-               if (column['source_items'] == 'table') {
+             if (column.name == cloumnName) {
+               if (column.sourceItems == 'table') {
                  box2 =
-                 await Hive.openBox<DataModel>(MainController.apiKey.value+'${column['source_table']}');
+                 await Hive.openBox<DataModel>(MainController.apiKey.value+'${column.sourceTable}');
                  dataBox = box2.values.toList();
                  if (dataBox.length != 0) {
                    for (int i = 0; i < dataBox.length; i++) {
@@ -56,7 +57,7 @@ class General{
                    }
                  }
                } else {
-                 for (var item in column['items'])
+                 for (var item in column.items)
                    if (item['value'] == value) {
                      data = item;
                    }
@@ -71,14 +72,13 @@ class General{
              List<dynamic> dataBox = [];
              var data;
              List<dynamic> multiSelectedTitleList = [];
-             List<dynamic> columnList = MainController.getColumnsTable(
-                 '${this.tableName}');
-             for (var column in columnList) {
+             List<ColumnModel> columnList = MainController.getColumnsTable('${this.tableName}');
+             for (ColumnModel column in columnList) {
                Box box2;
-               if (column['name'] == cloumnName)
-                 if (column['source_items'] == 'table') {
+               if (column.name == cloumnName)
+                 if (column.sourceItems == 'table') {
                    box2 =
-                   (await Hive.openBox<DataModel>(MainController.apiKey.value+'${column['source_table']}'));
+                   (await Hive.openBox<DataModel>(MainController.apiKey.value+'${column.sourceTable}'));
                    dataBox = box2.values.toList();
                    if (dataBox.length != 0)
                      for (var i = 0; i < dataBox.length; i++) {
@@ -94,7 +94,7 @@ class General{
                        : '';
                  } else {
                    List<dynamic>items = [];
-                   for (var item in column['items']) {
+                   for (var item in column.items) {
                      for (var val in value) {
                        if (item['value'] == val) {
                          items.add(item);
@@ -114,8 +114,8 @@ class General{
            return value;
          }
        }
-     }catch(error){
-       print('>>>>>>>>>>>>>>>>Error>>>>>>>>>>>>>>>>${error}');
+     }catch(error, s){
+       print('>>>>>>>>>>>>>>>>Error>>>>>>>>>>>>>>>>${error}>>${s}');
        showSnackbar(snackTypes.error, ' error format value');
      }
    }

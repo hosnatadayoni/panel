@@ -644,11 +644,11 @@ class _TableHeaderRoleState extends State<TableHeaderRole> {
                               // setState(() {
                               AdminController.countShowRowRole.value = value;
                               selectedCount = value;
-                              MainController.startIndex.value =
+                              MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.start =
                                   (AdminController.currentPageRole.value - 1) *
                                       AdminController.countShowRowRole.value;
-                              MainController.endIndex.value =
-                                  MainController.startIndex.value +
+                              MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.end =
+                                  MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.start! +
                                       AdminController.countShowRowRole.value;
                               AdminController.currentPageRole.value = 1;
                               //   // MainController.renderPagination();
@@ -809,11 +809,11 @@ class _TableHeaderRoleState extends State<TableHeaderRole> {
                             onSelected: (value) async {
                               AdminController.countShowRowRole.value = value;
                               selectedCount = value;
-                              MainController.startIndex.value =
+                              MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.start=
                                   (AdminController.currentPageRole.value - 1) *
                                       10;
-                              MainController.endIndex.value =
-                                  MainController.startIndex.value + 10;
+                              MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.end =
+                                  MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.start! + 10;
                               AdminController.currentPageRole.value = 1;
 
                               await AdminController.getRoles();
@@ -939,25 +939,23 @@ class TableFooterRole extends StatefulWidget {
   @override
   State<TableFooterRole> createState() => _TableFooterRoleState();
 }
+var tableSelected = 'access_role';
 
 class _TableFooterRoleState extends State<TableFooterRole> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = 'Role';
 
     return Obx(() {
       return Container(
         child: size.width > 556
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: pagenationBox(
-                    ViewController.totalPage.value, tableSelected),
+                children: pagenationBox(MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.totalPage, tableSelected),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: pagenationBox(
-                    ViewController.totalPage.value, tableSelected),
+          children: pagenationBox(MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.totalPage, tableSelected),
               ),
       );
     });
@@ -1026,7 +1024,7 @@ class _TableFooterRoleState extends State<TableFooterRole> {
                 color: color3,
               ),
               Txt(
-                '${AdminController.getRoleRes.value.length == 0 ? 0 : MainController.startIndex.value + 1}',
+                '${AdminController.getRoleRes.value.length == 0 ? 0 :  MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.start! + 1}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,
@@ -1038,7 +1036,7 @@ class _TableFooterRoleState extends State<TableFooterRole> {
                 color: color3,
               ),
               Txt(
-                '${MainController.endIndex.value}',
+                '${ MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.end}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,
@@ -1050,7 +1048,7 @@ class _TableFooterRoleState extends State<TableFooterRole> {
                 color: color3,
               ),
               Txt(
-                '${MainController.totalItems.value}',
+                '${ MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.totalRecords}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,

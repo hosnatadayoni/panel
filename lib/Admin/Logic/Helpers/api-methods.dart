@@ -76,20 +76,19 @@ class RestApi {
   }
 
 
-  static responseHandler(
-      {Response? response, Function? successCallback, Function? errorCallback, printResponse = false, popupMessage = true}) async {
+  static responseHandler({Response? response, Function? successCallback, Function? errorCallback, printResponse = false, popupMessage = true}) async {
     if (response == null) {
       if (isConnected)
         showSnackbar(snackTypes.error, 'Server Error');
-      // else
-      //   showSnackbar(snackTypes.error, 'اتصال اینترنت را بررسی کنید.');
+      else
+        showSnackbar(snackTypes.warning, 'هشدار! شما به اینترنت متصل نیستید.');
       // if(ModalRoute.of(Get.Get.context!)!.settings.name!='/networkError')
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }
 
-    else if (response.statusCode == 200) {
+    else if (response.statusCode == 200 || response.statusCode == 201) {
       if (printResponse)
-        print('>>>response>>>${response.data}<<<<end response <<<<');
+      print('>>>response>>>${response.data}<<<<end response <<<<');
       if (successCallback != null)
         await successCallback();
     }
@@ -160,7 +159,6 @@ class RestApi {
         if (token != '') dio.options.headers["authorization"] = token;
 
         if (token != '') {
-          print('RestApi.post>>>${token}');
           if (body == null) {
             body = {'token': '${token}'};
           } else {

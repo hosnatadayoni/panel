@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import 'Admin/Logic/Controllers/app_localization_delegate.dart';
 import 'Admin/UI/Views/splash.dart';
 import 'Admin/UI/Views/table-page.dart';
@@ -25,6 +27,9 @@ void main()async {
   // box.clear();
   // box2.clear();
   // box3.clear();
+  String date='1379/02/26';
+  // Jalali d=date.toJalai();
+  print('main>>>${(date.toJalai()).compareTo('1379/01/26'.toJalai())}');
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -78,7 +83,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/':(context)=>Splash(),
-        '/TablePage': (context) =>  TablePage(),
+        // '/TablePage': (context) =>  TablePage(),
       },
     );
   }

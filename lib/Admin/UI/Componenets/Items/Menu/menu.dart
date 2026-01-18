@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -53,7 +54,7 @@ class _MenuBoxState extends State<MenuBox> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (var i = 0; i < MainController.items.length; i++)
+                    for (var i = 0; i < MainController.menuItems.length; i++)
                       MainController.selectedItem == i &&
                               MainController.isClickedItem.value == true
                           ? Loading(
@@ -73,22 +74,20 @@ class _MenuBoxState extends State<MenuBox> {
                                       height: 20,
                                     ),
                                     for (var j = 0;
-                                        j < MainController.SubMenuList.length;
+                                        j < MainController.menuList.length;
                                         j++)
-                                      if (MainController.SubMenuList[j]
-                                              ['schema']['main_menu'] ??
-                                          true)
+                                      if (MainController.menuList[j].schema.mainMenu ?? true)
                                         Column(children: [
                                           InkWell(
                                               onTap: () async {
                                                 MainController.selectedSubItem.value = j;
                                                 DB.parentItem = {};
                                                 MainController.tableName.value =
-                                                MainController.SubMenuList[j]['schema']['name'];
-                                                MainController.SubMenuList[j]['schema']['currentPage'] = 1;
-                                                await MainController.goToTablePage(MainController.SubMenuList[j]);
+                                                MainController.menuList[j].schema.name!;
+                                                MainController.menuList[j].schema.currentPage = 1;
+                                                await HelperController.goToTablePage(MainController.menuList[j]);
                                               },
-                                              child: Txt('${MainController.SubMenuList[j]['schema']['title']}', fontSize: 16, fontWeight: FontWeight.w400,
+                                              child: Txt('${MainController.menuList[j].schema.title}', fontSize: 16, fontWeight: FontWeight.w400,
                                                 color: MainController.isLightMode.value == true &&
                                                         MainController.selectedSubItem.value == j
                                                     ? itemColor8
@@ -130,7 +129,7 @@ class _MenuBoxState extends State<MenuBox> {
                 SizedBox(
                   height: 20,
                 ),
-                for (var i = 0; i < MainController.items.length; i++)
+                for (var i = 0; i < MainController.menuItems.length; i++)
                   Obx(() {
                     return Column(
                       children: [
@@ -179,13 +178,11 @@ class _MenuBoxState extends State<MenuBox> {
                                           MainController.isClickedItem.value = false;
                                         }  else {
                                           MainController.isClickedItem.value = true;
-                                          await MainController.loadJson();
+                                          await ConncetServerController.listSchemaByField();
                                         }
-                                        MainController.itemSelected.value = MainController.items[MainController
-                                            .selectedItem.value];
+                                        MainController.itemSelected.value = MainController.menuItems[MainController.selectedItem.value];
                                         // Get.to(() => TablePage());
-                                        MainController.selectedSubItem.value =
-                                            -1;
+                                        MainController.selectedSubItem.value = -1;
                                       },
                                       child: Container(
                                           width: 50,
@@ -194,18 +191,11 @@ class _MenuBoxState extends State<MenuBox> {
                                               left: 10,
                                               bottom: 10,
                                               right: 10),
-                                          color: MainController
-                                                      .selectedItem.value ==
-                                                  i
-                                              ? MainController
-                                                          .isLightMode.value ==
-                                                      false
-                                                  ? whiteColor
-                                                  : background
+                                          color: MainController.selectedItem.value == i ? MainController.isLightMode.value == false ? whiteColor : background
                                               : Colors.transparent,
                                           child: Center(
                                               child: Icon(
-                                            MainController.items[i].icon,
+                                            MainController.menuItems[i].icon,
                                             size: 30,
                                             color: MainController
                                                         .selectedItem.value ==
@@ -236,7 +226,7 @@ class _MenuBoxState extends State<MenuBox> {
                                               BorderRadius.circular(10),
                                         ),
                                         child: Txt(
-                                          '${MainController.items[i].title}',
+                                          '${MainController.menuItems[i].title}',
                                           color: whiteColor,
                                         ),
                                       ),
