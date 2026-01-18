@@ -12,7 +12,8 @@ const String createSchemaUrl=baseApiUrl+'/createSchema';
 const String createFieldUrl = baseApiUrl+'/createFields';
 const String updateFieldUrl = baseApiUrl+'/updateFields';
 const String deleteFieldUrl = baseApiUrl+'/deleteFields';
-const String listFieldUrl=baseApiUrl+'/listFields';
+const String listFieldUrl =baseApiUrl+'/listFields';
+const String listFieldByIdUrl =baseApiUrl+'/listFieldsById';
 
 const String updateSchemaUrl=baseApiUrl+'/updateSchema';
 const String deleteSchemaUrl=baseApiUrl+'/deleteSchema';

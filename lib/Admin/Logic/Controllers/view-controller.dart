@@ -1774,6 +1774,8 @@ class ViewController extends GetxController {
 
   static Widget generateFileBox(String selecetdFiles, var column,
       Rx<bool>? isSeletedFile) {
+    Rx<bool> isSeletedFile=false.obs;
+    isSeletedFile.value=selecetdFiles.isNotEmpty?true:false;
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -1807,7 +1809,7 @@ class ViewController extends GetxController {
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt: selecetdFiles,
-          isSeletedFile: isSeletedFile,
+          isSeletedFile:selecetdFiles.isNotEmpty?true.obs:false.obs,
           column: column,
         ),
       ],

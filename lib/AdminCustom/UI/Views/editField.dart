@@ -1,4 +1,3 @@
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:panel/Admin/Logic/Controllers/app-controller.dart';
 import 'package:panel/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:panel/Admin/Logic/Controllers/helper-controller.dart';
@@ -13,8 +12,6 @@ import 'package:panel/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
-
 import '../../../Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import '../../../Admin/UI/Componenets/Popups/snackbar.dart';
 
@@ -35,34 +32,47 @@ class _EditFieldPageState extends State<EditFieldPage> {
   Rx<String> hintTxt = RxString('');
   RxList<dynamic> selectedItemsList = [].obs;
   Rx<bool> isSelectedItem = false.obs;
-
+  bool checkExistItem(var id){
+    for(var item in itemsList){
+      if(item['_id']==id){
+        return true;
+      }
+    }
+    return false;
+  }
+  List<String> titleSelect=[];
 
   Future<void> loadItems() async {
+    print('_EditFieldPageState.loadItems widget.data[>>${widget.data['items']}');
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'multiSelect') {
         if (widget.data['source_items'] == 'table') {
           if (widget.data['items'].length != 0) {
-            await ConncetServerController.listField(
-                {'name': widget.data['source_table']});
+            await ConncetServerController.listFieldByTableId({'id': widget.data['source_table']});
             for (var data in ConncetServerController.listFieldsRes) {
-              if (!itemsList.contains(data['title'])) {
-                itemsList.add(data['title']);
+              if (checkExistItem(data['_id'])==false) {
+                itemsList.add(data);
               }
             }
             if (column['sourceTable'] != null) {
               for (var item in widget.data['items']) {
-                selectedItemsList
-                    .add(ViewController.itemsShowSelectItem(item, column));
+                selectedItemsList.add(ViewController.itemsShowSelectItem(item, column));
+                print('_EditFieldPageState.loadItems selectedItemsList1>>${selectedItemsList}');
               }
             } else {
               for (var item in widget.data['items']) {
-                selectedItemsList.add(item);
+                selectedItemsList.add(item['value']);
+                print('_EditFieldPageState.loadItems selectedItemsList2>>>>>${selectedItemsList}');
               }
             }
             // hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
-            hintTxt.value = ViewController.itemsShowSelectItem(
-                selectedItemsList, MainController.tableInfo['columns'][j]);
+            // hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+            for (var item in itemsList)
+              if(selectedItemsList.contains(item['_id']))
+                titleSelect.add(item['title']);
+
+            hintTxt.value ='${titleSelect.join(', ')}';
             multiSelectWidget.value = Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +90,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
                       items: [
                         for (var item in itemsList)
                           DropdownMenuItem(
-                              value: item,
+                              value: item['_id'],
                               child: Obx(() {
                                 return Row(
                                   children: [
@@ -92,78 +102,44 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                           child: Obx(() {
                                             return Checkbox(
                                                 activeColor: colorBtn,
-                                                // value: selectedItemsList.any((map) =>
-                                                //     mapEquals(map, item)),
-                                                value: selectedItemsList
-                                                    .contains(item),
+                                                value: selectedItemsList.contains(item['_id']),
                                                 onChanged: (isChecked) {
+
                                                   if (isChecked != null) {
                                                     hintTxt.value = '';
-                                                    // if (!selectedItemsList.any((map) =>
-                                                    //     mapEquals(map, item))) {
-                                                    //   selectedId = [];
-                                                    //   requestMultiSelect = item;
-                                                    //   selectedItemsList.add(item);
-                                                    //
-                                                    // }
-                                                    if (!selectedItemsList
-                                                        .contains(item)) {
+                                                    if (!selectedItemsList.contains(item['_id'])) {
                                                       selectedId = [];
-                                                      selectedItemsList
-                                                          .add(item);
+                                                      selectedItemsList.add(item['_id']);
+                                                      titleSelect.add(item['title']);
                                                     } else {
                                                       selectedId = [];
-                                                      // requestMultiSelect.removeWhere((key,
-                                                      //     value) => value == ['value']);
-                                                      // var index = selectedItemsList
-                                                      //     .indexWhere((map) =>
-                                                      //     mapEquals(map, item));
-                                                      //
-                                                      // selectedItemsList.removeAt(index);
-                                                      if (selectedItemsList
-                                                          .contains(item)) {
-                                                        selectedItemsList
-                                                            .remove(item);
+                                                      if (selectedItemsList.contains(item['_id'])) {
+                                                        selectedItemsList.remove(item['_id']);
+                                                        titleSelect.remove(item['title']);
+                                                        print(
+                                                            '_EditFieldPageState.loadItems titleSelect>>${selectedItemsList}');
                                                       }
                                                     }
 
-                                                    if (selectedItemsList
-                                                            .value.length ==
-                                                        0) {
-                                                      isSelectedItem.value =
-                                                          false;
+                                                    if (selectedItemsList.value.length == 0) {
+                                                      isSelectedItem.value = false;
                                                     } else {
-                                                      isSelectedItem.value =
-                                                          true;
+                                                      isSelectedItem.value = true;
                                                     }
-                                                    // for (var r in selectedItemsList)
-                                                    // hintTxt.value = hintTxt.value + r['title'];
-                                                    // hintTxt.value = hintTxt.value + ',' + r;
-                                                    hintTxt.value = ViewController
-                                                        .itemsShowSelectItem(
-                                                            selectedItemsList,
-                                                            MainController
-                                                                    .tableInfo[
-                                                                'columns'][j]);
-                                                    for (var r
-                                                        in selectedItemsList)
-                                                      // selectedId.add(r['value']);
-                                                      selectedId.add(r);
+                                                    hintTxt.value = '${titleSelect.join(', ')}';
 
-                                                    ViewController.request[
-                                                            column['name']] =
-                                                        selectedId;
-                                                    ViewController.request[
-                                                            MainController
-                                                                        .tableInfo[
-                                                                    'columns']
-                                                                [j]['name']] =
-                                                        selectedItemsList;
+                                                    // for (var r in selectedItemsList)
+                                                    //   selectedId.add(r);
+
+
+                                                    ViewController.request['items'] = selectedItemsList;
+                                                    print('_EditFieldPageState.loadItems request>>%${column['name']}>>${selectedItemsList}>>%${ViewController.request[column['name']]}');
+
                                                   }
                                                 });
                                           })),
                                     ),
-                                    Txt(item,
+                                    Txt(item['title'],
                                         color: MainController.isLightMode.value
                                             ? whiteColor
                                             : primaryDark),
@@ -171,9 +147,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                 );
                               }))
                       ],
-                      hintText: hintTxt.value != '' && hintTxt.value != null
-                          ? hintTxt.value
-                          : '${AppController.of(Get.context!)!.value('choice')}',
+                      hintText: hintTxt.value != '' ? hintTxt.value : '${AppController.of(Get.context!)!.value('choice')}',
                       selectedItems: selectedItemsList,
                       isSelectedItem: isSelectedItem,
                       column: column,
@@ -194,10 +168,22 @@ class _EditFieldPageState extends State<EditFieldPage> {
   void initState() {
     super.initState();
     loadItems();
-
+    // print('_EditFieldPageState.initState>>>${widget.data['items']}');
     if (widget.data['items'] != null) {
-      items.value = List<Map<String, dynamic>>.from(widget.data['items']);
-      print('_EditFieldPageState.initState');
+      print('_EditFieldPageState.initState>>>${widget.data['items']}');
+
+      for(int i=0;i<widget.data['items'].length;i++){
+
+        // if(widget.data['items'][i] is Map) {
+          print('_EditFieldPageState.initState widget.data runtimeType');
+          widget.data['items'][i] = {
+            'title': widget.data['items'][i],
+            'value': widget.data['items'][i],
+          };
+        // }
+      }
+      print('_EditFieldPageState.initState>>>items>>${widget.data['items']}');
+      items.value = List<Map<String, dynamic>>.from(widget.data['items']) ;
     }
   }
 
@@ -378,7 +364,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
 
                                     // ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}')
                                     : widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton'
-                                        ? widget.data['items'].length == 0
+                                        ? widget.data['items']!=null && widget.data['items'].length == 0
                                             ? Container()
                                             : Obx(() {
                                                 return multiSelectWidget.value;
@@ -435,21 +421,18 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    if(items.isNotEmpty) {
-                                      var index = items.indexWhere((item) =>
-                                      item['value'] == null ||
-                                          item['value']!.isEmpty);
-                                      if (index != -1) {
-                                        items.removeAt(index);
-                                      }
-                                      ViewController.request.addAll({'items':items});
-                                    }
+                                    // if(items.isNotEmpty) {
+                                    //   var index = items.indexWhere((item) =>
+                                    //   item['value'] == null ||
+                                    //       item['value']!.isEmpty);
+                                    //   if (index != -1) {
+                                    //     items.removeAt(index);
+                                    //   }
+                                    //   ViewController.request.addAll({'items':items});
+                                    // }
                                     print(
                                         '_EditPageSate.build>>>${ViewController.request}>>>${MainController.tableName.value}');
-                                    HelperController.editFunction(
-                                        MainController.tableName.value,
-                                        request: ViewController.request,
-                                        id: widget.data!['_id']);
+                                    HelperController.editFunction(MainController.tableName.value, request:  ViewController.request, id: widget.data!['_id']);
                                     if (ViewController.isClickedBtn.value ==
                                         false) {}
                                   },

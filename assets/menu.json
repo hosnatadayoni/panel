@@ -111,13 +111,35 @@
         "items": [],
         "is-show-table": true,
         "is-show-store": true,
-        "is-show-edit": false
+        "is-show-edit": true
       },
       {
         "name": "online",
         "title": "online",
         "type": "checkbox",
         "default_value": true,
+        "is-show-table": true,
+        "is-show-store": true,
+        "is-show-edit": true
+      },
+      {
+        "name" :  "view",
+        "title": "view",
+        "type" : "select",
+        "sourceItems": "custom",
+        "sourceTable": null,
+        "items": [
+          {
+            "title": "default",
+            "value": "default",
+            "is_selected": true
+          },
+          {
+            "title": "custom",
+            "value": "custom",
+            "is_selected": false
+          }
+        ],
         "is-show-table": true,
         "is-show-store": true,
         "is-show-edit": true
@@ -306,7 +328,8 @@
             "title": "file",
             "value": "file",
             "is_selected": false
-          },          {
+          },
+          {
             "title": "file pv",
             "value": "file_pv",
             "is_selected": false
@@ -320,6 +343,16 @@
             "title": "multiFile pv",
             "value": "multiFile_pv",
             "is_selected": false
+          },
+          {
+            "title": "date",
+            "value": "date",
+            "is_selected": true
+          },
+          {
+            "title": "time",
+            "value": "time",
+            "is_selected": true
           }
         ],
         "validators": [
@@ -508,6 +541,13 @@
         "type": "string",
         "is-show-table": true,
         "is-show-store": true,
+        "is-show-edit": false
+      },   {
+        "name": "value",
+        "title": "value",
+        "type": "Number int",
+        "is-show-table": true,
+        "is-show-store": false,
         "is-show-edit": false
       }
     ]

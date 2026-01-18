@@ -27,7 +27,10 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
   RxList<dynamic> selectedItemsList = [].obs;
   Rx<bool> isSelectedItem = false.obs;
   List<dynamic> selectedId = [];
-
+  //select
+  String hintTxtSelectBox = '';
+  Rx<bool> isSelectedItemSelectBox = false.obs;
+  //end select
   Future<void> loadItems() async {
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
@@ -79,7 +82,7 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
             }
           }
         }
-         hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+        hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
       }
     }
     setState(() {});
@@ -88,10 +91,22 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
     loadItems();
+    if(widget.data['view'].toString().isEmpty){
+      widget.data['view']='default';
+    }
+    });
+
   }
   @override
   Widget build(BuildContext context) {
+    print('_EditSchemaPageState.build>>>${widget.data}');
+
+    print('_EditSchemaPageState.build isss>>${ MainController.tableInfo['columns'][6]['items']}');
+    for (var j = 0; j <
+        MainController.tableInfo['columns'].length; j++)
+      print('_EditSchemaPageState.build isss>>${ MainController.tableInfo['columns'][j]['name']}>>>>${ MainController.tableInfo['columns'][j]['type']}>>>${widget.data[MainController.tableInfo['columns'][j]['name']]}');
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
     return Scaffold(
@@ -101,6 +116,7 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
         child: Stack(
           children: [
             Obx(() {
+              print('_EditSchemaPageState.build iss>>${ widget.data['view']}');
               return Positioned(
                 right: size.width > 800
                     ? MainController.isClickedItem.value == true
@@ -130,7 +146,7 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
                         children: [
                           for (var j = 0; j <
                               MainController.tableInfo['columns'].length; j++)
-                            if (MainController.tableInfo['columns'][j]['is-show-store'] == true)
+                            if (MainController.tableInfo['columns'][j]['is-show-edit'] == true)
                               if (MainController.tableInfo['columns'][j]['type'] == 'string' || MainController.tableInfo['columns'][j]['type'] == 'int' ||
                                   MainController.tableInfo['columns'][j]['type'] == 'Number double' ||
                                   MainController.tableInfo['columns'][j]['type'] == 'Number int' ||
@@ -233,6 +249,61 @@ class _EditSchemaPageState extends State<EditSchemaPage> {
                                       }),
                                     ],
                                   )
+                                else if(MainController.tableInfo['columns'][j]['type'] == 'select')
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Obx(() {
+                                          return Txt(
+                                            '${MainController.tableInfo['columns'][j]['title']}',
+                                            color: MainController.isLightMode.value == true
+                                                ? whiteColor
+                                                : color2,
+                                          );
+                                        }),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        SelectBox(
+                                            name: '${MainController.tableInfo['columns'][j]['title']}',
+                                            column: MainController.tableInfo['columns'][j],
+                                            items: [
+                                              for (var item in MainController.tableInfo['columns'][8]['items'])
+                                                DropdownMenuItem(
+                                                    child: Obx(() {
+                                                      return Txt(
+                                                        '${item['title']}',
+                                                        color:
+                                                        MainController.isLightMode.value == true
+                                                            ? whiteColor
+                                                            : primaryDark,
+                                                      );
+                                                    }),
+                                                    value: item['value']),
+                                            ],
+                                            initalValue:  widget.data['view'] != null ? MainController.tableInfo['columns'][8]['items'].firstWhere((element) => element['value'] == widget.data[MainController.tableInfo['columns'][j]['name']])['value'] : MainController.tableInfo['columns'][8]['items'].first['value'],
+                                            onChanged: (value) async {
+                                              for (var item in MainController.tableInfo['columns'][8]['items']) {
+                                                if (item['title'] == value) {
+                                                  if (item['value'] == '') {
+                                                    value = null;
+                                                  }
+                                                }
+                                              }
+                                              if (value != '') {
+                                                ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
+                                                isSelectedItemSelectBox = true.obs;
+                                              } else {
+                                                ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
+                                                isSelectedItemSelectBox = false.obs;
+                                              }
+                                            },
+                                            hintText: hintTxtSelectBox,
+                                            isSeleted: isSelectedItemSelectBox,
+                                            selectedValue: ''),
+                                      ],
+                                    )
+
                         ],
                       ),
                       if (MainController.selectedSubItem.value != -1)

@@ -53,7 +53,7 @@ class _CreateValidatorState extends State<CreateValidator> {
       if(type.value == 'file' || type.value == 'multiFile'){
         itemsListFileType.value = MainController.tableInfo['columns'][0]['items'] ?? [];
       }
-      else if(type.value == 'Number int' || type.value == 'Number double'){
+      else if(type.value == 'Number int' || type.value == 'Number double'||type.value=='string'){
         itemsListValueNumberType.value = MainController.tableInfo['columns'][0]['items'] ?? [];
       }
       else{
@@ -70,7 +70,7 @@ class _CreateValidatorState extends State<CreateValidator> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isHoverBtnBack = false.obs;
-    print('hhhhhhhh>>>${MainController.tableInfo['columns'][0]['items']}');
+    print('hhhhhhhh>>>${MainController.tableInfo}');
     return Scaffold(
       body: Container(
         width: size.width,
@@ -293,8 +293,9 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                 ),
                                               ],
                                             ):Container():
-                                            type.value == 'Number int' || type.value == 'Number double'  ?
-                                            itemsListValueNumberType.length !=0 ? Column(
+                                            type.value == 'Number int' || type.value == 'Number double' || type.value == 'string' ?
+                                            itemsListValueNumberType.length !=0 ?
+                                            Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Obx(() {
@@ -372,7 +373,6 @@ class _CreateValidatorState extends State<CreateValidator> {
                                                   height: 10,
                                                 ),
                                                 Obx((){
-                                                  print('_CreateValidatorState.build>>>${itemsList}>>${MainController.tableInfo['columns'][j]}');
                                                   return SelectBox(
                                                       name: '${MainController.tableInfo['columns'][j]['title']}',
                                                       column: MainController.tableInfo['columns'][j],
@@ -423,7 +423,7 @@ class _CreateValidatorState extends State<CreateValidator> {
                                           }),
                                       ],
                                     ),
-                                if (numberVal.value == 'min' || numberVal.value == 'max')
+                                if (numberVal.value == 'min' || numberVal.value == 'max'|| numberVal.value == 'max_count'|| numberVal.value == 'min_count'|| numberVal.value == 'only_count')
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [

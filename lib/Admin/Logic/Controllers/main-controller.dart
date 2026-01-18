@@ -1730,12 +1730,8 @@ class MainController extends GetxController {
       //cehcek not range cell
       else {
         if (column['type'] == 'Number int' || column['type'] == 'Number double') {
-          var minValidator = column['validators'].firstWhere(
-              (validator) => validator['type'] == 'min',
-              orElse: () => null);
-          var maxValidator = column['validators'].firstWhere(
-              (validator) => validator['type'] == 'max',
-              orElse: () => null);
+          var minValidator = column['validators'].firstWhere((validator) => validator['type'] == 'min', orElse: () => null);
+          var maxValidator = column['validators'].firstWhere((validator) => validator['type'] == 'max', orElse: () => null);
           // int numberExcel = int.parse('${cellExcel}');
           num? intValue;
           if(column['type'] == 'Number int'){

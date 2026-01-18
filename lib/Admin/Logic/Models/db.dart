@@ -755,9 +755,7 @@ class DB {
             if (MainController.getStatusTable(this.tableName!) == true) {
               await ConncetServerController.updateRecordGeneral(setRecord);
               if (ConncetServerController.updateRecordRes.isNotEmpty) {
-                DataModel record = DataModel(
-                    id: ConncetServerController.updateRecordRes['_id'],
-                    data: ConncetServerController.updateRecordRes);
+                DataModel record = DataModel(id: ConncetServerController.updateRecordRes['_id'], data: ConncetServerController.updateRecordRes);
                 await box.putAt(allDataIndex, record);
               }
             }
@@ -787,9 +785,7 @@ class DB {
     Box box = await Hive.openBox<DataModel>('${this.tableName}');
     var relations = ViewCustomController.getDataTable(this.tableName!);
     for (var data in records) {
-      var tableDataIndex = box.values
-          .toList()
-          .indexWhere((element) => element.id == data['_id']);
+      var tableDataIndex = box.values.toList().indexWhere((element) => element.id == data['_id']);
       if (tableDataIndex != -1) {
         DataModel item = box.values.toList()[tableDataIndex];
         var before = await HelperController.beforeDelete(tableDataIndex);
@@ -798,9 +794,7 @@ class DB {
         } else {
           if (relations['relations'].length != 0) {
             for (var relation in relations['relations']) {
-              DB(relation['table-name'])
-                  .where('parent_id', '\$eq', data['_id'])
-                  .deleteRecord();
+              DB(relation['table-name']).where('parent_id', '\$eq', data['_id']).deleteRecord();
             }
           }
           if (MainController.getStatusTable(this.tableName!) == true) {

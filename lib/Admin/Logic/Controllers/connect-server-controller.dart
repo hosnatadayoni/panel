@@ -132,8 +132,17 @@ class ConncetServerController extends GetxController {
     }, printResponse: true);
   }
 
-  static listField(Map<String, dynamic> json) async {
-    var response = await RestApi.post(listFieldUrl, body:json);
+  // static listField(Map<String, dynamic> json) async {
+  //   var response = await RestApi.post(listFieldUrl, body:json);
+  //   RestApi.responseHandler(
+  //       response: response, successCallback: () async {
+  //       listFieldsRes=response!.data['data'];
+  //       listFieldsRes.removeWhere((element) => element['name']=='parent_table');
+  //       listFieldsRes.removeWhere((element) => element['name']=='parent_id');
+  //       }, printResponse: true);
+  // }
+  static listFieldByTableId(Map<String, dynamic> json) async {
+    var response = await RestApi.post(listFieldByIdUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
         listFieldsRes=response!.data['data'];

@@ -51,11 +51,12 @@ class _CretePageFieldState extends State<CretePageField> {
   //end selectcustom
 
   //multiSelect custom
-  RxList<dynamic> sourceTableItems = [].obs;
+  RxList<Map<String,dynamic>> sourceTableItems = <Map<String,dynamic>>[].obs;
   List<dynamic> selectedId = [];
   Rx<String> hintTxt = RxString('');
   RxList<dynamic> selectedItemsList = [].obs;
   Rx<bool> isSelectedItem = false.obs;
+
 
   //end multi select custom
 
@@ -63,24 +64,16 @@ class _CretePageFieldState extends State<CretePageField> {
   Rx<String> sourceSelected = ''.obs;
   Rx<String> selectedType = ''.obs;
   RxList<dynamic> typeItems = [].obs;
-
+  List<String> listTitle=[];
   Future<void> loadItems() async {
     typeItems.value = [];
     sourceTableItems.value = [];
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'select') {
-        // if (column['sourceItems'] != 'custom') {
         var items = await ViewController.itemsList(column);
         selectItems[column['name']] = items.obs;
-        selectWidgets[column['name']] =
-            ViewController.generateStoreFormSelectBox(
-                column,
-                items,
-                '',
-                '',
-                false.obs
-            );
+        selectWidgets[column['name']] = ViewController.generateStoreFormSelectBox(column, items, '', '', false.obs);
         if (column['name'] == 'source_table') {
           sourceTable.value = items;
         }
@@ -90,19 +83,12 @@ class _CretePageFieldState extends State<CretePageField> {
         else if (column['name'] == 'type') {
           typeItems.value = await ViewController.itemsList(column);
         }
-        //   }
-        // else {
-        //     rows.add(selectedItem(0));
-        //   }
       }
       else if (column['type'] == 'multiSelect') {
-        // if (column['sourceItems'] != 'custom') {
+        print('_CretePageFieldState.loadItems multiSelect>>${column['name']}');
         if (column['name'] == 'source_table') {
-          sourceTableItems.value = await ViewController.itemsList(column);
+          sourceTableItems.value = await ViewController.itemsList(column) as List<Map<String,dynamic>>;
         }
-        // } else {
-        //   rows.add(selectedItem(0));
-        // }
       }
     }
   }
@@ -227,7 +213,14 @@ class _CretePageFieldState extends State<CretePageField> {
     requestCustomData.remove(key);
     print('_CretePageFieldState.removeRow>>${requestCustomData}');
   }
-
+ bool checkExistItem(var id){
+    for(var item in sourceTableItems){
+      if(item['_id']==id){
+        return true;
+      }
+    }
+    return false;
+  }
   @override
   void initState() {
     super.initState();
@@ -487,28 +480,15 @@ class _CretePageFieldState extends State<CretePageField> {
                                                   MainController
                                                       .tableInfo['columns'][j],
                                                   false.obs)
-                                            else
-                                              if(MainController
-                                                  .tableInfo['columns'][j]['type'] ==
-                                                  'time')
-                                                ViewController
-                                                    .generateFormTimeBox(
-                                                    MainController
-                                                        .tableInfo['columns'][j],
-                                                    TimeOfDay.now(), false.obs)
-                                              else
-                                                if(MainController
-                                                    .tableInfo['columns'][j]['type'] ==
-                                                    'select')
-                                                  MainController
-                                                      .tableInfo['columns'][j]['name'] ==
-                                                      'type' ?
+                                            else if(MainController.tableInfo['columns'][j]['type'] == 'time')
+                                                ViewController.generateFormTimeBox(MainController.tableInfo['columns'][j], TimeOfDay.now(), false.obs)
+                                            else if(MainController.tableInfo['columns'][j]['type'] == 'select')
+                                                  MainController.tableInfo['columns'][j]['name'] == 'type' ?
                                                   Obx(() {
-                                                    return typeItems.value
-                                                        .length != 0
-                                                        ? new Column(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .start,
+                                                    return typeItems.value.length != 0
+                                                        ?
+                                                    new Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Obx(() {
                                                           return Txt(
@@ -640,16 +620,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                       }),
                                                                       value: item['value']),
                                                               ],
-                                                              initalValue: initailValueType
-                                                                  .value ==
-                                                                  '' ||
-                                                                  initailValueType
-                                                                      .value ==
-                                                                      null
-                                                                  ? typeItems
-                                                                  .first['value']
-                                                                  : initailValueType
-                                                                  .value,
+                                                              initalValue: initailValueType.value == '' ? typeItems.first['value'] : initailValueType.value,
                                                               onChanged: (
                                                                   value) async {
                                                                 print(
@@ -685,7 +656,11 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                     value ==
                                                                         'file_pv' ||
                                                                     value ==
-                                                                        'checkbox') {
+                                                                        'checkbox' ||
+                                                                    value ==
+                                                                        'date'||
+                                                                    value ==
+                                                                        'time' ) {
                                                                   ViewController
                                                                       .request['type_field'] =
                                                                   'string';
@@ -735,24 +710,12 @@ class _CretePageFieldState extends State<CretePageField> {
                                                     ) : Container();
                                                   }) :
 
-                                                  MainController
-                                                      .tableInfo['columns'][j]['name'] ==
-                                                      'source_items'
-                                                      ? selectedType.value ==
-                                                      'select' ||
-                                                      selectedType.value ==
-                                                          'multiSelect' ||
-                                                      selectedType.value ==
-                                                          'radiobutton' ||
-                                                      selectedType.value == ''
-                                                      ? sourceItemList.value
-                                                      .length != 0 &&
-                                                      selectedType.value ==
-                                                          'select' ||
-                                                      selectedType.value ==
-                                                          'radiobutton' ||
-                                                      selectedType.value ==
-                                                          'multiSelect' ?
+                                                  MainController.tableInfo['columns'][j]['name'] == 'source_items'
+                                                      ? selectedType.value == 'select' || selectedType.value == 'multiSelect' || selectedType.value == 'radiobutton' ||
+                                                      selectedType.value == '' ? sourceItemList.value.length != 0 &&
+                                                      selectedType.value == 'select' ||
+                                                      selectedType.value == 'radiobutton' ||
+                                                      selectedType.value == 'multiSelect' ?
                                                   new Column(
                                                     crossAxisAlignment: CrossAxisAlignment
                                                         .start,
@@ -771,45 +734,26 @@ class _CretePageFieldState extends State<CretePageField> {
                                                       SizedBox(
                                                         height: 10,
                                                       ),
-                                                      MainController
-                                                          .tableInfo['columns'][j]['sourceItems'] !=
-                                                          'custom' ?
+                                                      MainController.tableInfo['columns'][j]['sourceItems'] != 'custom' ?
                                                       Obx(() {
                                                         return SelectBox(
-                                                            name: '${MainController
-                                                                .tableInfo['columns'][j]['title']}',
-                                                            column: MainController
-                                                                .tableInfo['columns'][j],
+                                                            name: '${MainController.tableInfo['columns'][j]['title']}',
+                                                            column: MainController.tableInfo['columns'][j],
                                                             items: [
                                                               DropdownMenuItem(
                                                                   child: Obx(() {
                                                                     return Txt(
-                                                                      '${AppController
-                                                                          .of(
-                                                                          Get
-                                                                              .context!)!
-                                                                          .value(
-                                                                          'not selected')}',
-                                                                      color: MainController
-                                                                          .isLightMode
-                                                                          .value ==
-                                                                          true
-                                                                          ? whiteColor
-                                                                          : primaryDark,
+                                                                      '${AppController.of(Get.context!)!.value('not selected')}',
+                                                                      color: MainController.isLightMode.value == true ? whiteColor : primaryDark,
                                                                     );
                                                                   }),
                                                                   value: ''),
-                                                              for (var item in sourceItemList
-                                                                  .value)
+                                                              for (var item in sourceItemList.value)
                                                                 DropdownMenuItem(
                                                                     child: Obx(() {
                                                                       return
                                                                         Txt(
-                                                                          '${ViewController
-                                                                              .itemsShowSelectItem(
-                                                                              item,
-                                                                              MainController
-                                                                                  .tableInfo['columns'][j])}',
+                                                                          '${ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j])}',
                                                                           color:
                                                                           MainController
                                                                               .isLightMode
@@ -823,10 +767,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                             ],
                                                             initalValue: initailValueSourceItems
                                                                 .value ==
-                                                                '' ||
-                                                                initailValueSourceItems
-                                                                    .value ==
-                                                                    null
+                                                                ''
                                                                 ? ""
                                                                 : initailValueSourceItems
                                                                 .value,
@@ -889,11 +830,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                             ],
                                                             initalValue: initailValueSourceItems
                                                                 .value ==
-                                                                '' ||
-                                                                initailValueSourceItems
-                                                                    .value ==
-                                                                    null
-                                                                ? sourceItemList
+                                                                ''? sourceItemList
                                                                 .first['value']
                                                                 : initailValueSourceItems
                                                                 .value,
@@ -905,17 +842,11 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                   .value =
                                                                   value;
                                                               print(
-                                                                  '_CretePageFieldState.build>>${sourceItem
-                                                                      .value}');
-
-                                                              for (var item in sourceItemList
-                                                                  .value) {
-                                                                if (item['title'] ==
-                                                                    value) {
-                                                                  if (item['value'] ==
-                                                                      '') {
-                                                                    value =
-                                                                    null;
+                                                                  '_CretePageFieldState.build>>${sourceItem.value}');
+                                                              for (var item in sourceItemList.value) {
+                                                                if (item['title'] == value) {
+                                                                  if (item['value'] == '') {
+                                                                    value = null;
                                                                   }
                                                                 }
                                                               }
@@ -990,20 +921,10 @@ class _CretePageFieldState extends State<CretePageField> {
                                                   ) : Container()
                                                       : Container()
                                                       :
-                                                  MainController
-                                                      .tableInfo['columns'][j]['name'] ==
-                                                      'source_table'
-                                                      ? sourceItem.value ==
-                                                      'custom' ? Container() :
-                                                  (sourceTable.value.length !=
-                                                      0) &&
-                                                      (selectedType.value ==
-                                                          'select' ||
-                                                          selectedType.value ==
-                                                              'multiSelect' ||
-                                                          selectedType.value ==
-                                                              'radiobutton')
-                                                      ? Obx(() {
+                                                  MainController.tableInfo['columns'][j]['name'] == 'source_table'
+                                                      ? sourceItem.value == 'custom' ? Container() :
+                                                  (sourceTable.value.length != 0) && (selectedType.value == 'select' || selectedType.value == 'multiSelect' || selectedType.value == 'radiobutton') ?
+                                                  Obx(() {
                                                     return new Column(
                                                       crossAxisAlignment: CrossAxisAlignment
                                                           .start,
@@ -1020,8 +941,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                         SizedBox(
                                                           height: 10,
                                                         ),
-                                                        MainController
-                                                            .tableInfo['columns'][j]['sourceItems'] !=
+                                                        MainController.tableInfo['columns'][j]['sourceItems'] !=
                                                             'custom' ?
                                                         Obx(() {
                                                           return SelectBox(
@@ -1052,84 +972,40 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                   DropdownMenuItem(
                                                                       child: Obx(() {
                                                                         return Txt(
-                                                                          '${ViewController
-                                                                              .itemsShowSelectItem(
-                                                                              item,
-                                                                              MainController
-                                                                                  .tableInfo['columns'][j])}',
-                                                                          color:
-                                                                          MainController
-                                                                              .isLightMode
-                                                                              .value ==
-                                                                              true
-                                                                              ? whiteColor
-                                                                              : primaryDark,
+                                                                          '${ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j])}',
+                                                                          color: MainController.isLightMode.value == true ? whiteColor : primaryDark,
                                                                         );
                                                                       }),
-                                                                      value: item['name']),
+                                                                      value: item['_id']),
                                                               ],
-                                                              initalValue: initailValueSourceTable
-                                                                  .value ==
-                                                                  '' ||
-                                                                  initailValueSourceTable
-                                                                      .value ==
-                                                                      null
-                                                                  ? ""
-                                                                  : initailValueSourceTable
-                                                                  .value,
-                                                              onChanged: (
-                                                                  value) async {
-                                                                sourceTableItems
-                                                                    .value = [];
-                                                                initailValueSourceTable
-                                                                    .value =
-                                                                value!;
-                                                                sourceSelected
-                                                                    .value =
-                                                                    value;
-                                                                if (sourceSelected
-                                                                    .value !=
-                                                                    '') {
-                                                                  await ConncetServerController
-                                                                      .listField(
-                                                                      {
-                                                                        'name': sourceSelected
-                                                                            .value
-                                                                      });
-                                                                  for (var data in ConncetServerController
-                                                                      .listFieldsRes) {
-                                                                    if (!sourceTableItems
-                                                                        .contains(
-                                                                        data['name'])) {
-                                                                      sourceTableItems
-                                                                          .add(
-                                                                          data['name']);
+                                                              initalValue: initailValueSourceTable.value ==
+                                                                  '' ? "" : initailValueSourceTable.value,
+                                                              onChanged: (value) async {
+                                                                sourceTableItems.value = [];
+                                                                initailValueSourceTable.value =  sourceTable.firstWhere((element) => element['_id']==value)['name'];
+                                                                // initailValueSourceTable.value =  value!;
+                                                                sourceSelected.value =  value!;
+                                                                if (sourceSelected.value != '') {
+                                                                  await ConncetServerController.listFieldByTableId({'id':value});
+                                                                  for (var data in ConncetServerController.listFieldsRes) {
+                                                                    if (checkExistItem(data['_id'])==false) {
+                                                                      sourceTableItems.add(data);
                                                                     }
                                                                   }
                                                                 }
                                                                 else {
-                                                                  sourceTableItems
-                                                                      .value =
-                                                                  [];
+                                                                  sourceTableItems.value = [];
                                                                 }
-
-                                                                if (value !=
-                                                                    '') {
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] =
-                                                                      value;
+                                                                if (value != '') {
+                                                                  ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
                                                                 } else {
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] =
-                                                                  '';
+                                                                  ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
                                                                 }
+                                                                print('_CretePageFieldState.build sourceTableItems.value add>>${ ViewController.request[MainController.tableInfo['columns'][j]['name']] }');
+
                                                               },
-                                                              hintText: hintText
-                                                                  .value,
-                                                              isSeleted: ViewController
-                                                                  .request[MainController
+                                                              hintText: hintText.value,
+                                                              isSeleted: ViewController.request[MainController
                                                                   .tableInfo['columns'][j]['name']] ==
                                                                   '' ||
                                                                   ViewController
@@ -1139,112 +1015,57 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                   ? false.obs
                                                                   : true.obs,
                                                               selectedValue: '');
-                                                        })
-                                                            : Obx(() {
-                                                          return SelectBox(
+                                                        }) : Obx(() {
+                                                              return SelectBox(
                                                               name: '${MainController
                                                                   .tableInfo['columns'][j]['title']}',
                                                               column: MainController
                                                                   .tableInfo['columns'][j],
                                                               items: [
-                                                                for (var item in sourceTable
-                                                                    .value)
+                                                                for (var item in sourceTable.value)
                                                                   DropdownMenuItem(
                                                                       child: Obx(() {
                                                                         return Txt(
                                                                           '${item['title']}',
-                                                                          color:
-                                                                          MainController
-                                                                              .isLightMode
-                                                                              .value ==
-                                                                              true
-                                                                              ? whiteColor
-                                                                              : primaryDark,
+                                                                          color: MainController.isLightMode.value == true ? whiteColor : primaryDark,
                                                                         );
                                                                       }),
                                                                       value: item['value']),
                                                               ],
-                                                              initalValue: initailValueSourceTable
-                                                                  .value ==
-                                                                  '' ||
-                                                                  initailValueSourceTable
-                                                                      .value ==
-                                                                      null
-                                                                  ? sourceTable
-                                                                  .value
-                                                                  .first['value']
-                                                                  : initailValueSourceTable
-                                                                  .value,
-                                                              onChanged: (
-                                                                  value) async {
-                                                                for (var item in sourceTable
-                                                                    .value) {
-                                                                  if (item['title'] ==
-                                                                      value) {
-                                                                    if (item['value'] ==
-                                                                        '') {
+                                                              initalValue: initailValueSourceTable.value == '' ? sourceTable.value.first['value'] : initailValueSourceTable.value,
+                                                              onChanged: (value) async {
+                                                                for (var item in sourceTable.value) {
+                                                                  if (item['title'] == value) {
+                                                                    if (item['value'] == '') {
                                                                       value =
                                                                       null;
                                                                     }
                                                                   }
                                                                 }
-
-                                                                initailValueSourceTable
-                                                                    .value =
-                                                                value!;
-                                                                sourceSelected
-                                                                    .value =
-                                                                    value;
-                                                                if (sourceSelected
-                                                                    .value !=
-                                                                    '') {
-                                                                  await ConncetServerController
-                                                                      .listField(
-                                                                      {
-                                                                        'name': sourceSelected
-                                                                            .value
-                                                                      });
-                                                                  for (var data in ConncetServerController
-                                                                      .listFieldsRes) {
-                                                                    if (!sourceTableItems
-                                                                        .contains(
-                                                                        data['title'])) {
-                                                                      sourceTableItems
-                                                                          .add(
-                                                                          data['title']);
+                                                                initailValueSourceTable.value = value!;
+                                                                sourceSelected.value = value;
+                                                                if (sourceSelected.value != '') {
+                                                                  await ConncetServerController.listFieldByTableId({'id': sourceSelected.value});
+                                                                  for (var data in ConncetServerController.listFieldsRes) {
+                                                                    print('_CretePageFieldState.build listFieldsRes>>${data}');
+                                                                    if (checkExistItem(data['_id'])==false) {
+                                                                      sourceTableItems.add(data);
                                                                     }
                                                                   }
                                                                 }
                                                                 else {
-                                                                  sourceTableItems
-                                                                      .value =
-                                                                  [];
+                                                                  sourceTableItems.value = [];
                                                                 }
-                                                                if (value !=
-                                                                    '') {
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] =
-                                                                      value;
+                                                                if (value != '') {
+                                                                  ViewController.request[MainController.tableInfo['columns'][j]['name']] = value;
                                                                 } else {
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] =
-                                                                  '';
+                                                                  ViewController.request[MainController.tableInfo['columns'][j]['name']] = '';
                                                                 }
+                                                                print('_CretePageFieldState.build sourceTableItems.value add>>${sourceTableItems.value}');
+
                                                               },
-                                                              hintText: hintText
-                                                                  .value,
-                                                              isSeleted: ViewController
-                                                                  .request[MainController
-                                                                  .tableInfo['columns'][j]['name']] ==
-                                                                  '' ||
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] ==
-                                                                      null
-                                                                  ? false.obs
-                                                                  : true.obs,
+                                                              hintText: hintText.value,
+                                                              isSeleted: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null ? false.obs : true.obs,
                                                               selectedValue: '');
                                                         }),
                                                         SizedBox(
@@ -1268,23 +1089,12 @@ class _CretePageFieldState extends State<CretePageField> {
                                                   //         .tableInfo['columns'][j],
                                                   //     'string', '')
                                                   //     :
-                                                    (selectedType.value ==
-                                                        'select' ||
-                                                        selectedType.value ==
-                                                            'multiSelect' ||
-                                                        selectedType.value ==
-                                                            'radiobutton' ||
-                                                        selectedType.value ==
-                                                            '') &&
-                                                        sourceItem.value !=
-                                                            'custom'
-                                                        ? Obx(() {
-                                                      return sourceTableItems
-                                                          .value.length != 0
-                                                          ? MainController
-                                                          .tableInfo['columns'][j]['sourceItems'] !=
-                                                          'custom'
-                                                          ? Column(
+                                                    (selectedType.value == 'select' || selectedType.value == 'multiSelect' || selectedType.value == 'radiobutton' || selectedType.value == '') &&
+                                                        sourceItem.value != 'custom' ?
+                                                    Obx(() {
+                                                      print('_CretePageFieldState.build sourceTableItems>>${sourceTableItems}');
+                                                      return sourceTableItems.length != 0 ? MainController.tableInfo['columns'][j]['sourceItems'] != 'custom' ?
+                                                      Column(
                                                         crossAxisAlignment: CrossAxisAlignment
                                                             .start,
                                                         children: [
@@ -1304,7 +1114,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                               items: [
                                                                 for (var item in sourceTableItems)
                                                                   DropdownMenuItem(
-                                                                      value: item,
+                                                                      value: item['_id'],
                                                                       child: Obx(() {
                                                                         return Row(
                                                                           children: [
@@ -1316,134 +1126,46 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                   child: Obx(() {
                                                                                     return Checkbox(
                                                                                         activeColor: colorBtn,
-                                                                                        value: selectedItemsList
-                                                                                            .contains(
-                                                                                            item),
-                                                                                        onChanged: (
-                                                                                            isChecked) {
-                                                                                          if (isChecked !=
-                                                                                              null) {
-                                                                                            hintTxt
-                                                                                                .value =
-                                                                                            '';
-
-                                                                                            if (!selectedItemsList
-                                                                                                .contains(
-                                                                                                item)) {
-                                                                                              selectedId =
-                                                                                              [
-                                                                                              ];
-                                                                                              selectedItemsList
-                                                                                                  .add(
-                                                                                                  item);
+                                                                                        value: selectedItemsList.contains(item['_id']),
+                                                                                        onChanged: (isChecked) {
+                                                                                          if (isChecked != null) {
+                                                                                            hintTxt.value = '';
+                                                                                            if (!selectedItemsList.contains(item['_id'])) {
+                                                                                              selectedId = [];
+                                                                                              selectedItemsList.add(item['_id']);
                                                                                             } else {
-                                                                                              selectedId =
-                                                                                              [
-                                                                                              ];
-                                                                                              // ViewController.requestMultiSelect
-                                                                                              //     .removeWhere((key,
-                                                                                              //     value) =>
-                                                                                              // value == ['_id']);
-                                                                                              // var index =
-                                                                                              // selectedItemsList
-                                                                                              //     .indexWhere(
-                                                                                              //         (map) =>
-                                                                                              //         mapEquals(
-                                                                                              //             map,
-                                                                                              //             item));
-                                                                                              //
-                                                                                              // selectedItemsList
-                                                                                              //     .removeAt(index);
-                                                                                              if (selectedItemsList
-                                                                                                  .contains(
-                                                                                                  item)) {
-                                                                                                selectedItemsList
-                                                                                                    .remove(
-                                                                                                    item);
+                                                                                              selectedId = [];
+                                                                                              if (selectedItemsList.contains(item['_id'])) {
+                                                                                                selectedItemsList.remove(item['_id']);
                                                                                               }
                                                                                             }
-                                                                                            if (item['_id'] ==
-                                                                                                '') {}
-                                                                                            if (selectedItemsList
-                                                                                                .value
-                                                                                                .length ==
-                                                                                                0) {
-                                                                                              isSelectedItem
-                                                                                                  .value =
-                                                                                              false;
+                                                                                            if (selectedItemsList.value.length == 0) {
+                                                                                              isSelectedItem.value = false;
                                                                                             } else {
-                                                                                              isSelectedItem
-                                                                                                  .value =
-                                                                                              true;
+                                                                                              isSelectedItem.value = true;
                                                                                             }
-                                                                                            for (var r
-                                                                                            in selectedItemsList)
-                                                                                              hintTxt
-                                                                                                  .value =
-                                                                                                  hintTxt
-                                                                                                      .value +
-                                                                                                      ViewController
-                                                                                                          .itemsShowSelectItem(
-                                                                                                          r,
-                                                                                                          MainController
-                                                                                                              .tableInfo['columns'][j]);
-
-
-                                                                                            // for (var r
-                                                                                            // in selectedItemsList)
-                                                                                            //   selectedId.add(r['_id']);
-                                                                                            selectedId
-                                                                                                .add(
-                                                                                                item);
-                                                                                            ViewController
-                                                                                                .request[MainController
-                                                                                                .tableInfo['columns'][j]['name']] =
-                                                                                                selectedId;
-                                                                                            ViewController
-                                                                                                .request[MainController
-                                                                                                .tableInfo['columns'][j]['name']] =
-                                                                                                selectedItemsList;
+                                                                                            for (var r in selectedItemsList) {
+                                                                                              var i;
+                                                                                              if(item['_id']==r)
+                                                                                                i=item;
+                                                                                              hintTxt.value = hintTxt.value + ViewController.itemsShowSelectItem(i['name'], MainController.tableInfo['columns'][j]);
+                                                                                            }
+                                                                                            selectedId.add(item);
+                                                                                            print('_CretePageFieldState.build selectedItemsList>>>${selectedItemsList}>>>${selectedId}');
+                                                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedId;
+                                                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
                                                                                           }
                                                                                         });
                                                                                   })),
                                                                             ),
-                                                                            Txt(
-                                                                                ViewController
-                                                                                    .itemsShowSelectItem(
-                                                                                    item,
-                                                                                    MainController
-                                                                                        .tableInfo['columns'][j]),
-                                                                                color: MainController
-                                                                                    .isLightMode
-                                                                                    .value
-                                                                                    ? whiteColor
-                                                                                    : primaryDark),
+                                                                            Txt(ViewController.itemsShowSelectItem(item, MainController.tableInfo['columns'][j]), color: MainController.isLightMode.value ? whiteColor : primaryDark),
                                                                           ],
                                                                         );
                                                                       }))
                                                               ],
-                                                              hintText: hintTxt
-                                                                  .value !=
-                                                                  '' && hintTxt
-                                                                  .value != null
-                                                                  ? hintTxt
-                                                                  .value
-                                                                  : '${AppController
-                                                                  .of(
-                                                                  Get.context!)!
-                                                                  .value(
-                                                                  'choice')}',
+                                                              hintText: hintTxt.value != '' ? hintTxt.value : '${AppController.of(Get.context!)!.value('choice')}',
                                                               selectedItems: selectedItemsList,
-                                                              isSelectedItem: ViewController
-                                                                  .request[MainController
-                                                                  .tableInfo['columns'][j]['name']] ==
-                                                                  '' ||
-                                                                  ViewController
-                                                                      .request[MainController
-                                                                      .tableInfo['columns'][j]['name']] ==
-                                                                      null
-                                                                  ? false.obs
-                                                                  : true.obs,
+                                                              isSelectedItem: ViewController.request[MainController.tableInfo['columns'][j]['name']] == '' || ViewController.request[MainController.tableInfo['columns'][j]['name']] == null ? false.obs : true.obs,
                                                               column: MainController
                                                                   .tableInfo['columns'][j],
                                                             );
@@ -1471,8 +1193,7 @@ class _CretePageFieldState extends State<CretePageField> {
                                                           Obx(() {
                                                             return MultiSelectDropdown(
                                                               items: [
-                                                                for (var item in sourceTableItems
-                                                                    .value)
+                                                                for (var item in sourceTableItems.value)
                                                                   DropdownMenuItem(
                                                                       value: item,
                                                                       child: Obx(() {
@@ -1486,80 +1207,43 @@ class _CretePageFieldState extends State<CretePageField> {
                                                                                   child: Obx(() {
                                                                                     return Checkbox(
                                                                                         activeColor: colorBtn,
-                                                                                        value: selectedItemsList
-                                                                                            .contains(
-                                                                                            item),
-                                                                                        onChanged: (
-                                                                                            isChecked) {
-                                                                                          if (isChecked !=
-                                                                                              null) {
-                                                                                            hintTxt
-                                                                                                .value =
-                                                                                            '';
-                                                                                            if (!selectedItemsList
-                                                                                                .contains(
-                                                                                                item)) {
-                                                                                              selectedId =
-                                                                                              [
-                                                                                              ];
-                                                                                              selectedItemsList
-                                                                                                  .add(
-                                                                                                  item);
+                                                                                        value: selectedItemsList.contains(item['_id']),
+                                                                                        onChanged: (isChecked) {
+                                                                                          if (isChecked != null) {
+                                                                                            hintTxt.value ='';
+
+                                                                                            if (!selectedItemsList.contains(item['_id'])) {
+                                                                                              selectedId = [];
+                                                                                              selectedItemsList.add(item['_id']);
+                                                                                              listTitle.add(item['title']);
                                                                                             } else {
-                                                                                              selectedId =
-                                                                                              [
-                                                                                              ];
-                                                                                              // ViewController.requestMultiSelect.removeWhere((key,
-                                                                                              //     value) => value == ['value']);
-                                                                                              // var index = selectedItemsList
-                                                                                              //     .indexWhere((map) =>
-                                                                                              //     mapEquals(map, item));
-                                                                                              // selectedItemsList.removeAt(index);
-                                                                                              if (selectedItemsList
-                                                                                                  .contains(
-                                                                                                  item)) {
-                                                                                                selectedItemsList
-                                                                                                    .remove(
-                                                                                                    item);
+                                                                                              selectedId = [];
+                                                                                              if (selectedItemsList.contains(item['_id'])) {
+                                                                                                selectedItemsList.remove(item['_id']);
+                                                                                                listTitle.remove(item['title']);
                                                                                               }
                                                                                             }
 
-                                                                                            if (selectedItemsList
-                                                                                                .length ==
-                                                                                                0) {
-                                                                                              isSelectedItem
-                                                                                                  .value =
+                                                                                            if (selectedItemsList.length == 0) {
+                                                                                              isSelectedItem.value =
                                                                                               false;
                                                                                             } else {
-                                                                                              isSelectedItem
-                                                                                                  .value =
+                                                                                              isSelectedItem.value =
                                                                                               true;
                                                                                             }
-                                                                                            hintTxt
-                                                                                                .value =
-                                                                                                ViewController
-                                                                                                    .itemsShowSelectItem(
-                                                                                                    selectedItemsList,
-                                                                                                    MainController
-                                                                                                        .tableInfo['columns'][j]);
-                                                                                            selectedId
-                                                                                                .add(
-                                                                                                item);
 
-                                                                                            ViewController
-                                                                                                .request[MainController
-                                                                                                .tableInfo['columns'][j]['name']] =
-                                                                                                selectedId;
-                                                                                            ViewController
-                                                                                                .request[MainController
-                                                                                                .tableInfo['columns'][j]['name']] =
-                                                                                                selectedItemsList;
+                                                                                            // hintTxt.value = ViewController.itemsShowSelectItem(selectedItemsList, MainController.tableInfo['columns'][j]);
+                                                                                            hintTxt.value = '${listTitle.join(',')}';
+                                                                                            selectedId.add(item);
+                                                                                            ViewController.request[MainController.tableInfo['columns'][j]['name']] = selectedItemsList;
                                                                                           }
+                                                                                          print('_CretePageFieldState.build selectedItemsList2>>${listTitle}>>>${selectedItemsList}>>>${selectedId}');
+
                                                                                         });
                                                                                   })),
                                                                             ),
                                                                             Txt(
-                                                                                item,
+                                                                                item['title'],
                                                                                 color: MainController
                                                                                     .isLightMode
                                                                                     .value
