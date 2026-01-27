@@ -85,7 +85,7 @@ class RestApi {
       // Navigator.of(Get.Get.context!).pushNamedAndRemoveUntil('/networkError', (route) => false);
     }
 
-    else if(response.statusCode==200 ){
+    else if(response.statusCode!<400 ){
       if(printResponse)
         print('>>>response>>>${response.data}<<<<end response <<<<');
       if(successCallback!=null)

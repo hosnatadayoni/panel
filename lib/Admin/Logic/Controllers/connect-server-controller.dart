@@ -15,7 +15,7 @@ class ConncetServerController extends GetxController {
   static Map<String, dynamic> updateRecordRes = {};
   static List<Map<String, dynamic>> filterRecordRes = [];
   static List<dynamic> listProjectRes = [];
-  static List<dynamic> listSchemaRes = [];
+  static List<Map<String,dynamic>> listSchemaRes = [];
   static List<dynamic> listFieldsRes = [];
   static List<dynamic> listFiltersRes = [];
   static List<dynamic> listValidateRes = [];
@@ -60,26 +60,26 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response, successCallback: () async {
       stroredSchema=response!.data['data'];
-      await ConncetServerController.createField({
-        'table':'${stroredSchema['_id']}',
-        "title":'parent_table',
-        "name":'parent_table',
-        "type":'string',
-        "type_field":'string',
-        "is_show_table":false,
-        "is_show_store":false,
-        "is_show_edit":false,
-      });
-      await ConncetServerController.createField({
-        'table':'${stroredSchema['_id']}',
-        "title":'parent_id',
-        "name":'parent_id',
-        "type":'string',
-        "type_field":'string',
-        "is_show_table":false,
-        "is_show_store":false,
-        "is_show_edit":false,
-      });
+      // await ConncetServerController.createField({
+      //   'table':'${stroredSchema['_id']}',
+      //   "title":'parent_table',
+      //   "name":'parent_table',
+      //   "type":'string',
+      //   "type_field":'string',
+      //   "is_show_table":false,
+      //   "is_show_store":false,
+      //   "is_show_edit":false,
+      // });
+      // await ConncetServerController.createField({
+      //   'table':'${stroredSchema['_id']}',
+      //   "title":'parent_id',
+      //   "name":'parent_id',
+      //   "type":'string',
+      //   "type_field":'string',
+      //   "is_show_table":false,
+      //   "is_show_store":false,
+      //   "is_show_edit":false,
+      // });
     }, printResponse: true);
   }
   static updateSchema(Map<String, dynamic> request,var id) async {
@@ -101,7 +101,29 @@ class ConncetServerController extends GetxController {
     var response = await RestApi.post(listSchemaUrl, body: {'api_key': s});
     RestApi.responseHandler(
         response: response, successCallback: () async {
-      listSchemaRes=response!.data['data'];
+      listSchemaRes=List<Map<String,dynamic>>.from(response!.data['data']);
+      // await ConncetServerController.deleteField({'id': '6975c58489a9df3faa89c6b3'});
+      // await ConncetServerController.deleteField({'id': '6975c58489a9df3faa89c6b6'});
+      // await ConncetServerController.deleteField({'id': '6975c58489a9df3faa89c6b9'});
+      // for(var schema in listSchemaRes)
+      //   if(!schema.containsKey('version')){
+      //     await ConncetServerController.createField({
+      //       'table':'${schema['_id']}',
+      //       "title":'version',
+      //       "name":'version',
+      //       "type":'Number double',
+      //       "type_field":'number',
+      //       "is_show_table":false,
+      //       "is_show_store":false,
+      //       "is_show_edit":false,
+      //     });
+      //   }
+      // else{
+      //     print('schema version>>>$schema');
+      //
+      //
+      //   }
+
         }, printResponse: true);
   }
 
@@ -142,12 +164,23 @@ class ConncetServerController extends GetxController {
   //       }, printResponse: true);
   // }
   static listFieldByTableId(Map<String, dynamic> json) async {
+    // json={"name":"Product", "api_key": "8908b9e7-fd01-4bae-9f08-4c62dff3be18"};
     var response = await RestApi.post(listFieldByIdUrl, body:json);
     RestApi.responseHandler(
         response: response, successCallback: () async {
-        listFieldsRes=response!.data['data'];
+          // List<Map<String,dynamic>>res=[];
+          // res=List<Map<String,dynamic>>.from(response!.data['data']);
+
+      listFieldsRes=response!.data['data'];
         listFieldsRes.removeWhere((element) => element['name']=='parent_table');
         listFieldsRes.removeWhere((element) => element['name']=='parent_id');
+        listFieldsRes.removeWhere((element) => element['name']=='version');
+        // for(var r in res){
+        //   if(r['name']=='version' && r['type_field']== 'Number double'){
+        //     print('ConncetServerController.listFieldByTableId>>${r}');
+        //       await ConncetServerController.deleteField({'id': r['_id']});
+        //   }
+        // }
         }, printResponse: true);
   }
 
@@ -287,12 +320,8 @@ class ConncetServerController extends GetxController {
 
     var perPage = info['countShowRow'];
     var currentPage = info['currentPage'];
-    var response = await RestApi.post(getRecordsUrl,
-        body: ({
-          'table_name': tableName,
-          'pageNumber': currentPage.toString(),
-          'perPage': perPage.toString()
-        }));
+    var response = await RestApi.post(getRecordsUrl, body: ({'table_name': tableName, 'pageNumber': currentPage.toString(),
+          'perPage': perPage.toString()}));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {

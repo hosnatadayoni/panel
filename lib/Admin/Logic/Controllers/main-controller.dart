@@ -1446,12 +1446,10 @@ class MainController extends GetxController {
           for(var key in data.keys) {
             if (key != '_id'){
               if (data[key] != null) {
-                var type = getTypeOfField(
-                    MainController.tableInfo['table-name'], key);
+                var type = getTypeOfField(MainController.tableInfo['table-name'], key);
 
                 if (type == 'select' || type == 'multiSelect' || type == 'radiobutton') {
-                  var column = getDetailsOfField(
-                      MainController.tableInfo['table-name'], key);
+                  var column = getDetailsOfField(MainController.tableInfo['table-name'], key);
                   data[key] = ViewController.itemsShowSelectItem(data[key], column);
                 }
 

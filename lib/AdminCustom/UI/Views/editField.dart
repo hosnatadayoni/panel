@@ -43,18 +43,23 @@ class _EditFieldPageState extends State<EditFieldPage> {
   List<String> titleSelect=[];
 
   Future<void> loadItems() async {
-    print('_EditFieldPageState.loadItems widget.data[>>${widget.data['items']}');
+
+    print('_EditFieldPageState.loadItems widget.data[>>${widget.data['source_items'] }');
     for (var j = 0; j < MainController.tableInfo['columns'].length; j++) {
       final column = MainController.tableInfo['columns'][j];
       if (column['type'] == 'multiSelect') {
         if (widget.data['source_items'] == 'table') {
-          if (widget.data['items'].length != 0) {
-            await ConncetServerController.listFieldByTableId({'id': widget.data['source_table']});
-            for (var data in ConncetServerController.listFieldsRes) {
-              if (checkExistItem(data['_id'])==false) {
-                itemsList.add(data);
-              }
+          await ConncetServerController.listFieldByTableId({'id': widget.data['source_table']});
+          for (var data in ConncetServerController.listFieldsRes) {
+            if (checkExistItem(data['_id'])==false) {
+              itemsList.add(data);
             }
+            print('_EditFieldPageState.loadItems>>${data['_id']}>>>${checkExistItem(data['_id'])}>>${itemsList}');
+
+          }
+          // if (widget.data['items'].length != 0) {
+
+            print('_EditFieldPageState.loadItems sourceTable>>${column}');
             if (column['sourceTable'] != null) {
               for (var item in widget.data['items']) {
                 selectedItemsList.add(ViewController.itemsShowSelectItem(item, column));
@@ -62,8 +67,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
               }
             } else {
               for (var item in widget.data['items']) {
-                selectedItemsList.add(item['value']);
-                print('_EditFieldPageState.loadItems selectedItemsList2>>>>>${selectedItemsList}');
+                selectedItemsList.add(item['_id']);
+                print('_EditFieldPageState.loadItems selectedItemsList2>>>>${ widget.data['items']}>>>>${selectedItemsList}');
               }
             }
             // hintTxt = selectedItemsList.length != 0 ? RxString(selectedItemsList.join(' , ')) : RxString('');
@@ -73,7 +78,8 @@ class _EditFieldPageState extends State<EditFieldPage> {
                 titleSelect.add(item['title']);
 
             hintTxt.value ='${titleSelect.join(', ')}';
-            multiSelectWidget.value = Container(
+            multiSelectWidget.value =
+                Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -156,7 +162,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
                 ],
               ),
             );
-          }
+
         }
       }
     }
@@ -170,20 +176,22 @@ class _EditFieldPageState extends State<EditFieldPage> {
     loadItems();
     // print('_EditFieldPageState.initState>>>${widget.data['items']}');
     if (widget.data['items'] != null) {
-      print('_EditFieldPageState.initState>>>${widget.data['items']}');
+      print('_EditFieldPageState.initState>>>${widget.data['items']}>>>${widget.data}');
 
-      for(int i=0;i<widget.data['items'].length;i++){
-
-        // if(widget.data['items'][i] is Map) {
-          print('_EditFieldPageState.initState widget.data runtimeType');
-          widget.data['items'][i] = {
-            'title': widget.data['items'][i],
-            'value': widget.data['items'][i],
-          };
-        // }
-      }
+      // if(widget.data['source_items']!='custom')
+      // for(int i=0;i<widget.data['items'].length;i++){
+      //
+      //   // if(widget.data['items'][i] is Map) {
+      //     print('_EditFieldPageState.initState widget.data runtimeType');
+      //     widget.data['items'][i] = {
+      //       'title': widget.data['items'][i],
+      //       'value': widget.data['items'][i],
+      //     };
+      //   // }
+      // }
       print('_EditFieldPageState.initState>>>items>>${widget.data['items']}');
       items.value = List<Map<String, dynamic>>.from(widget.data['items']) ;
+      ViewController.request['items']=items.value ;
     }
   }
 
@@ -293,9 +301,7 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                           SizedBox(height: 15,),
                                           Obx(() => Column(
                                                 children: [
-                                                  for (var i = 0;
-                                                      i < items.length;
-                                                      i++)
+                                                  for (var i = 0; i < items.length; i++)
                                                     Row(
                                                       children: [
                                                         SizedBox(
@@ -363,10 +369,10 @@ class _EditFieldPageState extends State<EditFieldPage> {
                                       )
 
                                     // ViewController.generateFormTextField(GlobalKey(), MainController.tableInfo['columns'][j],MainController.tableInfo['columns'][j]['type'], '${widget.data['${MainController.tableInfo['columns'][j]['name']}'] != null ? widget.data['${MainController.tableInfo['columns'][j]['name']}'] : ''}')
-                                    : widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton'
-                                        ? widget.data['items']!=null && widget.data['items'].length == 0
-                                            ? Container()
-                                            : Obx(() {
+                                    : widget.data['type'] == 'select' || widget.data['type'] == 'multiSelect' || widget.data['type'] == 'radiobutton' ?
+                                // widget.data['items']!=null && widget.data['items'].length == 0
+                                //             ? Container()
+                                             Obx(() {
                                                 return multiSelectWidget.value;
                                               })
                                         : Container()
