@@ -1,7 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../../../../Logic/Models/columnModel.dart';
 
 class SelectBox extends StatefulWidget {
   String? name;

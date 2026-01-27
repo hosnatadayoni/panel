@@ -1,17 +1,20 @@
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shamsi_date/shamsi_date.dart';
+import 'package:hive/hive.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../UI/Views/create.dart';
 import '../../UI/Views/dashboard.dart';
 import '../../UI/Views/table-page.dart';
-import '../Models/dataModel.dart';
+import '../Models/columnModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
+import 'connect-server-controller.dart';
+import 'connection-controller.dart';
 import 'main-controller.dart';
 
 class HelperController extends GetxController {
@@ -49,11 +52,11 @@ class HelperController extends GetxController {
   //end update
 
   //delete
-  static beforeDelete(int index) {
-    return AppController.responceHelper(null, true);
+  static beforeDelete( Map<dynamic, dynamic> data) {
+    return AppController.responceHelper(data, true);
   }
 
-  static afterDelete(int index, var data) {
+  static afterDelete( Map<dynamic, dynamic> data) {
     // if(tableName == 'schema'){
     //   ConncetServerController.deleteSchema({'table-name' : 'tableName'});
     // }
@@ -73,10 +76,10 @@ class HelperController extends GetxController {
       MainController.selectedSubItem.value = index;
       MainController.tableName.value = MainController.menuList[index].schema.name!;
       var indexNew = MainController.menuList.indexWhere((element) => element.schema.name == MainController.tableName.value);
-      var table = MainController.getInfoTable(MainController.tableName.value);
+      TableModel table = MainController.getInfoTable(MainController.tableName.value);
       MainController.infoSchema.value = table;
       print('HelperController.backFunction>>${MainController.tableName.value}>>${MainController.menuList[indexNew]}>>${table}>>${ MainController.infoSchema}>>${MainController.menuList[index]}');
-      if (table['view'] == 'custom') {
+      if (table.schema.view == 'custom') {
         MainController.pageInfo[MainController.tableName.value]!.end= 0;
         MainController.pageInfo[MainController.tableName.value]!.start = 0;
       }
@@ -94,7 +97,21 @@ class HelperController extends GetxController {
       Get.to(() => DashboardPage());
     }
   }
-
+  static getListSchema() async {
+    bool connectivity = await ConnectionController.checkConnectivity();
+    if(connectivity){
+      await ConncetServerController.listSchemaByField();
+    }
+    else {
+      final box = await Hive.openBox<TableModel>('menuBox');
+      if (box.isNotEmpty) {
+        MainController.menuList.assignAll(box.values.toList());
+      }
+    }
+      // else{
+      //     await ConncetServerController.listSchemaByField();
+      // }
+  }
   static goToTablePage(TableModel table, {bool loadData = true, var tableFields = null, var tableData = null}) async {
     if (table.schema.view == 'custom') {
         await HelperController.pageInateFunction();
@@ -117,11 +134,7 @@ class HelperController extends GetxController {
     }
   }
 
-  static createFunction(String tableName,
-      {bool loadData = true,
-        var tableFields = null,
-        var tableData = null}) async {
-
+  static createFunction(String tableName, {bool loadData = true, var tableFields = null, var tableData = null}) async {
     var table = MainController.getInfoTable(MainController.tableName.value);
     if (table.schema.view == 'custom') {
       await MainController.loadData(
@@ -157,6 +170,7 @@ class HelperController extends GetxController {
       var items = await DB('${table.schema.name}').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: MainController.infoSchema.value.schema.name).getRecords();
       await goToTablePage(table, tableFields: MainController.getInfoTable(table.schema.name), tableData: items);
     } else {
+      print('HelperController.relationFunction>>${MainController.dataRecord[index]['_id']}');
       var items = await DB('${table.schema.name}').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: MainController.infoSchema.value.schema.name).getRecords();
       await goToTablePage(table, tableFields: MainController.getInfoTable(table.schema.name), tableData: items);
     }
@@ -169,7 +183,7 @@ class HelperController extends GetxController {
     tableName = table.schema.name;
     if (table.schema.view == 'custom') {
     } else {
-      var response={};
+      var response=[];
       print('HelperController.editFunction>>${request}');
       response= await DB('${MainController.infoSchema.value.schema.name}').where('_id', '\$eq', '${id}').updateRecords(request);
      if(response.isNotEmpty){
@@ -204,11 +218,10 @@ class HelperController extends GetxController {
     if (table.schema.view == 'custom') {
 
     } else {
+      print('HelperController.deleteFunction>>$id');
       await DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
-      await pageInateFunction();
-      // MainController.tableData.value =
-      // await DB('${tableName}').paginate();
-      MainController.pageInfo[tableName.toString()]!.totalPage = await DB('${tableName}').infoPage();
+      // await pageInateFunction();
+      // MainController.pageInfo[tableName.toString()]!.totalPage = await DB('${tableName}').infoPage();
     }
     Navigator.pop(Get.context!);
   }
@@ -218,12 +231,13 @@ class HelperController extends GetxController {
     MainController.infoSchema.value = table;
     var tableName = table.schema.name;
     if (table.schema.view == 'custom') {
+
       MainController.dataRecord.value = await DB('${MainController.tableName.value}').paginate();
       MainController.pageInfo[tableName]!.end = 0;
       MainController.pageInfo[tableName]!.start = 0;
     } else {
       MainController.dataRecord.value = await DB('${tableName}').paginate();
-      MainController.allData.value = MainController.dataRecord.value;
+      // MainController.allData.value = MainController.dataRecord.value;
     }
   }
 

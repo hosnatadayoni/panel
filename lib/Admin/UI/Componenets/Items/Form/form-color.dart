@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,12 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../../../../Logic/Models/columnModel.dart';
 class ColorPickerBox extends StatefulWidget {
   Color selectedColor = Colors.blue;
   Function(Color)? onChanged;
-  var column;
+  ColumnModel? column;
   Rx<bool>? isSeletedColor = false.obs;
 
   ColorPickerBox({this.onChanged , required this.selectedColor , this.column , this.isSeletedColor});
@@ -65,8 +68,8 @@ class _ColorPickerBoxState extends State<ColorPickerBox> {
     var inputRequired;
     String? errorMessage;
     if(widget.column != null){
-      if(widget.column['validators'] != null){
-        inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+      if(widget.column!.validators.length!=0){
+        inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
         errorMessage = inputRequired['message'];
       }
     }

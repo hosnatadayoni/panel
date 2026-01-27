@@ -1,6 +1,8 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/columnModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,7 @@ import 'package:intl/intl.dart';
 
 class TimePickerBox extends StatefulWidget {
   TimePickerBox({this.column, this.onTimeChanged, this.selectedTime , this.isSeletedTime});
-  var column;
+  ColumnModel? column;
   Function(String?)? onTimeChanged;
   TimeOfDay? selectedTime;
   Rx<bool>? isSeletedTime = false.obs;
@@ -34,15 +36,15 @@ class _TimePickerBoxState extends State<TimePickerBox> {
     var inputRequired;
     String? errorMessage;
 
-    if(widget.column['validators'] != null){
-      inputRequired = widget.column['validators'].firstWhere(
+    if(widget.column!.validators.length!=0){
+      inputRequired = widget.column!.validators.firstWhere(
               (validator) => validator['type'] == 'required',
           orElse: () => null
       );
       errorMessage = inputRequired?['message'];
     }
-    final dateFormat = widget.column['format'] != null
-        ? (widget.column['format'] == 24 ? DateFormat.Hm() : DateFormat.jm())
+    final dateFormat = widget.column!.format != null
+        ? (widget.column!.format == 24 ? DateFormat.Hm() : DateFormat.jm())
         : DateFormat.Hm();
     return Obx(() {
       return Column(

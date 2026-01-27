@@ -5,10 +5,12 @@ import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/set-token-page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import '../../Public/api-urls.dart';
 import '../../UI/Views/dashboard.dart';
 import '../Helpers/api-methods.dart';
 import '../Helpers/token-methods.dart';
+import '../Models/tableModel.dart';
 import 'main-controller.dart';
 
 class AdminController extends GetxController {
@@ -344,7 +346,10 @@ class AdminController extends GetxController {
   static logout() async {
     await Token.removeToken();
     MainController.menuList.value = [];
+
     getRoleRes.value = [];
     getAdminRes.value = [];
+    final box = await Hive.openBox<TableModel>('menuBox');
+    await box.clear();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-part'package:finance/Admin/Logic/Models/dataModel.g.dart';
+part'dataModel.g.dart';
 
 @HiveType(typeId: 5)
 class DataModel {

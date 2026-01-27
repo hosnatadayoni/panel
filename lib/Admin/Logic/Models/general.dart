@@ -1,7 +1,8 @@
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:hive/hive.dart';
 import '../Controllers/main-controller.dart';
+import 'columnModel.dart';
 import 'dataModel.dart';
 
 class General{

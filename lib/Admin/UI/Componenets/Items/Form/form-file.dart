@@ -3,12 +3,14 @@ import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/validator-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../../Logic/Models/columnModel.dart';
 import '../../Popups/snackbar.dart';
 
 class FormFile extends StatefulWidget {
@@ -16,7 +18,7 @@ class FormFile extends StatefulWidget {
   Map<String, List<dynamic>> filesSelected;
   String? columnName;
   var selectedFilesTxt;
-  var column;
+  ColumnModel? column;
   Rx<bool>? isSeletedFile = false.obs;
   var file;
   RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
@@ -47,8 +49,8 @@ class _FormFileState extends State<FormFile> {
   Widget build(BuildContext context) {
 
     var inputRequired;
-    if (widget.column['validators'] != null) {
-      inputRequired = widget.column['validators'].firstWhere(
+    if (widget.column!.validators.length!=0) {
+      inputRequired = widget.column!.validators.firstWhere(
           (validator) => validator['type'] == 'required',
           orElse: () => null);
       if (widget.filesSelected['${widget.columnName}'] == null) {
@@ -67,19 +69,19 @@ class _FormFileState extends State<FormFile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.column['type'] == 'multiFile' ||widget.column['type'] == 'multiFile_pv' ||
-              ((widget.column['type'] == 'file' ||widget.column['type'] == 'file_pv') && fileNameList.length == 0))
+          if (widget.column!.type == 'multiFile' ||widget.column!.type == 'multiFile_pv' ||
+              ((widget.column!.type == 'file' ||widget.column!.type == 'file_pv') && fileNameList.length == 0))
             InkWell(
               onTap: () async {
                 FilePickerResult? picked = await FilePicker.platform.pickFiles(
                   allowMultiple:
-                      widget.column['type'] == 'multiFile' || widget.column['type'] == 'multiFile_pv' ? true : false,
+                      widget.column!.type == 'multiFile' || widget.column!.type == 'multiFile_pv' ? true : false,
                   type: FileType.custom,
                   withReadStream: true,
                   withData: true,
                   allowedExtensions:
-                      widget.column['isPictureSelected'] != null &&
-                              widget.column['isPictureSelected'] == true
+                      widget.column!.isPictureSelected != null &&
+                              widget.column!.isPictureSelected == true
                           ? ['jpg', 'png']
                           : ['jpg', 'pdf', 'doc', 'png'],
                 );
@@ -89,12 +91,12 @@ class _FormFileState extends State<FormFile> {
                     if (!fileNameList.contains(file.name)) {
                       fileNameList.add(file.name);
                     }
-                    var [validation, message] =ValidatorController.validationFile(widget.column, file);
+                    var [validation, message] =ValidatorController.validationFile(widget.column!, file);
                     if (validation == false) {
                     fileNameList.removeWhere((element) => element==file.name);
                       showSnackbar(snackTypes.error, '${message}');
                     } else {
-                      filePath.value = (await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo))!;
+                      filePath.value = (await MainController.uploadFileInChunks(file, widget.column!, widget.fileInfo))!;
                         print('_FormFileState.build>>${filePath.value}');
                       setState(() {
                         widget.isSeletedFile!.value = true;
@@ -147,7 +149,7 @@ class _FormFileState extends State<FormFile> {
           Column(
             children: [
               for (var i = 0; i < fileNameList.length; i++)
-                ViewController.generateSelectFileBox(widget.column['type'],fileNameList, widget.fileInfo, i)
+                ViewController.generateSelectFileBox(widget.column!.type,fileNameList, widget.fileInfo, i)
                 // Container(
                 //   margin: EdgeInsets.only(bottom: 10),
                 //   child: Row(

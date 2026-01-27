@@ -37,7 +37,7 @@ class AppController extends GetxController {
   static late Locale locale;
   static Map<dynamic, dynamic> _localizedValues = new Map();
 
-  static startLoading(String loadingTag){
+  static startLoading(String? loadingTag){
     if(loadingTag!='' && loadingTag!=null)
       loadingList.add(loadingTag);
   }

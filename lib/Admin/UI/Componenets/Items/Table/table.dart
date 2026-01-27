@@ -1,9 +1,11 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/connection-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -90,9 +92,8 @@ class _TableBoxState extends State<TableBox> {
                                       ? whiteColor
                                       : color2)))
                     ]),
-                    if (MainController.dataRecord.length != 0)
+                    if (MainController.dataRecord.isNotEmpty)
                       for (var i = 0; i < MainController.dataRecord.length; i++)
-
                         TableRow(children: [
                           Center(
                             child: Txt(
@@ -161,12 +162,59 @@ class _TableBoxState extends State<TableBox> {
                                       });
                                     }
                                     if(value=='refresh'){
-                                      await DB('${MainController.infoSchema.value.schema.name}').storeRecord(MainController.dataRecord.value[i]);
-                                      await MainController.loadData(
-                                          tableData: MainController.getInfoTable('${MainController.infoSchema.value.schema.name}'));
-                                      if (ViewController.isClickedBtn.value == false) {
-                                        var table = MainController.getInfoTable(MainController.tableName.value);
-                                        HelperController.goToTablePage(table, loadData: false);
+                                      bool connectivity = await ConnectionController.checkConnectivity();
+                                      if(connectivity) {
+                                        Map<String, dynamic>record = Map<
+                                            String,
+                                            dynamic>.from(
+                                            MainController.dataRecord[i]);
+                                        final keysToRemove = {
+                                          'sync',
+                                          'sync_type',
+                                          'server error'
+                                        };
+                                        record.removeWhere((key, value) =>
+                                            keysToRemove.contains(key));
+                                        if (MainController
+                                            .dataRecord[i]['sync_type'] ==
+                                            'update')
+                                          await DB(
+                                              '${MainController.infoSchema.value
+                                                  .schema.name}')
+                                              .findByIdAndUpdate(MainController
+                                              .dataRecord[i]['_id'], record);
+                                        else if (MainController
+                                            .dataRecord[i]['sync_type'] ==
+                                            'delete')
+                                          await DB(
+                                              '${MainController.infoSchema.value
+                                                  .schema.name}')
+                                              .findByIdAndDelete(MainController
+                                              .dataRecord[i]['_id']);
+                                        else if (MainController
+                                            .dataRecord[i]['sync_type'] ==
+                                            'store')
+                                          await DB(
+                                              '${MainController.infoSchema.value
+                                                  .schema.name}').storeRecord(
+                                              record);
+
+                                        await MainController.loadData(
+                                            tableData: MainController
+                                                .getInfoTable(
+                                                '${MainController.infoSchema
+                                                    .value.schema.name}'));
+                                        if (ViewController.isClickedBtn.value ==
+                                            false) {
+                                          var table = MainController
+                                              .getInfoTable(
+                                              MainController.tableName.value);
+                                          HelperController.goToTablePage(
+                                              table, loadData: false);
+                                        }
+                                      }
+                                      else{
+                                        showSnackbar(snackTypes.error, "اتصال شما برقرار نیست");
                                       }
                                       // DB('${MainController.infoSchema.value.schema.name}').getRecords();
                                     }
@@ -233,10 +281,8 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
-                                                              HelperController.deleteFunction(
-                                                                  MainController
-                                                                      .dataRecord
-                                                                      .value[i]['_id']);
+                                                                  HelperController.deleteFunction(MainController.dataRecord.value[i]['_id']);
+                                                                  // await DB('item').where('string', '\$eq', 'es').deleteRecord();
 
                                                             },
                                                             child:
@@ -273,9 +319,7 @@ class _TableBoxState extends State<TableBox> {
 
                                   itemBuilder: (BuildContext  context) {
                                     return <PopupMenuEntry<String>>[
-                                      if (MainController.dataRecord.value[i]
-                                      ['sync'] ==
-                                          'false')
+                                      if (MainController.dataRecord.value[i]['sync'] == 'false')
                                         PopupMenuItem<String>(
                                             value: 'refresh',
                                             child: Container(
@@ -291,13 +335,7 @@ class _TableBoxState extends State<TableBox> {
                                                   SizedBox(
                                                     width: 10,
                                                   ),
-                                                  Txt('${AppController.of(context)!.value('refresh')}',
-                                                      color: MainController
-                                                          .isLightMode
-                                                          .value ==
-                                                          false
-                                                          ? color3
-                                                          : whiteColor)
+                                                  Txt('${AppController.of(context)!.value('refresh')}-${MainController.dataRecord[i]['sync_type']}', color: MainController.isLightMode.value == false ? color3 : whiteColor)
                                                 ],
                                               ),
                                             )),

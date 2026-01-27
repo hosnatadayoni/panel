@@ -4,8 +4,9 @@ import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
 import 'package:finance/Admin/Logic/Models/paginate.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import '../Helpers/api-methods.dart';
-import '../Models/ServerModel/tableModel.dart';
+import '../Models/tableModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 
@@ -20,20 +21,6 @@ class ConncetServerController extends GetxController {
   static RxInt currentPageRoute=1.obs;
   static RxInt countShowRowRoute=10.obs;
 
-  static listSchema() async {
-    AppController.finishLoading('list-schema');
-    var response = await RestApi.post(listSchemaUrl2,);
-    RestApi.responseHandler(
-        response: response,
-        successCallback: () async {
-           listTableNames.value = [];
-          for (var table in response!.data['data']) {
-            listTableNames.add(table['name']);
-          }
-        },printResponse: true);
-    AppController.finishLoading('list-schema');
-  }
-
   static listSchemaByField() async {
     AppController.finishLoading('list-schema');
     var response = await RestApi.post(listSchemaUrl,);
@@ -41,15 +28,16 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           MainController.menuList.value=[];
-          MainController.menuList.value = (response!.data["data"] as List)
-              .map((item) => TableModel.fromJson(item))
-              .toList();
+          MainController.menuList.value = (response!.data["data"] as List).map((item) => TableModel.fromJson(item)).toList();
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
 
             MainController.setRelations('${name}');
 
             MainController.addParentForRelations('${name}');
+            final box = await Hive.openBox<TableModel>('menuBox');
+            await box.clear();
+            await box.addAll(MainController.menuList.value);
           }
           // storeRecordRes={};
           // storeRecordRes=response!.data['data'];
@@ -89,15 +77,30 @@ class ConncetServerController extends GetxController {
     // AppController.finishLoading('get-records');
   }
 
-  static Future<Map<String, dynamic>>  updateRecordGeneral(var json) async {
-    Map<String, dynamic> responseUpdate={};
+  static Future<List<Map<String, dynamic>>>  updateRecordsGeneral(var json) async {
+    List<Map<String, dynamic>>responseUpdate=[];
     var response = await RestApi.post(updateRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          updateRecordRes={};
-          updateRecordRes=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
-          responseUpdate=response.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
+          // updateRecordRes={};
+          // updateRecordRes=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
+          responseUpdate=response!.data['data']!=null &&response.data['data'].length!=0? List<Map<String,dynamic>>.from(response.data['data']):[];
+        },printResponse: true,errorCallback: (){
+    }
+    );
+    return responseUpdate;
+    // AppController.finishLoading('update-records');
+    // AppController.finishLoading('get-records');
+  }
+
+  static Future<Map<String, dynamic>>  findAndUpdateRecordGeneral(var json) async {
+    Map<String, dynamic>responseUpdate={};
+    var response = await RestApi.post(findAndUpdateRecordUrl, body: (json));
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          responseUpdate=response!.data['data']!=null &&response.data['data'].length!=0? Map<String,dynamic>.from(response.data['data'].first):{};
         },printResponse: true,errorCallback: (){
     }
     );
@@ -122,8 +125,10 @@ class ConncetServerController extends GetxController {
           getRecordRes.value=response!.data['data']['data']!=null?response.data['data']['data']:[];
           int tRec=int.parse(response.data['data']['count'].toString());
           MainController.pageInfo[tableName]=PageInfo(totalRecords: tRec);
-
+return getRecordRes;
         },printResponse: true);
+    return getRecordRes;
+
     // AppController.finishLoading('get-records');
   }
 
@@ -180,7 +185,6 @@ class ConncetServerController extends GetxController {
 
   static createJsonFilter(var wheres,String tableName,String type,{var page=null,var perpage=null}) async {
     List<dynamic>l=[];
-    Map<String,dynamic> c={};
     Map<String,dynamic> body ={};
     var info=await MainController.getInfoTable(tableName);
     var perPage=perpage??info.schema.countShowRow;
@@ -227,25 +231,48 @@ class ConncetServerController extends GetxController {
     return responseUpdate;
   }
 
-  static Future<bool> deleteRecordGeneral(var json) async {
+  static Future<List<Map<String, dynamic>>> deleteRecordsGeneral(var json) async {
+    List<Map<String, dynamic>> responseDelete =[];
     var response = await RestApi.post(deleteRecordUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
+          print('ConncetServerController.deleteRecordsGeneral>>>${response!.data['data']}');
+
+          responseDelete= response.data['data']!=null && response.data['data'].length!=0? List<Map<String,dynamic>>.from(response.data['data']) : [];
+
           deleteRecordRes=true;
           var info=await MainController.getInfoTable(json['table_name']);
           var perPage=info.schema.countShowRow;
-          // MainController.totalRecords.value--;
-
           int tRec=MainController.pageInfo[json['table_name']]!.totalRecords;
           int tPage=(tRec/perPage).ceil();
           MainController.pageInfo[json['table_name']]=PageInfo(totalPage: tPage);
-
+          return responseDelete;
         },printResponse: true,errorCallback:() {
       deleteRecordRes = false;
     });
-    return deleteRecordRes;
-
+    return responseDelete;
+    // AppController.finishLoading('delete-record');
+    // AppController.finishLoading('get-records');
+  }
+  static Future<Map<String, dynamic>> findByIdAndDelete(var json) async {
+    Map<String, dynamic> responseDelete ={};
+    var response = await RestApi.post(findAndDeleteRecordUrl, body: json);
+    RestApi.responseHandler(
+        response: response,
+        successCallback: () async {
+          responseDelete= response!.data['data']!=null && response.data['data'].length!=0? Map<String,dynamic>.from(response.data['data']) : {};
+          deleteRecordRes=true;
+          var info=await MainController.getInfoTable(json['table_name']);
+          var perPage=info.schema.countShowRow;
+          int tRec=MainController.pageInfo[json['table_name']]!.totalRecords;
+          int tPage=(tRec/perPage).ceil();
+          MainController.pageInfo[json['table_name']]=PageInfo(totalPage: tPage);
+          return responseDelete;
+        },printResponse: true,errorCallback:() {
+      deleteRecordRes = false;
+    });
+    return responseDelete;
     // AppController.finishLoading('delete-record');
     // AppController.finishLoading('get-records');
   }

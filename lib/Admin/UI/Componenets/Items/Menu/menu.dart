@@ -178,7 +178,8 @@ class _MenuBoxState extends State<MenuBox> {
                                           MainController.isClickedItem.value = false;
                                         }  else {
                                           MainController.isClickedItem.value = true;
-                                          await ConncetServerController.listSchemaByField();
+                                          HelperController.getListSchema();
+                                          // await ConncetServerController.listSchemaByField();
                                         }
                                         MainController.itemSelected.value = MainController.menuItems[MainController.selectedItem.value];
                                         // Get.to(() => TablePage());

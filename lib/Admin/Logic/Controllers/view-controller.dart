@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
@@ -33,6 +33,7 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../../Public/config.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
+import '../Models/columnModel.dart';
 import '../Models/general.dart';
 
 class ViewController extends GetxController {
@@ -421,12 +422,7 @@ class ViewController extends GetxController {
                 selectedItem = items.firstWhere(
                     (element) => element['_id'] == dataModel[name]['_id']);
               }
-              selectBox = await generateStoreFormSelectBox(
-                  column: column,
-                  items: items,
-                  initailValue:
-                      '${selectedItem.isNotEmpty ? selectedItem['_id'] : null}',
-                  selected: dataModel[name]);
+              selectBox = await generateStoreFormSelectBox(column: column, items: items, initailValue:selectedItem.isNotEmpty ? '${selectedItem['_id'] }': null, selected: dataModel[name]);
             } else {
               if (dataModel[name] != null && dataModel[name] != '')
                 selectedItem = items.firstWhere(
@@ -434,8 +430,7 @@ class ViewController extends GetxController {
               selectBox = await generateStoreFormSelectBox(
                   column: column,
                   items: items,
-                  initailValue:
-                      '${selectedItem.isNotEmpty ? selectedItem['value'] : null}',
+                  initailValue:selectedItem.isNotEmpty ? '${ selectedItem['value']}':null,
                   selected: dataModel[name]);
             }
             children.add(SizedBox(
@@ -665,8 +660,7 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateCheckBox(int indexColumn, int indexRow,
-      {var tableData}) {
+  static Widget generateCheckBox(int indexColumn, int indexRow, {var tableData}) {
     // DataModel dataModel = MainController.tableData.value[indexRow];
     String name = '';
     if (tableData == null) {
@@ -675,18 +669,14 @@ class ViewController extends GetxController {
       name = tableData['columns'][indexColumn]['name'];
     }
     var dataModel = MainController.dataRecord.value[indexRow]['${name}'];
-
     if (dataModel == null) {
       dataModel = false;
     }
     return CheckBox(
-      defaultValue: dataModel == "true" ? true : false,
+      defaultValue: dataModel == "true" || dataModel==true? true : false,
       checkBoxTitle: '',
       onChange: (text) async {
-        await DB('${MainController.infoSchema.value.schema.name}')
-            .where('_id', '\$eq',
-                '${MainController.dataRecord.value[indexRow]['_id']}')
-            .updateRecords({'${name}': '${text}'});
+        await DB('${MainController.infoSchema.value.schema.name}').where('_id', '\$eq', '${MainController.dataRecord.value[indexRow]['_id']}').updateRecords({'${name}': '${text}'});
       },
       index: indexRow,
       column: tableData == null
@@ -1087,12 +1077,11 @@ class ViewController extends GetxController {
       var initailValue = null,
       var selected = null,
       Function? onChange}) {
-    RxBool isSeleted =
-        selected == '' || selected == null ? false.obs : true.obs;
+    RxBool isSeleted = selected == '' || selected == null ? false.obs : true.obs;
     if (initailValue == '' || initailValue == null) {
       ViewController.request[column.name] = null;
     }
-    print('ViewController.generateStoreFormSelectBox>>${items}');
+    print('ViewController.generateStoreFormSelectBox>>${initailValue=="null"}');
 
     return items.length != 0
         ? new Column(
@@ -1194,18 +1183,17 @@ class ViewController extends GetxController {
         : Container();
   }
 
-  static Widget generateFormCheckBox(
-      {var column,
-      var data = null,
-      var defultValue = null,
-      Function? onChange}) {
-    ViewController.request[column.name] =
-        defultValue ?? column['default_value'];
+  static Widget generateFormCheckBox({ColumnModel? column, var data = null, var defultValue = null, Function? onChange}) {
+    print('ViewController.generateFormCheckBox>>${defultValue==null}>>${defultValue.runtimeType}');
+    if(defultValue.toString().isEmpty)
+      defultValue=false;
+
+    ViewController.request[column!.name] = defultValue ?? column.defaultValue;
     return new CheckBox(
       checkBoxName: '${column.title}',
       checkBoxTitle: '${column.title}',
       isClickedBtn: data == null || data == '' ? false.obs : true.obs,
-      defaultValue: defultValue ?? column['default_value'],
+      defaultValue: defultValue ?? column.defaultValue,
       onChange: (text) {
         if (onChange != null) {
           onChange(text);
@@ -1856,7 +1844,6 @@ class ViewController extends GetxController {
     }
 
     var dataModel = MainController.dataRecord[indexRow]['${name}'];
-
     return dataModel != null && dataModel.length != 0
         ? Column(
             children: [
@@ -1956,7 +1943,7 @@ class ViewController extends GetxController {
           columnName: column.title,
           onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
-            if (column['type'] == 'file' || column['type'] == 'file_pv') {
+            if (column.type == 'file' || column.type == 'file_pv') {
               if (onChange != null) {
                 onChange(file);
               } else {
@@ -1973,7 +1960,7 @@ class ViewController extends GetxController {
           },
           filesSelected: selectedFilesMap,
           selectedFilesTxt:
-              column['type'] == 'file' || column['type'] == 'file_pv'
+              column.type == 'file' || column.type == 'file_pv'
                   ? selecetdFiles
                   : filesSelectedList,
           isSeletedFile: isSelectedFile,
@@ -1989,7 +1976,7 @@ class ViewController extends GetxController {
     final RxBool isSelectedFile = (data != null && data!.isNotEmpty).obs;
 
     String name = column.name;
-    String type = column['type'];
+    String type = column.type;
     RxString file =
         data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
 
@@ -1997,9 +1984,9 @@ class ViewController extends GetxController {
     if (selectedFilesMap['${column.name}'] == null) {
       selectedFilesMap['${column.name}'] = [];
     }
-    ViewController.request[name] = data != null && data[name + '_name'] != null
-        ? '${data[name + '_name']}'
-        : '';
+    // ViewController.request[name] = data != null && data[name + '_name'] != null
+    //     ? '${data[name + '_name']}'
+    //     : '';
     List<dynamic> filesSelectedList = [];
     RxMap<String, List<dynamic>> fileInfo = <String, List<dynamic>>{}.obs;
     return Obx(() {
@@ -2111,7 +2098,7 @@ class ViewController extends GetxController {
   static Widget generateEditMultiFileBox(var data, var column,
       {Function? onChange}) {
     final RxBool isSelectedFile = (data != null && data!.isNotEmpty).obs;
-    ViewController.request[column.name] = [];
+    // ViewController.request[column.name] = [];
     String name = column.name;
     String type = column['type'];
     Map<String, List<dynamic>> selectedFilesMap = {};
@@ -2123,7 +2110,7 @@ class ViewController extends GetxController {
 
     if (data != null && data.length != 0) {
       if (data[name + '_name'] != null && data[name + '_name'].length != 0) {
-        ViewController.request[column.name].add(data[name + '_name']);
+        // ViewController.request[column.name].add(data[name + '_name']);
       }
       if (data[name] != null && data[name].length != 0) {
         filesList.addAll(data[name + '_multi']);
@@ -2545,11 +2532,14 @@ class ViewController extends GetxController {
         print('ViewController.itemsList>>>${tableName}');
         // Future.delayed(Duration.zero, () async {
         List<dynamic> data = await DB('${tableName}').getRecords();
-        data.removeWhere((element) => element['sync'] != null);
-        dropDownListItems = data;
+        // data.removeWhere((element) => element['sync'] != null);
+        dropDownListItems = MainController.removeOffRecord(tableName:tableName,list: data );
+        print('ViewController.itemsList>>data>>>${dropDownListItems}');
+
         for (int i = 0; i < dropDownListItems.length; i++) {
           List<dynamic> a = [];
           for (var field in column.items) {
+
             a.add(dropDownListItems[i][field]);
           }
         }
@@ -2557,8 +2547,8 @@ class ViewController extends GetxController {
         if (dataModel[column.name] == null) {
           dropDownListItems = [];
         } else {
-          dataModel[column.name]
-              .removeWhere((element) => element['sync'] != null);
+          dataModel[column.name]= MainController.removeOffRecord(tableName:tableName,list: dataModel[column.name] );
+          // dataModel[column.name].removeWhere((element) => element['sync'] != null);
           List<dynamic> a = [];
           for (int i = 0; i < dataModel[column.name].length; i++) {
             a.add(dataModel[column.name][i]);

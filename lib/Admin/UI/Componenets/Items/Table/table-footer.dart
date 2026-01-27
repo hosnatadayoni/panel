@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
@@ -10,7 +11,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 
 class TableFooter extends StatefulWidget {
-  const TableFooter({Key? key}) : super(key: key);
+  var indexTable;
+   TableFooter({this.indexTable}) ;
 
   @override
   State<TableFooter> createState() => _TableFooterState();
@@ -20,9 +22,12 @@ class _TableFooterState extends State<TableFooter> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = MainController.menuList[MainController.selectedSubItem.value].schema.name;
+    var index=widget.indexTable??MainController.selectedSubItem.value;
+
 
     return Obx((){
+      var tableSelected = MainController.menuList[index].schema.name;
+      MainController.infoSchema.value=MainController.menuList[index];
       return Container(
         child: size.width > 556 ?
         Row(
@@ -50,9 +55,10 @@ class _TableFooterState extends State<TableFooter> {
             MainController.infoSchema.value.schema.currentPage = i;
           });
           print('_TableFooterState.box currentPage>>>${ MainController.infoSchema.value.schema.currentPage}');
-          var dataPageinate=await DB('${tableSelected}').paginate();
-          MainController.dataRecord.value = dataPageinate;
-          MainController.allData.value = MainController.dataRecord;
+          await HelperController.pageInateFunction();
+          // var dataPageinate=await DB('${tableSelected}').paginate();
+          // MainController.dataRecord.value = dataPageinate;
+          // MainController.allData.value = MainController.dataRecord;
           print('_TableFooterState.box>>>>>${{MainController.dataRecord.value}}');
         },
         child: Container(
@@ -87,10 +93,7 @@ class _TableFooterState extends State<TableFooter> {
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
-              Txt('${MainController.dataRecord.value.length == 0 ? 0 : (MainController
-                  .pageInfo[MainController.infoSchema.value.schema.name]
-                  ?.start ??
-                  0) + 1}',
+              Txt('${MainController.dataRecord.length == 0 ? 0 : (MainController.pageInfo[MainController.infoSchema.value.schema.name]?.start ?? 0) + 1}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,),
@@ -137,7 +140,9 @@ class _TableFooterState extends State<TableFooter> {
                 setState(() {
                   MainController.infoSchema.value.schema.currentPage --;
                 });
-                MainController.dataRecord.value= await DB('${tableSelected}').paginate();
+                await HelperController.pageInateFunction();
+
+                // MainController.dataRecord.value= await DB('${tableSelected}').paginate();
               } : null,
               child: Txt('${AppController.of(context)!.value(
                   'previous')}', color: MainController
@@ -183,7 +188,9 @@ class _TableFooterState extends State<TableFooter> {
                   setState(() {
                     MainController.infoSchema.value.schema.currentPage++;
                   });
-                  MainController.dataRecord.value= await DB('${tableSelected}').paginate();
+                  await HelperController.pageInateFunction();
+
+                  // MainController.dataRecord.value= await DB('${tableSelected}').paginate();
 
                 } : null,
                 child: Txt(
@@ -220,7 +227,9 @@ class _TableFooterState extends State<TableFooter> {
                     MainController.infoSchema.value.schema.currentPage--;
                   });
                   // MainController.renderPagination();
-                  MainController.dataRecord.value= await DB('${tableSelected}').paginate();
+                  await HelperController.pageInateFunction();
+
+                  // MainController.dataRecord.value= await DB('${tableSelected}').paginate();
                 } : null,
                 child: Txt('${AppController.of(context)!.value(
                     'previous')}', color: MainController
@@ -260,14 +269,14 @@ class _TableFooterState extends State<TableFooter> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(15)),
-                  onPressed: MainController
-                      .infoSchema.value.schema.currentPage<
-                      totalPages ? () async {
+                  onPressed: MainController.infoSchema.value.schema.currentPage< totalPages ? () async {
                     setState(() {
                       MainController.infoSchema.value.schema.currentPage++;
                     });
                     // MainController.renderPagination();
-                    MainController.dataRecord.value= await DB('${tableSelected}').paginate();
+                    await HelperController.pageInateFunction();
+
+                    // MainController.dataRecord.value= await DB('${tableSelected}').paginate();
 
                   } : null,
                   child: Txt(

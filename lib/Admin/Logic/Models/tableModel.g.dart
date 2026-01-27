@@ -1,35 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dataModel.dart';
+part of 'tableModel.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DataModelAdapter extends TypeAdapter<DataModel> {
+class TableModelAdapter extends TypeAdapter<TableModel> {
   @override
-  final int typeId = 5;
+  final int typeId = 9;
 
   @override
-  DataModel read(BinaryReader reader) {
+  TableModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DataModel(
-      id: fields[0] as String?,
-      data: (fields[1] as Map).cast<dynamic, dynamic>(),
+    return TableModel(
+      schema: fields[0] as SchemaModel,
+      columns: (fields[1] as List).cast<ColumnModel>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, DataModel obj) {
+  void write(BinaryWriter writer, TableModel obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.schema)
       ..writeByte(1)
-      ..write(obj.data);
+      ..write(obj.columns);
   }
 
   @override
@@ -38,7 +38,7 @@ class DataModelAdapter extends TypeAdapter<DataModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DataModelAdapter &&
+      other is TableModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
