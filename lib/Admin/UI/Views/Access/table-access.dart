@@ -572,14 +572,9 @@ class _TableHeaderRouteState extends State<TableHeaderRoute> {
                               ConncetServerController.countShowRowRoute.value =
                                   value;
                               selectedCount = value;
-                              MainController.startIndex.value =
-                                  (ConncetServerController
-                                              .currentPageRoute.value -
-                                          1) *
-                                      ConncetServerController
-                                          .countShowRowRoute.value;
-                              MainController.endIndex.value =
-                                  MainController.startIndex.value +
+                              MainController.pageInfo['access_'+MainController.apiKey.value]!.start = (ConncetServerController.currentPageRoute.value - 1) * ConncetServerController.countShowRowRoute.value;
+                              MainController.pageInfo['access_'+MainController.apiKey.value]!.end =
+                                  MainController.pageInfo['access_'+MainController.apiKey.value]!.start! +
                                       ConncetServerController
                                           .countShowRowRoute.value;
                               ConncetServerController.currentPageRoute.value =
@@ -744,13 +739,13 @@ class _TableHeaderRouteState extends State<TableHeaderRoute> {
                               ConncetServerController.countShowRowRoute.value =
                                   value;
                               selectedCount = value;
-                              MainController.startIndex.value =
+                              MainController.pageInfo['access_'+MainController.apiKey.value]!.start =
                                   (ConncetServerController
                                               .currentPageRoute.value -
                                           1) *
                                       10;
-                              MainController.endIndex.value =
-                                  MainController.startIndex.value + 10;
+                              MainController.pageInfo['access_'+MainController.apiKey.value]!.end =
+                                  MainController.pageInfo['access_'+MainController.apiKey.value]!.start! + 10;
                               ConncetServerController.currentPageRoute.value =
                                   1;
 
@@ -883,7 +878,7 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var tableSelected = 'route';
+    String tableSelected = 'access';
 
     return Obx(() {
       return Container(
@@ -891,12 +886,12 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: pagenationBox(
-                    ViewController.totalPage.value, tableSelected),
+                    MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.totalPage, tableSelected),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: pagenationBox(
-                    ViewController.totalPage.value, tableSelected),
+                    MainController.pageInfo[tableSelected+'_'+MainController.apiKey.value]!.totalPage, tableSelected),
               ),
       );
     });
@@ -964,7 +959,7 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
                 color: color3,
               ),
               Txt(
-                '${ConncetServerController.getRouteRes.value.length == 0 ? 0 : MainController.startIndex.value + 1}',
+                '${ConncetServerController.getRouteRes.value.length == 0 ? 0 : MainController.pageInfo['access_'+MainController.apiKey.value]!.start! + 1}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,
@@ -976,7 +971,7 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
                 color: color3,
               ),
               Txt(
-                '${MainController.endIndex.value}',
+                '${MainController.pageInfo['access_'+MainController.apiKey.value]!.end}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,
@@ -988,7 +983,7 @@ class _TableFooterRouteState extends State<TableFooterRoute> {
                 color: color3,
               ),
               Txt(
-                '${MainController.totalItems.value}',
+                '${MainController.pageInfo['access_'+MainController.apiKey.value]!.totalRecords}',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: color3,

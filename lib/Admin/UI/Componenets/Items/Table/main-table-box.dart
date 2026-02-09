@@ -41,8 +41,8 @@ class _MainTableBoxState extends State<MainTableBox> {
             return ColumnScroll(
               children: [
                 TableHeader(),
-                if (MainController.tableInfo['schema']['filters'] != null &&
-                    MainController.tableInfo['schema']['filters'].length != 0)
+                if (MainController.infoSchema.value.schema.filters != null &&
+                    MainController.infoSchema.value.schema.filters!.length != 0)
                   Container(
                     width: size.width > 800
                         ? MainController.isClickedItem.value == true
@@ -60,8 +60,8 @@ class _MainTableBoxState extends State<MainTableBox> {
                             ],
                           ),
                   ),
-                if (MainController.tableInfo['schema']['filters'] != null &&
-                    MainController.tableInfo['schema']['filters'].length != 0)
+                if (MainController.infoSchema.value.schema.filters != null &&
+                    MainController.infoSchema.value.schema.filters!.length != 0)
                   Container(
                     margin: EdgeInsets.only(left: 5),
                     width: 140,
@@ -69,14 +69,13 @@ class _MainTableBoxState extends State<MainTableBox> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(primary: Colors.blue),
                       onPressed: () async {
-                        List<dynamic> w =
-                            MainController.tableInfo['schema']['filters'];
+                        List<dynamic> w = MainController.infoSchema.value.schema.filters!;
                         String opration = '\$eq';
                         if (ViewController.request.length != 0) {
                           var d;
                           List<dynamic> d2 = [];
                           var a = DB(
-                              '${MainController.tableInfo['schema']['name']}');
+                              '${MainController.infoSchema.value.schema.name}');
                           print(
                               '_MainTableBoxState.build>>>${ViewController.request}');
 
@@ -103,6 +102,7 @@ class _MainTableBoxState extends State<MainTableBox> {
                                       '${filter['operator']}', filter['value']);
                                 }
                               } else {
+                                print('elseeeeee');
                               }
                             }
                           }
@@ -110,10 +110,10 @@ class _MainTableBoxState extends State<MainTableBox> {
                             d2 = await d.getRecords();
                           } else {
                             d2 = await DB(
-                                    '${MainController.tableInfo['schema']['name']}')
+                                    '${MainController.infoSchema.value.schema.name}')
                                 .getRecords();
                           }
-                          MainController.tableData.value = d2;
+                          MainController.dataRecord.value = d2;
                         }
                       },
                       child: Center(

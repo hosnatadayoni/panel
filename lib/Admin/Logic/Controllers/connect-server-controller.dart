@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/paginate.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
+import '../Models/ServerModel/tableModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 
@@ -39,9 +40,10 @@ class ConncetServerController extends GetxController {
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          MainController.SubMenuList.value=[];
-
-          MainController.SubMenuList.value=response!.data['data'];
+          MainController.menuList.value=[];
+          MainController.menuList.value = (response!.data["data"] as List)
+              .map((item) => TableModel.fromJson(item))
+              .toList();
           for (var name in MainController.tableNames()) {
             MainController.addsyncField('${name}');
 
@@ -65,38 +67,50 @@ class ConncetServerController extends GetxController {
         },printResponse: true);
   }
 
-  static storeRecordGeneral (var json) async {
+  static Future<Map<String, dynamic>> storeRecordGeneral (var json) async {
     storeRecordRes={};
+    Map<String, dynamic> responseStore={};
     var response = await RestApi.post(storeRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           storeRecordRes={};
           storeRecordRes=response!.data['data'];
+          responseStore={};
+          responseStore=response.data['data'];
+          print('ConncetServerController.storeRecordGeneral>>${responseStore}');
+          return responseStore;
         }
         ,printResponse: true,errorCallback: (){
-      storeRecordRes={};
+      responseStore={};
     });
+    return responseStore;
     // AppController.finishLoading('store-record');
     // AppController.finishLoading('get-records');
   }
 
-  static updateRecordGeneral(var json) async {
+  static Future<Map<String, dynamic>>  updateRecordGeneral(var json) async {
+    Map<String, dynamic> responseUpdate={};
     var response = await RestApi.post(updateRecordUrl, body: (json));
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           updateRecordRes={};
           updateRecordRes=response!.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
-        },printResponse: true);
+          responseUpdate=response.data['data']!=null &&response.data['data'].length!=0? response.data['data'].first:[];
+        },printResponse: true,errorCallback: (){
+    }
+    );
+    return responseUpdate;
     // AppController.finishLoading('update-records');
     // AppController.finishLoading('get-records');
   }
 
   static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
+    print('ConncetServerController.getRecordGeneral');
     var info=await MainController.getInfoTable(tableName);
     var perPage=perpage??info['schema']['countShowRow'];
-    var currentPage=page??info['schema']['currentPage'];
+    var currentPage=page??info['schema'].currentPage;
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()})
@@ -106,7 +120,8 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           getRecordRes.value=[];
           getRecordRes.value=response!.data['data']['data']!=null?response.data['data']['data']:[];
-          MainController.totalItems.value=response.data['data']['count'];
+          int tRec=int.parse(response.data['data']['count'].toString());
+          MainController.pageInfo[tableName]=PageInfo(totalRecords: tRec);
 
         },printResponse: true);
     // AppController.finishLoading('get-records');
@@ -127,13 +142,13 @@ class ConncetServerController extends GetxController {
         successCallback: () async {
           getRouteRes.value=[];
           getRouteRes.value=response!.data['data']['data'].length!=0?response.data['data']['data']:[];
-          MainController.totalItems.value=response.data['data']['count'];
+          String name='route_'+MainController.apiKey.value;
+          int tRec= int.parse(response.data['data']['count'].toString());
           int s = (currentPageRoute.value - 1) * countShowRowRoute.value;
           var end = s + countShowRowRoute.value;
-          MainController.startIndex.value = s;
-          var endBycondition = end >= MainController.totalItems.value ? MainController.totalItems.value : end;
-          MainController.endIndex.value = endBycondition;
-          ViewController.totalPage.value =(MainController.totalItems.value/countShowRowRoute.value).ceil();
+          var endBycondition = end >= tRec ? tRec : end;
+          int tPage = (tRec / countShowRowRoute.value).ceil();
+          MainController.pageInfo[name]=PageInfo(start: s,end: endBycondition,totalPage: tPage,totalRecords: tRec);
         },printResponse: true);
     // AppController.finishLoading('get-records');
   }
@@ -168,18 +183,23 @@ class ConncetServerController extends GetxController {
     Map<String,dynamic> c={};
     Map<String,dynamic> body ={};
     var info=await MainController.getInfoTable(tableName);
-    var perPage=perpage??info['schema']['countShowRow'];
-    var currentPage=page??info['schema']['currentPage'];
+    var perPage=perpage??info.schema.countShowRow;
+    var currentPage=page??info.schema.currentPage;
     body.addAll({
         'table_name':tableName,
         'type':type,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()
       });
-    if(wheres.length!=0)
-    for(Where item in wheres.values){
-      l.add({'column':'${item.fieldName}','operation': "${item.operator!=null?item.operator:"\$eq"}",'value': "${item.value}"});
+    if(wheres.length!=0) {
+      for (Where item in wheres.values) {
+        l.add({
+          'column': '${item.fieldName}',
+          'operation': "${item.operator != null ? item.operator : "\$eq"}",
+          'value': "${item.value}"
+        });
       }
+    }
 
     body.addAll({
         'filter':json.encode(l),
@@ -188,26 +208,44 @@ class ConncetServerController extends GetxController {
     return body;
   }
 
-  static filterRecordGeneral(var wheres,String tableName,String type) async {
+  static  Future<List<Map<String, dynamic>>>  filterRecordGeneral(var wheres,String tableName,String type) async {
     var json=await createJsonFilter(wheres, tableName,type);
+    filterRecordRes=[];
+    List<Map<String, dynamic>> responseUpdate=[];
     var response = await RestApi.post(filterRecordsUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
-          filterRecordRes=response!.data['data']['data']!=null?response.data['data']['data'].cast<Map<String, dynamic>>():[];
-          MainController.totalItems.value=response.data['data']['count'];
+          // MainController.pageInfo.value={};
+          filterRecordRes=response!.data['data']!=null?response.data['data'].cast<Map<String, dynamic>>():[];
+          responseUpdate=response.data['data']!=null?response.data['data'].cast<Map<String, dynamic>>():[];
+          int tRec=response.data['pagination']['total'];
           int perPage = int.parse(json["perPage"]);
-          ViewController.totalPage.value =(MainController.totalItems.value/perPage).ceil();
+          int tPage=(tRec/perPage).ceil();
+          MainController.pageInfo[tableName]=PageInfo(start:1,end:0,totalRecords: tRec,totalPage: tPage);
         },printResponse: true);
+    return responseUpdate;
   }
 
-  static deleteRecordGeneral(var json) async {
+  static Future<bool> deleteRecordGeneral(var json) async {
     var response = await RestApi.post(deleteRecordUrl, body: json);
     RestApi.responseHandler(
         response: response,
         successCallback: () async {
           deleteRecordRes=true;
-        },printResponse: true,errorCallback:()=> deleteRecordRes=false);
+          var info=await MainController.getInfoTable(json['table_name']);
+          var perPage=info.schema.countShowRow;
+          // MainController.totalRecords.value--;
+
+          int tRec=MainController.pageInfo[json['table_name']]!.totalRecords;
+          int tPage=(tRec/perPage).ceil();
+          MainController.pageInfo[json['table_name']]=PageInfo(totalPage: tPage);
+
+        },printResponse: true,errorCallback:() {
+      deleteRecordRes = false;
+    });
+    return deleteRecordRes;
+
     // AppController.finishLoading('delete-record');
     // AppController.finishLoading('get-records');
   }

@@ -45,6 +45,7 @@ class _FormFileState extends State<FormFile> {
 
   @override
   Widget build(BuildContext context) {
+
     var inputRequired;
     if (widget.column['validators'] != null) {
       inputRequired = widget.column['validators'].firstWhere(
@@ -94,10 +95,9 @@ class _FormFileState extends State<FormFile> {
                       showSnackbar(snackTypes.error, '${message}');
                     } else {
                       filePath.value = (await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo))!;
+                        print('_FormFileState.build>>${filePath.value}');
                       setState(() {
                         widget.isSeletedFile!.value = true;
-                        selectedFiles =  fileNameList;
-
                       });
                       if (widget.onChanged != null) {
 
@@ -108,7 +108,7 @@ class _FormFileState extends State<FormFile> {
               },
               child: IntrinsicWidth(
                 child: Container(
-                  padding: EdgeInsets.only(top: 8 , bottom: 8 , right: 15 , left: 15),
+                  padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     color: MainController.isLightMode.value == true
                         ? background

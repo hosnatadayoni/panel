@@ -6,11 +6,13 @@ enum snackTypes{
   error,info,success,warning
 }
 showSnackbar(snackTypes snackType,message) {
-
+  print('>>>>showSnackbar>>>>$message');
 
   Get.snackbar('', '',
       snackPosition: SnackPosition.TOP,
       borderRadius: 50,
+      // animationDuration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 1000),
       maxWidth: Get.width<400?Get.width-30:370,
       titleText: Container(),
       messageText: Container(

@@ -10,6 +10,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../Componenets/Headers/header-edit.dart';
 import '../Componenets/btn.dart';
 
 class EditPage extends StatefulWidget {
@@ -63,42 +64,8 @@ class _EditPageState extends State<EditPage> {
                       _future.value,
                       SizedBox(height: 20,),
                       if(MainController.selectedSubItem.value != -1)
-                         if(MainController.SubMenuList[MainController.selectedSubItem.value]['view'] != 'custom')
-                            Container(
-                        padding: EdgeInsets.all(10),
-                        width: size.width,
-                        child: Wrap(
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          alignment: WrapAlignment.end,
-                          children: [
-                            Btn(type: btnType.primary, isOutline: true, content: Txt(
-                              '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
-                            ),onClick: () async {
-                              await MainController.loadData();
-                              await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                            }),
-                            SizedBox(width: 5,),
-                            Btn(type: btnType.primary , content: Txt(
-                              '${AppController.of(context)!.value('edit')}',
-                              color: whiteColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                                onClick: () async {
-                                        if(ViewController.request.length!=0) {
-                                    HelperController.editFunction('${MainController.tableInfo['schema']['name']}',id:'${widget.data!['_id']}' ,request:ViewController.request );
-                                  }
-                                  else{
-                                    await MainController.loadData();
-                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                                  }
-                                  if (ViewController.isClickedBtn.value == false) {
-                                    await MainController.goToTablePage(MainController.SubMenuList[MainController.selectedSubItem.value]);
-                                  }
-                                } , loadingTag: 'update-records'),
-                          ],
-                        )
-                      )
+                         if(MainController.menuList[MainController.selectedSubItem.value].schema.view!= 'custom')
+                           HeaderEdit(data: widget.data,request: ViewController.request)
                     ],
                   ),
                 ),

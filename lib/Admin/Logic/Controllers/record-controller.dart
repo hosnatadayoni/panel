@@ -6,17 +6,16 @@ import 'main-controller.dart';
 import 'package:finance/Admin/boxes.dart';
 
 class RecordController extends GetxController {
-  static Future<bool> validate(String tableName, DataModel newData,var dataTable) async {
+  static Future<bool> validate(String tableName, var newData,var dataTable) async {
 
     bool isValidator;
     List<bool> isValidatorList = [];
     var columns = MainController.getColumnsTable(tableName);
 
     for (var j = 0; j < columns.length; j++) {
-      isValidator = await ValidatorController.checkInputValidation(j, newData.data,tableData: dataTable);
+      isValidator = await ValidatorController.checkInputValidation(j, newData,tableData: dataTable);
       isValidatorList.add(isValidator);
     }
-    print('isValidatorList>>>${isValidatorList}');
     bool isExsistsValidation = isValidatorList.contains(false);
     if (isExsistsValidation) {
       isValidatorList = [];
@@ -28,7 +27,7 @@ class RecordController extends GetxController {
 
   static updateRecordByEcel(
       var excelJson, var recordIndex, var primeColumn) async {
-    DataModel existingData = MainController.tableData.value[recordIndex];
+    DataModel existingData = MainController.dataRecord.value[recordIndex];
     existingData.data = excelJson;
     await box.putAt(recordIndex, existingData);
     // dataController.allData.value[recordIndex] = existingData;

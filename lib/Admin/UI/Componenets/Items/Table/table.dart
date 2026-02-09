@@ -51,7 +51,7 @@ class _TableBoxState extends State<TableBox> {
                 scrollDirection: Axis.horizontal,
                 controller: _scrollController,
                 child: Table(
-                  defaultColumnWidth: FixedColumnWidth((MainController.tableInfo['columns'].length > 8 ? 150.0 : size.width / 7)),
+                  defaultColumnWidth: FixedColumnWidth((MainController.infoSchema.value.columns.length > 8 ? 150.0 : size.width / 7)),
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                   border: TableBorder.all(
                       color: MainController.isLightMode.value == true
@@ -60,15 +60,18 @@ class _TableBoxState extends State<TableBox> {
                   children: [
                     TableRow(
                         children: [
-                      for (var i = 0; i < MainController.tableInfo['columns'].length; i++)
-                        if (MainController.tableInfo['columns'][i]
-                        ['is_show_table'] ==
-                            true)
+                           Center(child: Txt('#' , fontSize: 14,
+                             fontWeight: FontWeight.w500,
+                             color:
+                             MainController.isLightMode.value == true ? whiteColor : color2,
+                             textAlign: TextAlign.center,)),
+                          for (var i = 0; i < MainController.infoSchema.value.columns.length; i++)
+                        if (MainController.infoSchema.value.columns[i].isShowTable == true)
                           Center(
                               child: Container(
                                   padding: EdgeInsets.all(10),
                                   child: Txt(
-                                      '${MainController.tableInfo['columns'][i]['title']}',
+                                      '${MainController.infoSchema.value.columns[i].title}',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
                                       color: MainController.isLightMode.value ==
@@ -87,17 +90,22 @@ class _TableBoxState extends State<TableBox> {
                                       ? whiteColor
                                       : color2)))
                     ]),
-                    if (MainController.tableData.length != 0)
-                      for (var i = 0; i < MainController.tableData.length; i++)
-                        TableRow(
+                    if (MainController.dataRecord.length != 0)
+                      for (var i = 0; i < MainController.dataRecord.length; i++)
 
-                            children: [
-                          for (var j = 0;
-                          j < MainController.tableInfo['columns'].length;
-                          j++)
-                            if (MainController.tableInfo['columns'][j]
-                            ['is_show_table'] ==
-                                true)
+                        TableRow(children: [
+                          Center(
+                            child: Txt(
+                              '${i+1}',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color:
+                              MainController.isLightMode.value == true ? whiteColor : color2,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          for (var j = 0; j < MainController.infoSchema.value.columns.length; j++)
+                            if (MainController.infoSchema.value.columns[j].isShowTable == true)
                               FutureBuilder<Widget>(
                                 future: ViewController.generateDataColumn(j, i),
                                 builder: (BuildContext context,
@@ -131,9 +139,9 @@ class _TableBoxState extends State<TableBox> {
                                   elevation: 0,
                                   offset: Offset(0, 55),
                                   onSelected: (String value) async {
-                                    var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
-                                        .firstWhere((item) => item == value, orElse: () => null):null;
-                                    print('relation ddd>>>${relation}');
+                                    print('_TableBoxState.build PopupMenuButton>>>${value}');
+                                    var relation = MainController.infoSchema.value.schema.relations!=null ?MainController.infoSchema.value.schema.relations
+                                        !.firstWhere((item) => item == value, orElse: () => null):null;
                                     if(relation!=null){
                                       MainController
                                           .tableName.value =
@@ -141,7 +149,7 @@ class _TableBoxState extends State<TableBox> {
                                       HelperController.relationFunction(table: relation, index: i);
                                     }
                                     if(value=='edit'){
-                                      setState(() async {
+                                      setState(() {
                                         MainController.isClickedItem
                                             .value = false;
                                         ViewController
@@ -149,18 +157,18 @@ class _TableBoxState extends State<TableBox> {
                                         ViewController.isClickedEditBtn
                                             .value = false;
                                         ViewController.request = {};
-                                        HelperController.editPageFunction(MainController.tableData.value[i]);
+                                        HelperController.editPageFunction(MainController.dataRecord.value[i]);
                                       });
                                     }
                                     if(value=='refresh'){
-                                      await DB('${MainController.tableInfo['schema']['name']}').storeRecord(MainController.tableData.value[i]);
+                                      await DB('${MainController.infoSchema.value.schema.name}').storeRecord(MainController.dataRecord.value[i]);
                                       await MainController.loadData(
-                                          tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
+                                          tableData: MainController.getInfoTable('${MainController.infoSchema.value.schema.name}'));
                                       if (ViewController.isClickedBtn.value == false) {
                                         var table = MainController.getInfoTable(MainController.tableName.value);
-                                        MainController.goToTablePage(table, loadData: false);
+                                        HelperController.goToTablePage(table, loadData: false);
                                       }
-                                      // DB('${MainController.tableInfo['schema']['name']}').getRecords();
+                                      // DB('${MainController.infoSchema.value.schema.name}').getRecords();
                                     }
                                     if(value=='remove'){
                                       showDialog(
@@ -227,7 +235,7 @@ class _TableBoxState extends State<TableBox> {
                                                                 () async {
                                                               HelperController.deleteFunction(
                                                                   MainController
-                                                                      .tableData
+                                                                      .dataRecord
                                                                       .value[i]['_id']);
 
                                                             },
@@ -265,7 +273,7 @@ class _TableBoxState extends State<TableBox> {
 
                                   itemBuilder: (BuildContext  context) {
                                     return <PopupMenuEntry<String>>[
-                                      if (MainController.tableData.value[i]
+                                      if (MainController.dataRecord.value[i]
                                       ['sync'] ==
                                           'false')
                                         PopupMenuItem<String>(
@@ -345,8 +353,8 @@ class _TableBoxState extends State<TableBox> {
                                               ],
                                             ),
                                           )),
-                                      if (MainController.tableInfo['schema']['relations']!=null&& MainController.tableInfo['schema']['relations'].length != 0)
-                                        for (var item in MainController.tableInfo['schema']['relations'])
+                                      if (MainController.infoSchema.value.schema.relations!=null&& MainController.infoSchema.value.schema.relations!.length != 0)
+                                        for (var item in MainController.infoSchema.value.schema.relations!)
                                           PopupMenuItem<String>(
                                               value: item.toString(),
                                               child: Container(

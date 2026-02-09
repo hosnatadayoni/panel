@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/mobile-format.dart';
@@ -28,12 +29,10 @@ class FormTextField extends StatefulWidget {
   bool? isValidate;
   String name;
   GlobalKey<FormBuilderState>? fbKey;
-  var column;
+  ColumnModel? column;
   var maxValidator;
   var minValidator;
   bool? isEmail;
-  double height;
-  List<TextInputFormatter>? inputFormatters;
 
   FormTextField(
       {this.lable,
@@ -51,10 +50,7 @@ class FormTextField extends StatefulWidget {
       this.isValidate = true,
       required this.name,
       this.column,
-      this.isEmail,
-        this.height = 50,
-        this.inputFormatters
-      });
+      this.isEmail});
 
   @override
   State<FormTextField> createState() => _FormTextFieldState();
@@ -83,12 +79,12 @@ class _FormTextFieldState extends State<FormTextField> {
 
   void _validateInput() {
     if (widget.column != null) {
-      if (widget.column['validators'] != null || widget.column['validators'] != []) {
+      if (widget.column!.validators != []) {
         var inputRequired;
-        if (ViewController.request[widget.column['name']] == '' ||
-            ViewController.request[widget.column['name']] == null) {
-          inputRequired = widget.column['validators'].firstWhere(
-              (validator) => validator['type'] == 'reqiured',
+        if (ViewController.request[widget.column!.name] == '' ||
+            ViewController.request[widget.column!.name] == null) {
+          inputRequired = widget.column!.validators.firstWhere(
+              (validator) => validator['type'] == 'required',
               orElse: () => null);
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
@@ -106,13 +102,13 @@ class _FormTextFieldState extends State<FormTextField> {
             _errorText = null;
           });
           if (widget.isNumberInt == true || widget.isNumberDouble == true) {
-            var maxValidator = widget.column['validators'].firstWhere(
+            var maxValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'max',
                 orElse: () => null);
-            var minValidator = widget.column['validators'].firstWhere(
+            var minValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'min',
                 orElse: () => null);
-            var number = ViewController.request[widget.column['name']];
+            var number = ViewController.request[widget.column!.name];
             if (number != null) {
               if (minValidator != null || maxValidator != null) {
                 if (number < minValidator['value']) {
@@ -133,20 +129,20 @@ class _FormTextFieldState extends State<FormTextField> {
               }
             }
           } else if (widget.isEmail == true) {
-            var emailValidator = widget.column['validators'].firstWhere(
+            var emailValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'email',
                 orElse: () => null);
             final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
             setState(() {
               if (!emailRegex
-                  .hasMatch(ViewController.request[widget.column['name']])) {
+                  .hasMatch(ViewController.request[widget.column!.name])) {
                 _errorText = emailValidator['message'];
               } else {
                 _errorText = null;
               }
             });
           } else if (widget.isMobile == true) {
-            var mobileValidator = widget.column['validators'].firstWhere(
+            var mobileValidator = widget.column!.validators.firstWhere(
                 (validator) => validator['type'] == 'mobile',
                 orElse: () => null);
             // setState(() {
@@ -168,30 +164,30 @@ class _FormTextFieldState extends State<FormTextField> {
     return Obx(() {
       if (ViewController.isClickedBtn.value) {
         if (widget.column != null) {
-          if (ViewController.request[widget.column['name']] == '' ||
-              ViewController.request[widget.column['name']] == null) {
+          if (ViewController.request[widget.column!.name] == '' ||
+              ViewController.request[widget.column!.name] == null) {
             var inputRequired;
 
-            if (widget.column['validators'] != null) {
-              inputRequired = widget.column['validators'].firstWhere(
+            if (widget.column!.validators != []) {
+              inputRequired = widget.column!.validators.firstWhere(
                   (validator) => validator['type'] == 'required',
                   orElse: () => null);
               if (inputRequired != null) {
                 _errorText = inputRequired['message'];
               }
             }
-          } else if (ViewController.request[widget.column['name']] != '') {
-            if (widget.column['validators'] != null) {
+          } else if (ViewController.request[widget.column!.name] != '') {
+            if (widget.column!.validators != []) {
               if (widget.isNumberInt == true || widget.isNumberDouble == true) {
                 var maxValidator;
                 var minValidator;
-                maxValidator = widget.column['validators'].firstWhere(
+                maxValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'max',
                     orElse: () => null);
-                minValidator = widget.column['validators'].firstWhere(
+                minValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'min',
                     orElse: () => null);
-                var number = ViewController.request[widget.column['name']];
+                var number = ViewController.request[widget.column!.name];
                 if (number != null) {
                   if (minValidator != null && maxValidator != null) {
                     if (number < minValidator['value']) {
@@ -216,19 +212,19 @@ class _FormTextFieldState extends State<FormTextField> {
                   }
                 }
               } else if (widget.isEmail == true) {
-                var emailValidator = widget.column['validators'].firstWhere(
+                var emailValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'email',
                     orElse: () => null);
                 final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
                 if (!emailRegex
-                    .hasMatch(ViewController.request[widget.column['name']])) {
+                    .hasMatch(ViewController.request[widget.column!.name])) {
                   _errorText = emailValidator['message'];
                 } else {
                   _errorText = null;
                 }
               } else if (widget.isMobile == true) {
-                var mobileValidator = widget.column['validators'].firstWhere(
+                var mobileValidator = widget.column!.validators.firstWhere(
                     (validator) => validator['type'] == 'mobile',
                     orElse: () => null);
               }
@@ -244,110 +240,100 @@ class _FormTextFieldState extends State<FormTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormBuilder(
-
-            key: widget.fbKey,
-            child: SizedBox(
-              height: widget.height,
-              child: FormBuilderTextField(
-
-                key: textFieldKey,
-                focusNode: _focusNode,
-                controller: widget.initValue == null ? _formConroller : null,
-                obscureText: widget.isPassword == true &&
-                        AdminController.isVisibility.value == false
-                    ? true
-                    : false,
-                keyboardType: widget.isLongTxt == true
-                    ? TextInputType.multiline
-                    : widget.isNumberInt! || widget.isNumberDouble!
-                        ? TextInputType.number
-                        : TextInputType.text,
-                minLines: 1,
-                maxLines: widget.isPassword == true ? 1 : 3,
-                inputFormatters: widget.inputFormatters != null ? widget.inputFormatters: [
-                  if (widget.isMobile == true) MobileNumberFormatter(),
-                  if (widget.isMobile == true)
-                    LengthLimitingTextInputFormatter(11),
-                  if (widget.isMobile == true)
-                    FilteringTextInputFormatter.digitsOnly,
-                  if (widget.isNumberDouble == true)
-                    // FilteringTextInputFormatter.digitsOnly,
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                  if (widget.isNumberInt == true)
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  // if(widget.isNumber == true)
-                  //   ThousandSeparatorInputFormatter(),
-                  if (widget.isMobile == true)
-                    FilteringTextInputFormatter.deny(
-                      RegExp(r'^0+'),
-                    ),
-                ],
-                initialValue: widget.initValue,
-                // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
-                style: TextStyle(
+            key: UniqueKey(),
+            child: FormBuilderTextField(
+              key: textFieldKey,
+              focusNode: _focusNode,
+              controller: widget.initValue == null ? _formConroller : null,
+              obscureText: widget.isPassword == true &&
+                      AdminController.isVisibility.value == false
+                  ? true
+                  : false,
+              keyboardType: widget.isLongTxt == true
+                  ? TextInputType.multiline
+                  : widget.isNumberInt! || widget.isNumberDouble!
+                      ? TextInputType.number
+                      : TextInputType.text,
+              minLines: 1,
+              maxLines: widget.isPassword == true ? 1 : 3,
+              inputFormatters: [
+                if (widget.isMobile == true) MobileNumberFormatter(),
+                if (widget.isMobile == true)
+                  LengthLimitingTextInputFormatter(11),
+                if (widget.isMobile == true)
+                  FilteringTextInputFormatter.digitsOnly,
+                if (widget.isNumberDouble == true)
+                  // FilteringTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                if (widget.isNumberInt == true)
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                // if(widget.isNumber == true)
+                //   ThousandSeparatorInputFormatter(),
+                if (widget.isMobile == true)
+                  FilteringTextInputFormatter.deny(
+                    RegExp(r'^0+'),
+                  ),
+              ],
+              initialValue: widget.initValue,
+              // style: TextStyle(color: widget.isLoginPage == false ? MainController.isLightMode.value == true ? whiteColor:primaryDark:primaryDark),
+              style: TextStyle(
+                  color: widget.isLoginPage == false
+                      ? MainController.isLightMode.value == true
+                          ? whiteColor
+                          : primaryDark
+                      : primaryDark),
+              onChanged: (value) {
+                // if(widget.isNumberInt == true){
+                //   text.value = int.parse('${value!}');
+                // }
+                // else if(widget.isNumberDouble == true){
+                //   text.value = double.parse('${value!}');
+                // }
+                // else {
+                //   text.value = value!;
+                // }
+                // ViewController.request[widget.column.name] = value;
+                if (widget.onChange != null) this.widget.onChange!(value);
+              },
+              onEditingComplete: () {},
+              onSubmitted: (value) {},
+              name: widget.name,
+              decoration: InputDecoration(
+                prefixIcon: widget.isPassword == true
+                    ? Obx(() {
+                        return InkWell(
+                            onTap: () {
+                              setState(() {
+                                AdminController.isVisibility.value =
+                                    !AdminController.isVisibility.value;
+                              });
+                            },
+                            child: Icon(
+                              AdminController.isVisibility.value == true
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 15,
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : primaryDark,
+                            ));
+                      })
+                    : null,
+                labelText: '${this.widget.lable}',
+                labelStyle: TextStyle(
                     color: widget.isLoginPage == false
                         ? MainController.isLightMode.value == true
                             ? whiteColor
                             : primaryDark
                         : primaryDark),
-                onChanged: (value) {
-                  // if(widget.isNumberInt == true){
-                  //   text.value = int.parse('${value!}');
-                  // }
-                  // else if(widget.isNumberDouble == true){
-                  //   text.value = double.parse('${value!}');
-                  // }
-                  // else {
-                  //   text.value = value!;
-                  // }
-                  // ViewController.request[widget.column['name']] = value;
-                  if (widget.onChange != null) this.widget.onChange!(value);
-                },
-                onEditingComplete: () {},
-                onSubmitted: (value) {},
-                name: widget.name,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 12,
-                  ),
-
-                  prefixIcon: widget.isPassword == true
-                      ? Obx(() {
-                          return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  AdminController.isVisibility.value =
-                                      !AdminController.isVisibility.value;
-                                });
-                              },
-                              child: Icon(
-                                AdminController.isVisibility.value == true
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                size: 15,
-                                color: MainController.isLightMode.value == true
-                                    ? whiteColor
-                                    : primaryDark,
-                              ));
-                        })
-                      : null,
-                  labelText: '${this.widget.lable}',
-                  labelStyle: TextStyle(
-                      color: widget.isLoginPage == false
-                          ? MainController.isLightMode.value == true
-                              ? whiteColor
-                              : primaryDark
-                          : primaryDark),
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: colorBtn, width: 2.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: color3, width: 1.0),
-                  ),
-                  // errorText: _errorText,
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: colorBtn, width: 2.0),
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: color3, width: 1.0),
+                ),
+                // errorText: _errorText,
               ),
             ),
           ),

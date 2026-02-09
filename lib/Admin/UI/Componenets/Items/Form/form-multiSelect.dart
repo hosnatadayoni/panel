@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +14,7 @@ class MultiSelectDropdown extends StatefulWidget {
   RxList<dynamic>? selectedItems = <String>[].obs;
   Function(List<dynamic>)? onChanged;
   Rx<bool>? isSelectedItem = false.obs;
-  var column;
+  ColumnModel? column;
 
   MultiSelectDropdown({this.hintText ,required this.items , this.column , this.onChanged,this.selectedItems , this.isSelectedItem});
   @override
@@ -28,8 +29,9 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
-    if(widget.column['validators']!=null && widget.column['validators'].length!=0){
-      inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'reqiured', orElse: () => null);
+    if(widget.column!.validators.length!=0){
+      inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'reqiured', orElse: () => null);
+      print('_MultiSelectDropdownState.build>>${inputRequired}');
 
       errorMessage = inputRequired['message'];
     }

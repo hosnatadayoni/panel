@@ -22,7 +22,8 @@ class TableOutPutHeader extends StatefulWidget {
 class _TableOutPutHeaderState extends State<TableOutPutHeader> {
   @override
   Widget build(BuildContext context) {
-   RxInt count = RxInt(MainController.tableInfo['schema']['countShowRow']);
+   RxInt count = RxInt(MainController.infoSchema.value.schema.countShowRow);
+
     return Obx((){
       return Container(
         padding: EdgeInsets.only(left: 10 , right: 10),
@@ -37,7 +38,7 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                   lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
                 // MainCustomController.searchOutPutOrder(text , widget.ordersList);
                 setState(() {
-                  MainController.tableInfo['schema']['currentPage'] = 1;
+                  MainController.infoSchema.value.schema.currentPage = 1;
                 });
 
               }),
@@ -52,12 +53,10 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                         InkWell(
                           onTap: () async{
                             count.value++;
-                            // MainController.tableInfo['schema']['countShowRow'] = count.value;
-                            // MainController.startIndex.value = (MainController.tableInfo['schema']['currentPage']-1) * MainController.tableInfo['schema']['countShowRow'];
-                            // MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['schema']['countShowRow']}');
-                            // MainController.tableInfo['schema']['currentPage'] = 1;
-                            // widget.ordersList= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                            // ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+                            MainController.infoSchema.value.schema.countShowRow = count.value;
+                            MainController.infoSchema.value.schema.currentPage = 1;
+                            await MainController.loadData(tableData: MainController.getInfoTable('Orders'));
+                            MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
                           },
                           child: Icon(Icons.arrow_drop_up , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
                         ),
@@ -68,12 +67,10 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                             if(count.value < 10){
                               count.value =  10;
                             };
-                            // MainController.tableInfo['schema']['countShowRow'] = count.value;
-                            // MainController.startIndex.value = (MainController.tableInfo['schema']['currentPage']-1) * MainController.tableInfo['schema']['countShowRow'];
-                            // MainController.endIndex.value = MainController.startIndex.value + int.parse('${MainController.tableInfo['schema']['countShowRow']}');
-                            // MainController.tableInfo['schema']['currentPage'] = 1;
-                            // widget.ordersList= await DB('${MainController.tableInfo['schema']['name']}').paginate();
-                            // ViewController.totalPage.value = await DB('${MainController.tableInfo['schema']['name']}').infoPage();
+                            MainController.infoSchema.value.schema.countShowRow = count.value;
+                            MainController.infoSchema.value.schema.currentPage = 1;
+                            MainController.dataRecord.value = await DB('${MainController.infoSchema.value.schema.name}').paginate();
+                            await MainController.loadData(tableData: MainController.getInfoTable('Orders'));
                           },
                           child: Icon(Icons.arrow_drop_down , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
                         ),
@@ -97,7 +94,7 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                   children: [
                     Txt('${AppController.of(context)!.value('show')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
                     SizedBox(width: 5,),
-                    Txt('ورودی' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
+                    Txt('${AppController.of(context)!.value('input')}' , color: MainController.isLightMode.value == true?  whiteColor:color1, fontSize: 16, fontWeight: FontWeight.w400,),
                   ],
                 ),
               ],

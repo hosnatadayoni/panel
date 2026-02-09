@@ -33,7 +33,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
         children: [
           Expanded(
               child: Txt(
-                '${MainController.selectedSubItem.value != -1 ? MainController.tableInfo['schema']['title'] != null ? MainController.tableInfo['schema']['title'] : '' : ''}',
+                '${MainController.selectedSubItem.value != -1 ? MainController.infoSchema.value.schema.title != null ? MainController.infoSchema.value.schema.title : '' : ''}',
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
                 color: MainController.isLightMode.value == true
@@ -117,7 +117,7 @@ class _MainTableHeaderState extends State<MainTableHeader> {
                               ViewController.request = {};
                               HelperController.createPageFunction(
                                   MainController.tableName.value);
-                              //   await Get.to(() => MainController.SubMenuList[MainController.selectedSubItem.value]['create-view-address']);
+                              //   await Get.to(() => MainController.menuList[MainController.selectedSubItem.value]['create-view-address']);
                             });
                           },
                           value: 'create',

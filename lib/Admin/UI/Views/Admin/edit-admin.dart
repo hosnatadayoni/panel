@@ -161,6 +161,7 @@ class _EditAdminState extends State<EditAdmin> {
   selects(){
     var initvalue= widget.data['role_id']!=null? '${widget.data['role_id']}':AdminController.getRoleRes.first['_id'];
     var selectItem=initvalue;
+    print('_EditAdminState.selects>>${selectItem}');
 
     ViewController.request['role_id'] =selectItem;
     return new Column(

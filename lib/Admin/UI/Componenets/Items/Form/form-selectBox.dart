@@ -1,6 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
+import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,8 @@ class SelectBox extends StatefulWidget {
   String? selectedValue;
    Function(String?)? onChanged;
    String? initalValue;
-  var column;
+  ColumnModel? column;
   Rx<bool>? isSeleted = false.obs;
-  double maxHeight;
   SelectBox({
      this.name,
     this.items,
@@ -28,7 +28,6 @@ class SelectBox extends StatefulWidget {
     this.initalValue,
     this.column,
     this.isSeleted,
-    this.maxHeight = 45,
   });
 
   @override
@@ -42,8 +41,8 @@ class _SelectBoxState extends State<SelectBox> {
     var inputRequired;
     String? errorMessage;
     if(widget.column!=null)
-    if(widget.column['validators'] != null && widget.column['validators'].length!=0){
-       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'reqiured', orElse: () => null);
+    if(widget.column!.validators.length!=0){
+       inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
        errorMessage = inputRequired['message'];
     }
     return widget.items!.isNotEmpty? FormBuilder(
@@ -56,12 +55,13 @@ class _SelectBoxState extends State<SelectBox> {
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
               isExpanded: true,
               decoration: InputDecoration(
-                contentPadding:EdgeInsets.only(right: 10),
+                // contentPadding: EdgeInsets.only(right: 40),
+                contentPadding:EdgeInsets.only(right: 10 , top: 21,bottom: 21),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
                 border: OutlineInputBorder(),
-                constraints:  BoxConstraints(maxHeight: widget.maxHeight),
+                constraints: BoxConstraints(minHeight: 60),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),
@@ -69,13 +69,7 @@ class _SelectBoxState extends State<SelectBox> {
               items: widget.items!,
               onChanged: (value) {
               setState(() {
-                if(value == '' || value == null){
-                  widget.isSeleted!.value = false;
-                }
-                else {
-                  widget.isSeleted!.value = true;
-                }
-
+                 widget.isSeleted!.value = true;
                   widget.selectedValue = value!.toString();
                   if (widget.onChanged != null) {
                     widget.onChanged!(value.toString());
@@ -85,7 +79,7 @@ class _SelectBoxState extends State<SelectBox> {
             ),
             SizedBox(height: 5,),
             if(inputRequired != null)
-              if(inputRequired['type'] == 'reqiured')
+              if(inputRequired['type'] == 'required')
                 ViewController.isClickedBtn.value == true && widget.isSeleted!.value == false ||  ViewController.isClickedEditBtn.value == true && widget.isSeleted!.value == false?
                 Txt('${errorMessage != null ? errorMessage:''}' , color: errorColor,):Container(),
           ],

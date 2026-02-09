@@ -24,7 +24,7 @@ class Field{
     title = json['title'];
     type = json['type'];
     typeField = json['type_field'];
-    sourceItem = json['source_items'];
+    sourceItem = json['source_item'];
     sourceTable = json['source_table'];
     items = json['items'];
     filters = json['filters'];
