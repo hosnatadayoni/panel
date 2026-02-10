@@ -1,10 +1,9 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/filePicker-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
-import 'package:finance/Admin/Logic/Models/tableModel.dart';
-import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/images.dart';
@@ -20,7 +19,6 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
-import 'package:finance/Admin/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -1835,40 +1833,62 @@ class ViewController extends GetxController {
       {var tableData}) {
     String name;
     String type;
+    String schemaId;
+    bool statusTable;
+    Rx<Uint8List?> bytes = Rx<Uint8List?>(null);
     if (tableData == null) {
       name = MainController.infoSchema.value.columns[indexColumn].name;
       type = MainController.infoSchema.value.columns[indexColumn].type;
+      schemaId = MainController.infoSchema.value.columns[indexColumn].myTable!;
     } else {
       name = tableData['columns'][indexColumn]['name'];
       type = tableData['columns'][indexColumn]['type'];
+      schemaId = tableData['columns'][indexColumn]['my_table'];
+    }
+    statusTable=MainController.getStatusTable(MainController.getTableNameById(schemaId));
+    var dataModel = MainController.dataRecord[indexRow]['${name}'];
+    print('ViewController.generateCellFileBox>>${dataModel}');
+    if (statusTable == false && dataModel != null && dataModel != '') {
+      FilePickerController.convertToBase64(dataModel).then((value) {
+        bytes.value = value;
+      });
     }
 
-    var dataModel = MainController.dataRecord[indexRow]['${name}'];
     return dataModel != null && dataModel.length != 0
         ? Column(
-            children: [
-              Center(
-                  child: Image.network(
-                type == 'file'
-                    ? '${baseUrl}' + '${dataModel}'
-                    : '${baseUrlPvFile}' + '${dataModel}',
+      children: [
+        Obx(() {
+          if (statusTable == true) {
+            return Image.network(
+              type == 'file'
+                  ? '$baseUrl$dataModel'
+                  : '$baseUrlPvFile$dataModel',
+              width: 60,
+              height: 60,
+              fit: BoxFit.fill,
+              errorBuilder: (_, __, ___) => Image.asset(
+                fileImage,
                 width: 60,
                 height: 60,
-                fit: BoxFit.fill,
-                errorBuilder: (BuildContext context, Object error,
-                    StackTrace? stackTrace) {
-                  return Image.asset(
-                    fileImage,
-                    width: 60,
-                    height: 60,
-                  ); // عکس جایگزین
-                },
-              )
-                  // Img('${ dataModel}',width: 70,height: 70,isNetwork: true,),
-
-                  ),
-            ],
-          )
+              ),
+            );
+          } else {
+            return bytes.value != null
+                ? Image.memory(
+              bytes.value!,
+              width: 60,
+              height: 60,
+              fit: BoxFit.fill,
+            )
+                : const SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            );
+          }
+        }),
+      ],
+    )
         : Container();
   }
 
@@ -1959,10 +1979,7 @@ class ViewController extends GetxController {
             }
           },
           filesSelected: selectedFilesMap,
-          selectedFilesTxt:
-              column.type == 'file' || column.type == 'file_pv'
-                  ? selecetdFiles
-                  : filesSelectedList,
+          selectedFilesTxt: column.type == 'file' || column.type == 'file_pv' ? selecetdFiles : filesSelectedList,
           isSeletedFile: isSelectedFile,
           column: column,
           fileInfo: fileInfo,
@@ -2266,31 +2283,33 @@ class ViewController extends GetxController {
     });
   }
 
-  static Widget generateSelectFileBox(
-      String type,
+  static Future<Widget> generateSelectFileBox(
+      ColumnModel column,
       RxList<String> fileSelectedList,
       RxMap<String, List<dynamic>> fileInfo,
-      var index) {
-    return Obx(() {
+      var index)async {
+    String type=column.type;
+    var statusTable=MainController.getStatusTable(MainController.getTableNameById(column.myTable!));
+    final bytes = await  File( fileSelectedList[index]).readAsBytes();
+    return Obx(()  {
       var fileData = fileInfo[fileSelectedList[index]];
+      print('ViewController.generateSelectFileBox>>${fileSelectedList[index]}');
+      print('ViewController.generateSelectFileBox>>${fileInfo}');
       var totalChunks = 1;
       var currentChunk = 0;
       RxMap<String, dynamic>? chunkName = <String, dynamic>{}.obs;
       if (fileInfo[fileSelectedList[index]] != null) {
         totalChunks = fileData?[0] ?? 1;
         currentChunk = fileData?[1] ?? 0;
-        chunkName.value = fileData!.length > 2
-            ? fileData[2] != null
-                ? fileData[2]
-                : {}
-            : fileSelectedList[index];
+        chunkName.value = fileData!.length > 2 ? fileData[2] != null ? fileData[2] : {} : fileSelectedList[index];
       }
+
       return Container(
         margin: EdgeInsets.only(bottom: 10),
         child: Row(
           children: [
-            chunkName.isNotEmpty
-                ? Image.network(
+            statusTable==true?
+            chunkName.isNotEmpty ? Image.network(
                     type.endsWith('pv')
                         ? baseUrlPvFile + '${chunkName['path']}'
                         : baseUrl + '${chunkName['path']}',
@@ -2308,6 +2327,10 @@ class ViewController extends GetxController {
                   )
                 : Img(
                     fileImage,
+                    width: 70,
+                    height: 70,
+                  )
+                : Image.memory(bytes,
                     width: 70,
                     height: 70,
                   ),

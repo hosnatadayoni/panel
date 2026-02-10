@@ -160,6 +160,26 @@ class MainController extends GetxController {
     return double.tryParse(str) != null;
   }
 
+  static getInfoTableById(String tableId) {
+    int index = MainController.menuList.indexWhere((element) {
+      return element.schema.id == '${tableId}';
+    });
+    if (index != -1) {
+      var tableInfo = MainController.menuList[index];
+      return tableInfo;
+    }
+    return null;
+  }
+  static getTableNameById(String tableId) {
+    int index = MainController.menuList.indexWhere((element) {
+      return element.schema.id == '${tableId}';
+    });
+    if (index != -1) {
+      var tableInfo = MainController.menuList[index];
+      return tableInfo.schema.name;
+    }
+    return null;
+  }
   static getInfoTable(String tableName) {
     int index = MainController.menuList.indexWhere((element) {
       return element.schema.name == '${tableName}';
@@ -283,63 +303,7 @@ class MainController extends GetxController {
     }
   }
 
-  // static Future<void> search(String query) async {
-  //   print('MainController.search>>1}${MainController.allData.value}');
-  //
-  //   List<Map<String, dynamic>> allData = [];
-  //   for (var item in MainController.allData) {
-  //     if (item is Map) {
-  //       allData.add(Map<String, dynamic>.from(item));
-  //     }
-  //   }
-  //   searchQuery.value = query;
-  //   if (query.isEmpty) {
-  //     // MainController.dataRecord.value =allData;
-  //     // if (MainController.dataRecord !=  allData2) {
-  //     MainController.dataRecord.value = List.from(MainController.allData);
-  //     // }
-  //   } else {
-  //     print('MainController.search else');
-  //     List<dynamic> list = [];
-  //     MainController.infoSchema.value.schema.currentPage = 1;
-  //     for (Map<String, dynamic> data in allData) {
-  //       bool flag = true;
-  //
-  //       for (var key in data.keys) {
-  //         if (key != '_id') {
-  //           if (data[key] != null) {
-  //             var type = getTypeOfField(
-  //                 MainController.infoSchema.value.schema.name!, key);
-  //             if (type == 'select' ||
-  //                 type == 'multiSelect' ||
-  //                 type == 'radiobutton') {
-  //               var column = getDetailsOfField(MainController.infoSchema.value.schema.name!, key);
-  //               data[key] = ViewController.itemsShowSelectItem(data[key], column);
-  //             }
-  //
-  //             var val = data[key];
-  //             if (val.toString().toLowerCase().contains(query.toString().toLowerCase())) {
-  //               flag = true;
-  //               break;
-  //             } else {
-  //               flag = false;
-  //             }
-  //           } else {
-  //             flag = false;
-  //           }
-  //         } else {
-  //           flag = false;
-  //         }
-  //       }
-  //       if (flag == true) {
-  //         // MainController.allData.value.
-  //         list.add(data);
-  //       }
-  //     }
-  //     MainController.dataRecord.value = list;
-  //     print('MainController.search>>2}${MainController.allData.value}');
-  //   }
-  // }
+
 
   static setRelations(String tableName) {
     var index =
