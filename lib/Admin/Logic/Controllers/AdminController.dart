@@ -18,7 +18,6 @@ class AdminController extends GetxController {
   static RxList<dynamic> getNameAccessRes = [].obs;
   static RxInt currentPageAccess = 1.obs;
   static RxInt countShowRowAccess = 10.obs;
-
   static RxList<dynamic> getRoleRes = [].obs;
   static RxMap<String, dynamic> accessRoles = <String, dynamic>{}.obs;
   static RxInt currentPageRole = 1.obs;
