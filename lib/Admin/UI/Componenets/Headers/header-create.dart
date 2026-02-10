@@ -64,7 +64,7 @@ class HeaderCreate extends StatelessWidget {
                                   .menuList[
                               MainController
                                   .selectedSubItem
-                                  .value]);
+                                  .value].schema.name!);
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

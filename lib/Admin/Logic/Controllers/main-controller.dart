@@ -105,8 +105,7 @@ class MainController extends GetxController {
   static Rx<int> selectedItemList = 0.obs;
 
   static RxList<TableModel> menuList = <TableModel>[].obs;
-  static Rx<TableModel> infoSchema =
-      TableModel(schema: SchemaModel(), columns: []).obs;
+  static Rx<TableModel> infoSchema = TableModel(schema: SchemaModel(), columns: []).obs;
   static RxList<dynamic> dataRecord = <dynamic>[].obs;
 
   DataModel? dataModel;
@@ -234,15 +233,16 @@ class MainController extends GetxController {
   }
 
   //all items in column
-  static getDetailsOfField(String tableName, String name) {
-    var i;
-    var column = getColumnsTable(tableName);
+  static  getDetailsOfField(String tableName, String name) {
+    ColumnModel i;
+    List<ColumnModel> column = getColumnsTable(tableName);
     for (ColumnModel item in column) {
       if (item.name == name) {
         i = item;
         return i;
       }
     }
+    // return i;
   }
 
 

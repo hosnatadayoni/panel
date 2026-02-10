@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/record-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
 import 'package:finance/Admin/Logic/Models/tableModel.dart';
@@ -7,10 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:uuid/uuid.dart';
+import '../../../Custom/Logic/Controllers/view-custom-controller.dart';
+import '../../../Custom/Logic/Models/order-item.dart';
+import '../../../Custom/UI/Components/Views/table-page-custom.dart';
+import '../../../Custom/UI/Components/page-custom/order/order-create.dart';
+import '../../../Custom/UI/Components/page-custom/order/order-edit.dart';
 import '../../UI/Views/create.dart';
 import '../../UI/Views/dashboard.dart';
 import '../../UI/Views/table-page.dart';
 import '../Models/columnModel.dart';
+import '../Models/dataModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 import 'connect-server-controller.dart';
@@ -112,9 +120,17 @@ class HelperController extends GetxController {
       //     await ConncetServerController.listSchemaByField();
       // }
   }
-  static goToTablePage(TableModel table, {bool loadData = true, var tableFields = null, var tableData = null}) async {
+  static goToTablePage(String tableName, {bool loadData = true, var tableFields = null, var tableData = null}) async {
+    TableModel table=MainController.getInfoTable(tableName);
     if (table.schema.view == 'custom') {
-        await HelperController.pageInateFunction();
+      await HelperController.pageInateFunction();
+      if (table.schema.name == 'order') {
+        Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePageCustom()));
+      }
+      else if (table.schema.name == 'Order_Details') {
+        Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
+      }
+      else
         Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
     } else {
       if (loadData == true)
@@ -127,18 +143,102 @@ class HelperController extends GetxController {
 
 
   static createPageFunction(String tableName) async {
-    var table = MainController.getInfoTable(tableName);
+    TableModel table = MainController.getInfoTable(tableName);
     if (table.schema.view == 'custom') {
+      print('HelperController.createPageFunction>>${table.schema.name}');
+      if (table.schema.name== 'order') {
+        List<dynamic> customerItems = await DB('user').getRecords();
+        List<dynamic> productItems = await DB('product').getRecords();
+        ViewCustomController.containers = <String, Widget>{}.obs;
+        await Get.to(() => OrderCreatePage(tableName, customerItems, productItems));
+      }
     } else {
       await Get.to(() => CreatePage(tableName));
     }
   }
 
   static createFunction(String tableName, {bool loadData = true, var tableFields = null, var tableData = null}) async {
-    var table = MainController.getInfoTable(MainController.tableName.value);
+    TableModel table = MainController.getInfoTable(MainController.tableName.value);
     if (table.schema.view == 'custom') {
-      await MainController.loadData(
-          tableData: MainController.getInfoTable(''));
+      if (table.schema.name == 'order') {
+        if (ViewCustomController.order['date'] == null) {
+          ViewCustomController.order['Date'] =
+              ViewCustomController.getDate(Jalali.now());
+        }
+        if (ViewCustomController.order['type'] == null) {
+          ViewCustomController.order['Type'] =
+          MainController.getDetailsOfField('order', 'Type')['items']
+              .first['value'];
+        }
+        if (ViewCustomController.order['customer'] == null) {
+          List<dynamic> customerItems = await DB('user').getRecords();
+          ViewCustomController.order['customer'] = customerItems.first['_id'];
+        }
+
+        var Id = Uuid().v4();
+        DataModel newData =
+        DataModel(id: '${Id}', data: ViewCustomController.order);
+        bool validate = await RecordController.validate(
+            'order', newData, MainController.getInfoTable('order'));
+        if (validate == false) {
+          var Id = Uuid().v4();
+          List<bool> validatorOrderDetailList = [];
+          for (var i = 0;
+          i < OrderItem.orderItemsList.values.toList().length;
+          i++) {
+            var orderItem = OrderItem.orderItemsList.values.toList()[i];
+            if (orderItem['Cut_Pattern'] == null) {
+              orderItem['Cut_Pattern'] = MainController.getDetailsOfField(
+                  'Order_Details', 'Cut_Pattern')['items']
+                  .first['value'];
+            }
+            if (orderItem['Manufacturing_Difficulty'] == null) {
+              orderItem['Manufacturing_Difficulty'] =
+              MainController.getDetailsOfField(
+                  'Order_Details', 'Manufacturing_Difficulty')['items']
+                  .first['value'];
+            }
+            if (orderItem['Product_Name'] == null) {
+              List<dynamic> productItems = await DB('product').getRecords();
+              orderItem['Product_Name'] = ViewCustomController
+                  .order['customer'] = productItems.first['_id'];
+            }
+            print('orderItem>>>${orderItem}');
+            DataModel newDataOrderItem =
+            DataModel(id: '${Id}', data: orderItem);
+
+            bool validateOrderDetail = await RecordController.validate(
+                'Order_Details',
+                newDataOrderItem,
+                MainController.getInfoTable('Order_Details'));
+            validatorOrderDetailList.add(validateOrderDetail);
+          }
+          if (validatorOrderDetailList.length != 0) {
+            if (validatorOrderDetailList.every((e) => !e)) {
+              await DB('${tableName}')
+                  .parent(
+                  parentId: '${ViewCustomController.order['customer']}',
+                  parentTable: 'user')
+                  .storeRecord(ViewCustomController.order);
+              var orderId = ConncetServerController.storeRecordRes['_id'];
+              for (var orderItem in OrderItem.orderItemsList.values.toList()) {
+                await DB('Order_Details')
+                    .parent(parentId: '${orderId}', parentTable: '${tableName}')
+                    .storeRecord(orderItem);
+              }
+            }
+          } else {
+            showSnackbar(snackTypes.error, 'لطفا جزئیات سفارش را وارد کنید...');
+          }
+        }
+
+        await MainController.loadData(
+            tableData: MainController.getInfoTable('order'));
+      }
+      else {
+        await MainController.loadData(
+            tableData: MainController.getInfoTable(''));
+      }
     } else {
       var responseStore={};
       Map<String, Map<String,dynamic>> parent = await DB.parentItem;
@@ -166,9 +266,37 @@ class HelperController extends GetxController {
     var tableName = table.schema.name;
     print('HelperController.relationFunction>>>${tableName}');
     if (table.schema.view == 'custom') {
-      // pageInateFunction();
-      var items = await DB('${table.schema.name}').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: MainController.infoSchema.value.schema.name).getRecords();
-      await goToTablePage(table, tableFields: MainController.getInfoTable(table.schema.name), tableData: items);
+      var orderList = [];
+      if (tableName == 'order') {
+        print(
+            'MainController.tableData relation orders>>>${MainController.dataRecord}');
+        orderList = await DB('${table['schema']['name']}')
+            .parent(
+            parentId: MainController.dataRecord[index]['_id'],
+            parentTable: MainController.infoSchema.value.schema.name)
+            .getRecords();
+
+        print('order list>>>${orderList}');
+      }
+      if (tableName == 'Order_Details') {
+        print(
+            'MainController.tableData relation order_detail>>>${MainController.dataRecord}');
+        print(
+            'c1300>>>${await DB('Order_Details').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: 'order').getRecords()}');
+        var orderDetailsList = await DB('Order_Details')
+            .parent(
+            parentId: MainController.dataRecord[index]['_id'],
+            parentTable: 'order')
+            .getRecords();
+        print('orderDetailsList>>>${orderDetailsList}');
+      }
+      await HelperController.goToTablePage(
+        table,
+        tableFields: MainController.getInfoTable(table['schema']['name']),
+      );
+      pageInateFunction();
+      // var items = await DB('${table.schema.name}').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: MainController.infoSchema.value.schema.name).getRecords();
+      // await goToTablePage(table, tableFields: MainController.getInfoTable(table.schema.name), tableData: items);
     } else {
       print('HelperController.relationFunction>>${MainController.dataRecord[index]['_id']}');
       var items = await DB('${table.schema.name}').parent(parentId: MainController.dataRecord[index]['_id'], parentTable: MainController.infoSchema.value.schema.name).getRecords();
@@ -199,11 +327,19 @@ class HelperController extends GetxController {
   }
 
   static editPageFunction(var data) async {
-    var table = MainController.getInfoTable(MainController.tableName.value);
+    TableModel table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table.schema.name;
     print('HelperController.editPageFunction>>>${table.schema.view}');
     if (table.schema.view == 'custom') {
-
+      if (tableName== 'order') {
+        List<dynamic> customerItems = await DB('user')
+            .parent(parentTable: null, parentId: null)
+            .getRecords();
+        List<dynamic> productItems = await DB('product')
+            .parent(parentTable: null, parentId: null)
+            .getRecords();
+        await Get.to(() => OrderEditPge(data: data, customerItems, productItems));
+      }
     }
     else {
       print('HelperController.editPageFunction');
@@ -216,7 +352,10 @@ class HelperController extends GetxController {
     var table = MainController.getInfoTable(MainController.tableName.value);
     var tableName = table.schema.name;
     if (table.schema.view == 'custom') {
-
+      if (tableName == 'order') {
+        await DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();
+        print('orderssssss delete ${id}');
+      }
     } else {
       print('HelperController.deleteFunction>>$id');
       await DB('${tableName}').where('_id', '\$eq', '${id}').deleteRecord();

@@ -85,7 +85,7 @@ class _MenuBoxState extends State<MenuBox> {
                                                 MainController.tableName.value =
                                                 MainController.menuList[j].schema.name!;
                                                 MainController.menuList[j].schema.currentPage = 1;
-                                                await HelperController.goToTablePage(MainController.menuList[j]);
+                                                await HelperController.goToTablePage(MainController.menuList[j].schema.name!);
                                               },
                                               child: Txt('${MainController.menuList[j].schema.title}', fontSize: 16, fontWeight: FontWeight.w400,
                                                 color: MainController.isLightMode.value == true &&

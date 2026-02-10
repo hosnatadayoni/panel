@@ -32,7 +32,7 @@ class _HeaderEditState extends State<HeaderEdit> {
               '${AppController.of(context)!.value('back')}', fontSize: 16, fontWeight: FontWeight.w400,
             ),onClick: () async {
               await MainController.loadData();
-              await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value]);
+              await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value].schema.name!);
             }),
             SizedBox(width: 5,),
             Btn(type: btnType.primary , content: Txt(
@@ -47,7 +47,7 @@ class _HeaderEditState extends State<HeaderEdit> {
                   }
                   else{
                     await MainController.loadData();
-                    await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value]);
+                    await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value].schema.name!);
                   }
                   // if (ViewController.isClickedBtn.value == false) {
                   //   await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value]);
