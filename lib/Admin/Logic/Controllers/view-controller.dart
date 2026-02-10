@@ -18,7 +18,6 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-time.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
-import 'package:finance/Admin/boxes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +26,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import 'package:finance/Admin/Logic/Controllers/dataController.dart';
-import 'package:uuid/uuid.dart';
 import '../../Public/config.dart';
-import '../../UI/Componenets/General/loading.dart';
 import '../../UI/Componenets/Items/Form/form-file.dart';
 import '../Models/general.dart';
-import 'connect-server-controller.dart';
 
 class ViewController extends GetxController {
   static Rx<String> selectedRadioButton = ''.obs;
@@ -46,7 +40,7 @@ class ViewController extends GetxController {
   // static Map<String, dynamic> requestFilter ={};
   static Map<String, dynamic> requestMultiSelect = <String, dynamic>{};
   static Map<String, dynamic> request2 = {};
-  static RxInt totalPage = 0.obs;
+  static RxInt totalPage = 1.obs;
   static RxList<Widget> filters = <Widget>[].obs;
 
   static copyClipboard(String text) async {
@@ -548,8 +542,7 @@ class ViewController extends GetxController {
           children.add(colorBox);
         } else if (type == 'file' || type == 'file_pv') {
           fileBox = generateEditFileBox(
-              dataModel[name] != null && dataModel[name] != ''
-                  ? dataModel
+              dataModel[name] != null && dataModel[name] != '' ? dataModel
                   : null,
               column,
               dataModel[name] == null ? false.obs : true.obs);
@@ -1267,7 +1260,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFormDateBox(
-      var column, Jalali selectedDate, Rx<bool>? isSeletedDate) {
+      var column, Jalali selectedDate, Rx<bool>? isSeletedDate,{Function? onChange}) {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1285,7 +1278,11 @@ class ViewController extends GetxController {
           selectedDate: selectedDate,
           isSeletedDate: isSeletedDate,
           onDateChanged: (date) {
+            print('ViewController.generateFormDateBox>>${selectedDate.year}');
             // dataJson[columnName] =  date;
+            if(onChange!=null)
+              onChange(date)!;
+            else
             ViewController.request[column['name']] = date;
           },
           column: column,
@@ -1874,7 +1871,7 @@ class ViewController extends GetxController {
   }
 
   static Widget generateFileBox(
-      var selecetdFiles, var column, Rx<bool>? isSeletedFile) {
+      var selecetdFiles, var column, Rx<bool>? isSeletedFile,{Function?onChange}) {
     Map<String, List<dynamic>> selectedFilesMap = {};
     if (selectedFilesMap['${column['name']}'] == null) {
       selectedFilesMap['${column['name']}'] = [];
@@ -1899,10 +1896,19 @@ class ViewController extends GetxController {
           onChanged: (file) {
             // dataJson[columnName] = selecetdFiles;
             if (column['type'] == 'file' || column['type'] == 'file_pv') {
-              ViewController.request[column['name']] = file;
+              if(onChange!=null){
+                onChange(file);
+              }else{
+                ViewController.request[column['name']] = file;
+
+              }
             } else {
-              filesSelectedList.add(file);
-              ViewController.request[column['name']] = filesSelectedList;
+              if (onChange != null) {
+                onChange(filesSelectedList);
+              } else {
+                filesSelectedList.add(file);
+                ViewController.request[column['name']] = filesSelectedList;
+              }
             }
           },
           filesSelected: selectedFilesMap,
@@ -1918,8 +1924,7 @@ class ViewController extends GetxController {
     );
   }
 
-  static Widget generateEditFileBox(
-      var data, var column, Rx<bool>? isSeletedFile) {
+  static Widget generateEditFileBox(var data, var column, Rx<bool>? isSeletedFile) {
     String name = column['name'];
     String type = column['type'];
     RxString file =

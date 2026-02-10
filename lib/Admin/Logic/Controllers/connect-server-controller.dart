@@ -5,7 +5,6 @@ import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:get/get.dart';
 import '../Helpers/api-methods.dart';
-import '../Models/ServerModel/tableModel.dart';
 import '../Models/db.dart';
 import 'app-controller.dart';
 
@@ -180,6 +179,7 @@ class ConncetServerController extends GetxController {
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()
       });
+    if(wheres.length!=0)
     for(Where item in wheres.values){
       l.add({'column':'${item.fieldName}','operation': "${item.operator!=null?item.operator:"\$eq"}",'value': "${item.value}"});
       }

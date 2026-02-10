@@ -21,7 +21,6 @@ class _TableFooterState extends State<TableFooter> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var tableSelected = MainController.SubMenuList[MainController.selectedSubItem.value]['schema']['name'];
-    print('_TableFooterState.build>>${ViewController.totalPage.value}');
 
     return Obx((){
       return Container(
@@ -259,9 +258,7 @@ class _TableFooterState extends State<TableFooter> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(15)),
-                  onPressed: MainController
-                      .tableInfo['schema']['currentPage'] <
-                      totalPages ? () async {
+                  onPressed: MainController.tableInfo['schema']['currentPage'] < totalPages ? () async {
                     setState(() {
                       MainController.tableInfo['schema']['currentPage']++;
                     });
@@ -271,10 +268,7 @@ class _TableFooterState extends State<TableFooter> {
                   } : null,
                   child: Txt(
                     '${AppController.of(context)!.value('next')}',
-                    color: MainController
-                        .tableInfo['schema']['currentPage'] <
-                        totalPages
-                        ? whiteColor
+                    color: MainController.tableInfo['schema']['currentPage'] < totalPages ? whiteColor
                         : color3,),
                 ),
               ),

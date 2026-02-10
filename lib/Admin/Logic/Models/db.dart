@@ -146,12 +146,14 @@ class DB {
   }
 
   parent({var parentTable = null, var parentId = null}) {
-    parentItem = <String, Map<String,dynamic>>{};
+    parentItem = {};
+    print('DB.parent parentTable>>${parentTable}>>${parentId}');
     if (parentTable != null && parentId != null) {
       var json = {'parent_table': parentTable, 'parent_id': parentId};
       parentItem = {"${this.tableName}":json};
+      print('DB.parent>>${parentItem}');
     } else
-      parentItem = <String, Map<String,dynamic>>{};
+      parentItem = {};
 
     return this;
   }
@@ -166,20 +168,21 @@ class DB {
     int index = MainController.SubMenuList.indexWhere((element) => element['schema']['name'] == '${this.tableName}');
 
     data = [];
+    if (parentItem.containsKey(this.tableName) && parentItem[this.tableName]!.length != 0) {
+      where('parent_id', '\$eq', parentItem[this.tableName]!['parent_id']);
+      print('DB.getRecords where list is>>>${this.whereList}');
+    } else {
+      // where('parent_id', '\$eq', null);
+      // print('DB.getRecords where list is2>>>${this.whereList}');
+      // await ConncetServerController.getRecordGeneral('${tableName}');
+      // dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
+      // for(var s in dataItems){
+      //   print(s['parent_id']);
+      //   print(s['parent_id'].runtimeType);
+      // }
+    }
     if (MainController.SubMenuList[index]['schema']['online'] == true) {
-      if (parentItem.containsKey(this.tableName) && parentItem[this.tableName]!.length != 0) {
-        where('parent_id', '\$eq', parentItem[this.tableName]!['parent_id']);
-        print('DB.getRecords where list is>>>${this.whereList}');
-      } else {
-        where('parent_id', '\$eq', null);
-        print('DB.getRecords where list is2>>>${this.whereList}');
-        // await ConncetServerController.getRecordGeneral('${tableName}');
-        // dataItems = ConncetServerController.getRecordRes.cast<Map<String, dynamic>>();
-        // for(var s in dataItems){
-        //   print(s['parent_id']);
-        //   print(s['parent_id'].runtimeType);
-        // }
-      }
+
       if (this.whereList.length == 0 && this.orWhereList.length == 0) {
         List<Map<String, dynamic>> dataItems = [];
         await ConncetServerController.filterRecordGeneral([],'${tableName}', '\$or');
@@ -1270,9 +1273,9 @@ class DB {
     for (var data in records) {
       a = data;
       for (var item in request.keys) {
-        if (!a.containsKey(item)) {
+        // if (!a.containsKey(item)) {
           a[item] = request[item];
-        }
+        // }
       }
       print('DB.updateRecords containsKey>>${a}');
 

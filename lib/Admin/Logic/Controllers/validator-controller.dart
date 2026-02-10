@@ -182,28 +182,33 @@ class ValidatorController extends GetxController {
           for (var column in columns) {
             if (column['name'] == key) {
               if (column['type'] == 'Number int') {
-                print(
-                    'ValidatorController.validateByType>>${request[key]}>>${request[key] is int}');
+                print('ValidatorController.validateByType Number int>>${request[key]}>>${request[key] is int}');
                 if (request[key] is int == false) {
                   return false;
                 }
               }
-              if (column['type'] == 'Number double') {
-                if (request[key] is double == false) {
-                  return false;
-                }
-              }
+              // if (column['type'] == 'Number double') {
+              //   if (request[key] is double == false) {
+              //     return false;
+              //   }
+              // }
               if (column['type'] == 'multiSelect') {
+                print('ValidatorController.validateByType Number int>>${request[key]}>>${request[key] is List}');
+
                 if (request[key] is List == false) {
                   return false;
                 }
               }
               if (column['type'] == 'select' || column['type'] == 'radioButton') {
+                print('ValidatorController.validateByType Number select>>${request[key]}>>${request[key] is String}');
+
                 if (request[key] is String == false) {
                   return false;
                 }
               }
               if (column['type'] == 'checkBox') {
+                print('ValidatorController.validateByType Number checkBox>>${request[key]}>>${request[key] is bool}');
+
                 if (request[key] is bool == false) {
                   return false;
                 }

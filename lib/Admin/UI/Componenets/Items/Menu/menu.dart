@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -86,7 +87,7 @@ class _MenuBoxState extends State<MenuBox> {
                                                 MainController.tableName.value =
                                                 MainController.SubMenuList[j]['schema']['name'];
                                                 MainController.SubMenuList[j]['schema']['currentPage'] = 1;
-                                                await MainController.goToTablePage(MainController.SubMenuList[j]);
+                                                await HelperController.goToTablePage(MainController.SubMenuList[j]);
                                               },
                                               child: Txt('${MainController.SubMenuList[j]['schema']['title']}', fontSize: 16, fontWeight: FontWeight.w400,
                                                 color: MainController.isLightMode.value == true &&

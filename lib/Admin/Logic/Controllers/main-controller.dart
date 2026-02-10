@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:finance/Admin/Logic/Controllers/AdminController.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Helpers/token-methods.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
@@ -80,7 +79,8 @@ class MainController extends GetxController {
   static Rx<Item> itemSelected = Item().obs;
   static Rx<int> subItemSelectedIndex = (-1).obs;
   static Rx<String> subItemSelected = ''.obs;
-  static Rx<int> totalPages = 1.obs;
+  static RxMap<String,int> totalPages =<String,int>{}.obs;
+
   static Rx<int> startIndex = 0.obs;
   static Rx<int> endIndex = 0.obs;
   static Rx<int> totalItems = 0.obs;
@@ -221,14 +221,13 @@ class MainController extends GetxController {
   }
 
   static getDetailsOfField(String tableName, String name) {
-    var i;
     var column = getColumnsTable(tableName);
     for (var item in column) {
       if (item['name'] == name) {
-        i = item;
-        return i;
+        return item;
       }
     }
+    return null; // فقط وقتی هیچ آیتمی پیدا نشد
   }
 
   static Future<void> search(String query) async {
@@ -312,12 +311,12 @@ class MainController extends GetxController {
 
   static addsyncField(String tableName) {
     var index = SubMenuList.indexWhere(
-        (element) => element.schema.name == tableName);
+        (element) => element["schema"]["name"] == tableName);
     var items = SubMenuList[index];
     if (items['schema']['view'] == null) {
       items['schema']['view'] = 'default';
     }
-    items['columns'].columns.add({
+    items['columns'].add({
       'name': 'sync',
       'title': 'sync',
       'type': 'string',
@@ -546,25 +545,7 @@ class MainController extends GetxController {
     return true;
   }
 
-  static goToTablePage(var table,
-      {bool loadData = true,
-      var tableFields = null,
-      var tableData = null}) async {
-    if (table['schema']['view'] == 'custom') {
-      HelperController.pageInateFunction();
-      Navigator.push(
-          Get.context!, MaterialPageRoute(builder: (context) => TablePage()));
-      // HelpegrController.tablePageFunction(table: table);
-    } else {
-      if (loadData == true)
-        await MainController.loadData(
-            tableData: tableFields, tableDataItems: tableData);
-      MainController.tableInfo['schema']['currentPage'] = 1;
-      ViewController.totalPage.value =
-          await DB('${MainController.tableInfo['schema']['name']}').infoPage();
-      await Get.to(() => TablePage());
-    }
-  }
+
 
   static Rx<String> apiKey = ''.obs;
 

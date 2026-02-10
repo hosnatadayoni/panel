@@ -9,7 +9,7 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 class DateBox extends StatefulWidget {
    DateBox({this.onDateChanged , this.selectedDate , this.column , this.isSeletedDate});
    // Function? onTap;
-   Function(String?)? onDateChanged;
+   Function(String)? onDateChanged;
    // String? selectedDate;
    Jalali? selectedDate;
    var column;
@@ -26,6 +26,7 @@ class _DateBoxState extends State<DateBox> {
     String? errorMessage;
     if(widget.column['validators'] != null){
       inputRequired = widget.column['validators'].firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+      if(inputRequired!=null)
       errorMessage = inputRequired['message'];
     }
     return Obx((){
@@ -55,7 +56,7 @@ class _DateBoxState extends State<DateBox> {
                       String date = '${picked.year}/${picked.month}/${picked.day}';
 
                       if(widget.onDateChanged!=null){
-                        this.widget.onDateChanged!(date);
+                        widget.onDateChanged?.call(date);
                       }
                     }
                   },

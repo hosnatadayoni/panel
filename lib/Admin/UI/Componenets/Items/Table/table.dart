@@ -61,12 +61,11 @@ class _TableBoxState extends State<TableBox> {
                     TableRow(
                         children: [
                       for (var i = 0; i < MainController.tableInfo['columns'].length; i++)
-                        if (MainController.tableInfo['columns'][i]
-                        ['is_show_table'] ==
-                            true)
+                        if (MainController.tableInfo['columns'][i]['is_show_table'] == true)
                           Center(
-                              child: Container(
-                                  padding: EdgeInsets.all(10),
+                              child:
+                          Container(
+                              padding: EdgeInsets.all(10),
                                   child: Txt(
                                       '${MainController.tableInfo['columns'][i]['title']}',
                                       fontSize: 16,
@@ -89,12 +88,8 @@ class _TableBoxState extends State<TableBox> {
                     ]),
                     if (MainController.tableData.length != 0)
                       for (var i = 0; i < MainController.tableData.length; i++)
-                        TableRow(
-
-                            children: [
-                          for (var j = 0;
-                          j < MainController.tableInfo['columns'].length;
-                          j++)
+                        TableRow(children: [
+                          for (var j = 0; j < MainController.tableInfo['columns'].length; j++)
                             if (MainController.tableInfo['columns'][j]
                             ['is_show_table'] ==
                                 true)
@@ -134,10 +129,9 @@ class _TableBoxState extends State<TableBox> {
                                     print('_TableBoxState.build PopupMenuButton>>>${value}');
                                     var relation = MainController.tableInfo['schema']['relations']!=null ?MainController.tableInfo['schema']['relations']
                                         .firstWhere((item) => item == value, orElse: () => null):null;
+                                    print('_TableBoxState.build>>${relation}');
                                     if(relation!=null){
-                                      MainController
-                                          .tableName.value =
-                                      relation;
+                                      MainController.tableName.value = relation;
                                       HelperController.relationFunction(table: relation, index: i);
                                     }
                                     if(value=='edit'){
@@ -158,7 +152,7 @@ class _TableBoxState extends State<TableBox> {
                                           tableData: MainController.getInfoTable('${MainController.tableInfo['schema']['name']}'));
                                       if (ViewController.isClickedBtn.value == false) {
                                         var table = MainController.getInfoTable(MainController.tableName.value);
-                                        MainController.goToTablePage(table, loadData: false);
+                                        HelperController.goToTablePage(table, loadData: false);
                                       }
                                       // DB('${MainController.tableInfo['schema']['name']}').getRecords();
                                     }
