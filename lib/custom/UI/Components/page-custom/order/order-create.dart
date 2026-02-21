@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:finance/Admin/Public/styles.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import '../../../../../Admin/UI/Componenets/General/column-scroll.dart';
 import '../../../../Logic/Models/order-item.dart';
 import 'form-create-order-custom.dart';
@@ -27,6 +28,10 @@ class OrderCreatePage extends StatefulWidget {
   @override
   State<OrderCreatePage> createState() => _OrderCreatePageState();
 }
+class F1Intent extends Intent {
+  const F1Intent();
+}
+
 class F4Intent extends Intent {
   const F4Intent();
 }
@@ -37,7 +42,10 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
   void initState() {
     super.initState();
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
   Future<void> _handleF4(BuildContext context) async {
     await ViewCustomController.checkOrder(context, widget.productItems);
   }
@@ -46,71 +54,48 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return Shortcuts(
-      shortcuts: <LogicalKeySet, Intent>{
-        LogicalKeySet(LogicalKeyboardKey.f1): const ActivateIntent(),
-        LogicalKeySet(LogicalKeyboardKey.f4): const F4Intent(),
-      },
-      child: Actions(
-        actions: <Type, Action<Intent>>{
-          ActivateIntent: CallbackAction<ActivateIntent>(
-            onInvoke: (intent) {
-              ViewController.isClickedBtn.value = true;
-              HelperController.createFunction('Orders');
-              return null;
-            },
-          ),
-          F4Intent: CallbackAction<F4Intent>(
-            onInvoke: (intent) {
-              _handleF4(context);
-              return null;
-            },
-          ),
-        },
-        child: FocusScope(
-          autofocus: true,
-          child: Scaffold(
-            body: Container(
-              width: size.width,
-              height: size.height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: MainController.isLightMode.value == true
-                    ? darkBackground
-                    : backgroundLight,
-              ),
-              child: Stack(
-                children: [
-                  Obx(() {
-                    return Positioned(
-                      right: Directionality.of(context) == TextDirection.rtl
-                          ? size.width > 800
-                          ? MainController.isClickedItem.value == true
-                          ? 300
-                          : 50
-                          : 50
-                          : 0,
-                      left: Directionality.of(context) == TextDirection.ltr
-                          ? size.width > 800
-                          ? MainController.isClickedItem.value == true
-                          ? 300
-                          : 50
-                          : 50
-                          : 0,
-                      child: Container(
-                        width: size.width > 800
-                            ? MainController.isClickedItem.value == true
-                            ? (size.width) - 300
-                            : (size.width) - 50
-                            : (size.width) - 50,
-                        height: size.height,
-                        color: MainController.isLightMode.value == false
-                            ? color6
-                            : color9,
-                        child: ColumnScroll(
-                          children: [
-                            const SizedBox(height: 80),
-                            Container(
+    return Scaffold(
+      body: Container(
+        width: size.width,
+        height: size.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: MainController.isLightMode.value == true
+              ? darkBackground
+              : backgroundLight,
+        ),
+        child: Stack(
+          children: [
+            Obx(() {
+              return Positioned(
+                right: Directionality.of(context) == TextDirection.rtl
+                    ? size.width > 800
+                    ? MainController.isClickedItem.value == true
+                    ? 300
+                    : 50
+                    : 50
+                    : 0,
+                left: Directionality.of(context) == TextDirection.ltr
+                    ? size.width > 800
+                    ? MainController.isClickedItem.value == true
+                    ? 300
+                    : 50
+                    : 50
+                    : 0,
+                child: Container(
+                  width: size.width > 800
+                      ? MainController.isClickedItem.value == true
+                      ? (size.width) - 300
+                      : (size.width) - 50
+                      : (size.width) - 50,
+                  height: size.height,
+                  color: MainController.isLightMode.value == false
+                      ? color6
+                      : color9,
+                  child: ColumnScroll(
+                    children: [
+                      const SizedBox(height: 80),
+                      Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -126,7 +111,7 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
                                 ),
                                 SizedBox(width: 5),
                                 Txt(
-                                  '${MainController.tableInfo['schema']['title']}',
+                                  '${MainController.infoSchema.value.schema.title}',
                                   fontSize: 24,
                                   fontWeight: FontWeight.w500,
                                   color: MainController.isLightMode.value == true
@@ -147,8 +132,8 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
                                     },
                                     child: InkWell(
                                       onTap: () {
-                                        MainController.goToTablePage(
-                                            MainController.SubMenuList[
+                                        HelperController.goToTablePage(
+                                            MainController.menuList[
                                             MainController
                                                 .selectedSubItem.value]);
                                       },
@@ -205,25 +190,50 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
                           ],
                         ),
                       ),
-                            const SizedBox(height: 80),
-                            Column(
+                      const SizedBox(height: 80),
+                      Shortcuts(
+                        shortcuts: <LogicalKeySet, Intent>{
+                          LogicalKeySet(LogicalKeyboardKey.f1): const F1Intent(),
+                          LogicalKeySet(LogicalKeyboardKey.f4): const F4Intent(),
+                        },
+                        child: Actions(
+                          actions:{
+                            F1Intent: CallbackAction<F1Intent>(
+                              onInvoke: (intent) async {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                await Future.delayed(const Duration(milliseconds: 50));
+                                ViewController.isClickedBtn.value = true;
+                                HelperController.createFunction('Orders');
+                                return null;
+                              },
+                            ),
+                            F4Intent: CallbackAction<F4Intent>(
+                              onInvoke: (intent) {
+                                _handleF4(context);
+                                return null;
+                              },
+                            ),
+                          },
+                          child: FocusScope(
+                            autofocus: true,
+                            child: Column(
                               children: [
                                 FormCreateOrderCustom(widget.customerItems),
                                 const SizedBox(height: 20),
                                 FormCreateOrderItemCustom(widget.productItems),
                               ],
-                            )
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                  Header(),
-                  MenuBox(),
-                ],
-              ),
-            ),
-          ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+            Header(),
+            MenuBox(),
+          ],
         ),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Views/Access/access-page.dart';
 import 'package:finance/Admin/UI/Views/component-page.dart';
 import 'package:finance/Admin/UI/Views/dashboard.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';

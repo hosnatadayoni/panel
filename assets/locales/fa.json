@@ -67,5 +67,22 @@
   "access": "دسترسی",
   "input": "ورودی",
   "register selected orders for checkout": "ثبت خروج سفارشات انتخاب شده",
-  "order list": "لیست سفارشات"
+  "order list": "لیست سفارشات",
+  "outPut": "ثبت خروجی",
+  "back outPut": "برگشت خروجی",
+  "cancel": "انصراف",
+  "preview": "پیش نمایش",
+  "select": "انتخاب",
+  "input code": "کد ورودی",
+  "customer": "مشتری",
+  "entry date": "تاریخ ورود",
+  "plan number": "شماره نقشه",
+  "customer order": "سفارش مشتری",
+  "out": "خارج شده",
+  "unbroken": "خارج نشده",
+  "Operation successfully completed": "عملیات با موفقیت انجام شد",
+  "Please enter the order details": "لطفا جزئیات سفارش را وارد کنید",
+  "was copied": "کپی شد",
+  "Data has incorrect values": "داده ها دارای مقادیر نادرستی هستند",
+  "Please complete the order items": "لطفا آیتم های سفارش را تکمیل کنید"
 }

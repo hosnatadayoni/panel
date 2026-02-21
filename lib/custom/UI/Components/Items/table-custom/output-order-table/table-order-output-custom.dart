@@ -13,23 +13,25 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 
 class TableBoxOrderOutPutCustom extends StatefulWidget {
-  TableBoxOrderOutPutCustom(this.ordersList);
-  List<dynamic> ordersList;
+  TableBoxOrderOutPutCustom();
+
+
 
   @override
-  State<TableBoxOrderOutPutCustom> createState() => _TableBoxOrderOutPutCustomState();
+  State<TableBoxOrderOutPutCustom> createState() =>
+      _TableBoxOrderOutPutCustomState();
 }
 
 class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
   late ScrollController _scrollController;
 
-
-
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
 
+    });
   }
 
   @override
@@ -41,9 +43,10 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Obx((){
+    return Obx(() {
       return Container(
-        color: MainController.isLightMode.value == true ? background : whiteColor,
+        color:
+            MainController.isLightMode.value == true ? background : whiteColor,
         padding: EdgeInsets.all(15),
         width: size.width,
         child: Scrollbar(
@@ -56,7 +59,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
             controller: _scrollController,
             child: Table(
               defaultColumnWidth: FixedColumnWidth(
-                (MainController.tableInfo['columns'].length > 8
+                (MainController.infoSchema.value.columns.length > 8
                     ? 150.0
                     : size.width / 7),
               ),
@@ -73,7 +76,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'انتخاب',
+                          '${AppController.of(context)!.value('select')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -86,7 +89,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'کد ورودی',
+                          '${AppController.of(context)!.value('input code')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -99,7 +102,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'مشتری',
+                          '${AppController.of(context)!.value('customer')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -112,7 +115,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'تاریخ ورود',
+                          '${AppController.of(context)!.value('entry date')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -125,7 +128,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'شماره نقشه',
+                          '${AppController.of(context)!.value('plan number')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -138,7 +141,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Txt(
-                          'سفارش مشتری',
+                          '${AppController.of(context)!.value('customer order')}',
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: MainController.isLightMode.value == true
@@ -159,47 +162,58 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                                     : color2))),
                   ],
                 ),
-                if (widget.ordersList.length != 0)
-                  for (var i=0;i<widget.ordersList.length;i++)
+                if (MainController.dataRecord.value.length != 0)
+                  for (var i = 0; i < MainController.dataRecord.value.length; i++)
                     TableRow(children: [
-                      Center(child: Obx((){
-                        String orderId = widget.ordersList[i]['_id'];
-                        bool isChecked = ViewCustomController.checkboxStatus[orderId] ?? false;
-                        return FormBuilderCheckbox(
-                          key: Key('${i}'),
-                          decoration: InputDecoration(border: InputBorder.none),
+                      Center(child: Obx(() {
+                        String orderId = MainController.dataRecord[i]['_id'];
+                        Rx<bool> isChecked = RxBool(ViewCustomController.status.value[orderId] != null
+                            ? ViewCustomController.status.value[orderId]!
+                                ? true
+                                : false
+                            : false);
+                        return ViewCustomController.status.value[orderId] !=null?
+                        FormBuilderCheckbox(
+                          key: Key('${orderId}'),
+                          decoration: InputDecoration(border: InputBorder.none,),
                           activeColor: colorBtn,
-                          initialValue: isChecked,
-                          side:  BorderSide(
+                          // initialValue:ViewCustomController.status.value[orderId]  ,
+                          initialValue:ViewCustomController.status.value[orderId] == true ? ViewCustomController.status.value[orderId] : ViewCustomController.ordersSelected.containsKey(orderId),
+                          enabled: ViewCustomController.status.value[orderId] != null
+                              ? ViewCustomController.status.value[orderId]!
+                                  ? false
+                                  : true
+                              : true,
+                          side: BorderSide(
                               color: MainController.isLightMode.value ? whiteColor : primaryDark,
                               width: 1.5,
-                              strokeAlign: 2.5
-                          ),
+                              strokeAlign: 2.5),
                           onChanged: (checked) async {
-                            var orderDetailSelected = await ViewCustomController.getDataOrderDetailList(widget.ordersList[i]['_id']);
-                            print('orderDetailSelected>>>${orderDetailSelected}');
-                            if(checked == true){
-                              ViewCustomController.allOrderDetailsSelected.add(orderDetailSelected);
-                              ViewCustomController.checkboxStatus[orderId] = true;
-                            }
-                            else{
-                              ViewCustomController.allOrderDetailsSelected.removeWhere(
-                                    (orderDetails) => orderDetails.any(
-                                      (y) => y['parent_id'] == widget.ordersList[i]['_id'],
-                                ),
-                              );
-                              ViewCustomController.checkboxStatus[orderId] = false;
+                            if (checked == true) {
+                              var orderDetailSelected = await ViewCustomController
+                                  .getDataOrderDetailList(orderId);
+                              for(var orderDetail in orderDetailSelected){
+                                orderDetail['Drawing_Number'] = await ViewCustomController.getDrawingNumberOrder(orderId);
+                              }
+                              ViewCustomController.ordersSelected[orderId] = orderDetailSelected;
+                              ViewCustomController.allOrdersSelected.add(MainController.dataRecord[i]);
 
+                            } else {
+                              ViewCustomController.ordersSelected.remove(orderId);
+                              ViewCustomController.allOrdersSelected.remove(MainController.dataRecord[i]);
                             }
-                            ViewCustomController.checkboxStatus.refresh();
-                          }, name: '', title: Txt(''),
-
-                        );
+                            ViewCustomController.ordersSelected.refresh();
+                            ViewCustomController.allOrdersSelected.refresh();
+                          },
+                          name: '',
+                          title: Txt(''),
+                        ):
+                        Container();
                       })),
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${widget.ordersList[i]['Input_Code']}',
+                            '${MainController.dataRecord[i]['Input_Code']}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -212,7 +226,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${widget.ordersList[i]['Customer']['Name_and_lastName']}',
+                            '${MainController.dataRecord[i]['Customer'] != null ? MainController.dataRecord[i]['Customer']['Name_and_lastName'] : ""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -225,7 +239,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${widget.ordersList[i]['Date']}',
+                            '${MainController.dataRecord[i]['Date']}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -238,7 +252,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${widget.ordersList[i]['Drawing_Number']}',
+                            '${MainController.dataRecord[i]['Drawing_Number']}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -251,7 +265,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${widget.ordersList[i]['Drawing_Number(customer)']}',
+                            '${MainController.dataRecord[i]['Drawing_Number(customer)']}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -261,23 +275,37 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                           ),
                         );
                       }),
-                      Center(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 10 , right: 10 , top: 5 , bottom: 5),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: notCheckedOutBtnColor, width: 1),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(20)),
-                            color: notCheckedOutBtnColor,
+                      Obx(() {
+                        String orderId = MainController.dataRecord[i]['_id'];
+                        return Center(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 5, bottom: 5),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: ViewCustomController.status.value[orderId] != null
+                                      ? ViewCustomController.status.value[orderId]!
+                                          ? checkedOutBtnColor
+                                          : notCheckedOutBtnColor
+                                      : notCheckedOutBtnColor,
+                                  width: 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              color: ViewCustomController.status.value[orderId] != null
+                                  ? ViewCustomController.status.value[orderId]!
+                                      ? checkedOutBtnColor
+                                      : notCheckedOutBtnColor
+                                  : notCheckedOutBtnColor,
+                            ),
+                            child: Txt(
+                              '${ViewCustomController.status.value[orderId] != null ? ViewCustomController.status.value[orderId]! ? '${AppController.of(context)!.value('out')}' : '${AppController.of(context)!.value('unbroken')}' : '${AppController.of(context)!.value('unbroken')}'}',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: whiteColor,
+                            ),
                           ),
-                          child: Txt(
-                            'خارج نشده',
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: whiteColor,
-                          ),
-                        ),
-                      )
+                        );
+                      })
                     ])
               ],
             ),

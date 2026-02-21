@@ -1,19 +1,16 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
-import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-box.dart';
-import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart';
-import 'package:finance/custom/Logic/Controllers/main-custom-controller.dart';
+import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-table/main-table-box-output-order-custom.dart';
-import 'package:finance/custom/UI/Components/Items/table-header/table-header.dart';
+import 'package:finance/custom/UI/Components/Items/table-header/table-output-header.dart';
 import 'package:finance/custom/UI/Components/Views/output-order-item-page-custom/table-output-order-item-page-custom.dart';
 import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,8 +20,8 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class MainTableOutPutOrderCustom extends StatefulWidget {
-  MainTableOutPutOrderCustom(this.ordersList);
-  List<dynamic> ordersList;
+  MainTableOutPutOrderCustom();
+
 
   @override
   State<MainTableOutPutOrderCustom> createState() => _MainTableOutPutOrderCustomState();
@@ -35,8 +32,7 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    RxInt count = RxInt(MainController.tableInfo['schema']['countShowRow']);
-
+    RxInt count = RxInt(MainController.infoSchema.value.schema.countShowRow);
     return Obx((){
       return Scaffold(
           body: Container(
@@ -69,10 +65,26 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                           ),
                           SizedBox(height: 10,),
                           InkWell(
-                            onTap: (){
-                              Navigator.push(
-                                  Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderItemCustom(widget.ordersList)));
-                            },
+                            onTap: () async {
+                              if(ViewCustomController.ordersSelected.length != 0){
+                                for(var OrderDetailsSelected in ViewCustomController.ordersSelected.entries){
+                                  for(var orderDetailSelected in OrderDetailsSelected.value){
+                                    ViewCustomController.statusOrderDetails[orderDetailSelected['_id']] =  await ViewCustomController.getStatusOrderDetail(orderDetailSelected['_id']);
+                                  }
+                                }
+
+                                ViewCustomController.isClickedBtnRegister.value = true;
+
+
+                                await HelperController.pageInateFunction();
+                                Navigator.push(
+                                    Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderItemCustom()));
+                              }
+                              else{
+                                showSnackbar(snackTypes.error, 'سفارشی انتخاب نشده');
+                              }
+                              },
+
                             child: Container(
                               width: size.width,
                               child: Row(
@@ -90,7 +102,7 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                           SizedBox(height: 10,),
                           TableOutPutHeader(),
                           SizedBox(height: 25,),
-                          MainTableBoxOutPutOrderCustom(widget.ordersList),
+                          MainTableBoxOutPutOrderCustom(),
                         ],
                       ),
                     ),

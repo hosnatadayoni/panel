@@ -9,6 +9,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../Componenets/Headers/header-edit.dart';
 import '../Componenets/btn.dart';
@@ -19,6 +20,10 @@ class EditPage extends StatefulWidget {
 
   @override
   State<EditPage> createState() => _EditPageState();
+}
+
+class F1Intent extends Intent {
+  const F1Intent();
 }
 
 class _EditPageState extends State<EditPage> {
@@ -61,7 +66,33 @@ class _EditPageState extends State<EditPage> {
                   child:  ColumnScroll(
                     children: [
                       SizedBox(height: 80,),
-                      _future.value,
+                      Shortcuts(
+                          shortcuts: <LogicalKeySet, Intent>{
+                            LogicalKeySet(LogicalKeyboardKey.f1):
+                            const F1Intent(),
+                          },
+                          child: Actions(
+                              actions: <Type, Action<Intent>>{
+                                F1Intent:
+                                CallbackAction<F1Intent>(
+                                  onInvoke: (intent) async {
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    await Future.delayed(const Duration(milliseconds: 50));
+                                    if(ViewController.request.length!=0) {
+                                      HelperController.editFunction('${MainController.infoSchema.value.schema.name}',id:'${widget.data!['_id']}' ,request:ViewController.request);
+                                    }
+                                    else{
+                                      // await MainController.loadData();
+                                      // await HelperController.goToTablePage(MainController.menuList[MainController.selectedSubItem.value]);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              },
+                              child: FocusScope(
+                                  autofocus: true,
+                                  child:
+                                  Container(child: _future.value)))),
                       SizedBox(height: 20,),
                       if(MainController.selectedSubItem.value != -1)
                          if(MainController.menuList[MainController.selectedSubItem.value].schema.view!= 'custom')

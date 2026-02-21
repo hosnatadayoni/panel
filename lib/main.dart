@@ -1,4 +1,6 @@
+import 'package:finance/Admin/Logic/Helpers/utils/extensions.dart';
 import 'package:finance/Admin/Logic/Models/dataModel.dart';
+import 'package:finance/Admin/Logic/Models/projectModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,11 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import 'Admin/Logic/Controllers/app_localization_delegate.dart';
+import 'Admin/Logic/Models/columnModel.dart';
+import 'Admin/Logic/Models/schemaModel.dart';
+import 'Admin/Logic/Models/tableModel.dart';
 import 'Admin/UI/Views/splash.dart';
 import 'Admin/UI/Views/table-page.dart';
 
@@ -17,10 +23,12 @@ void main()async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  Hive.registerAdapter(SchemaModelAdapter());
+  Hive.registerAdapter(ColumnModelAdapter());
+  Hive.registerAdapter(TableModelAdapter());
 
   Hive.registerAdapter(DataModelAdapter());
-
-
+  Hive.registerAdapter(ProjectModelAdapter());
   // var box=await Hive.openBox<DataModel>('category');
   // var box2=await Hive.openBox<DataModel>('item');
   // var box3=await Hive.openBox<DataModel>('subItem');
@@ -80,7 +88,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/':(context)=>Splash(),
-        '/TablePage': (context) =>  TablePage(),
+        // '/TablePage': (context) =>  TablePage(),
       },
     );
   }

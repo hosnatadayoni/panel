@@ -5,21 +5,22 @@ import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-box.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart';
+import 'package:finance/custom/UI/Components/Items/table-custom/order-detail-table/main-table-box-order-detail.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class MainTableOrderCustom extends StatefulWidget {
-   MainTableOrderCustom(this.table);
-   var table;
+class MainTableOrderDetailCustom extends StatefulWidget {
+  MainTableOrderDetailCustom(this.schema);
+  var schema;
 
   @override
-  State<MainTableOrderCustom> createState() => _MainTableOrderCustomState();
+  State<MainTableOrderDetailCustom> createState() => _MainTableOrderDetailCustomState();
 }
 
-class _MainTableOrderCustomState extends State<MainTableOrderCustom> {
+class _MainTableOrderDetailCustomState extends State<MainTableOrderDetailCustom> {
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class _MainTableOrderCustomState extends State<MainTableOrderCustom> {
                           SizedBox(height: 80,),
                           MainTableHeader(),
                           SizedBox(height: 25,),
-                          MainTableBoxCustom(widget.table),
+                          MainTableOrderDetailBox(widget.schema),
                         ],
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/Headers/header-create.dart';
@@ -5,6 +6,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../Public/styles.dart';
 import '../Componenets/General/column-scroll.dart';
@@ -18,16 +20,17 @@ class CreatePage extends StatefulWidget {
   State<CreatePage> createState() => _CreatePageState();
 }
 
-class _CreatePageState extends State<CreatePage> {
-  DateTime? startTime;
+class F1Intent extends Intent {
+  const F1Intent();
+}
 
-  DateTime? endTime;
+class _CreatePageState extends State<CreatePage> {
   Rx<Widget> _future = Container().obs;
-  Map<String, dynamic> dataJson = {};
 
   addWidget() async {
     Future.delayed(Duration.zero, () async {
-      _future.value = await ViewController.generateStoreFormView(MainController.infoSchema.value.columns);
+      _future.value = await ViewController.generateStoreFormView(
+          MainController.infoSchema.value.columns);
     });
   }
 
@@ -35,6 +38,11 @@ class _CreatePageState extends State<CreatePage> {
   void initState() {
     super.initState();
     addWidget();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -48,20 +56,12 @@ class _CreatePageState extends State<CreatePage> {
           height: size.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            // color: MainController.isLightMode.value == true ?darkBackground : backgroundLight,
             color: MainController.isLightMode.value == false ? color6 : color9,
           ),
           child: Stack(
             children: [
               Obx(() {
                 return Positioned(
-                    // right:MainController.isClickedItem.value == true ? 300 :50,
-
-                    // right: size.width > 800
-                    //     ? MainController.isClickedItem.value == true
-                    //         ? 300
-                    //         : 50
-                    //     : 50,
                     right: Directionality.of(context) == TextDirection.rtl
                         ? size.width > 800
                             ? MainController.isClickedItem.value == true
@@ -93,11 +93,32 @@ class _CreatePageState extends State<CreatePage> {
                             SizedBox(
                               height: 80,
                             ),
-                          HeaderCreate(widget.tableName),
+                            HeaderCreate(widget.tableName),
                             SizedBox(
                               height: 10,
                             ),
-                            Container(child: _future.value)
+                            Shortcuts(
+                                shortcuts: <LogicalKeySet, Intent>{
+                                  LogicalKeySet(LogicalKeyboardKey.f1):
+                                  const F1Intent(),
+                                },
+                                child: Actions(
+                                    actions: <Type, Action<Intent>>{
+                                      F1Intent:
+                                          CallbackAction<F1Intent>(
+                                        onInvoke: (intent) async {
+                                          FocusManager.instance.primaryFocus?.unfocus();
+                                          await Future.delayed(const Duration(milliseconds: 50));
+                                          await HelperController.createFunction(
+                                              widget.tableName);
+                                          return null;
+                                        },
+                                      ),
+                                    },
+                                    child: FocusScope(
+                                        autofocus: true,
+                                        child:
+                                            Container(child: _future.value)))),
                           ],
                         )));
               }),

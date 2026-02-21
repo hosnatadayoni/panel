@@ -1,7 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import '../../../../Logic/Models/columnModel.dart';
 
 class SelectBox extends StatefulWidget {
   String? name;
@@ -19,6 +20,7 @@ class SelectBox extends StatefulWidget {
    String? initalValue;
   ColumnModel? column;
   Rx<bool>? isSeleted = false.obs;
+  double? maxHeight;
   SelectBox({
      this.name,
     this.items,
@@ -28,6 +30,7 @@ class SelectBox extends StatefulWidget {
     this.initalValue,
     this.column,
     this.isSeleted,
+    this.maxHeight,
   });
 
   @override
@@ -52,16 +55,17 @@ class _SelectBoxState extends State<SelectBox> {
           children: [
             FormBuilderDropdown(
               name: widget.name!,
+              iconSize: 20,
               dropdownColor: MainController.isLightMode.value ? primaryDark : whiteColor,
               isExpanded: true,
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.only(right: 40),
-                contentPadding:EdgeInsets.only(right: 10 , top: 21,bottom: 21),
+                contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
                 ),
                 border: OutlineInputBorder(),
-                constraints: BoxConstraints(minHeight: 60),
+                constraints: BoxConstraints(maxHeight: widget.maxHeight != null ? widget.maxHeight! : 60),
                 labelStyle: TextStyle(color: MainController.isLightMode.value ? whiteColor : primaryDark),
               ),
               hint: Txt(widget.hintText??'', color: MainController.isLightMode.value ? whiteColor : primaryDark),

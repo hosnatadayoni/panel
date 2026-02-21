@@ -15,8 +15,8 @@ import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:get/get.dart';
 
 class MainTableBoxOutPutOrderCustom extends StatefulWidget {
-  MainTableBoxOutPutOrderCustom(this.ordersList);
-  List<dynamic> ordersList;
+  MainTableBoxOutPutOrderCustom();
+
 
   @override
   State<MainTableBoxOutPutOrderCustom> createState() => _MainTableBoxOutPutOrderCustomState();
@@ -45,11 +45,11 @@ class _MainTableBoxOutPutOrderCustomState extends State<MainTableBoxOutPutOrderC
               SizedBox(
                 height: 10,
               ),
-              TableBoxOrderOutPutCustom(widget.ordersList),
+              TableBoxOrderOutPutCustom(),
               SizedBox(
                 height: 20,
               ),
-              TableFooter(),
+              TableFooter(index:   MainController.menuList.value.indexWhere((element) => element.schema.name=="Orders")),
             ],
           ),
         ],

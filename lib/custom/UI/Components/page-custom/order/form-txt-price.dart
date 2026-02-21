@@ -59,6 +59,14 @@ class _FormPriceTextFieldState extends State<FormPriceTextField> {
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        // وقتی کاربر از فیلد خارج شد
+        if (widget.updateChange != null) {
+          widget.updateChange!();
+        }
+      }
+    });
   }
 
   @override

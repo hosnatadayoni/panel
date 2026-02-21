@@ -34,15 +34,15 @@ class _TimePickerBoxState extends State<TimePickerBox> {
     var inputRequired;
     String? errorMessage;
 
-    if(widget.column['validators'] != null){
-      inputRequired = widget.column['validators'].firstWhere(
+    if(widget.column.validators != null){
+      inputRequired = widget.column.validators.firstWhere(
               (validator) => validator['type'] == 'required',
           orElse: () => null
       );
       errorMessage = inputRequired?['message'];
     }
-    final dateFormat = widget.column['format'] != null
-        ? (widget.column['format'] == 24 ? DateFormat.Hm() : DateFormat.jm())
+    final dateFormat = widget.column.format != null
+        ? (widget.column.format == 24 ? DateFormat.Hm() : DateFormat.jm())
         : DateFormat.Hm();
     return Obx(() {
       return Column(

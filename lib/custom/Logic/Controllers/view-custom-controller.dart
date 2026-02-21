@@ -1,46 +1,61 @@
 import 'dart:convert';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/connect-server-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/dataModel.dart';
+import 'package:finance/Admin/Logic/Models/tableModel.dart';
 import 'package:finance/Admin/Public/api-urls.dart';
 import 'package:finance/Admin/Public/config.dart';
 import 'package:finance/Admin/Public/images.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-custom.dart';
-import 'package:finance/custom/UI/Components/Items/Forms/form-text-field-order-item-custom.dart';
-import 'package:finance/custom/UI/Components/Items/Forms/form-txt-field-order-item-edit-custom.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/OrderItem/form-text-field-order-item-custom.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/OrderItem/form-txt-field-order-item-edit-custom.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/form-txt-price.dart';
 import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:intl/intl.dart';
+// import 'package:shamsi_date/shamsi_date.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../../../Admin/Logic/Controllers/record-controller.dart';
 import '../../../Admin/Public/styles.dart';
 import '../../../Admin/UI/Componenets/General/txt.dart';
 import '../../../Admin/UI/Componenets/Items/Form/form-file.dart';
-import '../../../Admin/UI/Componenets/Items/Form/form-time.dart';
 import '../../../Admin/Logic/Models/db.dart';
 import '../../../Admin/UI/Componenets/Popups/snackbar.dart';
-import '../../UI/Components/Items/Forms/thousand-separatorInput-formatter.dart';
 import '../Models/order-item.dart';
 
-class ViewCustomController extends GetxController{
+class ViewCustomController extends GetxController {
   static Map<String, dynamic> order = {};
   static Map<String, dynamic> orderItem = {};
   static RxMap<String, Widget> containers = <String, Widget>{}.obs;
   static RxMap<String, Widget> editContainers = <String, Widget>{}.obs;
-  static RxList<dynamic> allOrderDetailsSelected = [].obs;
-  static RxMap<String, bool> checkboxStatus = <String, bool>{}.obs;
-  static RxMap<String, bool> checkboxOrderItemStatus = <String, bool>{}.obs;
+  static RxMap<String, int> quantities = <String, int>{}.obs;
+  static RxMap<String, double> areas = <String, double>{}.obs;
+  static RxBool isShowAlert = false.obs;
 
+  // order output and order detail output table
+  static RxMap<String, Map> orderDetailsSelected = <String, Map>{}.obs;
+  static RxMap<String, List<dynamic>> ordersSelected =
+      <String, List<dynamic>>{}.obs;
+  static RxMap<String, bool> status = <String, bool>{}.obs;
+  static RxMap<String, bool> statusOrderDetails = <String, bool>{}.obs;
+  static Rx<int> OrderItemOutPutCurrentPage = 1.obs;
+  static Rx<int> OrderItemOutPutCountShowRow = 10.obs;
+  static RxList allOrdersSelected = [].obs;
+
+  //end order output and order detail output table
+
+  static Rx<bool> isClickedBtnRegister = false.obs;
+  static Rx<String> customerId=''.obs;
 
   static Jalali parseDate(String dateString) {
     List<String> dateParts = dateString.split('/');
@@ -49,14 +64,16 @@ class ViewCustomController extends GetxController{
     int day = int.parse(dateParts[2]);
     return Jalali(year, month, day);
   }
-  static String getDate(Jalali j){
+
+  static String getDate(Jalali j) {
     int year = j.year;
-    int month= j.month;
+    int month = j.month;
     int day = j.day;
     String date = '${year}/${month}/${day}';
     return date;
   }
-  static TimeOfDay parseTime(String dateString){
+
+  static TimeOfDay parseTime(String dateString) {
     List<String>? TimeParts;
     int hour = TimeOfDay.now().hour;
     int minute = TimeOfDay.now().minute;
@@ -66,37 +83,46 @@ class ViewCustomController extends GetxController{
 
     return TimeOfDay(hour: hour, minute: minute);
   }
-  static Map<String,dynamic> getDataTable(String tableName){
-    Map<String,dynamic> dataTableName={};
-    for(var subMenu in MainController.SubMenuList){
-      if(subMenu['schema']['name'] == tableName){
-        dataTableName = subMenu;
-      }
-    }
-    return dataTableName;
-  }
-  static getCalculateTotalArea(double firsDimension , double secondDimension){
+
+  // static Map<String, dynamic> getDataTable(String tableName) {
+  //   Map<String, dynamic> dataTableName = {};
+  //   for (var subMenu in MainController.menuList.value) {
+  //     if (subMenu.schema.name == tableName) {
+  //       dataTableName = subMenu;
+  //     }
+  //   }
+  //   return dataTableName;
+  // }
+
+  static getCalculateTotalArea(double firsDimension, double secondDimension) {
     double total = firsDimension * secondDimension;
     return double.parse(total.toStringAsFixed(2));
   }
-  static getCalculateTotalPrice(int price , double firsDimension , double secondDimension , int quantity){
+
+  static getCalculateTotalPrice(
+      int price, double firsDimension, double secondDimension, int quantity) {
     final formatter = NumberFormat('#,##0', 'en_US');
-    double totalPrice = getCalculateTotalArea(firsDimension, secondDimension) * price * quantity;
+    double totalPrice = getCalculateTotalArea(firsDimension, secondDimension) *
+        price *
+        quantity;
     double rounded = double.parse(totalPrice.toStringAsFixed(2));
     return formatter.format(rounded);
   }
-  static Widget generateFileBox(String selecetdFiles, var column,
-      Rx<bool>? isSeletedFile) {
+
+  static Widget generateFileBox(
+      String selecetdFiles, var column) {
+    final RxBool isSelectedFile =
+        (selecetdFiles != null && selecetdFiles!='').obs;
     Map<String, List<dynamic>> selectedFilesMap = {};
-    if (selectedFilesMap['${column['name']}'] == null) {
-      selectedFilesMap['${column['name']}'] = [];
+    if (selectedFilesMap['${column.name}'] == null) {
+      selectedFilesMap['${column.name}'] = [];
     }
-    List<dynamic> filesSelectedList=[];
-    if (ViewCustomController.order[column['name']] != null) {
+    List<dynamic> filesSelectedList = [];
+    if (ViewCustomController.order[column.name] != null) {
       // filesSelectedList = ViewCustomController.order[column['name']];
-      filesSelectedList.add(ViewCustomController.order[column['name']]);
+      filesSelectedList.add(ViewCustomController.order[column.name]);
       for (var data in filesSelectedList) {
-        selectedFilesMap['${column['name']}']!.add(data);
+        selectedFilesMap['${column.name}']!.add(data);
       }
     }
     return new Column(
@@ -104,9 +130,9 @@ class ViewCustomController extends GetxController{
       children: [
         Obx(() {
           return Txt(
-            '${column['title']}',
+            '${column.title}',
             color:
-            MainController.isLightMode.value == true ? whiteColor : color2,
+                MainController.isLightMode.value == true ? whiteColor : color2,
           );
         }),
         SizedBox(
@@ -115,28 +141,32 @@ class ViewCustomController extends GetxController{
         Container(
           child: FormFile(
             fileInfo: <String, List<dynamic>>{}.obs,
-            columnName: column['title'],
+            columnName: column.title,
             onChanged: (selecetdFiles) {
-              ViewCustomController.order[column['name']] = selecetdFiles;
+              ViewCustomController.order[column.name] = selecetdFiles;
             },
             filesSelected: selectedFilesMap,
             selectedFilesTxt: selecetdFiles,
-            isSeletedFile: isSeletedFile,
+            isSeletedFile: isSelectedFile,
             column: column,
           ),
         ),
       ],
     );
   }
-  static Widget generateEditFileBox(
-      var data, var column, Rx<bool>? isSeletedFile) {
-    String name = column['name'];
-    String type = column['type'];
-    RxString file = data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
 
+  static Widget generateEditFileBox(
+      var data, var column) {
+    String name = column.name;
+    String type = column.type;
+    RxString file =
+        data != null && data[name] != null ? '${data[name]}'.obs : ''.obs;
+    print('file.value>>>${file.value}');
+
+    final RxBool isSelectedFile = (data != null && data!.isNotEmpty).obs;
     Map<String, List<dynamic>> selectedFilesMap = {};
-    if (selectedFilesMap['${column['name']}'] == null) {
-      selectedFilesMap['${column['name']}'] = [];
+    if (selectedFilesMap['${column.name}'] == null) {
+      selectedFilesMap['${column.name}'] = [];
     }
     // ViewController.request[name] =   data != null && data[name+'_name'] != null ? '${data[name+'_name']}' : '';
     List<dynamic> filesSelectedList = [];
@@ -146,139 +176,154 @@ class ViewCustomController extends GetxController{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Txt(
-            '${column['title']}',
+            '${column.title}',
             color:
-            MainController.isLightMode.value == true ? whiteColor : color2,
+                MainController.isLightMode.value == true ? whiteColor : color2,
           ),
           SizedBox(
             height: 10,
           ),
           file.value != ''
               ? IntrinsicWidth(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: MainController.isLightMode.value == true
-                        ? whiteColor
-                        : background,
-                    width: 0.5),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Image.network(
-                            type == 'file'
-                                ? baseUrl + '${file}'
-                                : baseUrlPvFile + '${file}',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.fill,
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
-                              return Image.asset(
-                                fileImage,
-                                width: 40,
-                                height: 40,
-                              ); // عکس جایگزین
-                            },
-                          ),
-                          Txt(
-                            '${data[name + '_name']}',
-                            color: MainController.isLightMode.value == true
-                                ? whiteColor
-                                : color2,
-                          ),
-                        ],
-                      )),
-                  Positioned(
-                      top: 0,
-                      left: 0,
-                      child: IconButton(
-                        color: redColor,
-                        onPressed: () async {
-                          ViewController.widgetDeletePopup(onChange: () async {
-                            var status =
-                            await MainController.deleteFileInChunks(
-                                data[name + '_name'],
-                                recordId: data['_id'],
-                                record: json
-                                    .encode({name: null}).toString());
-                            if (status == true) {
-                              file.value = '';
-                              Navigator.pop(Get.context!);
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          size: 25,
-                          color: redColor,
-                        ),
-                      ))
-                ],
-              ),
-            ),
-          )
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: MainController.isLightMode.value == true
+                              ? whiteColor
+                              : background,
+                          width: 0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                            child: Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Image.network(
+                              type == 'file'
+                                  ? baseUrl + '${file}'
+                                  : baseUrlPvFile + '${file}',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.fill,
+                              errorBuilder: (BuildContext context, Object error,
+                                  StackTrace? stackTrace) {
+                                return Image.asset(
+                                  fileImage,
+                                  width: 40,
+                                  height: 40,
+                                ); // عکس جایگزین
+                              },
+                            ),
+                            Txt(
+                              '${data[name + '_name']}',
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : color2,
+                            ),
+                          ],
+                        )),
+                        Positioned(
+                            top: 0,
+                            left: 0,
+                            child: IconButton(
+                              color: redColor,
+                              onPressed: () async {
+                                ViewController.widgetDeletePopup(
+                                    onChange: () async {
+                                  var status =
+                                      await MainController.deleteFileInChunks(
+                                          data[name + '_name'],
+                                          recordId: data['_id'],
+                                          record: json
+                                              .encode({name: null}).toString());
+                                  if (status == true) {
+                                    file.value = '';
+                                    Navigator.pop(Get.context!);
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                size: 25,
+                                color: redColor,
+                              ),
+                            ))
+                      ],
+                    ),
+                  ),
+                )
               : FormFile(
-            columnName: column['title'],
-            onChanged: (selecetdFiles) {
-              print('selecetdFiles file of picture>>>${selecetdFiles}');
-              data = selecetdFiles;
-            },
-            filesSelected: selectedFilesMap,
-            // selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
-            selectedFilesTxt: '',
-            isSeletedFile: isSeletedFile,
-            column: column,
-            fileInfo: fileInfo,
-          ),
+                  columnName: column.title,
+                  onChanged: (selecetdFiles) {
+                    data[name] = selecetdFiles;
+                    // ViewCustomController.order[name] = selecetdFiles;
+                  },
+                  filesSelected: selectedFilesMap,
+                  // selectedFilesTxt: column['type'] == 'file' ? selecetdFiles:filesSelectedList,
+                  selectedFilesTxt: '',
+                  isSeletedFile: isSelectedFile,
+                  column: column,
+                  fileInfo: fileInfo,
+                ),
         ],
       );
     });
   }
-  static Future<Widget> getOrderItems(var data) async {
-    List<dynamic> orderDetailItems = await ViewCustomController.getDataOrderDetailList('${data['_id']}');
-    List<dynamic> productItems= await DB('Product').getRecords();
 
-    for(var item in orderDetailItems){
-      OrderItem.orderItemsList.value[item['_id']]=item;
+  static Future<Widget> getOrderItems(var data) async {
+    List<dynamic> orderDetailItems =
+        await ViewCustomController.getDataOrderDetailList('${data['_id']}');
+    ViewCustomController.getAllReocord('Product');
+    List<dynamic> productItems = await DB('Product').getRecords();
+
+    for (var item in orderDetailItems) {
+      OrderItem.orderItemsList.value[item['_id']] = item;
     }
     return Column(
       children: [
-          FormEditOrderItemCustom(productItems , orderDetailItems , data),
+        FormEditOrderItemCustom(productItems, orderDetailItems, data),
       ],
     );
   }
 
   //order item
-  static  addContainer(BuildContext context , List<dynamic> productItems) {
-      var Id = Uuid().v4();
-      String newKey = Id;
-      ViewCustomController.containers[newKey] = buildContainer(newKey , context ,productItems);
-      ViewCustomController.containers.refresh();
-      OrderItem.orderItemsList.value[newKey] = {...ViewCustomController.orderItem};
-      OrderItem.orderItemsList.refresh();
+  static addContainer(BuildContext context, List<dynamic> productItems) {
+    var Id = Uuid().v4();
+    String newKey = Id;
+    ViewCustomController.containers[newKey] =
+        buildContainer(newKey, context, productItems);
+    ViewCustomController.containers.refresh();
+    OrderItem.orderItemsList.value[newKey] = {
+      ...ViewCustomController.orderItem
+    };
+    OrderItem.orderItemsList.refresh();
   }
-  static Widget buildContainer(String key , BuildContext context , List<dynamic> productItems) {
+
+  static Widget buildContainer(
+      String key, BuildContext context, List<dynamic> productItems) {
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
     final formatter = NumberFormat('#,###');
     print('key of row>>>${key}');
 
-    if(OrderItem.orderItemsList[key] == null){
+    if (OrderItem.orderItemsList[key] == null) {
       OrderItem.orderItemsList[key] = {};
     }
-    final priceController = TextEditingController(text: formatter.format(
-      ViewCustomController.getProductPrice(
-        productItems, OrderItem.orderItemsList[key]!['Product_Name'] ?? productItems.first['_id'],) ?? 0,
-    ));
+    final productName = OrderItem.orderItemsList[key]?['Product_Name'] ?? '';
+
+    final price =
+        ViewCustomController.getProductPrice(productItems, productName);
+
+    final priceController = TextEditingController(
+      text: price == null ? '' : formatter.format(price),
+    );
+
+
     return Container(
       key: ValueKey(key),
       width: size.width,
@@ -289,57 +334,78 @@ class ViewCustomController extends GetxController{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if(productItems.length != 0)
-                 Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Obx(() {
-                    return Txt(
-                      'نام کالا',
-                      color: MainController.isLightMode.value == true
-                          ? whiteColor
-                          : color2,
-                    );
-                  }),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: 250,
-                    child: SelectBox(
-                        name: 'نام کالا',
-                        maxHeight: 38,
-                        column: MainController.getDetailsOfField('Order_Details' , 'Product_Name'),
-                        items: [
-                          for (var item in productItems)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(() {
+                      return Txt(
+                        'نام کالا',
+                        color: MainController.isLightMode.value == true
+                            ? whiteColor
+                            : color2,
+                      );
+                    }),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 250,
+                      child: SelectBox(
+                          name: 'نام کالا',
+                          maxHeight: 38,
+                          column: MainController.getDetailsOfField(
+                              'Order_Details', 'Product_Name'),
+                          items: [
                             DropdownMenuItem(
+                              enabled: false,
                                 child: Obx(() {
                                   return Txt(
-                                    '${ViewController.itemsShowSelectItem(item, MainController.getDetailsOfField('Order_Details' , 'Product_Name'))}',
+                                    'لطفا یکی از موارد زیر را انتخاب کنید',
                                     color:
                                     MainController.isLightMode.value == true
                                         ? whiteColor
                                         : primaryDark,
                                   );
                                 }),
-                                value: item['_id'].toString()),
-                        ],
-                        initalValue: '${productItems.first['_id']}',
-                        onChanged: (value) async {
-                          if (value != '') {
-                            OrderItem.orderItemsList[key]!['Product_Name'] = value;
-                            final newPrice = ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList[key]!['Product_Name']) ?? 0;
-                            priceController.text = formatter.format(newPrice);
-                          } else {
-                            OrderItem.orderItemsList[key]!['Product_Name'] = '';
-                          }
-                          OrderItem.orderItemsList.refresh();
-                        },
-                        hintText: '',
-                        isSeleted: true.obs,
-                        selectedValue: ''),
-                  ),
-                ],
-              ),
+                                value: ''),
+                            for (var item in productItems)
+                              DropdownMenuItem(
+                                  child: Obx(() {
+                                    return Txt(
+                                      '${ViewController.itemsShowSelectItem(
+                                          item,
+                                          MainController.getDetailsOfField(
+                                              'Order_Details',
+                                              'Product_Name'))}',
+                                      color:
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
+                                    );
+                                  }),
+                                  value: item['_id'].toString()),
+                          ],
+                          // initalValue: '${productItems.first['_id']}',
+                          onChanged: (value) async {
+                            if (value != '') {
+                              OrderItem.orderItemsList[key]!['Product_Name'] =
+                                  value;
+                              final newPrice = ViewCustomController
+                                  .getProductPrice(productItems, OrderItem
+                                  .orderItemsList[key]!['Product_Name']) ?? 0;
+                              priceController.text = formatter.format(newPrice);
+                            } else {
+                              OrderItem.orderItemsList[key]!['Product_Name'] =
+                              '';
+                            }
+                            OrderItem.orderItemsList.refresh();
+                          },
+                          hintText: '',
+                          isSeleted: false.obs,
+                          selectedValue: ''),
+                    ),
+                  ],
+                ),
               SizedBox(width: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,40 +414,47 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'قیمت',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
                     height: 10,
                   ),
-                 Obx((){
-                   return  Container(
-                     width: 100,
-                     child: FormPriceTextField(
-                       name: 'قیمت',
-                       hint: 'قیمت',
-                       lable: '',
-                       controller: priceController,
-                       height: 40,
-                       column: MainController.getDetailsOfField('Order_Details' , 'Price'),
-                       onChange: (text) {
-                         if (text != null && text != '') {
-                           String cleanText = text.replaceAll(',', '');
-                           int value = int.tryParse(cleanText) ?? 0;
-                           OrderItem.orderItemsList[key]!['Price'] = value;
-                           String formatted = formatter.format(value);
-                           if (formatted != text) {
-                             _controller.value = TextEditingValue(
-                               text: formatted,
-                               selection: TextSelection.collapsed(offset: formatted.length),
-                             );
-                           }
-                         }
-                         OrderItem.orderItemsList.refresh();
-                       },
-                     ),
-                   );
-                 })
+                  Obx(() {
+                    return Container(
+                      width: 100,
+                      child: FormPriceTextField(
+                        name: 'قیمت',
+                        hint: 'قیمت',
+                        lable: '',
+                        controller: priceController,
+                        height: 40,
+                        column: MainController.getDetailsOfField(
+                            'Order_Details', 'Price'),
+                        onChange: (text) async {
+                          if (text != null && text != '') {
+                            String cleanText = text.replaceAll(',', '');
+                            int value = int.tryParse(cleanText) ?? 0;
+                            OrderItem.orderItemsList[key]!['Price'] = value;
+                            String formatted = formatter.format(value);
+                            if (formatted != text) {
+                              _controller.value = TextEditingValue(
+                                text: formatted,
+                                selection: TextSelection.collapsed(
+                                    offset: formatted.length),
+                              );
+                            }
+                          }
+                          OrderItem.orderItemsList.refresh();
+                          ViewCustomController.isShowAlert.value =
+                          await ViewCustomController.showAlret();
+                        },
+
+                      ),
+                    );
+                  })
                 ],
               ),
               SizedBox(width: 10,),
@@ -392,7 +465,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'بعد اول',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -405,18 +480,22 @@ class ViewCustomController extends GetxController{
                       hint: 'بعد اول',
                       lable: '',
                       height: 40,
-                      isNumberDouble:true,
+                      isNumberDouble: true,
                       keyOrderItem: key,
-                      column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'First_Dimension'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['First_Dimension'] = double.tryParse('${text}');
+                          OrderItem.orderItemsList[key]!['First_Dimension'] =
+                              double.tryParse('${text}');
                         }
-                        else{
-                          OrderItem.orderItemsList[key]!['First_Dimension'] = null;
+                        else {
+                          OrderItem.orderItemsList[key]!['First_Dimension'] =
+                          null;
                         }
                         OrderItem.orderItemsList.refresh();
                       },
+
                     ),
                   ),
                 ],
@@ -429,7 +508,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'بعد دوم',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -442,18 +523,22 @@ class ViewCustomController extends GetxController{
                       hint: 'بعد دوم',
                       lable: '',
                       height: 40,
-                      isNumberDouble:true,
+                      isNumberDouble: true,
                       keyOrderItem: key,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Second_Dimension'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Second_Dimension'] = double.tryParse('${text}');
+                          OrderItem.orderItemsList[key]!['Second_Dimension'] =
+                              double.tryParse('${text}');
                         }
-                        else{
-                          OrderItem.orderItemsList[key]!['Second_Dimension'] = null;
+                        else {
+                          OrderItem.orderItemsList[key]!['Second_Dimension'] =
+                          null;
                         }
                         OrderItem.orderItemsList.refresh();
                       },
+
                     ),
                   ),
                 ],
@@ -466,7 +551,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'جمع متراژ',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -478,10 +565,17 @@ class ViewCustomController extends GetxController{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Obx((){
-                          return Txt('${ViewCustomController.getCalculateTotalArea((OrderItem.orderItemsList[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                              (OrderItem.orderItemsList[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0)}',
-                            color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                        Obx(() {
+                          return Txt('${ViewCustomController
+                              .getCalculateTotalArea((OrderItem
+                              .orderItemsList[key]?['First_Dimension'] as num?)
+                              ?.toDouble() ?? 0.0,
+                              (OrderItem
+                                  .orderItemsList[key]?['Second_Dimension'] as num?)
+                                  ?.toDouble() ?? 0.0)}',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : color2,);
                         }),
                       ],
                     ),
@@ -496,7 +590,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'تعداد',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -509,17 +605,22 @@ class ViewCustomController extends GetxController{
                       hint: 'تعداد',
                       lable: '',
                       height: 40,
-                      isNumberInt:true,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
+                      isNumberInt: true,
+                      initValue: '1',
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Quantity'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Quantity'] = int.tryParse('${text}');
+                          OrderItem.orderItemsList[key]!['Quantity'] =
+                              int.tryParse('${text}');
                         }
-                        else{
+                        else {
                           OrderItem.orderItemsList[key]!['Quantity'] = 0;
                         }
                         OrderItem.orderItemsList.refresh();
                       },
+
+
                     ),
                   ),
                 ],
@@ -544,9 +645,11 @@ class ViewCustomController extends GetxController{
                     child: SelectBox(
                         name: 'الگوی بری',
                         maxHeight: 38,
-                        column: MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern'),
+                        column: MainController.getDetailsOfField(
+                            'Order_Details', 'Cut_Pattern'),
                         items: [
-                          for (var item in MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'])
+                          for (var item in MainController.getDetailsOfField(
+                              'Order_Details', 'Cut_Pattern').items)
                             DropdownMenuItem(
                                 child: Obx(() {
                                   return Txt(
@@ -560,10 +663,13 @@ class ViewCustomController extends GetxController{
                                 }),
                                 value: item['value']),
                         ],
-                        initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
+                        initalValue: '${MainController.getDetailsOfField(
+                            'Order_Details', 'Cut_Pattern').items
+                            .first['value']}',
                         onChanged: (value) async {
                           if (value != '') {
-                            OrderItem.orderItemsList[key]!['Cut_Pattern'] = value;
+                            OrderItem.orderItemsList[key]!['Cut_Pattern'] =
+                                value;
                           } else {
                             OrderItem.orderItemsList[key]!['Cut_Pattern'] = '';
                           }
@@ -594,9 +700,12 @@ class ViewCustomController extends GetxController{
                     child: SelectBox(
                         name: 'سختی تولید',
                         maxHeight: 38,
-                        column: MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty'),
+                        column: MainController.getDetailsOfField(
+                            'Order_Details', 'Manufacturing_Difficulty'),
                         items: [
-                          for (var item in MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty')['items'])
+                          for (var item in MainController.getDetailsOfField(
+                              'Order_Details',
+                              'Manufacturing_Difficulty').items)
                             DropdownMenuItem(
                                 child: Obx(() {
                                   return Txt(
@@ -610,12 +719,19 @@ class ViewCustomController extends GetxController{
                                 }),
                                 value: item['value']),
                         ],
-                        initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty')['items'].first['value']}',
+                        initalValue: '${MainController.getDetailsOfField(
+                            'Order_Details',
+                            'Manufacturing_Difficulty').items
+                            .first['value']}',
                         onChanged: (value) async {
                           if (value != '') {
-                            OrderItem.orderItemsList[key]!['Manufacturing_Difficulty'] = value;
+                            OrderItem
+                                .orderItemsList[key]!['Manufacturing_Difficulty'] =
+                                value;
                           } else {
-                            OrderItem.orderItemsList[key]!['Manufacturing_Difficulty'] = '';
+                            OrderItem
+                                .orderItemsList[key]!['Manufacturing_Difficulty'] =
+                            '';
                           }
                         },
                         hintText: '',
@@ -632,7 +748,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'بلوک',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -645,16 +763,18 @@ class ViewCustomController extends GetxController{
                       hint: 'بلوک',
                       lable: '',
                       height: 40,
-                      isNumberInt:true,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Block'),
+                      isNumberInt: true,
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Block'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Block'] = int.parse('${text}');
+                          OrderItem.orderItemsList[key]!['Block'] =
+                              int.parse('${text}');
                         } else {
-                          OrderItem.orderItemsList[key]!['Block']= '';
-
+                          OrderItem.orderItemsList[key]!['Block'] = '';
                         }
                       },
+
                     ),
                   ),
                 ],
@@ -667,7 +787,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'طبقه',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -680,16 +802,18 @@ class ViewCustomController extends GetxController{
                       hint: 'طبقه',
                       lable: '',
                       height: 40,
-                      isNumberInt:true,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Level'),
+                      isNumberInt: true,
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Level'),
                       onChange: (text) {
                         if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Level'] = int.parse('${text}');
+                          OrderItem.orderItemsList[key]!['Level'] =
+                              int.parse('${text}');
                         } else {
-                          OrderItem.orderItemsList[key]!['Level']= '';
-
+                          OrderItem.orderItemsList[key]!['Level'] = '';
                         }
                       },
+
                     ),
                   ),
                 ],
@@ -702,28 +826,53 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'واحد',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    width: 60,
-                    child: FormTextField(
-                      name: 'واحد',
-                      hint: 'واحد',
-                      lable: '',
-                      isNumberInt:true,
-                      height: 40,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Unit'),
-                      onChange: (text) {
-                        if (text != null && text != '') {
-                          OrderItem.orderItemsList[key]!['Unit'] = int.parse('${text}');
-                        } else {
-                          OrderItem.orderItemsList[key]!['Unit']= '';
+                  Focus(
+                    autofocus: true,
+                    onKeyEvent: (node, event) {
+                      if (event is KeyDownEvent &&
+                          event.logicalKey == LogicalKeyboardKey.tab) {
+
+                        String lastKey =
+                        ViewCustomController.containers.keys.last.toString();
+
+                        if (key == lastKey) {
+                          ViewCustomController.addContainer(context, productItems);
+                          return KeyEventResult.ignored;
                         }
-                      },
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: Container(
+                      width: 60,
+                      child: FormTextField(
+                        name: 'واحد',
+                        hint: 'واحد',
+                        lable: '',
+                        isNumberInt: true,
+                        height: 40,
+                        column: MainController.getDetailsOfField(
+                            'Order_Details', 'Unit'),
+                        onChange: (text) {
+                          if (text != null && text != '') {
+                            OrderItem.orderItemsList[key]!['Unit'] =
+                                int.parse('${text}');
+                          } else {
+                            OrderItem.orderItemsList[key]!['Unit'] = '';
+                          }
+                        },
+                        onEditingComplete: (){
+                          ViewCustomController.addContainer(context, productItems);
+                        },
+
+                      ),
                     ),
                   ),
                 ],
@@ -736,7 +885,9 @@ class ViewCustomController extends GetxController{
                     return Txt(
                       'جمع مبلغ',
                       color:
-                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,
                     );
                   }),
                   SizedBox(
@@ -750,14 +901,25 @@ class ViewCustomController extends GetxController{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Obx((){
-                            return Txt('${ViewCustomController.getCalculateTotalPrice(
-                                ViewCustomController.getProductPrice(
-                                  productItems, OrderItem.orderItemsList[key]?['Product_Name'] ?? productItems.first['_id'],),
-                                (OrderItem.orderItemsList[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                (OrderItem.orderItemsList[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
-                                OrderItem.orderItemsList[key]?['Quantity'] ?? 0
-                            )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                          Obx(() {
+                            return Txt(
+                              '${ViewCustomController.getCalculateTotalPrice(
+                                  ViewCustomController.getProductPrice(
+                                    productItems, OrderItem
+                                      .orderItemsList[key]?['Product_Name'] ??
+                                      productItems.first['_id'],),
+                                  (OrderItem
+                                      .orderItemsList[key]?['First_Dimension'] as num?)
+                                      ?.toDouble() ?? 0.0,
+                                  (OrderItem
+                                      .orderItemsList[key]?['Second_Dimension'] as num?)
+                                      ?.toDouble() ?? 0.0,
+                                  OrderItem.orderItemsList[key]?['Quantity'] ??
+                                      1
+                              )}',
+                              color: MainController.isLightMode.value == true
+                                  ? whiteColor
+                                  : color2,);
                           }),
                         ],
                       ),
@@ -768,18 +930,26 @@ class ViewCustomController extends GetxController{
               SizedBox(width: 10,),
               Column(
                 children: [
-                  Obx((){
-                    return Txt('${AppController.of(context)!.value('remove')}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                  Obx(() {
+                    return Txt('${AppController.of(context)!.value('remove')}',
+                      color: MainController.isLightMode.value == true
+                          ? whiteColor
+                          : color2,);
                   }),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 10,),
                   InkWell(
-                    onTap: (){
+                    onTap: () async {
                       ViewCustomController.removeContainer(key);
+                      ViewCustomController.isShowAlert.value = await ViewCustomController.showAlret();
                     },
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),
-                      padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                      child: Txt('${AppController.of(context)!.value('remove')} '),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.pinkAccent,),
+                      padding: EdgeInsets.only(
+                          right: 20, left: 20, top: 10, bottom: 10),
+                      child: Txt(
+                          '${AppController.of(context)!.value('remove')} '),
                     ),
                   ),
                 ],
@@ -788,17 +958,21 @@ class ViewCustomController extends GetxController{
           )
       ),
     );
+
   }
-  static  removeContainer(String key) {
+
+  static removeContainer(String key) {
     containers.remove(key);
     OrderItem.orderItemsList.remove(key);
   }
+
   //end order item
 
   static Future<int> calculateTotalQuantity(String orderId) async {
     int sum = 0;
 
-    var orderDetailsList = await ViewCustomController.getDataOrderDetailList(orderId);
+    var orderDetailsList =
+        await ViewCustomController.getDataOrderDetailList(orderId);
 
     for (var item in orderDetailsList) {
       sum += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
@@ -806,57 +980,73 @@ class ViewCustomController extends GetxController{
 
     return sum;
   }
+
   static Future<double> calculateTotalArea(String orderId) async {
     double sum = 0.0;
 
-    var orderDetailsList = await ViewCustomController.getDataOrderDetailList(orderId);
+    var orderDetailsList =
+        await ViewCustomController.getDataOrderDetailList(orderId);
 
     for (var item in orderDetailsList) {
-      double firstDim = double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
-      double secondDim = double.tryParse('${item['Second_Dimension'] ?? 0}') ?? 0.0;
-      sum += ViewCustomController.getCalculateTotalArea(firstDim , secondDim);
+      double firstDim =
+          double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
+      double secondDim =
+          double.tryParse('${item['Second_Dimension'] ?? 0}') ?? 0.0;
+      sum += ViewCustomController.getCalculateTotalArea(firstDim, secondDim);
     }
 
     return double.parse(sum.toStringAsFixed(2));
   }
+
   static getDataOrderDetailList(String parentId) async {
-    List<dynamic> orderDetailList = await DB('Order_Details').parent(parentTable: 'Orders', parentId: '${parentId}').getRecords();
+    List<dynamic> orderDetailList = await DB('Order_Details')
+        .parent(parentTable: 'Orders', parentId: '${parentId}')
+        .getRecords();
     for (var item in orderDetailList) {
       if (item['First_Dimension'] != null) {
-        item['First_Dimension'] =
-            (item['First_Dimension'] as num).toDouble();
+        item['First_Dimension'] = (item['First_Dimension'] as num).toDouble();
       }
 
       if (item['Second_Dimension'] != null) {
-        item['Second_Dimension'] =
-            (item['Second_Dimension'] as num).toDouble();
+        item['Second_Dimension'] = (item['Second_Dimension'] as num).toDouble();
       }
     }
+    print('orderDetailList>>>${orderDetailList}');
     return orderDetailList;
   }
-  static getProductPrice(List<dynamic> productItems , String productId) {
-    for(var product in productItems){
-      if(product['_id'] == productId){
+
+  static getProductPrice(List<dynamic> productItems, String productId) {
+    if (productItems.isEmpty) return null;
+    for (var product in productItems) {
+      if (product['_id'] == productId) {
         return product['Price'];
       }
     }
   }
 
   //order item edit page
-  static addEditContainer(BuildContext context , List<dynamic> productItems){
-        var Id = Uuid().v4();
-        String newKey = Id;
-        ViewCustomController.editContainers[newKey] = buildEditContainer(newKey , context ,productItems);
-        OrderItem.orderItemsList2[newKey] = {};
+  static addEditContainer(BuildContext context, List<dynamic> productItems , String customerId) {
+    var Id = Uuid().v4();
+    String newKey = Id;
+    print('customerId>>>${customerId}');
+    ViewCustomController.editContainers[newKey] =
+        buildEditContainer(newKey, context, productItems , customerId);
+    OrderItem.orderItemsList2[newKey] = {};
   }
-  static Widget buildEditContainer(String key , BuildContext context , List<dynamic> productItems){
+
+  static Widget buildEditContainer(
+      String key, BuildContext context, List<dynamic> productItems, String customerId) {
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
     final formatter = NumberFormat('#,###');
-    final priceController = TextEditingController(text: formatter.format(
-      ViewCustomController.getProductPrice(
-        productItems, OrderItem.orderItemsList2[key]?['Product_Name']['_id'] ?? productItems.first['_id'],) ?? 0,
-    ));
+    final productName = OrderItem.orderItemsList2[key]?['Product_Name'] ?? '';
+
+    final price =
+        ViewCustomController.getProductPrice(productItems, productName);
+
+    final priceController = TextEditingController(
+      text: price == null ? '' : formatter.format(price),
+    );
     return Container(
       width: size.width,
       key: ValueKey(key),
@@ -885,29 +1075,47 @@ class ViewCustomController extends GetxController{
                   child: SelectBox(
                       name: 'نام کالا',
                       maxHeight: 38,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Product_Name'),
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Product_Name'),
                       items: [
+                        DropdownMenuItem(
+                            enabled: false,
+                            child: Obx(() {
+                              return Txt(
+                                'لطفا یکی از موارد زیر را انتخاب کنید',
+                                color:
+                                MainController.isLightMode.value == true
+                                    ? whiteColor
+                                    : primaryDark,
+                              );
+                            }),
+                            value: ''),
                         for (var item in productItems)
                           DropdownMenuItem(
                               child: Obx(() {
                                 return Txt(
-                                  '${ViewController.itemsShowSelectItem(item, MainController.getDetailsOfField('Order_Details' , 'Product_Name'))}',
+                                  '${ViewController.itemsShowSelectItem(item, MainController.getDetailsOfField('Order_Details', 'Product_Name'))}',
                                   color:
-                                  MainController.isLightMode.value == true
-                                      ? whiteColor
-                                      : primaryDark,
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
                                 );
                               }),
                               value: item['_id'].toString()),
                       ],
-                      initalValue: '${productItems.first['_id'] ?? ''}',
+                      // initalValue: '${productItems.first['_id'] ?? ''}',
                       onChanged: (value) async {
                         if (value != '') {
-                          OrderItem.orderItemsList2[key]?['Product_Name']  = value;
-                          final newPrice = ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name']) ?? 0;
+                          OrderItem.orderItemsList2[key]?['Product_Name'] =
+                              value;
+                          final newPrice = ViewCustomController.getProductPrice(
+                                  productItems,
+                                  OrderItem
+                                      .orderItemsList2[key]!['Product_Name']) ??
+                              0;
                           priceController.text = formatter.format(newPrice);
                         } else {
-                          OrderItem.orderItemsList2[key]?['Product_Name']  = '';
+                          OrderItem.orderItemsList2[key]?['Product_Name'] = '';
                         }
                       },
                       hintText: '',
@@ -916,22 +1124,25 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'قیمت',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
                   height: 10,
                 ),
-                Obx((){
-                  return  Container(
+                Obx(() {
+                  return Container(
                     width: 100,
                     child: FormPriceTextField(
                       name: 'قیمت',
@@ -939,8 +1150,9 @@ class ViewCustomController extends GetxController{
                       lable: '',
                       controller: priceController,
                       height: 40,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Price'),
-                      onChange: (text) {
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Price'),
+                      onChange: (text) async {
                         if (text != null && text != '') {
                           String cleanText = text.replaceAll(',', '');
                           int value = int.tryParse(cleanText) ?? 0;
@@ -949,26 +1161,32 @@ class ViewCustomController extends GetxController{
                           if (formatted != text) {
                             _controller.value = TextEditingValue(
                               text: formatted,
-                              selection: TextSelection.collapsed(offset: formatted.length),
+                              selection: TextSelection.collapsed(
+                                  offset: formatted.length),
                             );
                           }
                         }
                         OrderItem.orderItemsList2.refresh();
+                        ViewCustomController.isShowAlert.value =
+                            await ViewCustomController.showAlretEditOrder(customerId);
                       },
                     ),
                   );
                 })
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'بعد اول',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -981,15 +1199,17 @@ class ViewCustomController extends GetxController{
                     hint: 'بعد اول',
                     lable: '',
                     height: 40,
-                    isNumberInt:true,
+                    isNumberInt: true,
                     keyOrderItem: key,
-                    column: MainController.getDetailsOfField('Order_Details' , 'First_Dimension'),
+                    column: MainController.getDetailsOfField(
+                        'Order_Details', 'First_Dimension'),
                     onChange: (text) {
                       if (text != null && text != '') {
-                        OrderItem.orderItemsList2[key]!['First_Dimension'] = double.tryParse('${text}');
-                      }
-                      else {
-                        OrderItem.orderItemsList2[key]!['First_Dimension'] = null;
+                        OrderItem.orderItemsList2[key]!['First_Dimension'] =
+                            double.tryParse('${text}');
+                      } else {
+                        OrderItem.orderItemsList2[key]!['First_Dimension'] =
+                            null;
                       }
                       OrderItem.orderItemsList2.refresh();
                     },
@@ -997,15 +1217,18 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'بعد دوم',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1018,14 +1241,17 @@ class ViewCustomController extends GetxController{
                     hint: 'بعد دوم',
                     lable: '',
                     height: 40,
-                    isNumberInt:true,
+                    isNumberInt: true,
                     keyOrderItem: key,
-                    column: MainController.getDetailsOfField('Order_Details' , 'Second_Dimension'),
+                    column: MainController.getDetailsOfField(
+                        'Order_Details', 'Second_Dimension'),
                     onChange: (text) {
                       if (text != null && text != '') {
-                        OrderItem.orderItemsList2[key]?['Second_Dimension'] = double.tryParse('${text}');
+                        OrderItem.orderItemsList2[key]?['Second_Dimension'] =
+                            double.tryParse('${text}');
                       } else {
-                        OrderItem.orderItemsList2[key]?['Second_Dimension'] = null;
+                        OrderItem.orderItemsList2[key]?['Second_Dimension'] =
+                            null;
                       }
                       OrderItem.orderItemsList2.refresh();
                     },
@@ -1033,15 +1259,18 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'جمع متراژ',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1053,24 +1282,31 @@ class ViewCustomController extends GetxController{
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                     Obx((){
-                       return  Txt('${ViewCustomController.getCalculateTotalArea(OrderItem.orderItemsList2[key]?['First_Dimension'] ?? 0,
-                           OrderItem.orderItemsList2[key]?['Second_Dimension'] ?? 0)}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
-                     })
+                      Obx(() {
+                        return Txt(
+                          '${ViewCustomController.getCalculateTotalArea(OrderItem.orderItemsList2[key]?['First_Dimension'] ?? 0, OrderItem.orderItemsList2[key]?['Second_Dimension'] ?? 0)}',
+                          color: MainController.isLightMode.value == true
+                              ? whiteColor
+                              : color2,
+                        );
+                      })
                     ],
                   ),
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'تعداد',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1083,14 +1319,16 @@ class ViewCustomController extends GetxController{
                     hint: 'تعداد',
                     lable: '',
                     height: 40,
-                    isNumberInt:true,
-                    column: MainController.getDetailsOfField('Order_Details' , 'Quantity'),
-                    initValue: '${OrderItem.orderItemsList2[key]?['Quantity'] ?? ''}',
+                    isNumberInt: true,
+                    column: MainController.getDetailsOfField(
+                        'Order_Details', 'Quantity'),
+                    initValue:
+                        '${OrderItem.orderItemsList2[key]?['Quantity'] ?? '1'}',
                     onChange: (text) {
                       if (text != null && text != '') {
-                        OrderItem.orderItemsList2[key]?['Quantity'] = int.tryParse('${text}');
-                      }
-                      else{
+                        OrderItem.orderItemsList2[key]?['Quantity'] =
+                            int.tryParse('${text}');
+                      } else {
                         OrderItem.orderItemsList2[key]?['Quantity'] = 0;
                       }
                       OrderItem.orderItemsList2.refresh();
@@ -1099,7 +1337,9 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1119,27 +1359,32 @@ class ViewCustomController extends GetxController{
                   child: SelectBox(
                       name: 'الگوی بری',
                       maxHeight: 38,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern'),
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Cut_Pattern'),
                       items: [
-                        for (var item in MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'])
+                        for (var item in MainController.getDetailsOfField(
+                                'Order_Details', 'Cut_Pattern')
+                            .items)
                           DropdownMenuItem(
                               child: Obx(() {
                                 return Txt(
                                   '${item['title']}',
                                   color:
-                                  MainController.isLightMode.value == true
-                                      ? whiteColor
-                                      : primaryDark,
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
                                   fontSize: 13,
                                 );
                               }),
                               value: item['value']),
                       ],
-                      initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
+                      initalValue:
+                          '${MainController.getDetailsOfField('Order_Details', 'Cut_Pattern').items.first['value']}',
                       onChanged: (value) async {
                         if (value != '') {
                           // ViewController.request['Cut_Pattern'] = value;
-                          OrderItem.orderItemsList2[key]?['Cut_Pattern'] = value;
+                          OrderItem.orderItemsList2[key]?['Cut_Pattern'] =
+                              value;
                         } else {
                           // ViewController.request['Cut_Pattern'] = '';
                           OrderItem.orderItemsList2[key]?['Cut_Pattern'] = '';
@@ -1151,7 +1396,9 @@ class ViewCustomController extends GetxController{
                 )
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1171,30 +1418,36 @@ class ViewCustomController extends GetxController{
                   child: SelectBox(
                       name: 'سختی تولید',
                       maxHeight: 38,
-                      column: MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty'),
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Manufacturing_Difficulty'),
                       items: [
-                        for (var item in MainController.getDetailsOfField('Order_Details' , 'Manufacturing_Difficulty')['items'])
+                        for (var item in MainController.getDetailsOfField(
+                                'Order_Details', 'Manufacturing_Difficulty')
+                            .items)
                           DropdownMenuItem(
                               child: Obx(() {
                                 return Txt(
                                   '${item['title']}',
                                   color:
-                                  MainController.isLightMode.value == true
-                                      ? whiteColor
-                                      : primaryDark,
+                                      MainController.isLightMode.value == true
+                                          ? whiteColor
+                                          : primaryDark,
                                   fontSize: 13,
                                 );
                               }),
                               value: item['value']),
                       ],
-                      initalValue: '${MainController.getDetailsOfField('Order_Details' , 'Cut_Pattern')['items'].first['value']}',
+                      initalValue:
+                          '${MainController.getDetailsOfField('Order_Details', 'Cut_Pattern').items.first['value']}',
                       onChanged: (value) async {
                         if (value != '') {
                           // ViewController.request['Manufacturing_Difficulty'] = value;
-                          OrderItem.orderItemsList2[key]?['Manufacturing_Difficulty'] = value;
+                          OrderItem.orderItemsList2[key]
+                              ?['Manufacturing_Difficulty'] = value;
                         } else {
                           // ViewController.request['Manufacturing_Difficulty'] = '';
-                          OrderItem.orderItemsList2[key]?['Manufacturing_Difficulty'] = '';
+                          OrderItem.orderItemsList2[key]
+                              ?['Manufacturing_Difficulty'] = '';
                         }
                       },
                       hintText: '',
@@ -1203,15 +1456,18 @@ class ViewCustomController extends GetxController{
                 )
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'بلوک',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1224,33 +1480,38 @@ class ViewCustomController extends GetxController{
                     hint: 'بلوک',
                     lable: '',
                     height: 40,
-                    isNumberInt:true,
-                    initValue: '${OrderItem.orderItemsList2[key]?['Block'] ?? ''}',
-                    column: MainController.getDetailsOfField('Order_Details' , 'Block'),
+                    isNumberInt: true,
+                    initValue:
+                        '${OrderItem.orderItemsList2[key]?['Block'] ?? ''}',
+                    column: MainController.getDetailsOfField(
+                        'Order_Details', 'Block'),
                     onChange: (text) {
                       // dataJson[columnName] = text;
                       if (text != null && text != '') {
                         // OrderItem.orderItemsList[key]!['Block'] = int.parse('${text}');
-                        OrderItem.orderItemsList2[key]?['Block'] = int.parse('${text}');
+                        OrderItem.orderItemsList2[key]?['Block'] =
+                            int.parse('${text}');
                       } else {
                         // OrderItem.orderItemsList[key]!['Block']= '';
                         OrderItem.orderItemsList2[key]?['Block'] = '';
-
                       }
                     },
                   ),
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'طبقه',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1263,69 +1524,97 @@ class ViewCustomController extends GetxController{
                     hint: 'طبقه',
                     lable: '',
                     height: 40,
-                    isNumberInt:true,
-                    initValue: '${OrderItem.orderItemsList2[key]?['Level'] ?? ''}',
-                    column: MainController.getDetailsOfField('Order_Details' , 'Level'),
+                    isNumberInt: true,
+                    initValue:
+                        '${OrderItem.orderItemsList2[key]?['Level'] ?? ''}',
+                    column: MainController.getDetailsOfField(
+                        'Order_Details', 'Level'),
                     onChange: (text) {
                       if (text != null && text != '') {
                         // OrderItem.orderItemsList[key]!['Level'] = int.parse('${text}');
-                        OrderItem.orderItemsList2[key]?['Level'] = int.parse('${text}');
+                        OrderItem.orderItemsList2[key]?['Level'] =
+                            int.parse('${text}');
                       } else {
                         // OrderItem.orderItemsList[key]!['Level']= '';
                         OrderItem.orderItemsList2[key]?['Level'] = '';
-
                       }
                     },
                   ),
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'واحد',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  width: 60,
-                  child: FormTextField(
-                    name: 'واحد',
-                    hint: 'واحد',
-                    lable: '',
-                    isNumberInt:true,
-                    initValue: '${OrderItem.orderItemsList2[key]?['Unit'] ?? ''}',
-                    height: 40,
-                    column: MainController.getDetailsOfField('Order_Details' , 'Unit'),
-                    onChange: (text) {
-                      if (text != null && text != '') {
-                        // OrderItem.orderItemsList[key]!['Unit'] = int.parse('${text}');
-                        OrderItem.orderItemsList2[key]?['Unit'] = int.parse('${text}');
-                      } else {
-                        // OrderItem.orderItemsList[key]!['Unit']= '';
-                        OrderItem.orderItemsList2[key]?['Unit'] = '';
+                Focus(
+                  autofocus: true,
+                  onKeyEvent: (node, event) {
+                    if (event is KeyDownEvent &&
+                        event.logicalKey == LogicalKeyboardKey.tab) {
+
+                      String lastKey =
+                      ViewCustomController.editContainers.keys.last.toString();
+
+                      if (key == lastKey) {
+                        ViewCustomController.addEditContainer(context, productItems , customerId);
+                        return KeyEventResult.ignored;
                       }
-                    },
+                    }
+                    return KeyEventResult.ignored;
+                  },
+                  child: Container(
+                    width: 60,
+                    child: FormTextField(
+                      name: 'واحد',
+                      hint: 'واحد',
+                      lable: '',
+                      isNumberInt: true,
+                      initValue:
+                          '${OrderItem.orderItemsList2[key]?['Unit'] ?? ''}',
+                      height: 40,
+                      column: MainController.getDetailsOfField(
+                          'Order_Details', 'Unit'),
+                      onChange: (text) {
+                        if (text != null && text != '') {
+                          // OrderItem.orderItemsList[key]!['Unit'] = int.parse('${text}');
+                          OrderItem.orderItemsList2[key]?['Unit'] =
+                              int.parse('${text}');
+                        } else {
+                          // OrderItem.orderItemsList[key]!['Unit']= '';
+                          OrderItem.orderItemsList2[key]?['Unit'] = '';
+                        }
+                      },
+                    ),
                   ),
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Obx(() {
                   return Txt(
                     'جمع مبلغ',
-                    color:
-                    MainController.isLightMode.value == true ? whiteColor : color2,
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
                   );
                 }),
                 SizedBox(
@@ -1339,14 +1628,13 @@ class ViewCustomController extends GetxController{
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Obx((){
-
-                          return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
-                              productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']),
-                              (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0,
-                              (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
-                              OrderItem.orderItemsList2[key]?['Quantity'] ?? 0
-                          )}', color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                        Obx(() {
+                          return Txt(
+                            '${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']), (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0, (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0, OrderItem.orderItemsList2[key]?['Quantity'] ?? 1)}',
+                            color: MainController.isLightMode.value == true
+                                ? whiteColor
+                                : color2,
+                          );
                         })
                       ],
                     ),
@@ -1354,162 +1642,521 @@ class ViewCustomController extends GetxController{
                 ),
               ],
             ),
-            SizedBox(width: 10,),
+            SizedBox(
+              width: 10,
+            ),
             Column(
               children: [
-                Obx((){
-                  return Txt('${AppController.of(context)!.value('remove')}' , color: MainController.isLightMode.value == true ? whiteColor : color2,);
+                Obx(() {
+                  return Txt(
+                    '${AppController.of(context)!.value('remove')}',
+                    color: MainController.isLightMode.value == true
+                        ? whiteColor
+                        : color2,
+                  );
                 }),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 10,
+                ),
                 InkWell(
-                  onTap: (){
+                  onTap: () async {
                     ViewCustomController.removeEditContainer(key);
+                    ViewCustomController.isShowAlert.value = await ViewCustomController.showAlretEditOrder(ViewCustomController.order['Customer'] == null ? customerId : ViewCustomController.order['Customer']);
                   },
                   child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.pinkAccent,),
-                    padding: EdgeInsets.only(right: 20 , left: 20 , top: 10,bottom: 10),
-                    child: Txt('${AppController.of(context)!.value('remove')} '),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.pinkAccent,
+                    ),
+                    padding: EdgeInsets.only(
+                        right: 20, left: 20, top: 10, bottom: 10),
+                    child:
+                        Txt('${AppController.of(context)!.value('remove')} '),
                   ),
                 ),
               ],
             ),
-
           ],
         ),
       ),
     );
   }
+
   static removeEditContainer(String key) {
-      if(OrderItem.orderItemsList.containsKey(key)){
-        OrderItem.orderItemsList.remove(key);
-        OrderItem.orderItemsList.refresh();
-      }
-      ViewCustomController.editContainers.remove(key);
-      OrderItem.orderItemsList2.remove(key);
-      // ViewCustomController.editContainers.refresh();
-      // OrderItem.orderItemsList2.refresh();
+    if (OrderItem.orderItemsList.containsKey(key)) {
+      OrderItem.orderItemsList.remove(key);
+      OrderItem.orderItemsList.refresh();
+    }
+    ViewCustomController.editContainers.remove(key);
+    OrderItem.orderItemsList2.remove(key);
   }
+
 // end order item edit page
 
-  static checkOrder(context,productItems) async {
-  if (ViewCustomController.order['Date'] == null) {
-    ViewCustomController.order['Date'] = ViewCustomController.getDate(Jalali.now());
+  static checkOrder(context, productItems) async {
+    if (ViewCustomController.order['Date'] == null) {
+      ViewCustomController.order['Date'] =
+          ViewCustomController.getDate(Jalali.now());
+    }
+    if (ViewCustomController.order['Type'] == null) {
+      ViewCustomController.order['Type'] =
+      MainController.getDetailsOfField('Orders', 'Type').items
+          .first['value'];
+    }
+
+    bool validate = await RecordController.validate('Orders',
+        ViewCustomController.order, MainController.getInfoTable('Orders'));
+
+    if (validate == false) {
+      if (productItems.length != 0) {
+        if (ViewCustomController.isShowAlert.value == false) {
+          ViewCustomController.addContainer(context, productItems);
+        }
+      } else {
+        showSnackbar(snackTypes.error, 'کالایی ثبت نشده');
+      }
+    } else {
+      showSnackbar(snackTypes.error,
+          '${AppController.of(Get.context!)!.value('Please complete the order items')}');
+    }
   }
-  if(ViewCustomController.order['Type'] == null){
-    ViewCustomController.order['Type'] = MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value'];
-  }
-  if(ViewCustomController.order['Customer'] == null){
-    List<dynamic> customerItems= await DB('Customer').getRecords();
-    ViewCustomController.order['Customer'] = customerItems.first['_id'];
-  }
-  var Id = Uuid().v4();
-  DataModel newData = DataModel(
-      id: '${Id}',
-      data: ViewCustomController.order);
-  bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
-  if(validate == false){
-    ViewCustomController.addContainer(context ,productItems);
-  }
-  else{
-    showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
-  }
-}
-  static checkEditOrder(context,productItems , {var data}) async {
+
+  static checkEditOrder(context, productItems, {var data}) async {
     if (data['Date'] == null) {
       data['Date'] = ViewCustomController.getDate(Jalali.now());
     }
-    if(data['Type'] == null){
-      data['Type'] = MainController.getDetailsOfField('Orders' , 'Type')['items'].first['value'];
+    if (data['Type'] == null) {
+      data['Type'] = MainController.getDetailsOfField('Orders', 'Type')
+          .items
+          .first['value'];
     }
-    if(data['Customer'] == null){
-      List<dynamic> customerItems= await DB('Customer').getRecords();
-      data['Customer'] = customerItems.first['_id'];
-    }
-    var Id = Uuid().v4();
-    DataModel newData = DataModel(
-        id: '${Id}',
-        data: data);
-    bool validate = await RecordController.validate('Orders', newData , MainController.getInfoTable('Orders'));
-    if(validate == false){
-      ViewCustomController.addEditContainer(context ,productItems);
-    }
-    else{
-      showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
+
+    bool validate = await RecordController.validate(
+        'Orders', data, MainController.getInfoTable('Orders'));
+    if (validate == false) {
+      if (ViewCustomController.isShowAlert.value == false) {
+        ViewCustomController.addEditContainer(context, productItems , ViewCustomController.order['Customer'] == null ? data['Customer']['_id'] : ViewCustomController.order['Customer']);
+      }
+    } else {
+      showSnackbar(snackTypes.error,
+          '${AppController.of(Get.context!)!.value('Please complete the order items')}');
     }
   }
+
   static goTableCustom({var table = null, var index}) async {
     table = MainController.getInfoTable('${MainController.tableName.value}');
-    var tableName = table['schema']['name'];
-    if (table['schema']['view'] == 'custom') {
-      var orderList=[];
-      if(tableName == 'Orders'){
-        print('MainController.tableData[index]>>>${MainController.tableData[index]}');
-        print('table schema name>>>${table['schema']['name']}');
-        orderList = await DB('${table['schema']['name']}')
+    var tableName = table.schema.name;
+    if (table.schema.view == 'custom') {
+      var orderList = [];
+      if (tableName == 'Orders') {
+        print(
+            'MainController.tableData[index]>>>${MainController.dataRecord[index]}');
+        print('table schema name>>>${table.schema.name}');
+        orderList = await DB('${table.schema.name}')
             .parent(
-            parentId: MainController.tableData[index]['parent_id'],
-            parentTable: 'Customer')
+                parentId: MainController.dataRecord[index]['parent_id'],
+                parentTable: 'Customer')
             .getRecords();
-        print('ID OF TABLE DATA>>>${MainController.tableData[index]['parent_id']}');
-        print('PARENT TABLE>>>${MainController.tableInfo['schema']['name']}');
-        print('orderList>>>${orderList}');
-
       }
-      if(tableName == 'Order_Details'){
-        var orderDetailsList = await ViewCustomController.getDataOrderDetailList(MainController.tableData[index]['_id']);
+      if (tableName == 'Order_Details') {
+        var orderDetailsList =
+            await ViewCustomController.getDataOrderDetailList(
+                MainController.dataRecord[index]['_id']);
       }
-      await MainController.goToTablePage(table,
-        tableFields: MainController.getInfoTable(table['schema']['name']),);
+      await HelperController.goToTablePage(
+        table,
+        tableFields: MainController.getInfoTable(table.schema.name),
+      );
       HelperController.pageInateFunction();
     } else {
-      // DB.parentItem = {
-      //   'parent_id': MainController.tableData[index]['_id'],
-      //   'parent_table': MainController.tableInfo['schema']['name']
-      // };
-      var items = await DB('${table['schema']['name']}')
+      var items = await DB('${table.schema.name}')
           .parent(
-          parentId: MainController.tableData[index]['_id'],
-          parentTable: MainController.tableInfo['schema']['name'])
+              parentId: MainController.dataRecord[index]['_id'],
+              parentTable: MainController.infoSchema.value.schema.name)
           .getRecords();
 
-
-      await MainController.goToTablePage(table,
-          tableFields: MainController.getInfoTable(table['schema']['name']),
+      await HelperController.goToTablePage(table,
+          tableFields: MainController.getInfoTable(table.schema.name),
           tableData: items);
     }
   }
-  static getDrawingNumberOrder(String orderDetailParentId , List<dynamic> orders){
-   for(var order in orders){
-     if(order['_id'] == orderDetailParentId){
-       return order['Drawing_Number'];
-     }
-   }
 
+  //order output
+  static getDrawingNumberOrder(String orderDetailParentId) async {
+    List<dynamic> ordersList = await DB('Orders').getRecords();
+    for (var order in ordersList) {
+      if (order['_id'] == orderDetailParentId) {
+        return order['Drawing_Number'];
+      }
+    }
   }
-  static calculateTotalAreaOrderDetail(double firstDimension , double secondDimension){
+
+  static calculateTotalAreaOrderDetail(
+      double firstDimension, double secondDimension) {
     double result = firstDimension * secondDimension;
     return double.parse(result.toStringAsFixed(3));
   }
-  static calculateTotalPriceOrderDetail(double firstDimension , double secondDimension , int quantity , int price){
+
+  static calculateTotalPriceOrderDetail(
+      double firstDimension, double secondDimension, int quantity, int price) {
     final formatter = NumberFormat('#,##0', 'en_US');
-    double totlalAreaOrderDetail = ViewCustomController.calculateTotalAreaOrderDetail(firstDimension , secondDimension);
-    double totalPrice = totlalAreaOrderDetail* quantity * price;
+    double totlalAreaOrderDetail =
+        ViewCustomController.calculateTotalAreaOrderDetail(
+            firstDimension, secondDimension);
+    double totalPrice = totlalAreaOrderDetail * quantity * price;
     double rounded = double.parse(totalPrice.toStringAsFixed(2));
     return formatter.format(rounded);
   }
+
   static registerCheckout() async {
-    for (var i=0;i<ViewCustomController.allOrderDetailsSelected.length;i++)
-      for(var orderDetail in ViewCustomController.allOrderDetailsSelected[i]){
-        String orderDetailId = orderDetail['_id'];
-        if (ViewCustomController.checkboxOrderItemStatus.containsKey(orderDetailId)){
-          print('orderDetail selected>>>${orderDetail}');
-          print('order-item-id>>>${orderDetail['_id']}');
-          print('order-id>>>${orderDetail['parent_id']}');
+    for (var orderDetail in ViewCustomController.orderDetailsSelected.entries) {
+      await DB('out_order_detail').storeRecord({
+        'order_id': orderDetail.value['parent_id'],
+        'order_item_id': orderDetail.value['_id'],
+      });
+    }
+    ViewCustomController.orderDetailsSelected.value = {};
+    ViewCustomController.ordersSelected.value = {};
+    ViewCustomController.allOrdersSelected.value = [];
+    ViewCustomController.isClickedBtnRegister.value = false;
+    MainController.infoSchema.value.schema.currentPage = 1;
+    ViewCustomController.getAllReocord('Orders');
+    List<dynamic> ordersList = await DB('Orders').getRecords();
+    await ViewCustomController.getStatusOutPutOrders(ordersList);
+    MainController.dataRecord.value = await DB('Orders').paginate();
+    MainController.allData.value = MainController.dataRecord.value;
+  }
 
+  static getOrderOutPut(String orderId) async {
+    List filterOrder = await DB('out_order_detail')
+        .where('order_id', '\$eq', orderId)
+        .getRecords();
+    return filterOrder;
+  }
+
+  static getOrderDetailOutPut(String orderDetailId) async {
+    List filterOrderDetail = await DB('out_order_detail')
+        .where('order_item_id', '\$eq', orderDetailId)
+        .getRecords();
+    return filterOrderDetail;
+  }
+
+  static Future<bool> getStatusOrders(String orderId) async {
+    List<dynamic> orderOutPut = await getOrderOutPut(orderId);
+    List<dynamic> orderDetails =
+        await ViewCustomController.getDataOrderDetailList(orderId);
+    if (orderOutPut.length == orderDetails.length) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> getStatusOrderDetail(String orderDetailId) async {
+    List<dynamic> orderDetailOutPut = await getOrderDetailOutPut(orderDetailId);
+    if (orderDetailOutPut.length != 0) {
+      return true;
+    }
+    return false;
+  }
+
+  static getStatusOutPutOrders(List orderList) async {
+    for (var order in orderList) {
+      ViewCustomController.status['${order['_id']}'] =
+          await ViewCustomController.getStatusOrders(order['_id']);
+      print(
+          'ViewCustomController.status>>>${ViewCustomController.status['${order['_id']}']}');
+    }
+  }
+
+  static List getOrderDetailsOrderSelectedList() {
+    RxList<dynamic> orderDetailsList = [].obs;
+    for (var orderSelected in ViewCustomController.ordersSelected.entries) {
+      for (var orderDetail in orderSelected.value) {
+        orderDetailsList.add(orderDetail);
+      }
+    }
+    return orderDetailsList;
+  }
+
+  static List<dynamic> paginate() {
+    int currentPage = MainController.infoSchema.value.schema.currentPage ?? 1;
+    int perPage = MainController.infoSchema.value.schema.countShowRow ?? 10;
+    List<dynamic> records =
+        ViewCustomController.getOrderDetailsOrderSelectedList();
+    int start = (currentPage - 1) * perPage;
+    int totalRecords =
+        ViewCustomController.getOrderDetailsOrderSelectedList().length;
+    MainController.pageInfo['Order_Details']?.start = start;
+    var end = start + perPage;
+    var endBycondition = end >= totalRecords ? totalRecords : end;
+    MainController.pageInfo['Order_Details']?.end = endBycondition;
+    return records.skip(start).take(perPage).toList();
+  }
+
+  static int getTotalPage() {
+    var countShowRow = MainController.infoSchema.value.schema.countShowRow;
+    int perPage = countShowRow != null ? countShowRow : 10;
+
+    int totalRecords =
+        ViewCustomController.getOrderDetailsOrderSelectedList().length;
+
+    return (totalRecords / perPage).ceil();
+  }
+
+  static getStartIndexOutPutOrderItem() {
+    int currentPage = MainController.infoSchema.value.schema.currentPage ?? 1;
+    int perPage = MainController.infoSchema.value.schema.countShowRow ?? 10;
+    int start = (currentPage - 1) * perPage;
+    return start;
+  }
+
+  static getEndIndexOutPutOrderItem() {
+    int perPage = MainController.infoSchema.value.schema.countShowRow ?? 10;
+    var end = ViewCustomController.getStartIndexOutPutOrderItem() + perPage;
+    int totalRecords =
+        ViewCustomController.getOrderDetailsOrderSelectedList().length;
+    var endBycondition = end >= totalRecords ? totalRecords : end;
+    end = endBycondition;
+    return end;
+  }
+
+  static updatePagenationInOutPutOrderItems() {
+    int indexTable = MainController.menuList.value
+        .indexWhere((element) => element.schema.name == "Order_Details");
+    MainController.infoSchema.value = MainController.menuList[indexTable];
+    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+        ?.start = ViewCustomController.getStartIndexOutPutOrderItem();
+    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+        ?.end = ViewCustomController.getEndIndexOutPutOrderItem();
+    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+            ?.totalRecords =
+        ViewCustomController.getOrderDetailsOrderSelectedList().length;
+    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+        ?.totalPage = ViewCustomController.getTotalPage();
+    print(
+        'total page>>>${MainController.pageInfo[MainController.menuList[indexTable].schema.name!]?.totalPage}');
+    MainController.dataRecord.value = ViewCustomController.paginate();
+  }
+  //end order output
+
+
+  static int generateCustomerCode() {
+    final total = MainController
+            .pageInfo[MainController.infoSchema.value.schema.name]
+            ?.totalRecords ??
+        0;
+
+    return 1000 + total;
+  }
+
+  static String getDatePart(Jalali date) {
+    int year = date.year;
+    int month = date.month;
+    int day = date.day;
+    String lastDigitOfYear = (year % 10).toString();
+    String monthTwoDigits = month.toString().padLeft(2, '0');
+    String dayTwoDigits = day.toString().padLeft(2, '0');
+
+    return '$lastDigitOfYear$monthTwoDigits$dayTwoDigits';
+  }
+
+  static Future<int> generateOrderCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    int counter = prefs.getInt('orderCounter') ?? 1000;
+    return counter;
+  }
+
+  static Future<int> getNextOrderCounter() async {
+    int counter = await generateOrderCounter();
+    counter++;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('orderCounter', counter);
+    return counter;
+  }
+
+  static Future<int> generateOrderCode(Jalali date) async {
+    int counter = await generateOrderCounter();
+    int datePart = int.parse(await getDatePart(date));
+    int orderCode = int.parse('$datePart$counter');
+    await getNextOrderCounter();
+    return orderCode;
+  }
+
+  static Future<int> saveOrderCode(Jalali date) async {
+    int counter = await generateOrderCounter();
+    counter -= 1;
+    int datePart = int.parse(await getDatePart(date));
+    int orderCode = int.parse('$datePart$counter');
+    return orderCode;
+  }
+
+  static Future<int> generateDrawingNumber() async {
+    int counter = await generateOrderCounter();
+    await getNextOrderCounter();
+    return counter;
+  }
+
+  static Future<int> calculateAllpriceOrderItem() async {
+    int totalPrice = 0;
+
+    for (var orderItem in OrderItem.orderItemsList.value.values) {
+      final price = orderItem['Price'];
+
+      if (price != null) {
+        totalPrice += (price as num).toInt();
+      }
+    }
+
+    return totalPrice;
+  }
+
+  static Future<bool> showAlret() async {
+    var customers = await DB('Customer')
+        .where('_id', '\$eq', ViewCustomController.order['Customer'])
+        .getRecords();
+    int totlaPrice = await calculateAllpriceOrderItem();
+    for (var customer in customers) {
+      if(customer['Credit_Limit'] != null){
+        if (totlaPrice < customer['Credit_Limit']) {
+          return false;
         }
-
+        else {
+          return true;
+        }
       }
 
+    }
+    return false;
   }
+
+  static Future<int> calculateAllpriceEditOrderItem() async {
+    int totalPrice = 0;
+    Map<String, dynamic> result = {};
+    result.addAll(OrderItem.orderItemsList.value);
+    result.addAll(OrderItem.orderItemsList2.value);
+
+    for (var orderItem in result.values) {
+      final price = orderItem['Price'];
+
+      if (price != null) {
+        totalPrice += (price as num).toInt();
+      }
+    }
+    return totalPrice;
+  }
+  static Future<bool> showAlretEditOrder(String customerId) async {
+    var customers = await DB('Customer')
+        .where('_id', '\$eq', customerId)
+        .getRecords();
+    int totlaPrice = await calculateAllpriceEditOrderItem();
+    for (var customer in customers) {
+      if (totlaPrice < customer['Credit_Limit']) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+  static getAllReocord(String tableName) async {
+    TableModel pageInfo = await MainController.getInfoTable('${tableName}');
+    pageInfo.schema.currentPage = 0;
+    pageInfo.schema.countShowRow = 0;
+  }
+  static Future<String> getTitleSelectedItem(
+      String tableName, String selectedId, var column) async {
+    String selectedTitle = '';
+    var sourceItem = column.sourceItems;
+    if (sourceItem != 'custom') {
+      if (selectedId != '') {
+        var object =
+        (await DB(tableName).where('_id', '\$eq', selectedId).getRecords());
+        if (object.length == 0) {
+          selectedTitle =
+          '${AppController.of(Get.context!)!.value('Uncertain')}';
+        } else {
+          for(var data in object){
+            if(tableName == 'Customer'){
+              selectedTitle = data['Name_and_lastName'];
+            }
+            else{
+              selectedTitle = data['Title'];
+            }
+          }
+        }
+      } else {
+        selectedTitle = '';
+      }
+    } else {
+      if (selectedId != '') {
+        Map<String, dynamic> selectedItem = column.items.firstWhere(
+                (element) => element['value'] == selectedId,
+            orElse: () => {'error': ''});
+        if (selectedItem['title'] != null) {
+          selectedTitle = selectedItem['title'];
+        } else {
+          selectedTitle = selectedItem['error'];
+        }
+      } else {
+        selectedTitle = '';
+      }
+    }
+    return selectedTitle;
+  }
+  static Widget generateCellFileBox() {
+    return Column(
+      children: [
+        Center(
+            child: Image.network(
+              '$baseUrl/storage/696ca25717c593e594ee637b/Orders/files/${ViewCustomController.order['Picture2']}',
+              width: 60,
+              height: 60,
+              fit: BoxFit.fill,
+              errorBuilder: (BuildContext context, Object error,
+                  StackTrace? stackTrace) {
+                return Image.asset(
+                  fileImage,
+                  width: 60,
+                  height: 60,
+                ); // عکس جایگزین
+              },
+            )
+        ),
+      ],
+    );
+  }
+  static Widget generateEditCellFileBox(var data) {
+    String url = '';
+    if(data['Picture2'].contains('/storage/696ca25717c593e594ee637b/Orders/files/')){
+      url = baseUrl + data['Picture2'];
+    }
+    else{
+      url = '$baseUrl/storage/696ca25717c593e594ee637b/Orders/files/${data['Picture2']}';
+    }
+    return Column(
+      children: [
+        Center(
+            child: Image.network(
+              url,
+              width: 60,
+              height: 60,
+              fit: BoxFit.fill,
+              errorBuilder: (BuildContext context, Object error,
+                  StackTrace? stackTrace) {
+                return Image.asset(
+                  fileImage,
+                  width: 60,
+                  height: 60,
+                ); // عکس جایگزین
+              },
+            )
+        ),
+      ],
+    );
+  }
+
+//end order & orderdetail
+
+
 
 }

@@ -40,11 +40,10 @@ const String deleteAdminUrl=baseApiUrl+'/admin/deleteUser';
 
 const String storeRecordUrl=baseApiUrl+'/record/storeRecord';
 const String updateRecordUrl=baseApiUrl+'/record/updateRecord';
-const String deleteRecordUrl=baseApiUrl+'/record/deleteRecord';
+const String findAndUpdateRecordUrl=baseApiUrl+'/record/findAndUpdateRecord';
+const String deleteRecordUrl=baseApiUrl+'/record/deleteRecords';
+const String findAndDeleteRecordUrl=baseApiUrl+'/record/findAndDeleteRecord';
 const String getRecordsUrl=baseApiUrl+'/record/getRecords';
 const String filterRecordsUrl=baseApiUrl+'/record/filterRecord';
 const String uploadFileUrl=baseApiUrl+'/record/uploadFile';
 const String deleteFileUrl=baseApiUrl+'/record/deleteFile';
-
-
-

@@ -1,20 +1,15 @@
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/columnModel.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 
-class MyDropdown extends StatefulWidget {
+class SelectBoxSearch extends StatefulWidget {
   String? name;
   List<dynamic>? items;
   String? hintText;
@@ -24,7 +19,7 @@ class MyDropdown extends StatefulWidget {
   ColumnModel? column;
   Rx<bool>? isSeleted = false.obs;
   double? maxHeight;
-  MyDropdown({
+  SelectBoxSearch({
     this.name,
     this.items,
     this.hintText,
@@ -37,10 +32,43 @@ class MyDropdown extends StatefulWidget {
   });
 
   @override
-  State<MyDropdown> createState() => _MyDropdownState();
+  State<SelectBoxSearch> createState() => _SelectBoxSearchState();
 }
 
-class _MyDropdownState extends State<MyDropdown> {
+class _SelectBoxSearchState extends State<SelectBoxSearch> {
+  final TextEditingController _searchController = TextEditingController();
+  RxList<Map<String, dynamic>> visibleItems = <Map<String, dynamic>>[].obs;
+
+  @override
+  void initState() {
+    super.initState();
+    visibleItems.value = widget.items!.cast<Map<String, dynamic>>();
+    _searchController.addListener(() {
+      final text = _searchController.text.trim().toLowerCase();
+
+      if (text.isEmpty) {
+        visibleItems.value = widget.items!
+            .cast<Map<String, dynamic>>()
+            .where((item) => item['_id'] != '__hint__')
+            .toList();
+      } else {
+        visibleItems.value = widget.items!
+            .cast<Map<String, dynamic>>()
+            .where((item) {
+          if (item['_id'] == '__hint__') return false;
+          final name =
+          (item['Name_and_lastName'] ?? '').toString().toLowerCase();
+          return name.contains(text);
+        })
+            .toList();
+      }
+    });
+  }
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   Widget build(BuildContext context) {
     var inputRequired;
@@ -54,89 +82,22 @@ class _MyDropdownState extends State<MyDropdown> {
       return  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // DropdownSearch<Map<String, dynamic>>(
-          //   items: widget.items!.cast<Map<String, dynamic>>(),
-          //   itemAsString: (item) {
-          //     return item['Name_and_lastName'] ?? '';
-          //   },
-          //
-          //   dropdownButtonProps: DropdownButtonProps(
-          //     icon: Icon(
-          //       Icons.keyboard_arrow_down,
-          //       size: 26,
-          //       color: Colors.grey,
-          //     ),
-          //   ),
-          //
-          //
-          //
-          //   popupProps: PopupProps.menu(
-          //     showSearchBox: true,
-          //     itemBuilder: (context, item, isSelected) {
-          //       return Container(
-          //         padding: const EdgeInsets.all(12),
-          //         color: isSelected
-          //             ? Colors.blue.withOpacity(0.15)
-          //             : Colors.transparent,
-          //         child: Text(
-          //           item['Name_and_lastName'],
-          //           style: TextStyle(
-          //             color:  MainController.isLightMode.value == true
-          //                 ? whiteColor
-          //                 : primaryDark,
-          //           ),
-          //         ),
-          //       );
-          //     },
-          //     menuProps: MenuProps(
-          //       backgroundColor: MainController.isLightMode.value
-          //           ? primaryDark
-          //           : whiteColor,
-          //       elevation: 8,
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(10),
-          //         side: BorderSide(
-          //           color: MainController.isLightMode.value
-          //               ? Colors.grey.shade300
-          //               : Colors.grey.shade700,
-          //         ),
-          //       ),
-          //     ),
-          //     searchFieldProps: TextFieldProps(
-          //       decoration: InputDecoration(
-          //         hintText: "",
-          //         border: OutlineInputBorder(),
-          //       ),
-          //     ),
-          //     fit: FlexFit.loose,
-          //   ),
-          //   dropdownDecoratorProps:  DropDownDecoratorProps(
-          //     dropdownSearchDecoration: InputDecoration(
-          //       labelText: "",
-          //       hintText: widget.hintText,
-          //       border: OutlineInputBorder(),
-          //       constraints: BoxConstraints(maxHeight: widget.maxHeight != null ? widget.maxHeight! : 60),
-          //       labelStyle: TextStyle(color: Colors.red),
-          //
-          //       enabledBorder: OutlineInputBorder(
-          //         borderSide: BorderSide(color: MainController.isLightMode.value ? whiteColor : primaryDark, width: 0),
-          //       ),
-          //     ),
-          //   ),
-          //   onChanged: (value) {
-          //     setState(() {
-          //       widget.isSeleted!.value = true;
-          //       widget.selectedValue = value?['_id']!.toString();
-          //       if (widget.onChanged != null) {
-          //         widget.onChanged!(value?['_id']!.toString());
-          //       }
-          //     });
-          //   },
-          // ),
           DropdownSearch<Map<String, dynamic>>(
-            items: widget.items!.cast<Map<String, dynamic>>(),
+            items: visibleItems.value,
             itemAsString: (item) => item['Name_and_lastName'] ?? '',
-
+            selectedItem: widget.initalValue == null ||
+                widget.initalValue!.isEmpty
+                ? null
+                : widget.items!
+                .cast<Map<String, dynamic>>()
+                .where((item) =>
+            item['_id'].toString() ==
+                widget.initalValue)
+                .cast<Map<String, dynamic>?>()
+                .firstWhere(
+                  (item) => item != null,
+              orElse: () => null,
+            ),
             dropdownButtonProps: DropdownButtonProps(
               icon: Icon(
                 Icons.keyboard_arrow_down,
@@ -144,12 +105,13 @@ class _MyDropdownState extends State<MyDropdown> {
                 color: Colors.grey, // آیکون طوسی
               ),
             ),
-
             popupProps: PopupProps.menu(
               showSearchBox: true,
+              disabledItemFn: (item) => item['_id'] == '__hint__',
               emptyBuilder: (context, searchEntry) {
-                return Padding(
-                  padding: const EdgeInsets.all(16),
+                return Container(
+                  height: 35,
+                  padding:  EdgeInsets.symmetric(horizontal: 10),
                   child: Center(
                     child: Txt(
                       'موردی یافت نشد',
@@ -162,18 +124,19 @@ class _MyDropdownState extends State<MyDropdown> {
                 );
               },
               itemBuilder: (context, item, isSelected) {
+                if (_searchController.text.trim().isNotEmpty && item['_id'] == '__hint__') {
+                  return Container(); // یا SizedBox.shrink()
+                }
                 return Container(
                   padding:  EdgeInsets.all(12),
                   color: isSelected
                       ? Colors.blue.withOpacity(0.15)
                       : Colors.transparent,
-                  child: Text(
+                  child: Txt(
                     item['Name_and_lastName'],
-                    style: TextStyle(
                       color: MainController.isLightMode.value
                           ? Colors.white
                           : primaryDark,
-                    ),
                   ),
                 );
               },
@@ -192,6 +155,7 @@ class _MyDropdownState extends State<MyDropdown> {
                 ),
               ),
               searchFieldProps: TextFieldProps(
+                controller: _searchController,
                 style: TextStyle(
                   color: MainController.isLightMode.value ? whiteColor : primaryDark,
                   fontSize: 14,
@@ -213,6 +177,7 @@ class _MyDropdownState extends State<MyDropdown> {
 
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 border: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -224,12 +189,9 @@ class _MyDropdownState extends State<MyDropdown> {
             ),
 
             dropdownBuilder: (context, selectedItem) {
-              if (selectedItem == null) {
+              if (selectedItem == null || selectedItem['_id'] == '__hint__') {
                 return Txt(
-                  '${widget.hintText ?? ''}',
-                  color: MainController.isLightMode.value == true
-                      ? whiteColor
-                      : primaryDark ,
+                  widget.hintText ?? 'لطفاً یکی از موارد را انتخاب کنید', // hint خاکستری
                 );
               }
               return Txt(
@@ -239,7 +201,6 @@ class _MyDropdownState extends State<MyDropdown> {
                                   : primaryDark ,
               );
             },
-
             onChanged: (value) {
               setState(() {
                 widget.isSeleted!.value = true;
@@ -262,3 +223,4 @@ class _MyDropdownState extends State<MyDropdown> {
   }
 
 }
+

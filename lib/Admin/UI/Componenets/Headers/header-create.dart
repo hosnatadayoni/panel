@@ -1,3 +1,4 @@
+import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -113,7 +114,7 @@ class HeaderCreate extends StatelessWidget {
                             color: colorBtn,
                           ),
                           child: Txt(
-                            '${AppController.of(context)!.value('save')}',
+                            '${AppController.of(context)!.value('save')} (F1)',
                             color: whiteColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,

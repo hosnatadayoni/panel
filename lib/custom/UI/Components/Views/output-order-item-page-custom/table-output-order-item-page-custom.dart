@@ -12,8 +12,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class TablePageOutPutOrderItemCustom extends StatelessWidget {
-  TablePageOutPutOrderItemCustom(this.orderList);
-  List<dynamic> orderList;
+  TablePageOutPutOrderItemCustom();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class TablePageOutPutOrderItemCustom extends StatelessWidget {
                 Header(),
                 MenuBox(),
                 if(MainController.selectedSubItem.value != -1)
-                  MainTableOutPutOrderItemCustom(this.orderList)
+                  MainTableOutPutOrderItemCustom()
               ],
             ),
           );

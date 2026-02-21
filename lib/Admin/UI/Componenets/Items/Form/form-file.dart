@@ -47,8 +47,8 @@ class _FormFileState extends State<FormFile> {
   Widget build(BuildContext context) {
 
     var inputRequired;
-    if (widget.column['validators'] != null) {
-      inputRequired = widget.column['validators'].firstWhere(
+    if (widget.column.validators.length != 0 ) {
+      inputRequired = widget.column.validators.firstWhere(
           (validator) => validator['type'] == 'required',
           orElse: () => null);
       if (widget.filesSelected['${widget.columnName}'] == null) {
@@ -67,21 +67,18 @@ class _FormFileState extends State<FormFile> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.column['type'] == 'multiFile' ||widget.column['type'] == 'multiFile_pv' ||
-              ((widget.column['type'] == 'file' ||widget.column['type'] == 'file_pv') && fileNameList.length == 0))
+          if (widget.column.type == 'multiFile' ||widget.column.type == 'multiFile_pv' ||
+              ((widget.column.type == 'file' ||widget.column.type == 'file_pv') && fileNameList.length == 0))
             InkWell(
               onTap: () async {
                 FilePickerResult? picked = await FilePicker.platform.pickFiles(
                   allowMultiple:
-                      widget.column['type'] == 'multiFile' || widget.column['type'] == 'multiFile_pv' ? true : false,
+                      widget.column.type == 'multiFile' || widget.column.type == 'multiFile_pv' ? true : false,
                   type: FileType.custom,
                   withReadStream: true,
                   withData: true,
                   allowedExtensions:
-                      widget.column['isPictureSelected'] != null &&
-                              widget.column['isPictureSelected'] == true
-                          ? ['jpg', 'png']
-                          : ['jpg', 'pdf', 'doc', 'png'],
+                  ['jpg', 'pdf', 'doc', 'png'],
                 );
 
                 if (picked != null)
@@ -94,6 +91,7 @@ class _FormFileState extends State<FormFile> {
                     fileNameList.removeWhere((element) => element==file.name);
                       showSnackbar(snackTypes.error, '${message}');
                     } else {
+                      print('CXCXCXDDD>>>${file} ${widget.column} ${widget.fileInfo}');
                       filePath.value = (await MainController.uploadFileInChunks(file, widget.column, widget.fileInfo))!;
                         print('_FormFileState.build>>${filePath.value}');
                       setState(() {
@@ -108,7 +106,7 @@ class _FormFileState extends State<FormFile> {
               },
               child: IntrinsicWidth(
                 child: Container(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: MainController.isLightMode.value == true
                         ? background
@@ -147,7 +145,7 @@ class _FormFileState extends State<FormFile> {
           Column(
             children: [
               for (var i = 0; i < fileNameList.length; i++)
-                ViewController.generateSelectFileBox(widget.column['type'],fileNameList, widget.fileInfo, i)
+                ViewController.generateSelectFileBox(widget.column.type,fileNameList, widget.fileInfo, i)
                 // Container(
                 //   margin: EdgeInsets.only(bottom: 10),
                 //   child: Row(

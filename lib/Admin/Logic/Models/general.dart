@@ -1,4 +1,4 @@
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/columnModel.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:hive/hive.dart';
 import '../Controllers/main-controller.dart';

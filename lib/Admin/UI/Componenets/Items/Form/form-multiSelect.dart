@@ -1,7 +1,7 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
-import 'package:finance/Admin/Logic/Models/ServerModel/tableModel.dart';
+import 'package:finance/Admin/Logic/Models/columnModel.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +30,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
     var inputRequired;
     String? errorMessage;
     if(widget.column!.validators.length!=0){
-      inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'reqiured', orElse: () => null);
+      inputRequired = widget.column!.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
       print('_MultiSelectDropdownState.build>>${inputRequired}');
 
       errorMessage = inputRequired['message'];

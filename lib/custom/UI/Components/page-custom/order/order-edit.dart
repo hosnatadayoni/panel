@@ -20,12 +20,16 @@ class OrderEditPge extends StatefulWidget {
   final List<dynamic> customerItems;
   final List<dynamic> productItems;
 
-  OrderEditPge(this.customerItems, this.productItems,
-      {this.data});
+  OrderEditPge(this.customerItems, this.productItems, {this.data});
 
   @override
   State<OrderEditPge> createState() => _OrderEditPgeState();
 }
+
+class F1Intent extends Intent {
+  const F1Intent();
+}
+
 class F4Intent extends Intent {
   const F4Intent();
 }
@@ -37,41 +41,11 @@ class _OrderEditPgeState extends State<OrderEditPge> {
   void initState() {
     super.initState();
     _loadWidgets();
-    // RawKeyboard.instance.addListener(_handleKey);
   }
 
-  // @override
-  // void dispose() {
-  //   RawKeyboard.instance.removeListener(_handleKey);
-  //   super.dispose();
-  // }
-
-  // void _handleKey(RawKeyEvent event) async {
-  //   if (event is RawKeyDownEvent) {
-  //     if (event.logicalKey == LogicalKeyboardKey.f1) {
-  //       ViewController.isClickedEditBtn.value = true;
-  //       HelperController.editFunction('Orders',
-  //           id: '${widget.data!['_id']}', request: widget.data);
-  //     }
-  //     if (event.logicalKey == LogicalKeyboardKey.f4) {
-  //       // var Id = Uuid().v4();
-  //       // DataModel newData =
-  //       // DataModel(id: Id, data: widget.data);
-  //       //
-  //       // bool validate = await RecordController.validate(
-  //       //     'Orders', newData, MainController.getInfoTable('Orders'));
-  //       // if (validate == false) {
-  //       //   ViewCustomController.addEditContainer(context, widget.productItems);
-  //       // } else {
-  //       //   showSnackbar(snackTypes.error, 'لطفا آیتم های سفارش را تکمیل کنید...');
-  //       // }
-  //       _handleF4(context);
-  //     }
-  //   }
-  // }
-
   Future<void> _handleF4(BuildContext context) async {
-    await ViewCustomController.checkEditOrder(context, widget.productItems , data: widget.data);
+    await ViewCustomController.checkEditOrder(context, widget.productItems,
+        data: widget.data);
   }
 
   _loadWidgets() async {
@@ -83,155 +57,100 @@ class _OrderEditPgeState extends State<OrderEditPge> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print('data order>>>${widget.data}');
 
-    return Shortcuts(
-      shortcuts: <LogicalKeySet, Intent>{
-        LogicalKeySet(LogicalKeyboardKey.f1): const ActivateIntent(),
-        LogicalKeySet(LogicalKeyboardKey.f4): const F4Intent(),
-      },
-      child: Actions(
-        actions: <Type, Action<Intent>>{
-          ActivateIntent: CallbackAction<ActivateIntent>(
-            onInvoke: (intent) {
-              ViewController.isClickedEditBtn.value = true;
-              HelperController.editFunction('Orders',
-                  id: '${widget.data!['_id']}', request: widget.data);
-              return null;
-            },
-          ),
-          F4Intent: CallbackAction<F4Intent>(
-            onInvoke: (intent) {
-              _handleF4(context);
-              return null;
-            },
-          ),
-        },
-        child: FocusScope(
-          autofocus: true,
-          child: Scaffold(
-            body: Container(
-              width: size.width,
-              height: size.height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: MainController.isLightMode.value == true
-                    ? darkBackground
-                    : backgroundLight,
-              ),
-              child: Stack(
-                children: [
-                  Obx(() {
-                    return Positioned(
-                      right: Directionality.of(context) == TextDirection.rtl
-                          ? size.width > 800
-                          ? MainController.isClickedItem.value == true
-                          ? 300
-                          : 50
-                          : 50
-                          : 0,
-                      left: Directionality.of(context) == TextDirection.ltr
-                          ? size.width > 800
-                          ? MainController.isClickedItem.value == true
-                          ? 300
-                          : 50
-                          : 50
-                          : 0,
-                      child: Container(
-                        width: size.width > 800
-                            ? MainController.isClickedItem.value == true
-                            ? (size.width) - 300
-                            : (size.width) - 50
-                            : (size.width) - 50,
-                        height: size.height,
-                        color: MainController.isLightMode.value == false
-                            ? color6
-                            : color9,
-                        child: ColumnScroll(
-                          children: [
-                            const SizedBox(height: 80),
-                            Column(
+    return Scaffold(
+      body: Container(
+        width: size.width,
+        height: size.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: MainController.isLightMode.value == true
+              ? darkBackground
+              : backgroundLight,
+        ),
+        child: Stack(
+          children: [
+            Obx(() {
+              return Positioned(
+                right: Directionality.of(context) == TextDirection.rtl
+                    ? size.width > 800
+                        ? MainController.isClickedItem.value == true
+                            ? 300
+                            : 50
+                        : 50
+                    : 0,
+                left: Directionality.of(context) == TextDirection.ltr
+                    ? size.width > 800
+                        ? MainController.isClickedItem.value == true
+                            ? 300
+                            : 50
+                        : 50
+                    : 0,
+                child: Container(
+                  width: size.width > 800
+                      ? MainController.isClickedItem.value == true
+                          ? (size.width) - 300
+                          : (size.width) - 50
+                      : (size.width) - 50,
+                  height: size.height,
+                  color: MainController.isLightMode.value == false
+                      ? color6
+                      : color9,
+                  child: ColumnScroll(
+                    children: [
+                      const SizedBox(height: 80),
+                      Shortcuts(
+                        shortcuts: <LogicalKeySet, Intent>{
+                          LogicalKeySet(LogicalKeyboardKey.f1): const F1Intent(),
+                          LogicalKeySet(LogicalKeyboardKey.f4): const F4Intent(),
+                        },
+                        child: Actions(
+                          actions: {
+                            F1Intent: CallbackAction<F1Intent>(
+                              onInvoke: (intent) async {
+                                FocusManager.instance.primaryFocus
+                                    ?.unfocus();
+                                await Future.delayed(
+                                    const Duration(milliseconds: 50));
+                                ViewController.isClickedEditBtn.value =
+                                true;
+                                HelperController.editFunction('Orders',
+                                    id: '${widget.data!['_id']}',
+                                    request: widget.data!);
+                                return null;
+                              },
+                            ),
+                            F4Intent: CallbackAction<F4Intent>(
+                              onInvoke: (intent) {
+                                _handleF4(context);
+                                return null;
+                              },
+                            ),
+                          },
+                          child: FocusScope(
+                            autofocus: true,
+                            child: Column(
                               children: [
-                                FormEditOrderCustom(data: widget.data, widget.customerItems),
+                                FormEditOrderCustom(
+                                    data: widget.data,
+                                    widget.customerItems),
                                 const SizedBox(height: 20),
                                 Container(child: _future.value),
                               ],
-                            )
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                  Header(),
-                  MenuBox(),
-                ],
-              ),
-            ),
-          ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+            Header(),
+            MenuBox(),
+          ],
         ),
       ),
     );
-
-    // return Scaffold(
-    //   body: Container(
-    //     width: size.width,
-    //     height: size.height,
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(10),
-    //       color: MainController.isLightMode.value == true
-    //           ? darkBackground
-    //           : backgroundLight,
-    //     ),
-    //     child: Stack(
-    //       children: [
-    //         Obx(() {
-    //           return Positioned(
-    //             right: Directionality.of(context) == TextDirection.rtl
-    //                 ? size.width > 800
-    //                 ? MainController.isClickedItem.value == true
-    //                 ? 300
-    //                 : 50
-    //                 : 50
-    //                 : 0,
-    //             left: Directionality.of(context) == TextDirection.ltr
-    //                 ? size.width > 800
-    //                 ? MainController.isClickedItem.value == true
-    //                 ? 300
-    //                 : 50
-    //                 : 50
-    //                 : 0,
-    //             child: Container(
-    //               width: size.width > 800
-    //                   ? MainController.isClickedItem.value == true
-    //                   ? (size.width) - 300
-    //                   : (size.width) - 50
-    //                   : (size.width) - 50,
-    //               height: size.height,
-    //               padding: EdgeInsets.all(15),
-    //               color: MainController.isLightMode.value == false
-    //                   ? color6
-    //                   : color9,
-    //               child: ColumnScroll(
-    //                 children: [
-    //                   SizedBox(height: 80),
-    //                   Column(
-    //                     children: [
-    //                       FormEditOrderCustom(
-    //                           data: widget.data, widget.customerItems),
-    //                       SizedBox(height: 20),
-    //                       Container(child: _future.value),
-    //                     ],
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           );
-    //         }),
-    //         Header(),
-    //         MenuBox(),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }

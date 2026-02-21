@@ -6,6 +6,7 @@ import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/table-footer.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/table-header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/table.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/table-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:get/get.dart';
 
 class MainTableBoxCustom extends StatefulWidget {
-  MainTableBoxCustom();
+  MainTableBoxCustom(this.table);
+  var table;
 
   @override
   State<MainTableBoxCustom> createState() => _MainTableBoxCustomState();
@@ -42,8 +44,8 @@ class _MainTableBoxCustomState extends State<MainTableBoxCustom> {
             return ColumnScroll(
               children: [
                 TableHeader(),
-                if (MainController.tableInfo['schema']['filters'] != null &&
-                    MainController.tableInfo['schema']['filters'].length != 0)
+                if (MainController.infoSchema.value.schema.filters != null &&
+                    MainController.infoSchema.value.schema.filters!.length != 0)
                   Container(
                     width: size.width > 800
                         ? MainController.isClickedItem.value == true
@@ -61,8 +63,8 @@ class _MainTableBoxCustomState extends State<MainTableBoxCustom> {
                             ],
                           ),
                   ),
-                if (MainController.tableInfo['schema']['filters'] != null &&
-                    MainController.tableInfo['schema']['filters'].length != 0)
+                if (MainController.infoSchema.value.schema.filters != null &&
+                    MainController.infoSchema.value.schema.filters!.length != 0)
                   Container(
                     margin: EdgeInsets.only(left: 5),
                     width: 140,
@@ -71,27 +73,22 @@ class _MainTableBoxCustomState extends State<MainTableBoxCustom> {
                       style: ElevatedButton.styleFrom(primary: Colors.blue),
                       onPressed: () async {
                         List<dynamic> w =
-                            MainController.tableInfo['schema']['filters'];
+                            MainController.infoSchema.value.schema.filters!;
                         String opration = '\$eq';
                         if (ViewController.request.length != 0) {
                           var d;
                           List<dynamic> d2 = [];
                           var a = DB(
-                              '${MainController.tableInfo['schema']['name']}');
+                              '${MainController.infoSchema.value.schema.name}');
                           print(
-                              '_MainTableBoxState.build>>>${ViewController.request}');
+                              '_MainTableBoxState.build>>>${ViewCustomController.order}');
 
-                          for (var filter in ViewController.request.values) {
+                          for (var filter in ViewCustomController.order.values) {
                             print(
                                 '_MainTableBoxState.build>> filter ${filter}');
                             if (filter != null) {
                               var indexFilter = w.indexWhere((element) =>
                               element['column'] == filter['column']);
-                              //   var indexFilter = w.indexWhere(
-                              //            element['column'] == filter
-                              //
-                              //   );
-
                               if (indexFilter != -1) {
                                 if (w[indexFilter]['operator'] != null) {
                                   opration = w[indexFilter]['operator'];
@@ -111,10 +108,10 @@ class _MainTableBoxCustomState extends State<MainTableBoxCustom> {
                             d2 = await d.getRecords();
                           } else {
                             d2 = await DB(
-                                    '${MainController.tableInfo['schema']['name']}')
+                                    '${MainController.infoSchema.value.schema.name}')
                                 .getRecords();
                           }
-                          MainController.tableData.value = d2;
+                          MainController.dataRecord.value = d2;
                         }
                       },
                       child: Center(
@@ -126,11 +123,12 @@ class _MainTableBoxCustomState extends State<MainTableBoxCustom> {
                 SizedBox(
                   height: 10,
                 ),
-                TableBoxCustom(),
+                if(MainController.tableName.value == 'Orders')
+                    TableBoxCustom(widget.table),
                 SizedBox(
                   height: 20,
                 ),
-                TableFooter(),
+                TableFooter(index: MainController.menuList.value.indexWhere((element) => element.schema.name=="Orders")),
               ],
             );
           }),

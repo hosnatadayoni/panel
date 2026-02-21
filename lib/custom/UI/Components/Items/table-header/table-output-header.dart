@@ -1,11 +1,12 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
-import 'package:finance/custom/Logic/Controllers/main-custom-controller.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,7 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
               child: FormTextField(
                   name: 'search',
                   lable: '${AppController.of(context)!.value('search')}...', onChange: (text){
-                // MainCustomController.searchOutPutOrder(text , widget.ordersList);
+                MainController.search(text);
                 setState(() {
                   MainController.infoSchema.value.schema.currentPage = 1;
                 });
@@ -55,8 +56,18 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                             count.value++;
                             MainController.infoSchema.value.schema.countShowRow = count.value;
                             MainController.infoSchema.value.schema.currentPage = 1;
-                            await MainController.loadData(tableData: MainController.getInfoTable('Orders'));
-                            MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
+                            if(ViewCustomController.ordersSelected.length != 0 && ViewCustomController.isClickedBtnRegister.value == true){
+                              await HelperController.pageInateFunction();
+                              for(var orderDetailSelected in MainController.dataRecord.value){
+                                ViewCustomController.statusOrderDetails[orderDetailSelected['_id']] =  await ViewCustomController.getStatusOrderDetail(orderDetailSelected['_id']);
+                              }
+                            }
+                            else{
+                              MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
+                              ViewCustomController.getStatusOutPutOrders(MainController.dataRecord.value);
+                            }
+
+
                           },
                           child: Icon(Icons.arrow_drop_up , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
                         ),
@@ -69,8 +80,19 @@ class _TableOutPutHeaderState extends State<TableOutPutHeader> {
                             };
                             MainController.infoSchema.value.schema.countShowRow = count.value;
                             MainController.infoSchema.value.schema.currentPage = 1;
-                            MainController.dataRecord.value = await DB('${MainController.infoSchema.value.schema.name}').paginate();
-                            await MainController.loadData(tableData: MainController.getInfoTable('Orders'));
+                            if(ViewCustomController.ordersSelected.length != 0 && ViewCustomController.isClickedBtnRegister.value == true){
+                              await HelperController.pageInateFunction();
+                              for(var orderDetailSelected in MainController.dataRecord.value){
+                                ViewCustomController.statusOrderDetails[orderDetailSelected['_id']] =  await ViewCustomController.getStatusOrderDetail(orderDetailSelected['_id']);
+                              }
+                            }
+                            else{
+                              MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
+                              ViewCustomController.getStatusOutPutOrders(MainController.dataRecord.value);
+
+                            }
+
+
                           },
                           child: Icon(Icons.arrow_drop_down , color:  MainController.isLightMode.value == true?  whiteColor:color1,size: 20,),
                         ),

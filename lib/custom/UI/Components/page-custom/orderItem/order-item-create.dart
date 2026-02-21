@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
@@ -35,6 +36,7 @@ class OrderItemCreatePage extends StatelessWidget {
           child: Stack(
             children: [
               Obx(() {
+                print('MainController.infoSchema.value.schema.name>>>${MainController.infoSchema.value.schema.name}');
                 return  Positioned(
                     right: Directionality.of(context) == TextDirection.rtl ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
                     left: Directionality.of(context) == TextDirection.ltr ? size.width > 800 ? MainController.isClickedItem.value == true ? 300 : 50 : 50 : 0,
@@ -53,7 +55,7 @@ class OrderItemCreatePage extends StatelessWidget {
                                     children: [
                                       Txt('${AppController.of(context)!.value('add')}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,),
                                       SizedBox(width: 5,),
-                                      Txt('${MainController.tableInfo['title']}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,),
+                                      Txt('${MainController.infoSchema.value.schema.title}' , fontSize: 24 , fontWeight: FontWeight.w500, color:MainController.isLightMode.value == true ? whiteColor:primaryDark ,),
                                     ],
                                   ),
                                   Obx((){
@@ -71,7 +73,9 @@ class OrderItemCreatePage extends StatelessWidget {
                                               child: InkWell(
                                                 onTap: (){
 
-                                                  MainController.goToTablePage('Orders');
+                                                 HelperController.goToTablePage(
+                                                      MainController
+                                                          .menuList[MainController.selectedSubItem.value]);
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(10),
@@ -92,7 +96,7 @@ class OrderItemCreatePage extends StatelessWidget {
                                               },
                                               child: InkWell(
                                                 onTap: () async{
-                                                  await DB('${MainController.tableInfo['table-name']}').storeRecord(ViewController.request);
+                                                  await DB('${MainController.infoSchema.value.schema.name}').storeRecord(ViewController.request);
                                                   if(ViewController.isClickedBtn.value == false){
                                                     Get.to(() => TablePage());
                                                   }

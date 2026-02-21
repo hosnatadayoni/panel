@@ -36,7 +36,7 @@ class _HeaderEditState extends State<HeaderEdit> {
             }),
             SizedBox(width: 5,),
             Btn(type: btnType.primary , content: Txt(
-              '${AppController.of(context)!.value('edit')}',
+              '${AppController.of(context)!.value('edit')} (F1)',
               color: whiteColor,
               fontSize: 16,
               fontWeight: FontWeight.w400,

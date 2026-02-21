@@ -4,6 +4,7 @@ import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
+import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -35,6 +36,7 @@ class _TableBoxState extends State<TableBox> {
   Widget build(BuildContext context) {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
+
     return Obx(() {
       return Container(
           color: MainController.isLightMode.value == true

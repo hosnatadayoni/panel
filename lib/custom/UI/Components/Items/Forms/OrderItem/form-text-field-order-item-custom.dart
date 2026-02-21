@@ -5,7 +5,7 @@ import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/Logic/Models/order-item.dart';
-import 'package:finance/custom/UI/Components/Items/Forms/two-decimal-input.dart';
+import 'package:finance/custom/UI/Components/Items/Forms/OrderItem/two-decimal-input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,13 +71,13 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
 
   void _validateInput(String key) {
     if (widget.column != null) {
-      if (widget.column['validators'] != null) {
+      if (widget.column.validators != null) {
         var inputRequired;
 
-        if (OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column['name']] == '' ||
-            OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column['name']] == null) {
-          inputRequired = widget.column['validators'].firstWhere(
-                  (validator) => validator['type'] == 'reqiured',
+        if (OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column.name] == '' ||
+            OrderItem.orderItemsList[widget.keyOrderItem]?[widget.column.name] == null) {
+          inputRequired = widget.column.validators.firstWhere(
+                  (validator) => validator['type'] == 'required',
               orElse: () => null);
           if (inputRequired != null) {
             if (inputRequired['message'] != null) {
@@ -104,30 +104,30 @@ class _FormTextFieldOrderItemCustomState extends State<FormTextFieldOrderItemCus
     return Obx(() {
       if (ViewController.isClickedBtn.value) {
          if (widget.column != null) {
-            if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == '' ||
-                OrderItem.orderItemsList[widget.keyOrderItem]![widget.column['name']] == null) {
+            if (OrderItem.orderItemsList[widget.keyOrderItem]![widget.column.name] == '' ||
+                OrderItem.orderItemsList[widget.keyOrderItem]![widget.column.name] == null) {
               var inputRequired;
 
-              if (widget.column['validators'] != null) {
-                inputRequired = widget.column['validators'].firstWhere(
-                        (validator) => validator['type'] == 'reqiured',
+              if (widget.column.validators != null) {
+                inputRequired = widget.column.validators.firstWhere(
+                        (validator) => validator['type'] == 'required',
                     orElse: () => null);
                 if (inputRequired != null) {
                   _errorText = inputRequired['message'];
                 }
               }
-            } else if (ViewCustomController.order[widget.column['name']] != '') {
-              if (widget.column['validators'] != null) {
+            } else if (ViewCustomController.order[widget.column.name] != '') {
+              if (widget.column.validators != null) {
                 if (widget.isNumberInt == true || widget.isNumberDouble == true) {
                   var maxValidator;
                   var minValidator;
-                  maxValidator = widget.column['validators'].firstWhere(
+                  maxValidator = widget.column.validators.firstWhere(
                           (validator) => validator['type'] == 'max',
                       orElse: () => null);
-                  minValidator = widget.column['validators'].firstWhere(
+                  minValidator = widget.column.validators.firstWhere(
                           (validator) => validator['type'] == 'min',
                       orElse: () => null);
-                  var number = ViewCustomController.order[widget.column['name']];
+                  var number = ViewCustomController.order[widget.column.name];
                   if (number != null) {
                     if (minValidator != null && maxValidator != null) {
                       if (number < minValidator['value']) {
