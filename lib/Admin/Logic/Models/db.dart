@@ -133,7 +133,7 @@ class DB {
     var end = start + perPage;
     var endBycondition = end >= totalRecords ? totalRecords : end;
     pageInfo?.end = endBycondition;
-    pageInfo?.totalRecords = totalRecords;
+    // pageInfo?.totalRecords = totalRecords;
     MainController.pageInfo[this.tableName!] = pageInfo!;
 
     if (infoTable.online == true) {
