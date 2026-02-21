@@ -1211,13 +1211,13 @@ class DB {
 
                 if (MainController.getStatusTable(this.tableName!) == true) {
                   if (connectivity) {
-                    storeRecordRes =
-                    await ConncetServerController.storeRecordGeneral(setRecord);
+                    storeRecordRes = await ConncetServerController.storeRecordGeneral(setRecord);
                     if (storeRecordRes.isNotEmpty) {
                       DataModel recordStored = DataModel(
                           id: '${storeRecordRes['_id']}', data: storeRecordRes);
                       await box.add(recordStored);
                     } else {
+
                       customData.addAll({
                         "sync": "false",
                         "sync_type": "store",
@@ -1225,16 +1225,15 @@ class DB {
                       });
                       var dataModelItem = DataModel(
                           id: newData.id, data: customData);
-
+                      dataModelItem.data = Map<String, dynamic>.from(dataModelItem.data);
+                      dataModelItem.data['_id'] = dataModelItem.id;
                       if (request.containsKey('_id')) {
                         if (box.values.toList().indexWhere((element) =>
                         element.id == request['_id']) == -1) {
                           await box.add(dataModelItem);
                         }
                       }
-
-                      storeRecordRes =
-                      Map<String, dynamic>.from(dataModelItem.data);
+                      storeRecordRes = Map<String, dynamic>.from(dataModelItem.data);
                     }
                   }
                   else {
@@ -1243,22 +1242,26 @@ class DB {
                       "sync_type": "store",
                       "server error": "Dont sync 'store' this record!",
                     });
+
                   var dataModelItem = DataModel(
                         id: newData.id, data: customData);
-                    print('DB.storeRecord connect false>>${dataModelItem}>>${request}>>${customData}');
-
+                    dataModelItem.data = Map<String, dynamic>.from(dataModelItem.data);
+                    dataModelItem.data['_id'] = dataModelItem.id;
                     if (request.containsKey('_id')) {
                       if (box.values.toList().indexWhere((element) =>
                       element.id == request['_id']) == -1) {
                         await box.add(dataModelItem);
                       }
                     }else{
+
                       await box.add(dataModelItem);
                     }
 
                     // MainController.renderData(operation.store,customData.data);
                   }
                 }else{
+                  dataModelItem.data = Map<String, dynamic>.from(dataModelItem.data);
+                  dataModelItem.data['_id'] = dataModelItem.id;
                   await box.add(dataModelItem);
                   storeRecordRes = Map<String, dynamic>.from(dataModelItem.data);
                 }

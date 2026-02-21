@@ -729,7 +729,7 @@ class ViewController extends GetxController {
         },
         child: Center(
           child: Txt(
-            '${dataModel != null ? type.toLowerCase().contains('int') ? int.parse(dataModel.toString()).toNumber() : dataModel.toString().length > 20 ? dataModel.toString().substring(0, 20) + '...' : dataModel : ''}',
+            '${dataModel != null ? type.toLowerCase().contains('int') ? int.tryParse(dataModel.toString()) : dataModel.toString().length > 20 ? dataModel.toString().substring(0, 20) + '...' : dataModel : ''}',
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color:
