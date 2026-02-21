@@ -479,7 +479,6 @@ class HelperController extends GetxController {
         }
       }
       else if(tableName == 'Order_Details'){
-        MainController.dataRecord.value = await DB('${tableName}').parent(parentId: '${ViewCustomController.orderId.value}', parentTable: 'Orders').getRecords();
       }
       if(tableName == 'Order_Output'){
         // print('_TableFooterState.box currentPage>>>>${ MainController.infoSchema.value.schema.name}>>${ MainController.infoSchema.value.schema.currentPage}');
