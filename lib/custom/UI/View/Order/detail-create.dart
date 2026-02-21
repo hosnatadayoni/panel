@@ -1,9 +1,9 @@
-import 'package:finance/Custom/Logic/controller.dart';
 import 'package:finance/Custom/UI/Cumponent/Inputs/input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../Admin/Logic/Controllers/main-controller.dart';
+import '../../../Logic/controller.dart';
 
 class DetailCreate extends StatefulWidget {
   final String ky;
