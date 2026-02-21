@@ -111,9 +111,9 @@ class ConncetServerController extends GetxController {
 
   static getRecordGeneral(var tableName,{var page=null,var perpage=null}) async {
     print('ConncetServerController.getRecordGeneral');
-    var info=await MainController.getInfoTable(tableName);
-    var perPage=perpage??info['schema']['countShowRow'];
-    var currentPage=page??info['schema'].currentPage;
+    TableModel info=await MainController.getInfoTable(tableName);
+    var perPage=perpage??info.schema.countShowRow;
+    var currentPage=page??info.schema.currentPage;
     var response = await RestApi.post(getRecordsUrl, body:( {'table_name':tableName,
       'pageNumber':currentPage.toString(),
       'perPage':perPage.toString()})
@@ -122,7 +122,7 @@ class ConncetServerController extends GetxController {
         response: response,
         successCallback: () async {
           getRecordRes.value=[];
-          getRecordRes.value=response!.data['data']['data']!=null?response.data['data']['data']:[];
+          getRecordRes.value=response!.data['data']!=null?response.data['data']:[];
           int tRec=int.parse(response.data['data']['count'].toString());
           MainController.pageInfo[tableName]=PageInfo(totalRecords: tRec);
 return getRecordRes;
@@ -187,8 +187,10 @@ return getRecordRes;
     List<dynamic>l=[];
     Map<String,dynamic> body ={};
     var info=await MainController.getInfoTable(tableName);
+
     var perPage=perpage??info.schema.countShowRow;
     var currentPage=page??info.schema.currentPage;
+
     body.addAll({
         'table_name':tableName,
         'type':type,

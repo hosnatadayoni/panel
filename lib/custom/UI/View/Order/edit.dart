@@ -179,7 +179,7 @@ class _OrderEditState extends State<OrderEdit> {
                           SizedBox(
                             width: 20,
                           ),
-                          ViewController.generateEditFileBox(CustomController.orderRequest, MainController.getDetailsOfField('order','image'), CustomController.orderRequest['image'] == null ? false.obs : true.obs),
+                          ViewController.generateEditFileBox(CustomController.orderRequest, MainController.getDetailsOfField('order','image')),
                           // ViewController.generateFileBox(CustomController.orderRequest['image']??'', MainController.getDetailsOfField('order','image'), false.obs,onChange: (file){
                           //   CustomController.orderRequest['image']=file;
                           // }),
@@ -187,7 +187,7 @@ class _OrderEditState extends State<OrderEdit> {
                             width: 20,
                           ),
 
-                          ViewController.generateFormDateBox(MainController.getDetailsOfField('order','date'),CustomController.orderRequest['date']!=null? CustomController.parseJalali(CustomController.orderRequest['date']):Jalali.now(), false.obs,onChange: (value){
+                          ViewController.generateFormDateBox(column: MainController.getDetailsOfField('order','date'),data: CustomController.orderRequest['date']!=null? CustomController.parseJalali(CustomController.orderRequest['date']):Jalali.now(),onChange: (value){
 
                             CustomController.orderRequest['date']=value;
 

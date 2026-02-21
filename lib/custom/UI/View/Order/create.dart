@@ -41,7 +41,7 @@ class _OrderCreateState extends State<OrderCreate> {
     typeSelect = ''.obs;
 
     types = MainController.getDetailsOfField('order', 'type') != null
-        ? MainController.getDetailsOfField('order', 'type')['items']
+        ? MainController.getDetailsOfField('order', 'type').items
         : [];
 
     if (widget.users.isNotEmpty) {
@@ -50,7 +50,7 @@ class _OrderCreateState extends State<OrderCreate> {
       typeSelect.value =
       types.isNotEmpty ? types.first['value'].toString() : '';
     }
-    CustomController.orderRequest['date']=Jalali.now();
+    CustomController.orderRequest['date']=Jalali.now().toString();
   }
   RxMap<String,Widget> details=<String,Widget>{}.obs;
   addDetails(){
@@ -131,17 +131,17 @@ class _OrderCreateState extends State<OrderCreate> {
                           SizedBox(
                             width: 20,
                           ),
-                          ViewController.generateFileBox('', MainController.getDetailsOfField('order','image'), false.obs,onChange: (file){
+                          ViewController.generateFileBox(column:MainController.getDetailsOfField('order','image'),onChange: (file){
                             CustomController.orderRequest['image']=file;
                           }),
                           SizedBox(
                             width: 20,
                           ),
-                          ViewController.generateFormDateBox(MainController.getDetailsOfField('order','date'), Jalali.now(), false.obs,onChange: (value){
+                          ViewController.generateFormDateBox(column: MainController.getDetailsOfField('order','date'),data:  Jalali.now(),onChange: (value){
 
                           CustomController.orderRequest['date']=value;
-
-                        })
+                          print('_OrderCreateState.build>>${value}>>${value.runtimeType}');
+                            })
                         ],
                       ),
                       Row(

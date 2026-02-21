@@ -25,7 +25,7 @@ class _DetailCreateState extends State<DetailCreate> {
   var patterns = [];
   var hardnesses = [];
   RxMap<String, int> priceProduct = <String, int>{}.obs;
-  RxMap<String, int> metrage = <String, int>{}.obs;
+  RxMap<String, double> metrage = <String, double>{}.obs;
   RxMap<String, int> priceDetail = <String, int>{}.obs;
 
   @override
@@ -43,8 +43,8 @@ class _DetailCreateState extends State<DetailCreate> {
         ? MainController.getDetailsOfField('order_detail', 'hardness')['items']
         : [];
     CustomController.orderDetailRequest[widget.ky] = {
-      'dimension1': 0,
-      'dimension2': 0,
+      'dimension1': 0.0,
+      'dimension2': 0.0,
     };
     metrage[widget.ky]=0;
     priceDetail[widget.ky]=0;

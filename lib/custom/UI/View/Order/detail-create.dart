@@ -25,7 +25,7 @@ class _DetailCreateState extends State<DetailCreate> {
   var patterns = [];
   var hardnesses = [];
   RxMap<String, int> priceProduct = <String, int>{}.obs;
-  RxMap<String, int> metrage = <String, int>{}.obs;
+  RxMap<String, double> metrage = <String, double>{}.obs;
   RxMap<String, int> priceDetail = <String, int>{}.obs;
 
   @override
@@ -36,12 +36,12 @@ class _DetailCreateState extends State<DetailCreate> {
       // print('_DetailCreateState.initState pat>>${MainController.getDetailsOfField('order_detail', 'hardness')}>>>${MainController.getDetailsOfField('order_detail', 'pattern')}');
       patterns = MainController.getDetailsOfField('order_detail', 'pattern') !=
               null
-          ? MainController.getDetailsOfField('order_detail', 'pattern')['items']
+          ? MainController.getDetailsOfField('order_detail', 'pattern').items
           : [];
       hardnesses =
           MainController.getDetailsOfField('order_detail', 'hardness') != null
               ? MainController.getDetailsOfField(
-                  'order_detail', 'hardness')['items']
+                  'order_detail', 'hardness').items
               : [];
 
       final oldData = CustomController.orderDetailRequest[widget.ky] ?? {};
@@ -64,8 +64,8 @@ class _DetailCreateState extends State<DetailCreate> {
 
       CustomController.orderDetailRequest[widget.ky] = {
         ...oldData,
-        'dimension1': oldData['dimension1'] ?? 0,
-        'dimension2': oldData['dimension2'] ?? 0,
+        'dimension1': oldData['dimension1'] ?? 0.0,
+        'dimension2': oldData['dimension2'] ?? 0.0,
         'count': oldData['count'] ?? 1,
         'product': oldData['product']!=null?  oldData['product']['_id']:null,
         'pattern': oldData['pattern']!=null?  oldData['pattern']['value']:null,
@@ -81,11 +81,11 @@ class _DetailCreateState extends State<DetailCreate> {
       //   ...CustomController.orderDetailRequest[widget.ky]
       // };
 
-      metrage[widget.ky] = CustomController.Meterage(
+     CustomController.orderDetailRequest[widget.ky]!['metrage'] = CustomController.Meterage(
           d1: CustomController.orderDetailRequest[widget.ky]!['dimension1'],
           d2: CustomController.orderDetailRequest[widget.ky]!['dimension2']);
       priceDetail[widget.ky] = CustomController.priceDetail(
-          metrage: metrage[widget.ky] ?? 0,
+          metrage:CustomController.orderDetailRequest[widget.ky]!['metrage'] ?? 0,
           count: CustomController.orderDetailRequest[widget.ky]!['count'],
           priceProduct: priceProduct[widget.ky] ?? 0);
     });
@@ -109,17 +109,15 @@ class _DetailCreateState extends State<DetailCreate> {
               ),
               width: 100,
               lable: 'بعد اول',
-              isNumber: true,
+
               onChange: (value) {
-                CustomController.orderDetailRequest[widget.ky]!['dimension1'] =
-                    value;
-                metrage[widget.ky] = CustomController.Meterage(
-                    d1: CustomController
-                        .orderDetailRequest[widget.ky]!['dimension1'],
-                    d2: CustomController
-                        .orderDetailRequest[widget.ky]!['dimension2']);
+                CustomController.orderDetailRequest[widget.ky]!['dimension1'] = double.parse(value);
+               CustomController.orderDetailRequest[widget.ky]!['metrage'] = CustomController.Meterage(
+                    d1: CustomController.orderDetailRequest[widget.ky]!['dimension1'],
+                    d2: CustomController.orderDetailRequest[widget.ky]!['dimension2']);
+
                 priceDetail[widget.ky]= CustomController.priceDetail(
-                    metrage: metrage[widget.ky] ?? 0,
+                    metrage:CustomController.orderDetailRequest[widget.ky]!['metrage'] ?? 0,
                     count: CustomController.orderDetailRequest[widget.ky]!['count'],
                     priceProduct: priceProduct[widget.ky] ?? 0);
               },
@@ -132,17 +130,15 @@ class _DetailCreateState extends State<DetailCreate> {
                 text: value['dimension2']?.toString() ?? '',
               ),              width: 100,
               lable: 'بعد دوم',
-              isNumber: true,
               onChange: (value) {
                 CustomController.orderDetailRequest[widget.ky]!['dimension2'] =
-                    value;
-                metrage[widget.ky] = CustomController.Meterage(
-                    d1: CustomController
-                        .orderDetailRequest[widget.ky]!['dimension1'],
-                    d2: CustomController
-                        .orderDetailRequest[widget.ky]!['dimension2']);
+                    double.parse(value);
+                CustomController.orderDetailRequest[widget.ky]!['metrage'] = CustomController.Meterage(
+                    d1: CustomController.orderDetailRequest[widget.ky]!['dimension1'],
+                    d2: CustomController.orderDetailRequest[widget.ky]!['dimension2']);
+                print('CustomController.orderDetailRequest[widget.ky]>>>${CustomController.orderDetailRequest[widget.ky]!['metrage']}');
                 priceDetail[widget.ky]= CustomController.priceDetail(
-                    metrage: metrage[widget.ky] ?? 0,
+                    metrage:CustomController.orderDetailRequest[widget.ky]!['metrage'] ?? 0,
                     count: CustomController.orderDetailRequest[widget.ky]!['count'],
                     priceProduct: priceProduct[widget.ky] ?? 0);
               },
@@ -157,7 +153,7 @@ class _DetailCreateState extends State<DetailCreate> {
             //   print('_DetailCreateState.build d1>>${d1}');
             //       return
             Text(
-              '${metrage[widget.ky]}',
+              '${CustomController.orderDetailRequest[widget.ky]!['metrage']}',
             ),
             // }),
             SizedBox(
@@ -173,7 +169,7 @@ class _DetailCreateState extends State<DetailCreate> {
                 CustomController.orderDetailRequest[widget.ky]!['count'] =
                     value;
                 priceDetail[widget.ky]= CustomController.priceDetail(
-                    metrage: metrage[widget.ky] ?? 0,
+                    metrage:CustomController.orderDetailRequest[widget.ky]!['metrage'] ?? 0,
                     count: CustomController.orderDetailRequest[widget.ky]!['count'],
                     priceProduct: priceProduct[widget.ky] ?? 0);
               },
@@ -257,7 +253,7 @@ class _DetailCreateState extends State<DetailCreate> {
                 priceDetail[widget.ky] = CustomController.priceDetail(
                     count: CustomController
                         .orderDetailRequest[widget.ky]!['count'],
-                    metrage: metrage[widget.ky]!,
+                    metrage:CustomController.orderDetailRequest[widget.ky]!['metrage']!,
                     priceProduct: CustomController
                         .orderDetailRequest[widget.ky]!['price_product']);
               },
@@ -278,7 +274,7 @@ class _DetailCreateState extends State<DetailCreate> {
                   priceDetail[widget.ky] = CustomController.priceDetail(
                       count: CustomController
                           .orderDetailRequest[widget.ky]!['count'],
-                      metrage: metrage[widget.ky]!,
+                      metrage:CustomController.orderDetailRequest[widget.ky]!['metrage']!,
                       priceProduct: CustomController
                           .orderDetailRequest[widget.ky]!['price_product']);
                 },
