@@ -38,8 +38,7 @@ class ViewCustomController extends GetxController {
   static Map<String, dynamic> orderItem = {};
   static RxMap<String, Widget> containers = <String, Widget>{}.obs;
   static RxMap<String, Widget> editContainers = <String, Widget>{}.obs;
-  static RxMap<String, int> quantities = <String, int>{}.obs;
-  static RxMap<String, double> areas = <String, double>{}.obs;
+  static RxMap<String, Map> total = <String, Map>{}.obs;
   static RxBool isShowAlert = false.obs;
 
   // order output and order detail output table
@@ -56,6 +55,7 @@ class ViewCustomController extends GetxController {
 
   static Rx<bool> isClickedBtnRegister = false.obs;
   static Rx<String> customerId=''.obs;
+  static Map<String, dynamic> outPut = {};
 
   static Jalali parseDate(String dateString) {
     List<String> dateParts = dateString.split('/');
@@ -438,14 +438,9 @@ class ViewCustomController extends GetxController {
                             String cleanText = text.replaceAll(',', '');
                             int value = int.tryParse(cleanText) ?? 0;
                             OrderItem.orderItemsList[key]!['Price'] = value;
-                            String formatted = formatter.format(value);
-                            if (formatted != text) {
-                              _controller.value = TextEditingValue(
-                                text: formatted,
-                                selection: TextSelection.collapsed(
-                                    offset: formatted.length),
-                              );
-                            }
+                          }
+                          else{
+                            OrderItem.orderItemsList[key]!['Price'] = 0;
                           }
                           OrderItem.orderItemsList.refresh();
                           ViewCustomController.isShowAlert.value =
@@ -904,10 +899,9 @@ class ViewCustomController extends GetxController {
                           Obx(() {
                             return Txt(
                               '${ViewCustomController.getCalculateTotalPrice(
-                                  ViewCustomController.getProductPrice(
+                                OrderItem.orderItemsList[key]!['Price'] == null ? OrderItem.orderItemsList[key]!['Product_Name'] ==null ? 0 :ViewCustomController.getProductPrice(
                                     productItems, OrderItem
-                                      .orderItemsList[key]?['Product_Name'] ??
-                                      productItems.first['_id'],),
+                                      .orderItemsList[key]?['Product_Name'],):OrderItem.orderItemsList[key]!['Price'],
                                   (OrderItem
                                       .orderItemsList[key]?['First_Dimension'] as num?)
                                       ?.toDouble() ?? 0.0,
@@ -968,35 +962,44 @@ class ViewCustomController extends GetxController {
 
   //end order item
 
-  static Future<int> calculateTotalQuantity(String orderId) async {
-    int sum = 0;
+  static Future<Map<String, dynamic>> calculateTotalItems(String orderId) async {
+    int sumQuantity = 0;
+    double sumArea =0.0;
 
     var orderDetailsList =
         await ViewCustomController.getDataOrderDetailList(orderId);
 
     for (var item in orderDetailsList) {
-      sum += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
-    }
-
-    return sum;
-  }
-
-  static Future<double> calculateTotalArea(String orderId) async {
-    double sum = 0.0;
-
-    var orderDetailsList =
-        await ViewCustomController.getDataOrderDetailList(orderId);
-
-    for (var item in orderDetailsList) {
+      sumQuantity += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
       double firstDim =
           double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
       double secondDim =
           double.tryParse('${item['Second_Dimension'] ?? 0}') ?? 0.0;
-      sum += ViewCustomController.getCalculateTotalArea(firstDim, secondDim);
+      sumArea += ViewCustomController.getCalculateTotalArea(firstDim, secondDim);
     }
 
-    return double.parse(sum.toStringAsFixed(2));
+    return  {
+      'sumQuantity': sumQuantity,
+      'sumArea': double.parse(sumArea.toStringAsFixed(2)),
+    };
   }
+
+  // static Future<double> calculateTotalArea(String orderId) async {
+  //   double sum = 0.0;
+  //
+  //   var orderDetailsList =
+  //       await ViewCustomController.getDataOrderDetailList(orderId);
+  //
+  //   for (var item in orderDetailsList) {
+  //     double firstDim =
+  //         double.tryParse('${item['First_Dimension'] ?? 0}') ?? 0.0;
+  //     double secondDim =
+  //         double.tryParse('${item['Second_Dimension'] ?? 0}') ?? 0.0;
+  //     sum += ViewCustomController.getCalculateTotalArea(firstDim, secondDim);
+  //   }
+  //
+  //   return double.parse(sum.toStringAsFixed(2));
+  // }
 
   static getDataOrderDetailList(String parentId) async {
     List<dynamic> orderDetailList = await DB('Order_Details')
@@ -1015,7 +1018,7 @@ class ViewCustomController extends GetxController {
     return orderDetailList;
   }
 
-  static getProductPrice(List<dynamic> productItems, String productId) {
+  static getProductPrice(List<dynamic> productItems, String? productId) {
     if (productItems.isEmpty) return null;
     for (var product in productItems) {
       if (product['_id'] == productId) {
@@ -1157,14 +1160,6 @@ class ViewCustomController extends GetxController {
                           String cleanText = text.replaceAll(',', '');
                           int value = int.tryParse(cleanText) ?? 0;
                           OrderItem.orderItemsList2[key]!['Price'] = value;
-                          String formatted = formatter.format(value);
-                          if (formatted != text) {
-                            _controller.value = TextEditingValue(
-                              text: formatted,
-                              selection: TextSelection.collapsed(
-                                  offset: formatted.length),
-                            );
-                          }
                         }
                         OrderItem.orderItemsList2.refresh();
                         ViewCustomController.isShowAlert.value =
@@ -1630,7 +1625,7 @@ class ViewCustomController extends GetxController {
                       children: [
                         Obx(() {
                           return Txt(
-                            '${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']), (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0, (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0, OrderItem.orderItemsList2[key]?['Quantity'] ?? 1)}',
+                            '${ViewCustomController.getCalculateTotalPrice(OrderItem.orderItemsList2[key]!['Price'] == null ?OrderItem.orderItemsList2[key]!['Product_Name'] == null ? 0 : ViewCustomController.getProductPrice(productItems, OrderItem.orderItemsList2[key]!['Product_Name'] ?? productItems.first['_id']): OrderItem.orderItemsList2[key]!['Price'], (OrderItem.orderItemsList2[key]?['First_Dimension'] as num?)?.toDouble() ?? 0.0, (OrderItem.orderItemsList2[key]?['Second_Dimension'] as num?)?.toDouble() ?? 0.0, OrderItem.orderItemsList2[key]?['Quantity'] ?? 1)}',
                             color: MainController.isLightMode.value == true
                                 ? whiteColor
                                 : color2,

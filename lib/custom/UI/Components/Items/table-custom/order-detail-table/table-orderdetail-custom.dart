@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:intl/intl.dart';
 
 // class TableOrderDetailBox extends StatefulWidget {
 //   TableOrderDetailBox(this.tableColumns);
@@ -424,7 +425,7 @@ class _TableOrderDetailBoxState extends State<TableOrderDetailBox> {
     _scrollController.addListener(() {});
     var size = MediaQuery.of(context).size;
     var columns = widget.schema.columns.where((c) => c.isShowTable == true).toList();
-    print('columns.length>>>${MainController.dataRecord.value.length}');
+    final formatter = NumberFormat('#,###');
     if (MainController.tableName.value != 'Order_Details') {
       return const SizedBox.shrink();
     }
@@ -585,7 +586,7 @@ class _TableOrderDetailBoxState extends State<TableOrderDetailBox> {
                     Obx(() {
                       return Center(
                         child: Txt(
-                          '${MainController.dataRecord.value[i]['Price'] != null ? MainController.dataRecord.value[i]['Price']:''}',
+                          '${MainController.dataRecord.value[i]['Price'] != null ? formatter.format(MainController.dataRecord.value[i]['Price']):''}',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: MainController.isLightMode.value == true

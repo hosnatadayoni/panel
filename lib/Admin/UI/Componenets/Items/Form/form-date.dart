@@ -24,11 +24,14 @@ class _DateBoxState extends State<DateBox> {
   Widget build(BuildContext context) {
     var inputRequired;
     String? errorMessage;
-    if(widget.column.validators != null){
-      inputRequired = widget.column.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
-      if(inputRequired!=null)
-        errorMessage = inputRequired['message'];
+    if(widget.column != null){
+      if(widget.column.validators != null){
+        inputRequired = widget.column.validators.firstWhere((validator) => validator['type'] == 'required', orElse: () => null);
+        if(inputRequired!=null)
+          errorMessage = inputRequired['message'];
+      }
     }
+
     return Obx((){
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

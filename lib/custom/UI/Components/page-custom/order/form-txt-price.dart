@@ -5,6 +5,7 @@ import 'package:finance/Admin/Public/styles.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/mobile-format.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/thousand-separator-inputFormatter.dart';
+import 'package:finance/custom/UI/Components/page-custom/order/thousand-seprator-input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +16,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 class FormPriceTextField extends StatefulWidget {
   String? lable;
   String? hint;
-  Function? onChange, updateChange;
+  Function? onChange, updateChange , onEditingComplete;
   String? initValue;
   bool? isMobile;
   bool? isLoginPage;
@@ -36,6 +37,7 @@ class FormPriceTextField extends StatefulWidget {
         this.hint,
         this.onChange,
         this.updateChange,
+        this.onEditingComplete,
         this.initValue,
         this.fbKey,
         required this.name,
@@ -83,12 +85,19 @@ class _FormPriceTextFieldState extends State<FormPriceTextField> {
                 key: textFieldKey,
                 focusNode: _focusNode,
                 controller:widget.controller,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  ThousandsSeparatorInputFormatter(),
+                ],
                 minLines: 1,
                 maxLines: widget.isPassword == true ? 1 : 3,
                 initialValue: widget.initValue,
                 style: TextStyle(color: MainController.isLightMode.value == true ? whiteColor : primaryDark),
                 onChanged: (value) {
                   if (widget.onChange != null) this.widget.onChange!(value);
+                },
+                onEditingComplete:() {
+                  if (widget.onEditingComplete != null) this.widget.onEditingComplete!();
                 },
                 name: widget.name,
                 decoration: InputDecoration(

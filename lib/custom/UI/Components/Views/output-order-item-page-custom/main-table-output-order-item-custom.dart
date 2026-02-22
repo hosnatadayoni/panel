@@ -10,6 +10,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-box.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Table/main-table-header.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Table/table-header.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-item-table/main-table-box-output-order-item-custom.dart';
@@ -203,8 +204,7 @@ class _MainTableOutPutOrderItemCustomState
                               ),
                             );
                           }),
-                          TableOutPutHeader(),
-                          // TableOutPutOrderItemHeader(),
+                          TableHeader(),
                           SizedBox(
                             height: 25,
                           ),

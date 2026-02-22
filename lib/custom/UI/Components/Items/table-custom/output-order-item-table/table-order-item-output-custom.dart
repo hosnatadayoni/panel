@@ -316,7 +316,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${orderDetail['Product_Name']['Title']}',
+                            '${orderDetail != null ? orderDetail['Product_Name']['Title']:''}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -329,7 +329,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${orderDetail['Product_Name']['Price']}',
+                            '${orderDetail != null ? orderDetail['Product_Name']['Price']:""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -368,7 +368,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${ViewCustomController.calculateTotalAreaOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension'])}',
+                            '${orderDetail != null ? ViewCustomController.calculateTotalAreaOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension']):""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -459,9 +459,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${ViewCustomController.
-                            calculateTotalPriceOrderDetail(orderDetail['First_Dimension'] ,
-                                orderDetail['Second_Dimension'] , orderDetail['Quantity'] , orderDetail['Product_Name']['Price'])}',
+                            '${orderDetail != null ? ViewCustomController.calculateTotalPriceOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension'] , orderDetail['Quantity'] , orderDetail['Product_Name']['Price']):""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true

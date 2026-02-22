@@ -421,8 +421,7 @@ class HelperController extends GetxController {
         );
         for (var row in MainController.dataRecord){
           String id = row['_id'];
-          ViewCustomController.quantities[id] = await ViewCustomController.calculateTotalQuantity(id);
-          ViewCustomController.areas[id] = await ViewCustomController.calculateTotalArea(id);
+          ViewCustomController.total[id] = await ViewCustomController.calculateTotalItems(id);
         }
         await Navigator.push(
             Get.context!, MaterialPageRoute(builder: (context) => TablePageOrderCustom(table)));
@@ -456,7 +455,6 @@ class HelperController extends GetxController {
       MainController.pageInfo[table.schema.name!]?.totalPage = await DB('${MainController.infoSchema.value.schema.name}').infoPage();
       await Get.to(() => TablePage());
     }
-    print('MainController.pageInfo>>>${MainController.pageInfo}');
   }
 
   static pageInateFunction() async {
@@ -474,25 +472,21 @@ class HelperController extends GetxController {
         MainController.allData.value = MainController.dataRecord.value;
         for (var row in MainController.dataRecord){
           String id = row['_id'];
-          ViewCustomController.quantities[id] = await ViewCustomController.calculateTotalQuantity(id);
-          ViewCustomController.areas[id] = await ViewCustomController.calculateTotalArea(id);
+          ViewCustomController.total[id] = await ViewCustomController.calculateTotalItems(id);
+          print('ViewCustomController.total>>>${ViewCustomController.total}');
         }
       }
       else if(tableName == 'Order_Details'){
       }
       if(tableName == 'Order_Output'){
-        // print('_TableFooterState.box currentPage>>>>${ MainController.infoSchema.value.schema.name}>>${ MainController.infoSchema.value.schema.currentPage}');
-        // print('ViewCustomController.ordersSelected.length>>>${ViewCustomController.ordersSelected.length}');
+       table = MainController.getInfoTable('Orders');
+       MainController.infoSchema.value = table;
         if(ViewCustomController.ordersSelected.length != 0 && ViewCustomController.isClickedBtnRegister.value == true){
           MainController.dataRecord.value = [].obs;
           for(var orderDetail in ViewCustomController.getOrderDetailsOrderSelectedList()){
             MainController.dataRecord.add(orderDetail);
           }
           ViewCustomController.updatePagenationInOutPutOrderItems();
-
-
-
-          // MainController.dataRecord.value = await DB('${tableName}').paginate();
         }
         else{
           List<dynamic> ordersList = await DB('Orders').getRecords();

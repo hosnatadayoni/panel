@@ -25,8 +25,6 @@ import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
 
-import '../../../../../Admin/Logic/Models/db.dart';
-
 class FormEditOrderItemCustom extends StatefulWidget {
 
   FormEditOrderItemCustom(this.productItems , this.orderDetailItems , this.data);
@@ -57,18 +55,16 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   void _initPriceControllers() {
     for (var item in widget.orderDetailItems) {
       final id = item['_id'];
-
-      final price = ViewCustomController.getProductPrice(
-        widget.productItems,
-        item['Product_Name']?['_id'],
-      ) ??
-          0;
+      // final price = ViewCustomController.getProductPrice(
+      //   widget.productItems,
+      //   item['Product_Name']?['_id'],
+      // ) ??
+      //     0;
+      final price = item['Price'];
 
       priceControllers[id] = TextEditingController(
         text: formatter.format(price),
       );
-
-      item['Price'] = price;
     }
   }
   _loadIsExsitsOrder() async {
@@ -82,6 +78,9 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final TextEditingController _controller = TextEditingController();
+    for(int i=0;i<widget.orderDetailItems.length;i++){
+      print('PPLLXXD>>>${widget.orderDetailItems[i]['Price']}');
+    }
 
     return FocusScope(
       autofocus: true,
@@ -228,19 +227,13 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                           height: 40,
                                           column: MainController.getDetailsOfField('Order_Details' , 'Price'),
                                           onChange: (text) {
-                                            if (text != null && text != '') {
-                                              String cleanText = text.replaceAll(',', '');
-                                              int value = int.tryParse(cleanText) ?? 0;
-                                              widget.orderDetailItems[i]['Price'] = value;
-                                              String formatted = formatter.format(value);
-                                              if (formatted != text) {
-                                                _controller.value = TextEditingValue(
-                                                  text: formatted,
-                                                  selection: TextSelection.collapsed(offset: formatted.length),
-                                                );
+                                            setState(() {
+                                              if (text != null && text != '') {
+                                                String cleanText = text.replaceAll(',', '');
+                                                int value = int.tryParse(cleanText) ?? 0;
+                                                widget.orderDetailItems[i]['Price'] = value;
                                               }
-                                            }
-                                            OrderItem.orderItemsList.refresh();
+                                            });
                                           },
                                         ),
                                       ),
@@ -632,8 +625,8 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Obx((){
-                                                return Txt('${ViewCustomController.getCalculateTotalPrice(ViewCustomController.getProductPrice(
-                                                  widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id'] ?? widget.productItems.first['_id'],) ,
+                                                return Txt('${ViewCustomController.getCalculateTotalPrice(widget.orderDetailItems[i]['Price'] == null ?ViewCustomController.getProductPrice(
+                                                  widget.productItems, widget.orderDetailItems[i]['Product_Name']['_id'] ?? widget.productItems.first['_id'],): widget.orderDetailItems[i]['Price'],
                                                     (widget.orderDetailItems[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
                                                     (widget.orderDetailItems[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
                                                     widget.orderDetailItems[i]['Quantity'] ?? 1

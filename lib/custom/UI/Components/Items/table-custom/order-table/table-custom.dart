@@ -307,10 +307,22 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                         );
                       }),
                       Obx((){
-                        return Txt('${ViewCustomController.quantities.value[MainController.dataRecord.value[i]['_id']] != 0 ? ViewCustomController.quantities.value[MainController.dataRecord.value[i]['_id']] :0}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2,textAlign: TextAlign.center);
+                        return Txt(
+                          '${ViewCustomController.total.value[MainController.dataRecord.value[i]['_id']]?['sumQuantity'] ?? 0}',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: MainController.isLightMode.value == true ? whiteColor : color2,
+                          textAlign: TextAlign.center,
+                        );
                       }),
                       Obx((){
-                        return Txt('${ViewCustomController.areas.value[MainController.dataRecord.value[i]['_id']]}',fontSize: 14, fontWeight: FontWeight.w500, color: MainController.isLightMode.value == true ? whiteColor : color2,textAlign: TextAlign.center);
+                        return Txt(
+                          '${ViewCustomController.total.value[MainController.dataRecord.value[i]['_id']]?['sumArea'] ?? 0}',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: MainController.isLightMode.value == true ? whiteColor : color2,
+                          textAlign: TextAlign.center,
+                        );
                       }),
                       ViewController.generateCellFileBox(MainController.getColumnsTable(MainController.tableName.value).indexWhere((element) => element.name == 'Picture2'), i , tableData: widget.table),
                       Center(

@@ -10,6 +10,7 @@ import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class OrderInfo extends StatefulWidget {
   OrderInfo({this.table});
@@ -70,6 +71,7 @@ class _OrderInfoState extends State<OrderInfo> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final formatter = NumberFormat('#,###');
 
     return Scaffold(
       body: Container(
@@ -158,7 +160,7 @@ class _OrderInfoState extends State<OrderInfo> {
                           Expanded(
                             flex: 1,
                             child: Txt(
-                              'قیمت: ${orderItem['Price'] ?? ''}',
+                              'قیمت: ${formatter.format(orderItem['Price']) ?? ''}',
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: color2,
@@ -208,10 +210,7 @@ class _OrderInfoState extends State<OrderInfo> {
                             child: productItems.value.isNotEmpty
                                 ? Txt(
                               'جمع مبلغ: ${ViewCustomController.getCalculateTotalPrice(
-                                ViewCustomController.getProductPrice(
-                                  productItems.value,
-                                  orderItem['Product_Name'],
-                                ),
+                                orderItem['Price'],
                                 (orderItem['First_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 (orderItem['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 orderItem['Quantity'] ?? 1,

@@ -6,6 +6,7 @@ import 'package:finance/Admin/UI/Componenets/General/column-scroll.dart';
 import 'package:finance/Admin/UI/Componenets/General/txt.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Header/header.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Menu/menu.dart';
+import 'package:finance/Admin/UI/Componenets/Items/Table/table-header.dart';
 import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
@@ -99,8 +100,8 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                               ),
                             ),
                           ),
-                          SizedBox(height: 10,),
-                          TableOutPutHeader(),
+                          SizedBox(height: 20,),
+                          TableHeader(),
                           SizedBox(height: 25,),
                           MainTableBoxOutPutOrderCustom(),
                         ],

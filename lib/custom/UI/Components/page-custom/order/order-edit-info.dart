@@ -10,6 +10,7 @@ import 'package:finance/custom/Logic/Models/order-item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class OrderEditInfo extends StatefulWidget {
   OrderEditInfo({this.table , this.data});
@@ -28,6 +29,7 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
   RxMap<String, String> productTitles = <String, String>{}.obs;
   RxList productItems = [].obs;
   Map<String, dynamic> result = {};
+
 
   @override
   void initState() {
@@ -74,7 +76,7 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
     final size = MediaQuery.of(context).size;
     result.addAll(OrderItem.orderItemsList.value);
     result.addAll(OrderItem.orderItemsList2.value);
-    print('widget.data[Picture2]>>>${widget.data['Picture2']}');
+    final formatter = NumberFormat('#,###');
 
     return Scaffold(
       body: Container(
@@ -154,7 +156,9 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
                           Expanded(
                             flex: 1,
                             child: Txt(
-                              'نام کالا: ${productTitles[result.values.toList()[i]['Product_Name']['_id']] ?? ''}',
+                              'نام کالا: ${result.values.toList()[i]['Product_Name'] is Map
+                                  ? productTitles[result.values.toList()[i]['Product_Name']['_id']] ?? ''
+                                  : productTitles[result.values.toList()[i]['Product_Name']] ?? ''}',
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: color2,
@@ -163,7 +167,7 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
                           Expanded(
                             flex: 1,
                             child: Txt(
-                              'قیمت: ${result.values.toList()[i]['Price'] ?? ''}',
+                              'قیمت: ${formatter.format(result.values.toList()[i]['Price'] ?? '')}',
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: color2,
@@ -213,10 +217,7 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
                             child: productItems.value.isNotEmpty
                                 ? Txt(
                               'جمع مبلغ: ${ViewCustomController.getCalculateTotalPrice(
-                                ViewCustomController.getProductPrice(
-                                  productItems.value,
-                                  result.values.toList()[i]['Product_Name']['_id'],
-                                ),
+                                result.values.toList()[i]['Price'],
                                 (result.values.toList()[i]['First_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 (result.values.toList()[i]['Second_Dimension'] as num?)?.toDouble() ?? 0.0,
                                 result.values.toList()[i]['Quantity'] ?? 1,

@@ -72,6 +72,11 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
               children: [
                 TableRow(
                   children: [
+                    Center(child: Txt('#' , fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color:
+                      MainController.isLightMode.value == true ? whiteColor : color2,
+                      textAlign: TextAlign.center,)),
                     Center(
                       child: Container(
                         padding: EdgeInsets.all(10),
@@ -165,6 +170,16 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                 if (MainController.dataRecord.value.length != 0)
                   for (var i = 0; i < MainController.dataRecord.value.length; i++)
                     TableRow(children: [
+                      Center(
+                        child: Txt(
+                          '${i+1}',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color:
+                          MainController.isLightMode.value == true ? whiteColor : color2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       Center(child: Obx(() {
                         String orderId = MainController.dataRecord[i]['_id'];
                         Rx<bool> isChecked = RxBool(ViewCustomController.status.value[orderId] != null
@@ -204,6 +219,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                             }
                             ViewCustomController.ordersSelected.refresh();
                             ViewCustomController.allOrdersSelected.refresh();
+                            HelperController.pageInateFunction();
                           },
                           name: '',
                           title: Txt(''),

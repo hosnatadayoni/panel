@@ -1,4 +1,5 @@
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:finance/Admin/Logic/Controllers/helper-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/main-controller.dart';
 import 'package:finance/Admin/Logic/Controllers/view-controller.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
@@ -57,6 +58,7 @@ class _TableHeaderState extends State<TableHeader> {
                       MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
                       // ViewController.totalPage.value =  (MainController.dataRecord.value.length / MainController.infoSchema['countShowRow']).ceil();
                       MainController.pageInfo[MainController.infoSchema.value.schema.name!]!.totalPage= await DB('${MainController.infoSchema.value.schema.name}').infoPage();
+                      HelperController.pageInateFunction();
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
@@ -160,6 +162,7 @@ class _TableHeaderState extends State<TableHeader> {
                       });
                       MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
                       MainController.pageInfo[MainController.infoSchema.value.schema.name!]!.totalPage =  (MainController.dataRecord.value.length / MainController.infoSchema.value.schema.countShowRow).ceil();
+                      HelperController.pageInateFunction();
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {
