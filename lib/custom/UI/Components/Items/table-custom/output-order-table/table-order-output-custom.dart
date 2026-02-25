@@ -30,8 +30,15 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
     super.initState();
     _scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
+      await loadStatusForOrders(MainController.dataRecord.value);
     });
+  }
+  Future<void> loadStatusForOrders(List orders) async {
+    for (var order in orders) {
+      bool status = await ViewCustomController.getStatusOrders(order['_id']);
+      ViewCustomController.status.value[order['_id']] = status;
+    }
+    ViewCustomController.status.refresh();
   }
 
   @override
@@ -44,6 +51,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Obx(() {
+      print('MainController.pageInfo[MainController.infoSchema.value.schema.name]>>>${MainController.pageInfo[MainController.infoSchema.value.schema.name]}');
       return Container(
         color:
             MainController.isLightMode.value == true ? background : whiteColor,
@@ -187,7 +195,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                                 ? true
                                 : false
                             : false);
-                        return ViewCustomController.status.value[orderId] !=null?
+                        return
                         FormBuilderCheckbox(
                           key: Key('${orderId}'),
                           decoration: InputDecoration(border: InputBorder.none,),
@@ -219,12 +227,11 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                             }
                             ViewCustomController.ordersSelected.refresh();
                             ViewCustomController.allOrdersSelected.refresh();
-                            HelperController.pageInateFunction();
+                            // HelperController.pageInateFunction();
                           },
                           name: '',
                           title: Txt(''),
-                        ):
-                        Container();
+                        );
                       })),
                       Obx(() {
                         return Center(
@@ -281,7 +288,7 @@ class _TableBoxOrderOutPutCustomState extends State<TableBoxOrderOutPutCustom> {
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${MainController.dataRecord[i]['Drawing_Number(customer)']}',
+                            '${MainController.dataRecord[i]['Drawing_Number(customer)'] != null ? MainController.dataRecord[i]['Drawing_Number(customer)']:""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true

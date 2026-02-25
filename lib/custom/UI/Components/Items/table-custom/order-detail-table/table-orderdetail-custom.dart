@@ -731,7 +731,7 @@ class _TableOrderDetailBoxState extends State<TableOrderDetailBox> {
                                                       .center,
                                                   children: [
                                                     InkWell(
-                                                      onTap: () {
+                                                      onTap: () async {
                                                         Navigator.pop(
                                                             context);
                                                       },

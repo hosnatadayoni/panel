@@ -77,11 +77,6 @@ class _FormEditOrderItemCustomState extends State<FormEditOrderItemCustom> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    final TextEditingController _controller = TextEditingController();
-    for(int i=0;i<widget.orderDetailItems.length;i++){
-      print('PPLLXXD>>>${widget.orderDetailItems[i]['Price']}');
-    }
-
     return FocusScope(
       autofocus: true,
       child: Column(

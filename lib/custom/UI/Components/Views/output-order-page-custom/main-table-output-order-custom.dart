@@ -73,10 +73,7 @@ class _MainTableOutPutOrderCustomState extends State<MainTableOutPutOrderCustom>
                                     ViewCustomController.statusOrderDetails[orderDetailSelected['_id']] =  await ViewCustomController.getStatusOrderDetail(orderDetailSelected['_id']);
                                   }
                                 }
-
                                 ViewCustomController.isClickedBtnRegister.value = true;
-
-
                                 await HelperController.pageInateFunction();
                                 Navigator.push(
                                     Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderItemCustom()));

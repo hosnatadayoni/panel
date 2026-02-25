@@ -14,6 +14,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Table/table-header.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/order-table/main-table-box-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-item-table/main-table-box-output-order-item-custom.dart';
+import 'package:finance/custom/UI/Components/Items/table-custom/output-order-item-table/tabel-header-order-item-output-custm.dart';
 import 'package:finance/custom/UI/Components/Items/table-custom/output-order-table/main-table-box-output-order-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-header/table-order-item-output-custom.dart';
 import 'package:finance/custom/UI/Components/Items/table-header/table-output-header.dart';
@@ -204,7 +205,7 @@ class _MainTableOutPutOrderItemCustomState
                               ),
                             );
                           }),
-                          TableHeader(),
+                          TableHeaderOrderItemOutPut(),
                           SizedBox(
                             height: 25,
                           ),

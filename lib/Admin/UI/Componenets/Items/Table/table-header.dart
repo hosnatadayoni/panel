@@ -57,8 +57,8 @@ class _TableHeaderState extends State<TableHeader> {
                       });
                       MainController.dataRecord.value= await DB('${MainController.infoSchema.value.schema.name}').paginate();
                       // ViewController.totalPage.value =  (MainController.dataRecord.value.length / MainController.infoSchema['countShowRow']).ceil();
+                      MainController.allData.value = MainController.dataRecord.value;
                       MainController.pageInfo[MainController.infoSchema.value.schema.name!]!.totalPage= await DB('${MainController.infoSchema.value.schema.name}').infoPage();
-                      HelperController.pageInateFunction();
                     },
                     itemBuilder: (BuildContext context) {
                       return showInfo.map((item) {

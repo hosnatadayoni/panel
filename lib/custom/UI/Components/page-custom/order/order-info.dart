@@ -18,6 +18,7 @@ class OrderInfo extends StatefulWidget {
   var table;
   List<dynamic>? productItems;
 
+
   @override
   State<OrderInfo> createState() => _OrderInfoState();
 }
@@ -25,8 +26,9 @@ class OrderInfo extends StatefulWidget {
 class _OrderInfoState extends State<OrderInfo> {
   RxString customerTitle = ''.obs;
   RxString typeTitle = ''.obs;
-  RxMap<String, String> productTitles = <String, String>{}.obs;
+  RxMap<String, String?> productTitles = <String, String?>{}.obs;
   RxList productItems = [].obs;
+
 
   @override
   void initState() {
@@ -51,6 +53,7 @@ class _OrderInfoState extends State<OrderInfo> {
       MainController.getDetailsOfField('Orders', 'Type'),
     );
     for (var orderItem in OrderItem.orderItemsList.values.toList()) {
+      print('orderItem>>>${orderItem}');
       String productId = orderItem['Product_Name'];
       String resultProduct = await ViewCustomController.getTitleSelectedItem(
         'Product',
@@ -58,6 +61,7 @@ class _OrderInfoState extends State<OrderInfo> {
         MainController.getDetailsOfField('Order_Details', 'Product_Name'),
       );
       productTitles[productId] = resultProduct ?? '';
+      print('productTitles[productId]>>>${productTitles[productId]}');
     }
     customerTitle.value = resultCustomer?.toString() ?? '';
     typeTitle.value = resultType?.toString() ?? '';
@@ -82,6 +86,7 @@ class _OrderInfoState extends State<OrderInfo> {
         ),
         padding: const EdgeInsets.all(30),
         child: Obx(() {
+          print('OrderItem.orderItemsList.values.toList()>>>${OrderItem.orderItemsList.values.toList()}');
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -143,8 +148,9 @@ class _OrderInfoState extends State<OrderInfo> {
               const SizedBox(height: 20),
               Column(
                 children: [
-                  for (var orderItem in OrderItem.orderItemsList.values.toList())
-                    Container(
+                  if(OrderItem.orderItemsList.values.toList().length != 0)
+                    for (var orderItem in OrderItem.orderItemsList.values.toList())
+                      Container(
                       margin: EdgeInsets.only(bottom: 10),
                       child: Row(
                         children: [
@@ -229,6 +235,10 @@ class _OrderInfoState extends State<OrderInfo> {
               const SizedBox(height: 20),
               InkWell(
                 onTap: () async {
+                  final route = ModalRoute.of(context);
+                  if (route != null) {
+                    Navigator.of(context).removeRoute(route);
+                  }
                   if (MainController.infoSchema.value.schema.name ==
                       'Customer') {
                     for (var i = 0; i < MainController.dataRecord.length; i++) {

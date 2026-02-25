@@ -38,6 +38,9 @@ class _TableBoxState extends State<TableBox> {
     var size = MediaQuery.of(context).size;
 
     return Obx(() {
+      print('MainController.menuList[MainController.selectedSubItem.value].schema.name!>>>${MainController.menuList[MainController.selectedSubItem.value].schema.relations!}');
+      // var relation = MainController.infoSchema.value.schema.relations!=null ?MainController.infoSchema.value.schema.relations
+      // !.firstWhere((item) => item == value, orElse: () => null):null;
       return Container(
           color: MainController.isLightMode.value == true
               ? background
@@ -202,7 +205,7 @@ class _TableBoxState extends State<TableBox> {
                                                             .center,
                                                         children: [
                                                           InkWell(
-                                                            onTap: () {
+                                                            onTap: () async {
                                                               Navigator.pop(
                                                                   context);
                                                             },
@@ -235,11 +238,13 @@ class _TableBoxState extends State<TableBox> {
                                                           InkWell(
                                                             onTap:
                                                                 () async {
+                                                                  for(var relation in MainController.menuList[MainController.selectedSubItem.value].schema.relations!){
+                                                                    await DB('${relation}').where('parent_id', '\$eq', '${MainController.dataRecord.value[i]['_id']}').deleteRecord();
+                                                                  }
                                                               HelperController.deleteFunction(
                                                                   MainController
                                                                       .dataRecord
                                                                       .value[i]['_id']);
-
                                                             },
                                                             child:
                                                             Container(

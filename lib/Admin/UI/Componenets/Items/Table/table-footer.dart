@@ -27,18 +27,19 @@ class _TableFooterState extends State<TableFooter> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      indexTable.value =
-          widget.index ?? MainController.selectedSubItem.value;
-      tableSelected.value =
-      MainController.menuList[indexTable.value].schema.name!;
-      MainController.infoSchema.value =
-      MainController.menuList[indexTable.value];
+      MainController.infoSchema.value = MainController.menuList[indexTable.value];
     });
   }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Obx((){
+      indexTable.value =
+          widget.index ?? MainController.selectedSubItem.value;
+      tableSelected.value =
+      MainController.menuList[indexTable.value].schema.name!;
+
+
       return Container(
         child: size.width > 556 ?
         Row(

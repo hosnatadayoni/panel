@@ -9,8 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:finance/Admin/Logic/Models/db.dart';
+import 'package:intl/intl.dart';
 
 class TableBoxOrderItemOutPutCustom extends StatefulWidget {
   TableBoxOrderItemOutPutCustom();
@@ -24,13 +26,12 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
 
 
 
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
 
-    });
 
   }
 
@@ -43,6 +44,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final formatter = NumberFormat('#,###');
     return Obx((){
       return Container(
         color: MainController.isLightMode.value == true ? background : whiteColor,
@@ -329,7 +331,7 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${orderDetail != null ? orderDetail['Product_Name']['Price']:""}',
+                            '${orderDetail != null ? formatter.format(orderDetail['Price']):""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -368,7 +370,8 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${orderDetail != null ? ViewCustomController.calculateTotalAreaOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension']):""}',
+                            '${orderDetail != null ? ViewCustomController.calculateTotalAreaOrderDetail((orderDetail['First_Dimension'] as num).toDouble(),
+                              (orderDetail['Second_Dimension'] as num).toDouble()):""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true
@@ -459,7 +462,12 @@ class _TableBoxOrderItemOutPutCustomState extends State<TableBoxOrderItemOutPutC
                       Obx(() {
                         return Center(
                           child: Txt(
-                            '${orderDetail != null ? ViewCustomController.calculateTotalPriceOrderDetail(orderDetail['First_Dimension'] , orderDetail['Second_Dimension'] , orderDetail['Quantity'] , orderDetail['Product_Name']['Price']):""}',
+                            '${orderDetail != null ? ViewCustomController.calculateTotalPriceOrderDetail(
+                              (orderDetail['First_Dimension'] as num).toDouble(),
+                              (orderDetail['Second_Dimension'] as num).toDouble(),
+                              orderDetail['Quantity'] as int,
+                              orderDetail['Price'] as int,
+                            ):""}',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: MainController.isLightMode.value == true

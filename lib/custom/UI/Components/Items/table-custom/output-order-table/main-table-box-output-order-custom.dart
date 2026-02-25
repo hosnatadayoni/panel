@@ -49,7 +49,7 @@ class _MainTableBoxOutPutOrderCustomState extends State<MainTableBoxOutPutOrderC
               SizedBox(
                 height: 20,
               ),
-              TableFooter(index:   MainController.menuList.value.indexWhere((element) => element.schema.name=="Orders")),
+              TableFooter(index:MainController.menuList.value.indexWhere((element) => element.schema.name=="Orders")),
             ],
           ),
         ],

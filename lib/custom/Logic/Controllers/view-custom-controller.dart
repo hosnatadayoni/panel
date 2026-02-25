@@ -12,6 +12,7 @@ import 'package:finance/Admin/UI/Componenets/Items/Form/form-selectBox.dart';
 import 'package:finance/Admin/UI/Componenets/Items/Form/form-text-field.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/OrderItem/form-text-field-order-item-custom.dart';
 import 'package:finance/custom/UI/Components/Items/Forms/OrderItem/form-txt-field-order-item-edit-custom.dart';
+import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
 import 'package:finance/custom/UI/Components/page-custom/order/form-txt-price.dart';
 import 'package:finance/custom/UI/Components/page-custom/orderItem/form-edit-orderItem-custom.dart';
 import 'package:flutter/material.dart';
@@ -968,6 +969,7 @@ class ViewCustomController extends GetxController {
 
     var orderDetailsList =
         await ViewCustomController.getDataOrderDetailList(orderId);
+    print('orderDetailsList>>>${orderDetailsList}');
 
     for (var item in orderDetailsList) {
       sumQuantity += int.tryParse(item['Quantity']?.toString() ?? '0') ?? 0;
@@ -1014,7 +1016,6 @@ class ViewCustomController extends GetxController {
         item['Second_Dimension'] = (item['Second_Dimension'] as num).toDouble();
       }
     }
-    print('orderDetailList>>>${orderDetailList}');
     return orderDetailList;
   }
 
@@ -1778,7 +1779,7 @@ class ViewCustomController extends GetxController {
 
   //order output
   static getDrawingNumberOrder(String orderDetailParentId) async {
-    List<dynamic> ordersList = await DB('Orders').getRecords();
+    List<dynamic> ordersList = await DB('Orders').paginate();
     for (var order in ordersList) {
       if (order['_id'] == orderDetailParentId) {
         return order['Drawing_Number'];
@@ -1803,11 +1804,12 @@ class ViewCustomController extends GetxController {
     return formatter.format(rounded);
   }
 
-  static registerCheckout() async {
+  static registerCheckout(String parentId) async {
     for (var orderDetail in ViewCustomController.orderDetailsSelected.entries) {
-      await DB('out_order_detail').storeRecord({
+      await DB('out_order_detail').parent(parentTable:'Order_Detail_OutPut' , parentId: '${parentId}').storeRecord({
         'order_id': orderDetail.value['parent_id'],
         'order_item_id': orderDetail.value['_id'],
+        'order_detail_output_id': parentId,
       });
     }
     ViewCustomController.orderDetailsSelected.value = {};
@@ -1815,7 +1817,6 @@ class ViewCustomController extends GetxController {
     ViewCustomController.allOrdersSelected.value = [];
     ViewCustomController.isClickedBtnRegister.value = false;
     MainController.infoSchema.value.schema.currentPage = 1;
-    ViewCustomController.getAllReocord('Orders');
     List<dynamic> ordersList = await DB('Orders').getRecords();
     await ViewCustomController.getStatusOutPutOrders(ordersList);
     MainController.dataRecord.value = await DB('Orders').paginate();
@@ -1863,8 +1864,8 @@ class ViewCustomController extends GetxController {
     }
   }
 
-  static List getOrderDetailsOrderSelectedList() {
-    RxList<dynamic> orderDetailsList = [].obs;
+  static List<Map<String, dynamic>> getOrderDetailsOrderSelectedList() {
+    RxList<Map<String, dynamic>> orderDetailsList = <Map<String, dynamic>>[].obs;
     for (var orderSelected in ViewCustomController.ordersSelected.entries) {
       for (var orderDetail in orderSelected.value) {
         orderDetailsList.add(orderDetail);
@@ -1873,10 +1874,10 @@ class ViewCustomController extends GetxController {
     return orderDetailsList;
   }
 
-  static List<dynamic> paginate() {
+  static List<Map<String, dynamic>> paginate() {
     int currentPage = MainController.infoSchema.value.schema.currentPage ?? 1;
     int perPage = MainController.infoSchema.value.schema.countShowRow ?? 10;
-    List<dynamic> records =
+    List<Map<String, dynamic>> records =
         ViewCustomController.getOrderDetailsOrderSelectedList();
     int start = (currentPage - 1) * perPage;
     int totalRecords =
@@ -1902,6 +1903,7 @@ class ViewCustomController extends GetxController {
     int currentPage = MainController.infoSchema.value.schema.currentPage ?? 1;
     int perPage = MainController.infoSchema.value.schema.countShowRow ?? 10;
     int start = (currentPage - 1) * perPage;
+    print('currentPage AAASS>>>${currentPage} ${MainController.infoSchema.value.schema.countShowRow}');
     return start;
   }
 
@@ -1916,21 +1918,18 @@ class ViewCustomController extends GetxController {
   }
 
   static updatePagenationInOutPutOrderItems() {
-    int indexTable = MainController.menuList.value
-        .indexWhere((element) => element.schema.name == "Order_Details");
-    MainController.infoSchema.value = MainController.menuList[indexTable];
-    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+    MainController.pageInfo[MainController.infoSchema.value.schema.name!]
         ?.start = ViewCustomController.getStartIndexOutPutOrderItem();
-    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+    MainController.pageInfo[MainController.infoSchema.value.schema.name!]
         ?.end = ViewCustomController.getEndIndexOutPutOrderItem();
-    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+    MainController.pageInfo[MainController.infoSchema.value.schema.name!]
             ?.totalRecords =
         ViewCustomController.getOrderDetailsOrderSelectedList().length;
-    MainController.pageInfo[MainController.menuList[indexTable].schema.name!]
+    MainController.pageInfo[MainController.infoSchema.value.schema.name!]
         ?.totalPage = ViewCustomController.getTotalPage();
-    print(
-        'total page>>>${MainController.pageInfo[MainController.menuList[indexTable].schema.name!]?.totalPage}');
     MainController.dataRecord.value = ViewCustomController.paginate();
+    MainController.dataRecord.refresh();
+
   }
   //end order output
 
@@ -2151,6 +2150,26 @@ class ViewCustomController extends GetxController {
   }
 
 //end order & orderdetail
+
+  static Future<int> generateOutboundInvoiceNumberCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    int counter = prefs.getInt('OutboundInvoiceNumber') ?? 1;
+    return counter;
+  }
+  static Future<int> getNextOutboundInvoiceNumberCounter() async {
+    int counter = await generateOutboundInvoiceNumberCounter();
+    counter++;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('OutboundInvoiceNumber', counter);
+    return counter;
+  }
+  static Future<int> generateOutboundInvoiceNumber(Jalali date) async {
+    int counter = await generateOutboundInvoiceNumberCounter();
+    int datePart = int.parse(await getDatePart(date));
+    int outboundInvoiceNumber = int.parse('$datePart$counter');
+    await getNextOutboundInvoiceNumberCounter();
+    return outboundInvoiceNumber;
+  }
 
 
 

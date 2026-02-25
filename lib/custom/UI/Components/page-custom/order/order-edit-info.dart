@@ -236,6 +236,10 @@ class _OrderEditInfoState extends State<OrderEditInfo> {
               const SizedBox(height: 20),
               InkWell(
                 onTap: () async {
+                  final route = ModalRoute.of(context);
+                  if (route != null) {
+                    Navigator.of(context).removeRoute(route);
+                  }
                   if(MainController.infoSchema.value.schema.name == 'Customer'){
                     for (var i = 0; i < MainController.dataRecord.length; i++){
                       ViewCustomController.goTableCustom(table: MainController.tableName.value,index: i);

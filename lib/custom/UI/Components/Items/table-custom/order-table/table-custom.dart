@@ -38,6 +38,7 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    print('MainController.menuList[MainController.selectedSubItem.value].schema.name!>>>>${MainController.menuList[MainController.selectedSubItem.value].schema.name!}');
     return Obx((){
       return Container(
         color: MainController.isLightMode.value == true ? background : whiteColor,
@@ -391,7 +392,7 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                                                     CrossAxisAlignment.center,
                                                     children: [
                                                       InkWell(
-                                                        onTap: () {
+                                                        onTap: () async {
                                                           Navigator.pop(context);
                                                         },
                                                         child: Container(
@@ -416,6 +417,9 @@ class _TableBoxCustomState extends State<TableBoxCustom> {
                                                       ),
                                                       InkWell(
                                                         onTap: () async {
+                                                          for(var relation in MainController.menuList[MainController.selectedSubItem.value].schema.relations!){
+                                                            await DB('${relation}').where('parent_id', '\$eq', '${MainController.dataRecord.value[i]['_id']}').deleteRecord();
+                                                          }
                                                           await HelperController
                                                               .deleteFunction(
                                                               MainController

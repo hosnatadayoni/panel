@@ -18,9 +18,12 @@ import 'package:finance/custom/UI/Components/Views/output-order-item-page-custom
 import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:finance/Admin/Logic/Controllers/app-controller.dart';
+import 'package:intl/intl.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MainTableBoxOutPutOrderItemCustom extends StatefulWidget {
@@ -31,10 +34,32 @@ class MainTableBoxOutPutOrderItemCustom extends StatefulWidget {
 }
 
 class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOrderItemCustom> {
+  RxString outboundInvoiceNumber = ''.obs;
+  @override
+  void initState() {
+    super.initState();
+    _initOutboundInvoiceNumber();
+  }
+
+  void _initOutboundInvoiceNumber() async {
+    int generatedNumber = await ViewCustomController.generateOutboundInvoiceNumber(Jalali.now());
+    outboundInvoiceNumber.value = generatedNumber.toString();
+  }
+  String _formatTime(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Rx<bool> isSend= false.obs;
+    var dateSelected=Jalali.now();
+    Rx<String> smsText = ''.obs;
+    Rx<bool> isShowError = false.obs;
+
+
+
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -54,11 +79,12 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
               SizedBox(
                 height: 10,
               ),
-              TableBoxOrderItemOutPutCustom(),
+              if(MainController.tableName.value == 'Order_Output' && ViewCustomController.isClickedBtnRegister.value)
+                TableBoxOrderItemOutPutCustom(),
+
               SizedBox(
                 height: 20,
               ),
-              // TableFooterOutPutOrderItem(),
               TableFooter(index: MainController.menuList.value.indexWhere((element) => element.schema.name=="Order_Details")),
               SizedBox(
                 height: 20,
@@ -91,9 +117,9 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                   title: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text(
+                                       Txt(
                                         'مشخصات و تاریخ خروج',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                           fontWeight: FontWeight.bold
                                       ),
                                       IconButton(
                                         icon: const Icon(Icons.close),
@@ -104,10 +130,10 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                   content: Container(
                                     height: 400,
                                     width: 600,
-                                    child: ColumnScroll(
+                                    child: Column(
                                       children: [
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Txt(
@@ -118,23 +144,40 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Container(
-                                              width: 400,
-                                              child: FormTextField(
-                                                name: 'شماره فاکتور خروج',
-                                                hint: 'شماره فاکتور خروج',
-                                                lable: '',
-                                                initValue: '',
-                                                column:MainController.getDetailsOfField(
-                                                    'Order_Detail_OutPut', 'DispatcherNumber') ,
-                                                onChange: (text) {},
-                                              ),
-                                            ),
+                                            Obx((){
+                                              return Container(
+                                                width: 400,
+                                                child: FormBuilder(
+                                                  child: FormBuilderTextField(
+                                                    initialValue: '${outboundInvoiceNumber.value}',
+                                                    style: TextStyle(
+                                                        color: primaryDark),
+                                                    name: 'شماره فاکتور خروج',
+                                                    decoration: InputDecoration(
+                                                      contentPadding: EdgeInsets.symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 12,
+                                                      ),
+                                                      labelStyle: TextStyle(
+                                                          color: primaryDark),
+                                                      border: OutlineInputBorder(),
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: colorBtn, width: 2.0),
+                                                      ),
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: color3, width: 1.0),
+                                                      ),
+                                                      // errorText: _errorText,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            })
                                           ],
                                         ),
-                                        SizedBox(height: 5,),
+                                        SizedBox(height: 10,),
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Txt(
@@ -146,20 +189,49 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                             ),
                                             Container(
                                               width: 400,
-                                              child: FormTextField(
-                                                name: 'مشخصات خارج کننده',
-                                                hint: 'مشخصات خارج کننده',
-                                                lable: '',
-                                                column: MainController.getDetailsOfField(
-                                                    'Order_Detail_OutPut', 'Dispatcher'),
-                                                onChange: (text) {
-                                                  ViewCustomController.outPut['Dispatcher'] =  text;
-                                                },
+                                              child: Column(
+                                                children: [
+                                                  FormBuilderTextField(
+                                                    style: TextStyle(
+                                                        color: primaryDark),
+                                                    onChanged: (text) {
+                                                      ViewCustomController.outPut['Dispatcher'] =  text;
+                                                      if(ViewCustomController.outPut['Dispatcher'] == null){
+                                                        isShowError.value = true;
+                                                      }
+                                                      else{
+                                                        isShowError.value = false;
+                                                      }
+                                                    },
+                                                    name: 'مشخصات خارج کننده',
+                                                    decoration: InputDecoration(
+                                                      contentPadding: EdgeInsets.symmetric(
+                                                        vertical: 8,
+                                                        horizontal: 12,
+                                                      ),
+                                                      border: OutlineInputBorder(),
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: colorBtn, width: 2.0),
+                                                      ),
+                                                      enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: color3, width: 1.0),
+                                                      ),
+                                                      // errorText: _errorText,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Txt(
+                                                    '${isShowError.value ?'لطفا این آیتم را وارد کنید':''}',
+                                                    color: errorColor,
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: 5,),
+                                        SizedBox(height: 10,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
@@ -172,20 +244,34 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                             ),
                                             Container(
                                               width: 120,
-                                              child: DateBox(
-                                                selectedDate: Jalali.now(),
-                                                isSeletedDate: false.obs,
-                                                column: MainController.getDetailsOfField(
-                                                    'Order_Detail_OutPut', 'ExitDate'),
-                                                onDateChanged: (date) {
-                                                  ViewCustomController.outPut['ExitDate'] =  date;
-                                                },
+                                              child: Wrap(
+                                                children: [
+                                                  InkWell(
+                                                      onTap: ()async {
+                                                        Jalali? picked = await showPersianDatePicker(
+                                                          context: context,
+                                                          initialDate: dateSelected,
+                                                          firstDate: Jalali(1385 , 8),
+                                                          lastDate: Jalali(1450 , 9),
+                                                        );
+                                                        if(picked != null){
+                                                          setState(() {
+                                                            dateSelected = picked;
+                                                          });
+                                                          ViewCustomController.outPut['ExitDate'] = '${picked.year}/${picked.month}/${picked.day}';
+                                                        }
+                                                      },
 
+                                                      child: Icon(Icons.date_range_outlined, color: color3, size: 30.0)),
+                                                  SizedBox(width: 5,),
+                                                  Txt('${dateSelected!.year}/${dateSelected!.month}/${dateSelected.day}', color: primaryDark ,),
+
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: 5,),
+                                        SizedBox(height: 10,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
@@ -202,14 +288,48 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                                 ),
                                                 Container(
                                                   width: 400,
-                                                  child: TimePickerBox(
-                                                    column: MainController.getDetailsOfField(
-                                                        'Order_Detail_OutPut', 'ExitTime'),
-                                                    selectedTime: TimeOfDay.now(),
-                                                    isSeletedTime: false.obs,
-                                                    onTimeChanged: (time) {
-                                                      ViewCustomController.outPut['ExitTime'] =  time;
-                                                    },
+                                                  // child: TimePickerBox(
+                                                  //   column: MainController.getDetailsOfField(
+                                                  //       'Order_Detail_OutPut', 'ExitTime'),
+                                                  //   selectedTime: TimeOfDay.now(),
+                                                  //   isSeletedTime: false.obs,
+                                                  //   onTimeChanged: (time) {
+                                                  //     ViewCustomController.outPut['ExitTime'] =  time;
+                                                  //   },
+                                                  // ),
+                                                  child: FormBuilder(
+                                                    child: FormBuilderDateTimePicker(
+                                                      name: 'appointment_time',
+                                                      inputType: InputType.time,
+                                                      format: DateFormat.Hm(),
+                                                      decoration: InputDecoration(
+                                                        suffixIcon: Icon(Icons.access_time , color: color3,),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide(color: color3),
+                                                        ),
+                                                        hintText: _formatTime(TimeOfDay.now()),
+                                                        hintStyle: TextStyle(color: primaryDark),
+
+                                                      ),
+                                                      style: TextStyle(color: primaryDark),
+                                                      initialTime: TimeOfDay.now(),
+                                                      onChanged: (value) {
+                                                        print('value of hhh>>>${value}');
+                                                        if (value != null) {
+                                                          final timeOfDay = TimeOfDay.fromDateTime(value);
+                                                          ViewCustomController.outPut['ExitTime'] =  _formatTime(timeOfDay);
+                                                        }
+                                                        else{
+                                                          ViewCustomController.outPut['ExitTime'] =  _formatTime(TimeOfDay.now());
+                                                        }
+                                                      },
+                                                      validator: (value) {
+                                                        if (value == null) {
+                                                          return '${AppController.of(context)!.value('Please select a time')}';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -219,19 +339,29 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                         SizedBox(height: 5,),
                                         Column(
                                           children: [
-                                            CheckBox(
-                                              defaultValue: false,
-                                              checkBoxTitle: 'ارسال پیام کوتاه',
-                                              onChange: (text) async {
-                                                isSend.value = text;
+                                            FormBuilderCheckbox(
+                                              name: '',
+                                              decoration: InputDecoration(border: InputBorder.none),
+                                              activeColor: colorBtn,
+                                              title: Txt('ارسال پیام کوتاه', color: color2),
+                                              initialValue: false,
+                                              side:  BorderSide(
+                                                  color: primaryDark,
+                                                  width: 1.5,
+                                                  strokeAlign: 2.5
+                                              ),
+                                              onChanged: (text){
+                                                isSend.value = text!;
                                               },
+
                                             ),
                                             Container(
                                               width: double.infinity,
                                               child: TextField(
                                                 onChanged: (text) {
+                                                  smsText.value = text;
                                                   if(isSend.value){
-                                                    ViewCustomController.outPut['sms'] =  text;
+                                                    ViewCustomController.outPut['sms'] =  smsText.value;
                                                   }
                                                   else{
                                                     ViewCustomController.outPut['sms'] =  '';
@@ -251,26 +381,67 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                             ),
                                           ],
                                         )
-
-
                                       ],
                                     ),
                                   ),
                                   actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child:  Txt('انصراف'),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        await DB('Order_Detail_OutPut').storeRecord(ViewCustomController.outPut);
-                                        // await ViewCustomController.registerCheckout();
-                                        // await ViewCustomController.getStatusOutPutOrders(MainController.dataRecord.value);
-                                        // Navigator.push(
-                                        //     Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderCustom()));
-                                      },
-                                      child:  Txt('ذخیره'),
-                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        InkWell(
+                                          onTap:(){
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: previewBtnColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            padding: EdgeInsets.all(10),
+                                            child: Txt('انصراف' , color: whiteColor,),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        InkWell(
+                                          onTap:()async{
+                                            if(ViewCustomController.outPut['DispatcherNumber'] == null){
+                                              ViewCustomController.outPut['DispatcherNumber'] = outboundInvoiceNumber.value;
+                                            }
+                                            if(ViewCustomController.outPut['ExitTime'] == null){
+                                              ViewCustomController.outPut['ExitTime'] = _formatTime(TimeOfDay.now());
+                                            }
+                                            if(ViewCustomController.outPut['ExitDate'] == null){
+                                              ViewCustomController.outPut['ExitDate'] = '${Jalali.now().year}/${Jalali.now().month}/${Jalali.now().day}';
+                                            }
+                                            if (isSend.value == true && smsText.trim().isNotEmpty) {
+                                              ViewCustomController.outPut['sms'] = smsText.trim();
+                                            } else {
+                                              ViewCustomController.outPut['sms'] = null;
+                                            }
+                                            final result = await DB('Order_Detail_OutPut').storeRecord(ViewCustomController.outPut);
+                                            String orderDetailOutPutId = result['_id'];
+                                            Navigator.pop(context);
+
+                                            await ViewCustomController.registerCheckout(orderDetailOutPutId);
+                                            await ViewCustomController.getStatusOutPutOrders(MainController.dataRecord.value);
+                                            Navigator.pushReplacement(
+                                                Get.context!,
+                                              MaterialPageRoute(
+                                                builder: (context) => TablePageOutPutOrderCustom(),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color:cancelBtnColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            padding: EdgeInsets.all(10),
+                                            child:  Txt('ذخیره' , color: whiteColor,),
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 );
                               },

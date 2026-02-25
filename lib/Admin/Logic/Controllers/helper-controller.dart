@@ -421,6 +421,7 @@ class HelperController extends GetxController {
         );
         for (var row in MainController.dataRecord){
           String id = row['_id'];
+          print('await ViewCustomController.calculateTotalItems(id)>>>${await ViewCustomController.calculateTotalItems(id)}');
           ViewCustomController.total[id] = await ViewCustomController.calculateTotalItems(id);
         }
         await Navigator.push(
@@ -447,11 +448,11 @@ class HelperController extends GetxController {
         MainController.pageInfo[table.schema.name!]?.totalPage = await DB('Orders').infoPage();
         Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderCustom()));
       }
+
     }
     else {
       if (loadData == true)
         await MainController.loadData(tableData: tableFields, tableDataItems: tableData);
-      MainController.infoSchema.value.schema.currentPage = 1;
       MainController.pageInfo[table.schema.name!]?.totalPage = await DB('${MainController.infoSchema.value.schema.name}').infoPage();
       await Get.to(() => TablePage());
     }
@@ -464,10 +465,10 @@ class HelperController extends GetxController {
     if (table.schema.view == 'custom') {
       if(tableName == 'Orders'){
         if(MainController.menuList[MainController.selectedSubItem.value].schema.name! == 'Customer'){
-          MainController.dataRecord.value = await DB('${tableName}').parent(parentId: '${ViewCustomController.customerId.value}', parentTable: 'Customer').getRecords();
+          MainController.dataRecord.value = await DB('${tableName}').parent(parentId: '${ViewCustomController.customerId.value}', parentTable: 'Customer').paginate();
         }
         else{
-          MainController.dataRecord.value = await DB('${tableName}').getRecords();
+          MainController.dataRecord.value = await DB('${tableName}').paginate();
         }
         MainController.allData.value = MainController.dataRecord.value;
         for (var row in MainController.dataRecord){
@@ -482,6 +483,8 @@ class HelperController extends GetxController {
        table = MainController.getInfoTable('Orders');
        MainController.infoSchema.value = table;
         if(ViewCustomController.ordersSelected.length != 0 && ViewCustomController.isClickedBtnRegister.value == true){
+          var table = MainController.getInfoTable('Order_Details');
+          MainController.infoSchema.value = table;
           MainController.dataRecord.value = [].obs;
           for(var orderDetail in ViewCustomController.getOrderDetailsOrderSelectedList()){
             MainController.dataRecord.add(orderDetail);
@@ -489,7 +492,7 @@ class HelperController extends GetxController {
           ViewCustomController.updatePagenationInOutPutOrderItems();
         }
         else{
-          List<dynamic> ordersList = await DB('Orders').getRecords();
+          List<dynamic> ordersList = await DB('Orders').paginate();
           await ViewCustomController.getStatusOutPutOrders(ordersList);
           MainController.dataRecord.value = await DB('Orders').paginate();
           MainController.allData.value = MainController.dataRecord.value;
@@ -498,6 +501,9 @@ class HelperController extends GetxController {
     } else {
       MainController.dataRecord.value = await DB('${tableName}').paginate();
       MainController.allData.value = MainController.dataRecord.value;
+      for (var i = 0; i < MainController.dataRecord.length; i++){
+        print('MainController.dataRecord[i]>>>${MainController.dataRecord[i]}');
+      }
     }
   }
 
