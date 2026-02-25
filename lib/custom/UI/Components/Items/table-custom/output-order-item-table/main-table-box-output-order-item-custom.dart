@@ -418,12 +418,14 @@ class _MainTableBoxOutPutOrderItemCustomState extends State<MainTableBoxOutPutOr
                                             } else {
                                               ViewCustomController.outPut['sms'] = null;
                                             }
+                                            print('ViewCustomController.outPut>>>${ViewCustomController.outPut}');
                                             final result = await DB('Order_Detail_OutPut').storeRecord(ViewCustomController.outPut);
                                             String orderDetailOutPutId = result['_id'];
                                             Navigator.pop(context);
 
                                             await ViewCustomController.registerCheckout(orderDetailOutPutId);
                                             await ViewCustomController.getStatusOutPutOrders(MainController.dataRecord.value);
+                                            ViewCustomController.outPut = {};
                                             Navigator.pushReplacement(
                                                 Get.context!,
                                               MaterialPageRoute(
