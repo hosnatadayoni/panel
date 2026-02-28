@@ -8,6 +8,7 @@ import 'package:finance/Admin/UI/Componenets/Popups/snackbar.dart';
 import 'package:finance/Admin/UI/Views/edit.dart';
 import 'package:finance/custom/Logic/Controllers/view-custom-controller.dart';
 import 'package:finance/custom/Logic/Models/order-item.dart';
+import 'package:finance/custom/UI/Components/Views/lable-page-custom/table-lable-page-custom.dart';
 import 'package:finance/custom/UI/Components/Views/order-detail-page-custom/table-order-detail-page-custom.dart';
 import 'package:finance/custom/UI/Components/Views/order-page-custom/table-page-custom.dart';
 import 'package:finance/custom/UI/Components/Views/output-order-page-custom/table-output-order-page-custom.dart';
@@ -448,6 +449,13 @@ class HelperController extends GetxController {
         MainController.pageInfo[table.schema.name!]?.totalPage = await DB('Orders').infoPage();
         Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderCustom()));
       }
+      if(tableName == 'lable'){
+        await MainController.loadData(
+          tableData: MainController.getInfoTable('Orders'),
+        );
+        await Get.to(() => TablePageLableCustom());
+      }
+
 
     }
     else {
