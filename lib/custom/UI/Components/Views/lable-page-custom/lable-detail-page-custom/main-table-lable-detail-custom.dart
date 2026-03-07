@@ -15,7 +15,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class MainTableLableDetailCustom extends StatefulWidget {
   MainTableLableDetailCustom(this.index);
-  int index;
+  String index;
 
   @override
   State<MainTableLableDetailCustom> createState() => _MainTableLableDetailCustomState();

@@ -430,6 +430,9 @@ class HelperController extends GetxController {
         await HelperController.pageInateFunction();
       }
       if(tableName == 'Order_Details'){
+        await MainController.loadData(
+          tableData: MainController.getInfoTable('Order_Details'),
+        );
         await HelperController.pageInateFunction();
         MainController.dataRecord.value = tableData;
 
@@ -449,14 +452,20 @@ class HelperController extends GetxController {
         MainController.pageInfo[table.schema.name!]?.totalPage = await DB('Orders').infoPage();
         Navigator.push(Get.context!, MaterialPageRoute(builder: (context) => TablePageOutPutOrderCustom()));
       }
+      if(tableName ==  'Order_Detail_OutPut'){
+        await MainController.loadData(tableData: tableFields, tableDataItems: tableData);
+        MainController.pageInfo[table.schema.name!]?.totalPage = await DB('${MainController.infoSchema.value.schema.name}').infoPage();
+        // MainController.dataRecord.value = await ViewCustomController.getOutputWithOrderInfoHugeData();
+        await Get.to(() => TablePage());
+      }
       if(tableName == 'lable'){
+
+        ViewCustomController.lableDetailSelected.value = [];
         await MainController.loadData(
           tableData: MainController.getInfoTable('Orders'),
         );
         await Get.to(() => TablePageLableCustom());
       }
-
-
     }
     else {
       if (loadData == true)
@@ -487,7 +496,7 @@ class HelperController extends GetxController {
       }
       else if(tableName == 'Order_Details'){
       }
-      if(tableName == 'Order_Output'){
+      else if(tableName == 'Order_Output'){
        table = MainController.getInfoTable('Orders');
        MainController.infoSchema.value = table;
         if(ViewCustomController.ordersSelected.length != 0 && ViewCustomController.isClickedBtnRegister.value == true){
@@ -506,6 +515,20 @@ class HelperController extends GetxController {
           MainController.allData.value = MainController.dataRecord.value;
         }
       }
+      else if(tableName == 'lable'){
+        final routeName = Get.currentRoute;
+        var table;
+        if(routeName == '/TablePageLableDetailCustom'){
+           table = MainController.getInfoTable('Order_Details');
+          MainController.infoSchema.value = table;
+        }
+        else{
+          table = MainController.getInfoTable('Orders');
+          MainController.infoSchema.value = table;
+        }
+
+      }
+
     } else {
       MainController.dataRecord.value = await DB('${tableName}').paginate();
       MainController.allData.value = MainController.dataRecord.value;

@@ -9,7 +9,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class TablePageLableDetailCustom extends StatelessWidget {
   TablePageLableDetailCustom(this.index);
-  int index;
+  String index;
 
   @override
   Widget build(BuildContext context) {

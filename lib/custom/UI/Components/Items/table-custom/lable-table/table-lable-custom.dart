@@ -215,7 +215,7 @@ class _TableLableBoxCustomState extends State<TableLableBoxCustom> {
                       }),
                       InkWell(
                         onTap: () async {
-                          await Get.to(() => TablePageLableDetailCustom(MainController.dataRecord.value[i]));
+                          await Get.to(() => TablePageLableDetailCustom(MainController.dataRecord.value[i]['_id']));
                         },
                         child: Container(
                           padding: EdgeInsets.all(10),

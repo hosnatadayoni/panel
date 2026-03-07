@@ -58,6 +58,10 @@ class ViewCustomController extends GetxController {
   static Rx<String> customerId=''.obs;
   static Map<String, dynamic> outPut = {};
 
+  //labele
+  static RxList<dynamic> lableDetailSelected = <dynamic>[].obs;
+  //end lable
+
   static Jalali parseDate(String dateString) {
     List<String> dateParts = dateString.split('/');
     int year = int.parse(dateParts[0]);
@@ -2169,6 +2173,46 @@ class ViewCustomController extends GetxController {
     int outboundInvoiceNumber = int.parse('$datePart$counter');
     await getNextOutboundInvoiceNumberCounter();
     return outboundInvoiceNumber;
+  }
+
+  static Future<List<Map<String, dynamic>>> getOutputWithOrderInfoHugeData() async {
+    List<Map<String, dynamic>> finalList = [];
+
+    ViewCustomController.getAllReocord('Order_Detail_OutPut');
+    List outputs = await DB('Order_Detail_OutPut').getRecords();
+    ViewCustomController.getAllReocord('out_order_detail');
+    List outDetails = await DB('out_order_detail').getRecords();
+    ViewCustomController.getAllReocord('Orders');
+    List orders = await DB('Orders').getRecords();
+
+
+    final Map<String, dynamic> outputMap = {
+      for (var o in outputs) o['_id']: o
+    };
+
+    final Map<String, dynamic> orderMap = {
+      for (var o in orders) o['_id']: o
+    };
+
+    for (var detail in outDetails) {
+      final output = outputMap[detail['parent_id']];
+      final order  = orderMap[detail['order_id']];
+
+      if (output != null && order != null) {
+        finalList.add({
+          'ExitDate': output['ExitDate'],
+          'ExitTime': output['ExitTime'],
+          'DispatcherNumber': output['DispatcherNumber'],
+          'Dispatcher': output['Dispatcher'],
+          'Input_Code': order['Input_Code'],
+          'Customer': order['Customer']['Name_and_lastName'],
+          'Date': order['Date'],
+          'Drawing_Number': order['Drawing_Number'],
+        });
+      }
+    }
+
+    return finalList;
   }
 
 
